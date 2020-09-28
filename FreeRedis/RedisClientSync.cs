@@ -36,9 +36,12 @@ namespace FreeRedis
 			_listeningCommand = null;
 		}
 
-		public RedisResult<string[]> AclCat(string categoryname = null) => string.IsNullOrWhiteSpace(categoryname) ? SendCommand<string[]>("ACL", "CAT") : SendCommand<string[]>("ACL", "CAT", categoryname);
+        #region Commands Server
+        public RedisResult<string[]> AclCat(string categoryname = null) => string.IsNullOrWhiteSpace(categoryname) ? SendCommand<string[]>("ACL", "CAT") : SendCommand<string[]>("ACL", "CAT", categoryname);
 		public RedisResult<int> AclDelUser(params string[] username) => username?.Any() == true ? SendCommand<int>("ACL", "DELUSER", username) : throw new ArgumentException(nameof(username));
 		public RedisResult<string> AclGenPass(int bits = 0) => bits <= 0 ? SendCommand<string>("ACL", "GENPASS") : SendCommand<string>("ACL", "GENPASS", bits);
+		public RedisResult<object> AclGetUser(string username = "default") => SendCommand<object>("ACL", "GETUSER", username);
+		public RedisResult<object> AclHelp() => SendCommand<object>("ACL", "HELP");
 		public RedisResult<string[]> AclList() => SendCommand<string[]>("ACL", "LIST");
 		public RedisResult<string> AclLoad() => SendCommand<string>("ACL", "LOAD");
 		public RedisResult<LogInfo[]> AclLog(long count = 0) => (count <= 0 ? SendCommand<object[][]>("ACL", "LOG") : SendCommand<object[][]>("ACL", "LOG", count)).NewValue(x => x.Select(a => a.MapToClass<LogInfo>(Encoding)).ToArray());
@@ -91,13 +94,114 @@ namespace FreeRedis
 		public RedisResult<string> SwapDb(int index1, int index2) => SendCommand<string>("SWAPDB", null, index1, index2);
 		//public void Sync(Action<string> onData) => SendCommandListen(onData, "SYNC");
 		public RedisResult<DateTime> Time() => SendCommand<long[]>("TIME").NewValue(a => new DateTime(1970, 0, 0).AddSeconds(a[0]).AddTicks(a[1] * 10));
+		#endregion
 
-		public RedisResult<string> Discard() => SendCommand<string>("DISCARD");
-		public RedisResult<object[]> Exec() => SendCommand<object[]>("EXEC");
-		public RedisResult<string> Multi() => SendCommand<string>("MULTI");
-		public RedisResult<string> UnWatch() => SendCommand<string>("UNWATCH");
-		public RedisResult<string> Watch(params string[] keys) => SendCommand<string>("WATCH", null, keys);
+		#region Commands Sets
+		public RedisResult<long> SAdd(string key, params string[] members) => SendCommand<long>("SADD", key, members);
+		public RedisResult<long> SCard(string key) => SendCommand<long>("SCARD", key);
+		public RedisResult<string[]> SDiff(params string[] keys) => SendCommand<string[]>("SDIFF", null, keys);
+		public RedisResult<long> SDiffStore(string destination, params string[] keys) => SendCommand<long>("SDIFFSTORE", destination, keys);
+		public RedisResult<string[]> SInter(params string[] keys) => SendCommand<string[]>("SINTER", null, keys);
+		public RedisResult<long> SInterStore(string destination, params string[] keys) => SendCommand<long>("SINTERSTORE", destination, keys);
+		public RedisResult<bool> SIsMember(string key, string member) => SendCommand<bool>("SISMEMBER", key, member);
+		public RedisResult<string[]> SMeMembers(string key) => SendCommand<string[]>("SMEMBERS", key);
+		public RedisResult<bool> SMove(string source, string destination, string member) => SendCommand<bool>("SMOVE", source, destination, member);
+		public RedisResult<string> SPop(string key) => SendCommand<string>("SPOP", key);
+		public RedisResult<string[]> SPop(string key, int count) => SendCommand<string[]>("SPOP", key, count);
+		public RedisResult<string> SRandMember(string key) => SendCommand<string>("SRANDMEMBER", key);
+		public RedisResult<string[]> SRandMember(string key, int count) => SendCommand<string[]>("SRANDMEMBER", key, count);
+		public RedisResult<long> SRem(string key, params string[] members) => SendCommand<long>("SREM", key, members);
+		//SSCAN key cursor [MATCH pattern] [COUNT count]
+		public RedisResult<string[]> SUnion(params string[] keys) => SendCommand<string[]>("SUNION", null, keys);
+		public RedisResult<long> SUnionStore(string destination, params string[] keys) => SendCommand<long>("SUNIONSTORE", destination, keys);
+		#endregion
 
+		#region Commands Sorted Sets
+		public RedisResult<RedisSortedSetItem<string>> BZPopMax(string key, int timeoutSeconds) => BZPopMaxMin("BZPOPMAX", key, timeoutSeconds);
+		public RedisResult<RedisSortedSetItem<string>[]> BZPopMax(string[] keys, int timeoutSeconds) => BZPopMaxMin("BZPOPMAX", keys, timeoutSeconds);
+		public RedisResult<RedisSortedSetItem<string>> BZPopMin(string key, int timeoutSeconds) => BZPopMaxMin("BZPOPMIN", key, timeoutSeconds);
+		public RedisResult<RedisSortedSetItem<string>[]> BZPopMin(string[] keys, int timeoutSeconds) => BZPopMaxMin("BZPOPMIN", keys, timeoutSeconds);
+		RedisResult<RedisSortedSetItem<string>> BZPopMaxMin(string command, string key, int timeoutSeconds) => SendCommand<string[]>(command, key, timeoutSeconds).NewValue(a => a == null ? null : new RedisSortedSetItem<string>(a[1], a[2].ConvertTo<decimal>()));
+		/// <summary>
+		/// 弹出多个 keys 有序集合值，返回 [] 的下标与之对应
+		/// </summary>
+		/// <param name="keys"></param>
+		/// <param name="timeoutSeconds"></param>
+		/// <returns></returns>
+		RedisResult<RedisSortedSetItem<string>[]> BZPopMaxMin(string command, string[] keys, int timeoutSeconds)
+		{
+			return SendCommand<string[]>(command, null, keys.Select(a => (object)a).Concat(new object[] { timeoutSeconds }).ToArray())
+				.NewValue(a =>
+				{
+					if (a == null) return null;
+					var result = new RedisSortedSetItem<string>[keys.Length];
+					var oldkeys = keys.ToList();
+					for (var z = 0; z < a.Length; z += 3)
+					{
+						var oldkeysIdx = oldkeys.FindIndex(x => x == a[z]);
+						result[oldkeysIdx] = new RedisSortedSetItem<string>(a[z + 1], a[z + 2].ConvertTo<decimal>());
+						oldkeys[oldkeysIdx] = null;
+					}
+					return result;
+				});
+		}
+		public RedisResult<long> ZAdd(string key, decimal score, string member) => ZAdd<long>(key, new[] { new RedisSortedSetItem<string>(member, score) }, false, false, false, false);
+		public RedisResult<long> ZAdd(string key, RedisSortedSetItem<string>[] memberScores) => ZAdd<long>(key, memberScores, false, false, false, false);
+		public RedisResult<long> ZAdd(string key, RedisSortedSetItem<string>[] memberScores, bool nx, bool xx, bool ch) => ZAdd<long>(key, memberScores, nx, xx, ch, false);
+		public RedisResult<string[]> ZAddIncr(string key, RedisSortedSetItem<string>[] memberScores, bool nx, bool xx, bool ch) => ZAdd<string[]>(key, memberScores, nx, xx, ch, true);
+		RedisResult<TReturn> ZAdd<TReturn>(string key, RedisSortedSetItem<string>[] memberScores, bool nx, bool xx, bool ch, bool incr)
+		{
+			var args = new List<object>();
+			if (nx) args.Add("NX");
+			else if (xx) args.Add("XX");
+			if (ch) args.Add("CH");
+			if (incr) args.Add("INCR");
+			args.AddRange(memberScores.Select(a => new object[] { a.Score, a.Member }).SelectMany(a => a));
+			return SendCommand<TReturn>("ZADD", key, args);
+		}
+		public RedisResult<long> ZCard(string key) => SendCommand<long>("ZCARD", key);
+		public RedisResult<long> ZCount(string key, decimal min, decimal max) => SendCommand<long>("ZCOUNT", key, min, max);
+		public RedisResult<long> ZCount(string key, string min, string max) => SendCommand<long>("ZCOUNT", key, min, max);
+		public RedisResult<decimal> ZIncrBy(string key, decimal increment, string member) => SendCommand<decimal>("ZINCRBY", key, increment, member);
+		//ZINTERSTORE destination numkeys key [key ...] [WEIGHTS weight [weight ...]] [AGGREGATE SUM|MIN|MAX]
+		public RedisResult<long> ZLexCount(string key, string min, string max) => SendCommand<long>("ZLEXCOUNT", key, min, max);
+		public RedisResult<RedisSortedSetItem<string>> ZPopMin(string key) => ZPopMaxMin("ZPOPMIN", key);
+		public RedisResult<RedisSortedSetItem<string>[]> ZPopMin(string key, int count) => ZPopMaxMin("ZPOPMIN", key, count);
+		public RedisResult<RedisSortedSetItem<string>> ZPopMax(string key) => ZPopMaxMin("ZPOPMAX", key);
+		public RedisResult<RedisSortedSetItem<string>[]> ZPopMax(string key, int count) => ZPopMaxMin("ZPOPMAX", key, count);
+		RedisResult<RedisSortedSetItem<string>> ZPopMaxMin(string command, string key) => SendCommand<string[]>(command, key).NewValue(a => a == null ? null : new RedisSortedSetItem<string>(a[1], a[2].ConvertTo<decimal>()));
+		RedisResult<RedisSortedSetItem<string>[]> ZPopMaxMin(string command, string key, int count) => SendCommand<string[]>(command, key, count).NewValue(a => a == null ? null : a.MapToHash<decimal>(Encoding).Select(b => new RedisSortedSetItem<string>(b.Key, b.Value)).ToArray());
+		public RedisResult<string[]> ZRange(string key, decimal start, decimal stop) => SendCommand<string[]>("ZRANGE", key, start, stop);
+		public RedisResult<RedisSortedSetItem<string>[]> ZRangeWithScores(string key, decimal start, decimal stop) => SendCommand<string[]>("ZRANGE", key, start, stop, "WITHSCORES").NewValue(a => a == null ? null : a.MapToHash<decimal>(Encoding).Select(b => new RedisSortedSetItem<string>(b.Key, b.Value)).ToArray());
+		public RedisResult<string[]> ZRangeByLex(string key, decimal min, decimal max, int offset = 0, int count = 0) => offset > 0 || count > 0 ? SendCommand<string[]>("ZRANGEBYLEX", key, min, max, "LIMIT", offset, count) : SendCommand<string[]>("ZRANGEBYLEX", key, min, max);
+		public RedisResult<string[]> ZRangeByLex(string key, string min, string max, int offset = 0, int count = 0) => offset > 0 || count > 0 ? SendCommand<string[]>("ZRANGEBYLEX", key, min, max, "LIMIT", offset, count) : SendCommand<string[]>("ZRANGEBYLEX", key, min, max);
+		public RedisResult<string[]> ZRangeByScore(string key, decimal min, decimal max, int offset = 0, int count = 0) => offset > 0 || count > 0 ? SendCommand<string[]>("ZRANGEBYSCORE", key, min, max, "LIMIT", offset, count) : SendCommand<string[]>("ZRANGEBYSCORE", key, min, max);
+		public RedisResult<string[]> ZRangeByScore(string key, string min, string max, int offset = 0, int count = 0) => offset > 0 || count > 0 ? SendCommand<string[]>("ZRANGEBYSCORE", key, min, max, "LIMIT", offset, count) : SendCommand<string[]>("ZRANGEBYSCORE", key, min, max);
+		public RedisResult<RedisSortedSetItem<string>[]> ZRangeByScoreWithScores(string key, decimal min, decimal max, int offset = 0, int count = 0) => (offset > 0 || count > 0 ? SendCommand<string[]>("ZRANGEBYSCORE", key, min, max, "LIMIT", offset, count) : SendCommand<string[]>("ZRANGEBYSCORE", key, min, max)).NewValue(a => a == null ? null : a.MapToHash<decimal>(Encoding).Select(b => new RedisSortedSetItem<string>(b.Key, b.Value)).ToArray());
+		public RedisResult<RedisSortedSetItem<string>[]> ZRangeByScoreWithScores(string key, string min, string max, int offset = 0, int count = 0) => (offset > 0 || count > 0 ? SendCommand<string[]>("ZRANGEBYSCORE", key, min, max, "LIMIT", offset, count) : SendCommand<string[]>("ZRANGEBYSCORE", key, min, max)).NewValue(a => a == null ? null : a.MapToHash<decimal>(Encoding).Select(b => new RedisSortedSetItem<string>(b.Key, b.Value)).ToArray());
+		public RedisResult<long> ZRank(string key, string member) => SendCommand<long>("ZRANK", key, member);
+		public RedisResult<long> ZRem(string key, params string[] members) => SendCommand<long>("ZREM", key, members);
+		public RedisResult<long> ZRemRangeByLex(string key, string min, string max) => SendCommand<long>("ZREMRANGEBYLEX", key, min, max);
+		public RedisResult<long> ZRemRangeByRank(string key, long start, long stop) => SendCommand<long>("ZREMRANGEBYRANK", key, start, stop);
+		public RedisResult<long> ZRemRangeByScore(string key, decimal min, decimal max) => SendCommand<long>("ZREMRANGEBYSCORE", key, min, max);
+		public RedisResult<long> ZRemRangeByScore(string key, string min, string max) => SendCommand<long>("ZREMRANGEBYSCORE", key, min, max);
+		public RedisResult<string[]> ZRevRange(string key, decimal start, decimal stop) => SendCommand<string[]>("ZREVRANGE", key, start, stop);
+		public RedisResult<RedisSortedSetItem<string>[]> ZRevRangeWithScores(string key, decimal start, decimal stop) => SendCommand<string[]>("ZREVRANGE", key, start, stop, "WITHSCORES").NewValue(a => a == null ? null : a.MapToHash<decimal>(Encoding).Select(b => new RedisSortedSetItem<string>(b.Key, b.Value)).ToArray());
+		public RedisResult<string[]> ZRevRangeByLex(string key, decimal max, decimal min, int offset = 0, int count = 0) => offset > 0 || count > 0 ? SendCommand<string[]>("ZREVRANGEBYLEX", key, max, min, "LIMIT", offset, count) : SendCommand<string[]>("ZREVRANGEBYLEX", key, max, min);
+		public RedisResult<string[]> ZRevRangeByLex(string key, string max, string min, int offset = 0, int count = 0) => offset > 0 || count > 0 ? SendCommand<string[]>("ZREVRANGEBYLEX", key, max, min, "LIMIT", offset, count) : SendCommand<string[]>("ZREVRANGEBYLEX", key, max, min);
+		public RedisResult<string[]> ZRevRangeByScore(string key, decimal max, decimal min, int offset = 0, int count = 0) => offset > 0 || count > 0 ? SendCommand<string[]>("ZREVRANGEBYSCORE", key, max, min, "LIMIT", offset, count) : SendCommand<string[]>("ZREVRANGEBYSCORE", key, max, min);
+		public RedisResult<string[]> ZRevRangeByScore(string key, string max, string min, int offset = 0, int count = 0) => offset > 0 || count > 0 ? SendCommand<string[]>("ZREVRANGEBYSCORE", key, max, min, "LIMIT", offset, count) : SendCommand<string[]>("ZREVRANGEBYSCORE", key, max, min);
+		public RedisResult<RedisSortedSetItem<string>[]> ZRevRangeByScoreWithScores(string key, decimal max, decimal min, int offset = 0, int count = 0) => (offset > 0 || count > 0 ? SendCommand<string[]>("ZREVRANGEBYSCORE", key, max, min, "LIMIT", offset, count) : SendCommand<string[]>("ZREVRANGEBYSCORE", key, max, min)).NewValue(a => a == null ? null : a.MapToHash<decimal>(Encoding).Select(b => new RedisSortedSetItem<string>(b.Key, b.Value)).ToArray());
+		public RedisResult<RedisSortedSetItem<string>[]> ZRevRangeByScoreWithScores(string key, string max, string min, int offset = 0, int count = 0) => (offset > 0 || count > 0 ? SendCommand<string[]>("ZREVRANGEBYSCORE", key, max, min, "LIMIT", offset, count) : SendCommand<string[]>("ZREVRANGEBYSCORE", key, max, min)).NewValue(a => a == null ? null : a.MapToHash<decimal>(Encoding).Select(b => new RedisSortedSetItem<string>(b.Key, b.Value)).ToArray());
+		public RedisResult<long> ZRevRank(string key, string member) => SendCommand<long>("ZREVRANK", key, member);
+		//ZSCAN key cursor [MATCH pattern] [COUNT count]
+		public RedisResult<decimal> ZScore(string key, string member) => SendCommand<decimal>("ZSCORE", key, member);
+		//ZUNIONSTORE destination numkeys key [key ...] [WEIGHTS weight [weight ...]] [AGGREGATE SUM|MIN|MAX]
+		#endregion
+
+		//Streams
+
+		#region Commands Strings
 		public RedisResult<long> Append(string key, object value) => SendCommand<long>("APPEND", key, value);
 		public RedisResult<long> BitCount(string key, long start, long end) => SendCommand<long>("BITCOUNT", key, start, end);
 		//BITFIELD key [GET type offset] [SET type offset value] [INCRBY type offset increment] [OVERFLOW WRAP|SAT|FAIL]
@@ -107,17 +211,13 @@ namespace FreeRedis
 		public RedisResult<long> Decr(string key) => SendCommand<long>("DECR", key);
 		public RedisResult<long> DecrBy(string key, long decrement) => SendCommand<long>("DECRBY", key, decrement);
 		public RedisResult<string> Get(string key) => SendCommand<string>("GET", key);
-		public RedisResult<T> Get<T>(string key) => SendCommand<T>("GET", key);
 		public RedisResult<long> GetBit(string key, long offset) => SendCommand<long>("GETBIT", key, offset);
 		public RedisResult<string> GetRange(string key, long start, long end) => SendCommand<string>("GETRANGE", key, start, end);
-		public RedisResult<T> GetRange<T>(string key, long start, long end) => SendCommand<T>("GETRANGE", key, start, end);
 		public RedisResult<string> GetSet(string key, object value) => SendCommand<string>("GETSET", key, value);
-		public RedisResult<T> GetSet<T>(string key, object value) => SendCommand<T>("GETSET", key, value);
 		public RedisResult<long> Incr(string key) => SendCommand<long>("INCR", key);
 		public RedisResult<long> IncrBy(string key, long decrement) => SendCommand<long>("INCRBY", key, decrement);
 		public RedisResult<decimal> IncrByFloat(string key, decimal decrement) => SendCommand<decimal>("INCRBYFLOAT", key, decrement);
 		public RedisResult<string[]> MGet(params string[] keys) => SendCommand<string[]>("MGET", null, keys);
-		public RedisResult<T[]> MGet<T>(params string[] keys) => SendCommand<T[]>("MGET", null, keys);
 		public RedisResult<string> MSet(Dictionary<string, object> keyValues) => SendCommand<string>("MSET", null, keyValues.Select(a => new object[] { a.Key, a.Value }).SelectMany(a => a).ToArray());
 		public RedisResult<long> MSetNx(Dictionary<string, object> keyValues) => SendCommand<long>("MSETNX", null, keyValues.Select(a => new object[] { a.Key, a.Value }).SelectMany(a => a).ToArray());
 		public RedisResult<string> PSetNx(string key, long milliseconds, object value) => SendCommand<string>("PSETEX", key, milliseconds, value);
@@ -136,7 +236,7 @@ namespace FreeRedis
 			else if (keepTtl) args.Add("KEEPTTL");
 			if (nx) args.Add("NX");
 			else if (xx) args.Add("XX");
-			return SendCommand<string>("SET", key, value, args);
+			return SendCommand<string>("SET", key, args);
 		}
 		public RedisResult<long> SetBit(string key, long offset, object value) => SendCommand<long>("SETBIT", key, offset, value);
 		public RedisResult<string> SetEx(string key, int seconds, object value) => SendCommand<string>("SETEX", key, seconds, value);
@@ -144,8 +244,18 @@ namespace FreeRedis
 		public RedisResult<long> SetRange(string key, long offset, object value) => SendCommand<long>("SETRANGE", key, offset, value);
 		//STRALGO LCS algo-specific-argument [algo-specific-argument ...]
 		public RedisResult<long> StrLen(string key) => SendCommand<long>("STRLEN", key);
+		#endregion
+
+		#region Commands Transactions
+		public RedisResult<string> Discard() => SendCommand<string>("DISCARD");
+		public RedisResult<object[]> Exec() => SendCommand<object[]>("EXEC");
+		public RedisResult<string> Multi() => SendCommand<string>("MULTI");
+		public RedisResult<string> UnWatch() => SendCommand<string>("UNWATCH");
+		public RedisResult<string> Watch(params string[] keys) => SendCommand<string>("WATCH", null, keys);
+		#endregion
 
 
-	}
-	public enum BitOpOperation { And, Or, Xor, Not }
+    }
+    public enum BitOpOperation { And, Or, Xor, Not }
+	public class RedisSortedSetItem<T> { public T Member { get; set; } public decimal Score { get; set; } public RedisSortedSetItem(T member, decimal score) { this.Member = member;this.Score = score; } }
 }

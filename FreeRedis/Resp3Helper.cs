@@ -687,6 +687,7 @@ namespace FreeRedis
             }
             return dic;
         }
+        internal static T ConvertTo<T>(this object value) => (T)typeof(T).FromObject(value);
         static ConcurrentDictionary<Type, Func<string, object>> _dicFromObject = new ConcurrentDictionary<Type, Func<string, object>>();
         public static object FromObject(this Type targetType, object value, Encoding encoding = null)
         {
