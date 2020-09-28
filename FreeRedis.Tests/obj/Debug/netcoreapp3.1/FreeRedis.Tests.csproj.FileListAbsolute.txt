@@ -1,0 +1,4 @@
+C:\Users\28810\Desktop\github\FreeRedis\FreeRedis.Tests\obj\Debug\netcoreapp3.1\FreeRedis.Tests.csprojAssemblyReference.cache
+C:\Users\28810\Desktop\github\FreeRedis\FreeRedis.Tests\obj\Debug\netcoreapp3.1\FreeRedis.Tests.AssemblyInfoInputs.cache
+C:\Users\28810\Desktop\github\FreeRedis\FreeRedis.Tests\obj\Debug\netcoreapp3.1\FreeRedis.Tests.AssemblyInfo.cs
+C:\Users\28810\Desktop\github\FreeRedis\FreeRedis.Tests\obj\Debug\netcoreapp3.1\FreeRedis.Tests.csproj.CoreCompileInputs.cache
