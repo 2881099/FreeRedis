@@ -808,6 +808,31 @@ namespace FreeRedis
             return func(valueStr);
         }
         #endregion
+
+        #region 工具方法
+        internal static List<object> AddIf(this List<object> that, bool condition, params object[] items)
+        {
+            if (condition)
+            {
+                foreach (var item in items)
+                {
+                    if (item is object[] objs) that.AddRange(objs);
+                    else if (item is string[] strs) that.AddRange(strs.Select(a => (object)a));
+                    else that.Add(item);
+                }
+            }
+            return that;
+        }
+        internal static List<object> AddIf(this string that, bool condition, params object[] items)
+        {
+            var ret = new List<object>();
+            if (!string.IsNullOrWhiteSpace(that)) ret.Add(that);
+            return ret.AddIf(condition, items);
+        }
+        internal static object[] ToKvArray(this KeyValuePair<string, string>[] that) => that.Select(a => new object[] { a.Key, a.Value }).SelectMany(a => a).ToArray();
+        internal static object[] ToKvArray(this KeyValuePair<string, object>[] that) => that.Select(a => new object[] { a.Key, a.Value }).SelectMany(a => a).ToArray();
+        internal static object[] ToKvArray(this Dictionary<string, object> that) => that.Select(a => new object[] { a.Key, a.Value }).SelectMany(a => a).ToArray();
+        #endregion
     }
 
     public class RedisResult<T>

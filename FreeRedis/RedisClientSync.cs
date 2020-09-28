@@ -81,7 +81,7 @@ namespace FreeRedis
 		public RedisResult<Dictionary<string, string>> MemoryStats() => SendCommand<string[]>("MEMORY", "STATS").NewValue(a => a.MapToHash<string>(Encoding));
 		public RedisResult<long> MemoryUsage(string key, long count = 0) => count <= 0 ? SendCommand<long>("MEMORY ", "USAGE", key) : SendCommand<long>("MEMORY ", "USAGE", key, "SAMPLES", count);
 		public RedisResult<string[][]> ModuleList() => SendCommand<string[][]>("MODULE", "LIST");
-		public RedisResult<string> ModuleLoad(string path, params string[] args) => args?.Any() == true ? SendCommand<string>("MODULE", "LOAD", new[] { path }.Concat(args)) : SendCommand<string>("MODULE", "LOAD", path);
+		public RedisResult<string> ModuleLoad(string path, params string[] args) => SendCommand<string>("MODULE", "LOAD", path.AddIf(args?.Any() == true, args).ToArray());
 		public RedisResult<string> ModuleUnload(string name) => SendCommand<string>("MODULE", "UNLOAD", name);
 		public void Monitor(Action<string> onData) => SendCommandListen(onData, () => IsConnected, "MONITOR");
 		//public void PSync(string replicationid, string offset, Action<string> onData) => SendCommandListen(onData, "PSYNC", replicationid, offset);
@@ -130,7 +130,7 @@ namespace FreeRedis
 		/// <returns></returns>
 		RedisResult<RedisSortedSetItem<string>[]> BZPopMaxMin(string command, string[] keys, int timeoutSeconds)
 		{
-			return SendCommand<string[]>(command, null, keys.Select(a => (object)a).Concat(new object[] { timeoutSeconds }).ToArray())
+			return SendCommand<string[]>(command, null, "".AddIf(true, keys, timeoutSeconds).ToArray())
 				.NewValue(a =>
 				{
 					if (a == null) return null;
@@ -149,16 +149,13 @@ namespace FreeRedis
 		public RedisResult<long> ZAdd(string key, RedisSortedSetItem<string>[] memberScores) => ZAdd<long>(key, memberScores, false, false, false, false);
 		public RedisResult<long> ZAdd(string key, RedisSortedSetItem<string>[] memberScores, bool nx, bool xx, bool ch) => ZAdd<long>(key, memberScores, nx, xx, ch, false);
 		public RedisResult<string[]> ZAddIncr(string key, RedisSortedSetItem<string>[] memberScores, bool nx, bool xx, bool ch) => ZAdd<string[]>(key, memberScores, nx, xx, ch, true);
-		RedisResult<TReturn> ZAdd<TReturn>(string key, RedisSortedSetItem<string>[] memberScores, bool nx, bool xx, bool ch, bool incr)
-		{
-			var args = new List<object>();
-			if (nx) args.Add("NX");
-			else if (xx) args.Add("XX");
-			if (ch) args.Add("CH");
-			if (incr) args.Add("INCR");
-			args.AddRange(memberScores.Select(a => new object[] { a.Score, a.Member }).SelectMany(a => a));
-			return SendCommand<TReturn>("ZADD", key, args);
-		}
+		RedisResult<TReturn> ZAdd<TReturn>(string key, RedisSortedSetItem<string>[] memberScores, bool nx, bool xx, bool ch, bool incr) => SendCommand<TReturn>("ZADD", key, ""
+			.AddIf(nx, "NX")
+			.AddIf(xx, "XX")
+			.AddIf(ch, "CH")
+			.AddIf(incr, "INCR")
+			.AddIf(true, memberScores.Select(a => new object[] { a.Score, a.Member }).SelectMany(a => a).ToArray())
+			.ToArray());
 		public RedisResult<long> ZCard(string key) => SendCommand<long>("ZCARD", key);
 		public RedisResult<long> ZCount(string key, decimal min, decimal max) => SendCommand<long>("ZCOUNT", key, min, max);
 		public RedisResult<long> ZCount(string key, string min, string max) => SendCommand<long>("ZCOUNT", key, min, max);
@@ -199,13 +196,83 @@ namespace FreeRedis
 		//ZUNIONSTORE destination numkeys key [key ...] [WEIGHTS weight [weight ...]] [AGGREGATE SUM|MIN|MAX]
 		#endregion
 
-		//Streams
+		#region Commands Streams
+		public RedisResult<long> XAck(string key, string group, params string[] id) => SendCommand<long>("XACK", key, group.AddIf(true, id).ToArray());
+		public RedisResult<string> XAdd(string key, long maxLen, string id = "*", params KeyValuePair<string, string>[] fieldValues) => SendCommand<string>("XADD", key, ""
+			.AddIf(maxLen > 0, "MAXLEN", maxLen)
+			.AddIf(maxLen < 0, "MAXLEN", $"~{Math.Abs(maxLen)}")
+			.AddIf(true, fieldValues.ToKvArray())
+			.ToArray());
+		public RedisResult<object> XClaim(string key, string group, string consumer, long minIdleTime, params string[] id) => SendCommand<object>("XCLAIM", key, group
+			.AddIf(true, consumer, minIdleTime, id)
+			.ToArray());
+		public RedisResult<object> XClaim(string key, string group, string consumer, long minIdleTime, string[] id, long idle, long retryCount, bool force) => SendCommand<object>("XCLAIM", key, group
+			.AddIf(true, consumer, minIdleTime, id, "IDLE", idle, "RETRYCOUNT", retryCount)
+			.AddIf(force, "FORCE")
+			.ToArray());
+		public RedisResult<string[]> XClaimJustId(string key, string group, string consumer, long minIdleTime, params string[] id) => SendCommand<string[]>("XCLAIM", key, group
+			.AddIf(true, consumer, minIdleTime, id, "JUSTID")
+			.ToArray());
+		public RedisResult<string[]> XClaimJustId(string key, string group, string consumer, long minIdleTime, string[] id, long idle, long retryCount, bool force) => SendCommand<string[]>("XCLAIM", key, group
+			.AddIf(true, consumer, minIdleTime, id, "IDLE", idle, "RETRYCOUNT", retryCount)
+			.AddIf(force, "FORCE")
+			.AddIf(true, "JUSTID")
+			.ToArray());
+		public RedisResult<long> XDel(string key, params string[] id) => SendCommand<long>("XDEL", key, id);
+		public RedisResult<string> XGroupCreate(string key, string group, string id = "$", bool MkStream = false) => SendCommand<string>("XGROUP", "CREATE", key
+			.AddIf(true, group, id)
+			.AddIf(MkStream, "MKSTREAM")
+			.ToArray()); 
+		public RedisResult<string> XGroupSetId(string key, string group, string id = "$") => SendCommand<string>("XGROUP", "SETID", key, group, id);
+		public RedisResult<bool> XGroupDestroy(string key, string group) => SendCommand<bool>("XGROUP", "DESTROY", key, group);
+		public RedisResult<bool> XGroupDelConsumer(string key, string group, string consumer) => SendCommand<bool>("XGROUP", "DELCONSUMER", key, group, consumer);
+		public RedisResult<object> XInfoStream(string key) => SendCommand<object>("XINFO", "STREAM", key);
+		public RedisResult<object> XInfoGroups(string key) => SendCommand<object>("XINFO", "GROUPS", key);
+		public RedisResult<object> XInfoConsumers(string key, string group) => SendCommand<object>("XINFO", "CONSUMERS", key, group);
+		public RedisResult<long> XLen(string key) => SendCommand<long>("XLEN", key);
+		public RedisResult<object> XPending(string key, string group) => SendCommand<object>("XPENDING", key, group);
+		public RedisResult<object> XPending(string key, string group, string start, string end, long count, string consumer = null) => SendCommand<object>("XPENDING", key, group
+			.AddIf(true, start, end, count)
+			.AddIf(!string.IsNullOrWhiteSpace(consumer), consumer)
+			.ToArray());
+		public RedisResult<object> XRange(string key, string start, string end, long count = 1) => SendCommand<object>("XRANGE", key, start
+			.AddIf(true, end)
+			.AddIf(count > 0, "COUNT", count)
+			.ToArray());
+		public RedisResult<object> XRevRange(string key, string end, string start, long count = 1) => SendCommand<object>("XREVRANGE", key, end
+			.AddIf(true, start)
+			.AddIf(count > 0, "COUNT", count)
+			.ToArray());
+		public RedisResult<object> XRead(long count, long block, string key, string id) => SendCommand<object>("XREAD", null, ""
+			.AddIf(count > 0, "COUNT", count)
+			.AddIf(block > 0, "BLOCK", block)
+			.AddIf(true, "STREAMS", key, id)
+			.ToArray());
+		public RedisResult<object> XRead(long count, long block, string[] key, string[] id) => SendCommand<object>("XREAD", null, ""
+			.AddIf(count > 0, "COUNT", count)
+			.AddIf(block > 0, "BLOCK", block)
+			.AddIf(true, "STREAMS", key, id)
+			.ToArray());
+		public RedisResult<object> XReadGroup(string group, string consumer, long count, long block, string key, string id) => SendCommand<object>("XREADGROUP", null, "GROUP"
+			.AddIf(true, group, consumer)
+			.AddIf(count > 0, "COUNT", count)
+			.AddIf(block > 0, "BLOCK", block)
+			.AddIf(true, "STREAMS", key, id)
+			.ToArray());
+		public RedisResult<object> XReadGroup(string group, string consumer, long count, long block, string[] key, string[] id) => SendCommand<object>("XREADGROUP", null, "GROUP"
+			.AddIf(true, group, consumer)
+			.AddIf(count > 0, "COUNT", count)
+			.AddIf(block > 0, "BLOCK", block)
+			.AddIf(true, "STREAMS", key, id)
+			.ToArray());
+		public RedisResult<long> XTrim(string key, long maxLen) => SendCommand<long>("XTRIM", key, "MAXLEN", maxLen > 0 ? maxLen.ToString() : $"~{Math.Abs(maxLen)}");
+		#endregion
 
 		#region Commands Strings
 		public RedisResult<long> Append(string key, object value) => SendCommand<long>("APPEND", key, value);
 		public RedisResult<long> BitCount(string key, long start, long end) => SendCommand<long>("BITCOUNT", key, start, end);
 		//BITFIELD key [GET type offset] [SET type offset value] [INCRBY type offset increment] [OVERFLOW WRAP|SAT|FAIL]
-		public RedisResult<long> BitOp(BitOpOperation operation, string destkey, params string[] keys) => SendCommand<long>("BITOP", null, new object[] { operation, destkey }.Concat(keys).ToArray());
+		public RedisResult<long> BitOp(BitOpOperation operation, string destkey, params string[] keys) => SendCommand<long>("BITOP", null, "".AddIf(true, operation, destkey, keys).ToArray());
 		public RedisResult<long> BitPos(string key, object bit, long start = 0, long end = 0) => start > 0 && end > 0 ? SendCommand<long>("BITPOS", key, new object[] { bit, start, end }) :
 			(start > 0 ? SendCommand<long>("BITPOS", key, new object[] { bit, start }) : SendCommand<long>("BITPOS", key, bit));
 		public RedisResult<long> Decr(string key) => SendCommand<long>("DECR", key);
@@ -218,8 +285,8 @@ namespace FreeRedis
 		public RedisResult<long> IncrBy(string key, long decrement) => SendCommand<long>("INCRBY", key, decrement);
 		public RedisResult<decimal> IncrByFloat(string key, decimal decrement) => SendCommand<decimal>("INCRBYFLOAT", key, decrement);
 		public RedisResult<string[]> MGet(params string[] keys) => SendCommand<string[]>("MGET", null, keys);
-		public RedisResult<string> MSet(Dictionary<string, object> keyValues) => SendCommand<string>("MSET", null, keyValues.Select(a => new object[] { a.Key, a.Value }).SelectMany(a => a).ToArray());
-		public RedisResult<long> MSetNx(Dictionary<string, object> keyValues) => SendCommand<long>("MSETNX", null, keyValues.Select(a => new object[] { a.Key, a.Value }).SelectMany(a => a).ToArray());
+		public RedisResult<string> MSet(Dictionary<string, object> keyValues) => SendCommand<string>("MSET", null, keyValues.ToKvArray());
+		public RedisResult<long> MSetNx(Dictionary<string, object> keyValues) => SendCommand<long>("MSETNX", null, keyValues.ToKvArray());
 		public RedisResult<string> PSetNx(string key, long milliseconds, object value) => SendCommand<string>("PSETEX", key, milliseconds, value);
 		public RedisResult<string> Set(string key, object value, int timeoutSeconds = 0) => Set(key, value, TimeSpan.FromSeconds(timeoutSeconds), false, false, false);
 		public RedisResult<string> Set(string key, object value, bool keepTtl) => Set(key, value, TimeSpan.Zero, true, false, false);
@@ -227,17 +294,13 @@ namespace FreeRedis
 		public RedisResult<string> SetNx(string key, object value, bool keepTtl) => Set(key, value, TimeSpan.Zero, true, true, false);
 		public RedisResult<string> SetXx(string key, object value, int timeoutSeconds = 0) => Set(key, value, TimeSpan.FromSeconds(timeoutSeconds), false, false, true);
 		public RedisResult<string> SetXx(string key, object value, bool keepTtl) => Set(key, value, TimeSpan.Zero, true, false, true);
-		RedisResult<string> Set(string key, object value, TimeSpan timeout, bool keepTtl, bool nx, bool xx)
-		{
-			var args = new List<object>();
-			args.Add(value);
-			if (timeout.TotalSeconds >= 1) args.AddRange(new object[] { "EX", (long)timeout.TotalSeconds });
-			else if (timeout.TotalMilliseconds >= 1) args.AddRange(new object[] { "PX", (long)timeout.TotalMilliseconds });
-			else if (keepTtl) args.Add("KEEPTTL");
-			if (nx) args.Add("NX");
-			else if (xx) args.Add("XX");
-			return SendCommand<string>("SET", key, args);
-		}
+		RedisResult<string> Set(string key, object value, TimeSpan timeout, bool keepTtl, bool nx, bool xx) => SendCommand<string>("SET", key, ""
+			.AddIf(true, value)
+			.AddIf(timeout.TotalSeconds >= 1, "EX", (long)timeout.TotalSeconds)
+			.AddIf(timeout.TotalSeconds < 1 && timeout.TotalMilliseconds >= 1, "PX", (long)timeout.TotalMilliseconds)
+			.AddIf(keepTtl, "KEEPTTL")
+			.AddIf(nx, "NX")
+			.AddIf(xx, "XX").ToArray());
 		public RedisResult<long> SetBit(string key, long offset, object value) => SendCommand<long>("SETBIT", key, offset, value);
 		public RedisResult<string> SetEx(string key, int seconds, object value) => SendCommand<string>("SETEX", key, seconds, value);
 		public RedisResult<bool> SetNx(string key, object value) => SendCommand<bool>("SETNX", key, value);
