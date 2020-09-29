@@ -34,7 +34,7 @@ namespace FreeRedis
         string _listeningCommand;
         object[] PrepareCommand(string command, string subcommand = null, params object[] parms)
         {
-            if (!string.IsNullOrEmpty(_listeningCommand)) throw new Exception($"无法进行新的操作，因为正在执行监听的命令：{_listeningCommand}");
+            if (!string.IsNullOrWhiteSpace(_listeningCommand)) throw new Exception($"无法进行新的操作，因为正在执行监听的命令：{_listeningCommand}");
             if (string.IsNullOrWhiteSpace(command)) throw new ArgumentNullException("Redis command not is null or empty.");
             object[] args = null;
             if (parms?.Any() != true)
@@ -117,7 +117,7 @@ namespace FreeRedis
 		void ResetHost(string host)
         {
             ReleaseSocket();
-            if (string.IsNullOrEmpty(host?.Trim()))
+            if (string.IsNullOrWhiteSpace(host?.Trim()))
             {
                 Ip = "127.0.0.1";
                 Port = 6379;
@@ -134,7 +134,7 @@ namespace FreeRedis
             var spt = (host ?? "").Split(':');
             if (spt.Length == 1) //ipv4 or domain
             {
-                Ip = string.IsNullOrEmpty(spt[0].Trim()) == false ? spt[0].Trim() : "127.0.0.1";
+                Ip = string.IsNullOrWhiteSpace(spt[0].Trim()) == false ? spt[0].Trim() : "127.0.0.1";
                 Port = 6379;
                 return;
             }
@@ -142,7 +142,7 @@ namespace FreeRedis
             {
                 if (int.TryParse(spt.Last().Trim(), out var testPort2))
                 {
-                    Ip = string.IsNullOrEmpty(spt[0].Trim()) == false ? spt[0].Trim() : "127.0.0.1";
+                    Ip = string.IsNullOrWhiteSpace(spt[0].Trim()) == false ? spt[0].Trim() : "127.0.0.1";
                     Port = testPort2;
                     return;
                 }

@@ -313,6 +313,7 @@ namespace FreeRedis
                 foreach (var c in cmd)
                 {
                     if (c is byte[]) WriteClob(c as byte[]);
+                    else if (c is Enum) WriteBlobString(c.ToInvariantCultureToString().ToUpper());
                     else WriteBlobString(c.ToInvariantCultureToString());
                 }
             }
@@ -382,7 +383,7 @@ namespace FreeRedis
 
             Resp3Writer WriteRaw(string raw)
             {
-                if (string.IsNullOrEmpty(raw)) return this;
+                if (string.IsNullOrWhiteSpace(raw)) return this;
                 var data = _encoding.GetBytes($"{raw.ToInvariantCultureToString()}");
                 _stream.Write(data, 0, data.Length);
                 return this;
@@ -559,7 +560,7 @@ namespace FreeRedis
                 sb.Insert(0, ".").Insert(0, DisplayCsharp(nestedType.DeclaringType, false));
                 nestedType = nestedType.DeclaringType;
             }
-            if (isNameSpace && string.IsNullOrEmpty(nestedType.Namespace) == false)
+            if (isNameSpace && string.IsNullOrWhiteSpace(nestedType.Namespace) == false)
                 sb.Insert(0, ".").Insert(0, nestedType.Namespace);
 
             if (type.IsGenericType == false)
@@ -818,6 +819,8 @@ namespace FreeRedis
                 {
                     if (item is object[] objs) that.AddRange(objs);
                     else if (item is string[] strs) that.AddRange(strs.Select(a => (object)a));
+                    else if (item is int[] ints) that.AddRange(ints.Select(a => (object)a));
+                    else if (item is long[] longs) that.AddRange(longs.Select(a => (object)a));
                     else that.Add(item);
                 }
             }
@@ -829,9 +832,13 @@ namespace FreeRedis
             if (!string.IsNullOrWhiteSpace(that)) ret.Add(that);
             return ret.AddIf(condition, items);
         }
+        internal static object[] ToKvArray(this KeyValuePair<string, long>[] that) => that.Select(a => new object[] { a.Key, a.Value }).SelectMany(a => a).ToArray();
         internal static object[] ToKvArray(this KeyValuePair<string, string>[] that) => that.Select(a => new object[] { a.Key, a.Value }).SelectMany(a => a).ToArray();
         internal static object[] ToKvArray(this KeyValuePair<string, object>[] that) => that.Select(a => new object[] { a.Key, a.Value }).SelectMany(a => a).ToArray();
+        internal static object[] ToKvArray(this Dictionary<string, long> that) => that.Select(a => new object[] { a.Key, a.Value }).SelectMany(a => a).ToArray();
+        internal static object[] ToKvArray(this Dictionary<string, string> that) => that.Select(a => new object[] { a.Key, a.Value }).SelectMany(a => a).ToArray();
         internal static object[] ToKvArray(this Dictionary<string, object> that) => that.Select(a => new object[] { a.Key, a.Value }).SelectMany(a => a).ToArray();
+
         #endregion
     }
 
