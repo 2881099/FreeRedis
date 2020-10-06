@@ -100,9 +100,9 @@ namespace FreeRedis
                         var lenstr = ReadLine(null);
                         if (int.TryParse(lenstr, out var len))
                         {
+                            if (len < 0) return null;
                             if (len > 0) Read(destination, len, bufferSize);
                             ReadLine(null);
-                            if (len < 0) return null;
                             if (len == 0) return new byte[0];
                             return ms?.ToArray();
                         }

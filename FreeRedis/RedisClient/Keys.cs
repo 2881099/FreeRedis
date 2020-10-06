@@ -7,7 +7,7 @@ namespace FreeRedis
 {
 	partial class RedisClient
 	{
-		public RedisResult<long> Del(params string[] keys) => Call<long>("DEL", null, keys);
+		public long Del(params string[] keys) => Call<long>("DEL", null, keys).ThrowOrValue();
 		public RedisResult<byte[]> Dump(string key) => Call<byte[]>("DUMP", key);
 		public RedisResult<long> Exists(params string[] keys) => Call<long>("EXISTS", null, keys);
 		public RedisResult<bool> Expire(string key, int seconds) => Call<bool>("EXPIRE", key, seconds);
