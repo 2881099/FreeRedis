@@ -17,6 +17,7 @@ namespace FreeRedis
     {
         public static RedisResult<T> Read<T>(Stream stream) => new Resp3Reader(stream, null).ReadObject().ConvertTo<T>(null);
         public static RedisResult<T> Read<T>(Stream stream, Encoding encoding) => new Resp3Reader(stream, typeof(T) == typeof(byte[]) ? null : encoding).ReadObject().ConvertTo<T>(encoding);
+        public static void ReadChunk(Stream stream, Stream destination, int bufferSize = 1024) => new Resp3Reader(stream, null).ReadBlobStringChunk(destination, bufferSize);
         static RedisResult<T> ConvertTo<T>(this RedisResult<object> rt, Encoding encoding)
         {
             var obj = rt.Value;
@@ -67,12 +68,23 @@ namespace FreeRedis
 
             public Resp3Reader(Stream stream, Encoding encoding)
             {
-                if (encoding == null) encoding = Encoding.UTF8;
                 _stream = stream;
                 _encoding = encoding;
             }
 
-            object ReadBlobString(char msgtype)
+            public void ReadBlobStringChunk(Stream destination, int bufferSize)
+            {
+                char c = (char)_stream.ReadByte();
+                switch (c)
+                {
+                    case '$':
+                    case '=':
+                    case '!': ReadBlobString(c, destination, bufferSize); break;
+                    default: throw new ProtocolViolationException($"Expecting fail MessageType '{c}'");
+                }
+            }
+
+            object ReadBlobString(char msgtype, Stream destination, int bufferSize)
             {
                 var clob = ReadClob();
                 if (_encoding == null) return clob;
@@ -84,15 +96,15 @@ namespace FreeRedis
                     MemoryStream ms = null;
                     try
                     {
-                        ms = new MemoryStream();
+                        if (destination == null) destination = ms = new MemoryStream();
                         var lenstr = ReadLine(null);
                         if (int.TryParse(lenstr, out var len))
                         {
+                            if (len > 0) Read(destination, len, bufferSize);
+                            ReadLine(null);
                             if (len < 0) return null;
                             if (len == 0) return new byte[0];
-                            Read(ms, len);
-                            ReadLine(null);
-                            return ms.ToArray();
+                            return ms?.ToArray();
                         }
                         if (lenstr == "?")
                         {
@@ -106,14 +118,14 @@ namespace FreeRedis
                                     if (clen == 0) break;
                                     if (clen > 0)
                                     {
-                                        Read(ms, clen);
+                                        Read(destination, clen, bufferSize);
                                         ReadLine(null);
                                         continue;
                                     }
                                 }
                                 throw new ProtocolViolationException($"Expecting fail Streamed strings ';0', got ';{clenstr}'");
                             }
-                            return ms.ToArray();
+                            return ms?.ToArray();
                         }
                         throw new ProtocolViolationException($"Expecting fail Blob string '{msgtype}0', got '{msgtype}{lenstr}'");
                     }
@@ -238,11 +250,11 @@ namespace FreeRedis
                     char c = (char)_stream.ReadByte();
                     switch (c)
                     {
-                        case '$': return new RedisResult<object>(ReadBlobString(c), false, RedisMessageType.BlobString);
+                        case '$': return new RedisResult<object>(ReadBlobString(c, null, 1024), false, RedisMessageType.BlobString);
                         case '+': return new RedisResult<object>(ReadSimpleString(), false, RedisMessageType.SimpleString);
-                        case '=': return new RedisResult<object>(ReadBlobString(c), false, RedisMessageType.VerbatimString);
+                        case '=': return new RedisResult<object>(ReadBlobString(c, null, 1024), false, RedisMessageType.VerbatimString);
                         case '-': return new RedisResult<object>(ReadSimpleString(), false, RedisMessageType.SimpleError);
-                        case '!': return new RedisResult<object>(ReadBlobString(c), false, RedisMessageType.BlobError);
+                        case '!': return new RedisResult<object>(ReadBlobString(c, null, 1024), false, RedisMessageType.BlobError);
                         case ':': return new RedisResult<object>(ReadNumber(c), false, RedisMessageType.Number);
                         case '(': return new RedisResult<object>(ReadBigNumber(c), false, RedisMessageType.BigNumber);
                         case '_': ReadLine(null); return new RedisResult<object>(null, false, RedisMessageType.Null);
@@ -261,10 +273,10 @@ namespace FreeRedis
                 }
             }
 
-            void Read(Stream outStream, int len)
+            void Read(Stream outStream, int len, int bufferSize = 1024)
             {
                 if (len <= 0) return;
-                var buffer = new byte[Math.Min(1024, len)];
+                var buffer = new byte[Math.Min(bufferSize, len)];
                 var bufferLength = buffer.Length;
                 while (true)
                 {
@@ -839,12 +851,19 @@ namespace FreeRedis
             if (!string.IsNullOrWhiteSpace(that)) ret.Add(that);
             return ret.AddIf(condition, items);
         }
+        internal static List<object> AddRaw(this string that, object item)
+        {
+            var ret = new List<object>();
+            if (!string.IsNullOrWhiteSpace(that)) ret.Add(that);
+            ret.Add(item);
+            return ret;
+        }
         internal static object[] ToKvArray(this KeyValuePair<string, long>[] that) => that.Select(a => new object[] { a.Key, a.Value }).SelectMany(a => a).ToArray();
         internal static object[] ToKvArray(this KeyValuePair<string, string>[] that) => that.Select(a => new object[] { a.Key, a.Value }).SelectMany(a => a).ToArray();
-        internal static object[] ToKvArray(this KeyValuePair<string, object>[] that) => that.Select(a => new object[] { a.Key, a.Value }).SelectMany(a => a).ToArray();
+        internal static object[] ToKvArray(this KeyValuePair<string, object>[] that, Func<object, object> serialize) => that.Select(a => new object[] { a.Key, serialize(a.Value) }).SelectMany(a => a).ToArray();
         internal static object[] ToKvArray(this Dictionary<string, long> that) => that.Select(a => new object[] { a.Key, a.Value }).SelectMany(a => a).ToArray();
         internal static object[] ToKvArray(this Dictionary<string, string> that) => that.Select(a => new object[] { a.Key, a.Value }).SelectMany(a => a).ToArray();
-        internal static object[] ToKvArray(this Dictionary<string, object> that) => that.Select(a => new object[] { a.Key, a.Value }).SelectMany(a => a).ToArray();
+        internal static object[] ToKvArray(this Dictionary<string, object> that, Func<object, object> serialize) => that.Select(a => new object[] { a.Key, serialize(a.Value) }).SelectMany(a => a).ToArray();
 
         #endregion
     }
@@ -868,7 +887,11 @@ namespace FreeRedis
             this.MessageType = msgtype;
             this.SimpleError = simpleError;
         }
-        public RedisResult<T2> NewValue<T2>(Func<T, T2> value) => new RedisResult<T2>(value(this.Value), this.SimpleError, true, this.MessageType);
+        public RedisResult<T2> NewValue<T2>(Func<T, T2> value)
+        {
+            if (typeof(T) == typeof(T2)) return this as RedisResult<T2>;
+            return new RedisResult<T2>(value(this.Value), this.SimpleError, true, this.MessageType);
+        }
         public T ThrowOrValue()
         {
             if (IsError) throw new RedisException(this.SimpleError);
