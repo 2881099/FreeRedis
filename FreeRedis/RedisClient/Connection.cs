@@ -7,55 +7,70 @@ namespace FreeRedis
 {
 	partial class RedisClient
 	{
-		public void Auth(string password) => Call<string>("AUTH", null, password).ThrowOrVoid();
+		public void Auth(string password) => Call<string>("AUTH", null, password).ThrowOrValue();
 		public void Auth(string username, string password) => Call<string>("AUTH", null, ""
 			.AddIf(!string.IsNullOrWhiteSpace(username), username)
 			.AddIf(true, password)
-			.ToArray()).ThrowOrVoid();
-		public RedisResult<string> ClientCaching(Confirm confirm) => Call<string>("CLIENT", "CACHING", confirm);
-		public RedisResult<string> ClientGetName() => Call<string>("CLIENT", "GETNAME");
-		public RedisResult<long> ClientGetRedir() => Call<long>("CLIENT", "GETREDIR");
-		public RedisResult<long> ClientId() => Call<long>("CLIENT", "ID");
-		public RedisResult<long> ClientKill(string ipport, long? clientid) => Call<long>("CLIENT", "KILL", ""
+			.ToArray()).ThrowOrValue();
+		public void ClientCaching(Confirm confirm) => Call<string>("CLIENT", "CACHING", confirm).ThrowOrValue();
+		public string ClientGetName() => Call<string>("CLIENT", "GETNAME").ThrowOrValue();
+		public long ClientGetRedir() => Call<long>("CLIENT", "GETREDIR").ThrowOrValue();
+		public long ClientId() => Call<long>("CLIENT", "ID").ThrowOrValue();
+		public void ClientKill(string ipport) => Call<long>("CLIENT", "KILL", ""
 			.AddIf(!string.IsNullOrWhiteSpace(ipport), ipport)
-			.AddIf(clientid != null, clientid)
-			.ToArray());
-		public RedisResult<long> ClientKill(string ipport, long? clientid, ClientType? type, string username, string addr, Confirm? skipme) => Call<long>("CLIENT", "KILL", ""
+			.ToArray()).ThrowOrValue();
+		public long ClientKill(string ipport, long? clientid, ClientType? type, string username, string addr, Confirm? skipme) => Call<long>("CLIENT", "KILL", ""
 			.AddIf(!string.IsNullOrWhiteSpace(ipport), ipport)
-			.AddIf(clientid != null, clientid)
+			.AddIf(clientid != null, "ID", clientid)
 			.AddIf(type != null, "TYPE", type)
 			.AddIf(!string.IsNullOrWhiteSpace(username), "USER", username)
 			.AddIf(!string.IsNullOrWhiteSpace(addr), "ADDR", addr)
 			.AddIf(skipme != null, "SKIPME", skipme)
-			.ToArray());
-		public RedisResult<string[]> ClientList(ClientType? type) => Call<string[]>("CLIENT", "LIST", ""
+			.ToArray()).ThrowOrValue();
+		public string ClientList(ClientType? type = null) => Call<string>("CLIENT", "LIST", ""
 			.AddIf(type != null, "TYPE", type)
-			.ToArray());
-		public RedisResult<string> ClientPaush(long timeoutMilliseconds) => Call<string>("CLIENT", "PAUSE", timeoutMilliseconds);
-		public RedisResult<string> ClientReply(ClientReplyType type) => Call<string>("CLIENT", "REPLY", type);
-		public RedisResult<string> ClientSetName(string connectionName) => Call<string>("CLIENT", "SETNAME", connectionName);
-		public RedisResult<string> ClientTracking(bool on_off, long? redirect, string[] prefix, bool bcast, bool optin, bool optout, bool noloop) => Call<string>("CLIENT", "TRACKING", ""
+			.ToArray()).ThrowOrValue();
+		public void ClientPause(long timeoutMilliseconds) => Call<string>("CLIENT", "PAUSE", timeoutMilliseconds).ThrowOrValue();
+		public void ClientReply(ClientReplyType type)
+		{
+			var oldtype = _clientReplyType;
+			try
+			{
+				_clientReplyType = type;
+				if (type == ClientReplyType.On)
+					Call<string>("CLIENT", "REPLY", type).ThrowOrValue();
+				else
+					CallWriteOnly("CLIENT", "REPLY", type);
+			}
+			catch
+			{
+				_clientReplyType = oldtype;
+				throw;
+			}
+		}
+		public void ClientSetName(string connectionName) => Call<string>("CLIENT", "SETNAME", connectionName).ThrowOrValue();
+		public void ClientTracking(bool on_off, long? redirect, string[] prefix, bool bcast, bool optin, bool optout, bool noloop) => Call<string>("CLIENT", "TRACKING", ""
 			.AddIf(on_off, "ON")
 			.AddIf(!on_off, "OFF")
 			.AddIf(redirect != null, "REDIRECT", redirect)
-			.AddIf(prefix?.Any() == true, prefix.Select(a => new[] { "PREFIX", a }).SelectMany(a => a).ToArray())
+			.AddIf(prefix?.Any() == true, prefix?.Select(a => new[] { "PREFIX", a }).SelectMany(a => a).ToArray())
 			.AddIf(bcast, "BCAST")
 			.AddIf(optin, "OPTIN")
 			.AddIf(optout, "OPTOUT")
 			.AddIf(noloop, "NOLOOP")
-			.ToArray());
-		public RedisResult<bool> ClientUnBlock(long clientid, ClientUnBlockType? type = null) => Call<bool>("CLIENT", "UNBLOCK", ""
+			.ToArray()).ThrowOrValue();
+		public bool ClientUnBlock(long clientid, ClientUnBlockType? type = null) => Call<bool>("CLIENT", "UNBLOCK", ""
 			.AddIf(true, clientid)
 			.AddIf(type != null, type)
-			.ToArray());
-		public RedisResult<string> Echo(string message) => Call<string>("ECHO", null, message);
-		public RedisResult<object> Hello(decimal protover, string username, string password, string clientname) => Call<object>("HELLO", null, ""
+			.ToArray()).ThrowOrValue();
+		public string Echo(string message) => Call<string>("ECHO", null, message).ThrowOrValue();
+		public Dictionary<string, object> Hello(string protover, string username = null, string password = null, string clientname = null) => Call<object[]>("HELLO", null, ""
 			.AddIf(true, protover)
 			.AddIf(!string.IsNullOrWhiteSpace(username) && !string.IsNullOrWhiteSpace(password), "AUTH", username, password)
 			.AddIf(!string.IsNullOrWhiteSpace(clientname), "SETNAME", clientname)
-			.ToArray());
-		public RedisResult<string> Ping(string message = null) => Call<string>("PING", null, message);
-		public RedisResult<string> Quit() => Call<string>("QUIT");
-		public RedisResult<string> Select(int index) => Call<string>("SELECT", null, index);
-    }
+			.ToArray()).NewValue(a => a.MapToHash<object>(Encoding)).ThrowOrValue();
+		public string Ping(string message = null) => Call<string>("PING", message).ThrowOrValue();
+		public void Quit() => Call<string>("QUIT").ThrowOrValue();
+		public void Select(int index) => Call<string>("SELECT", null, index).ThrowOrValue();
+	}
 }

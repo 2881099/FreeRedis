@@ -39,10 +39,11 @@ namespace FreeRedis
             Ssl = ssl;
 		}
 
-        string _CallReadWhileCmd;
+        protected string _readWhile;
+        protected ClientReplyType _clientReplyType;
         object[] PrepareCmd(string cmd, string subcmd = null, params object[] parms)
         {
-            if (!string.IsNullOrWhiteSpace(_CallReadWhileCmd)) throw new Exception($"无法进行新的操作，因为正在执行监听的命令：{_CallReadWhileCmd}");
+            if (!string.IsNullOrWhiteSpace(_readWhile)) throw new Exception($"无法进行新的操作，因为正在执行监听的命令：{_readWhile}");
             if (string.IsNullOrWhiteSpace(cmd)) throw new ArgumentNullException("Redis command not is null or empty.");
             object[] args = null;
             if (parms?.Any() != true)
@@ -67,6 +68,8 @@ namespace FreeRedis
         {
             var args = PrepareCmd(cmd, subcmd, parms);
             Resp3Helper.Write(Stream, Encoding, args, true);
+            if (_clientReplyType != ClientReplyType.On) //CLIENT REPLY ON|OFF|SKIP
+                return new RedisResult<T>(default(T), true, RedisMessageType.SimpleString);
             var result = Resp3Helper.Read<T>(Stream, Encoding);
             return result;
         }
@@ -79,7 +82,7 @@ namespace FreeRedis
         {
             var args = PrepareCmd(command, subcommand, parms);
             Resp3Helper.Write(Stream, args, true);
-            _CallReadWhileCmd = string.Join(" ", args);
+            _readWhile = string.Join(" ", args);
             try
             {
                 do
@@ -99,19 +102,19 @@ namespace FreeRedis
             }
             finally
             {
-                _CallReadWhileCmd = null;
+                _readWhile = null;
             }
         }
 
         #region Commands Pub/Sub
 		public void PSubscribe(string pattern, Action<object> onData)
 		{
-			if (string.IsNullOrWhiteSpace(_CallReadWhileCmd)) CallReadWhile(onData, () => IsConnected, "PSUBSCRIBE", null, pattern);
+			if (string.IsNullOrWhiteSpace(_readWhile)) CallReadWhile(onData, () => IsConnected, "PSUBSCRIBE", null, pattern);
 			else CallWriteOnly("PSUBSCRIBE", null, pattern);
 		}
 		public void PSubscribe(string[] pattern, Action<object> onData)
 		{
-			if (string.IsNullOrWhiteSpace(_CallReadWhileCmd)) CallReadWhile(onData, () => IsConnected, "PSUBSCRIBE", null, "".AddIf(true, pattern).ToArray());
+			if (string.IsNullOrWhiteSpace(_readWhile)) CallReadWhile(onData, () => IsConnected, "PSUBSCRIBE", null, "".AddIf(true, pattern).ToArray());
 			else CallWriteOnly("PSUBSCRIBE", null, "".AddIf(true, pattern).ToArray());
 		}
 		public RedisResult<long> Publish(string channel, string message) => Call<long>("PUBLISH", channel, message);
@@ -121,12 +124,12 @@ namespace FreeRedis
 		public void PUnSubscribe(params string[] pattern) => CallWriteOnly("PUNSUBSCRIBE", null, "".AddIf(true, pattern).ToArray());
 		public void Subscribe(string channel, Action<object> onData)
 		{
-			if (string.IsNullOrWhiteSpace(_CallReadWhileCmd)) CallReadWhile(onData, () => IsConnected, "SUBSCRIBE", null, channel);
+			if (string.IsNullOrWhiteSpace(_readWhile)) CallReadWhile(onData, () => IsConnected, "SUBSCRIBE", null, channel);
 			else CallWriteOnly("SUBSCRIBE", null, channel);
 		}
 		public void Subscribe(string[] channels, Action<object> onData)
 		{
-			if (string.IsNullOrWhiteSpace(_CallReadWhileCmd)) CallReadWhile(onData, () => IsConnected, "SUBSCRIBE", null, "".AddIf(true, channels).ToArray());
+			if (string.IsNullOrWhiteSpace(_readWhile)) CallReadWhile(onData, () => IsConnected, "SUBSCRIBE", null, "".AddIf(true, channels).ToArray());
 			else CallWriteOnly("SUBSCRIBE", null, "".AddIf(true, channels).ToArray());
 		}
 		public void UnSubscribe(params string[] channels) => CallWriteOnly("UNSUBSCRIBE", null, "".AddIf(true, channels).ToArray());
@@ -144,6 +147,8 @@ namespace FreeRedis
                 throw new TimeoutException("Connect to redis-server timeout");
             _socket = localSocket;
             _stream = new NetworkStream(Socket, true);
+            _socket.SendTimeout = 10000;
+            _socket.ReceiveTimeout = 10000;
             Connected?.Invoke(this, new EventArgs());
         }
         TaskCompletionSource<bool> connectAsyncTcs;
@@ -170,6 +175,8 @@ namespace FreeRedis
             await connectAsyncTcs.Task.TimeoutAfter(TimeSpan.FromMilliseconds(millisecondsTimeout), "Connect to redis-server timeout");
             _socket = localSocket;
             _stream = new NetworkStream(Socket, true);
+            _socket.SendTimeout = 10000;
+            _socket.ReceiveTimeout = 10000;
             Connected?.Invoke(this, new EventArgs());
         }
         #endregion
@@ -189,6 +196,8 @@ namespace FreeRedis
                 try { _socket.Dispose(); } catch { }
                 _socket = null;
             }
+            _readWhile = null;
+            _clientReplyType = ClientReplyType.On;
         }
 		void ResetHost(string host)
         {

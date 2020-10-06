@@ -74,8 +74,10 @@ namespace FreeRedis
 
             object ReadBlobString(char msgtype)
             {
-                if (_encoding == null) return ReadClob();
-                return _encoding.GetString(ReadClob());
+                var clob = ReadClob();
+                if (_encoding == null) return clob;
+                if (clob == null) return null;
+                return _encoding.GetString(clob);
 
                 byte[] ReadClob()
                 {
@@ -86,6 +88,8 @@ namespace FreeRedis
                         var lenstr = ReadLine(null);
                         if (int.TryParse(lenstr, out var len))
                         {
+                            if (len < 0) return null;
+                            if (len == 0) return new byte[0];
                             Read(ms, len);
                             ReadLine(null);
                             return ms.ToArray();
@@ -181,6 +185,7 @@ namespace FreeRedis
                 var lenstr = ReadLine(null);
                 if (int.TryParse(lenstr, out var len))
                 {
+                    if (len < 0) return null;
                     for (var a = 0; a < len; a++)
                         arr.Add(ReadObject().Value);
                     return arr;
@@ -203,6 +208,7 @@ namespace FreeRedis
                 var lenstr = ReadLine(null);
                 if (int.TryParse(lenstr, out var len))
                 {
+                    if (len < 0) return null;
                     for (var a = 0; a < len; a++)
                     {
                         arr.Add(ReadObject().Value);
@@ -743,6 +749,7 @@ namespace FreeRedis
             }
             var func = _dicFromObject.GetOrAdd(targetType, tt =>
             {
+                if (tt == typeof(object)) return vs => vs;
                 if (tt == typeof(string)) return vs => vs;
                 if (tt == typeof(char[])) return vs => vs == null ? null : vs.ToCharArray();
                 if (tt == typeof(char)) return vs => vs == null ? default(char) : vs.ToCharArray(0, 1).FirstOrDefault();
@@ -852,16 +859,20 @@ namespace FreeRedis
         internal bool IsEnd { get; }
         public RedisMessageType MessageType { get; }
         public bool IsError => this.MessageType == RedisMessageType.SimpleError || this.MessageType == RedisMessageType.BlobError;
-        internal RedisResult(T value, bool isend, RedisMessageType msgtype)
+        public string SimpleError { get; }
+        internal RedisResult(T value, bool isend, RedisMessageType msgtype) : this(value, value?.ConvertTo<string>(), isend, msgtype) { }
+        internal RedisResult(T value, string simpleError, bool isend, RedisMessageType msgtype)
         {
             this.Value = value;
             this.IsEnd = isend;
             this.MessageType = msgtype;
+            this.SimpleError = simpleError;
         }
-        public RedisResult<T2> NewValue<T2>(Func<T, T2> value) => new RedisResult<T2>(value(this.Value), true, this.MessageType);
-        public void ThrowOrVoid()
+        public RedisResult<T2> NewValue<T2>(Func<T, T2> value) => new RedisResult<T2>(value(this.Value), this.SimpleError, true, this.MessageType);
+        public T ThrowOrValue()
         {
-            if (IsError) throw new RedisException(Value?.ConvertTo<string>());
+            if (IsError) throw new RedisException(this.SimpleError);
+            return this.Value;
         }
     }
 
