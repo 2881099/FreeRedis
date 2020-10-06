@@ -5,3 +5,4 @@ C:\Users\28810\Desktop\github\FreeRedis\FreeRedis\bin\Debug\net45\FreeRedis.dll
 C:\Users\28810\Desktop\github\FreeRedis\FreeRedis\bin\Debug\net45\FreeRedis.pdb
 C:\Users\28810\Desktop\github\FreeRedis\FreeRedis\obj\Debug\net45\FreeRedis.dll
 C:\Users\28810\Desktop\github\FreeRedis\FreeRedis\obj\Debug\net45\FreeRedis.pdb
+C:\Users\28810\Desktop\github\FreeRedis\FreeRedis\obj\Debug\net45\FreeRedis.csprojAssemblyReference.cache

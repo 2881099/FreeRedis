@@ -51,8 +51,8 @@ namespace FreeRedis
 				var arr = a as object[];
 				return new ScanValue<string>(arr[0].ConvertTo<long>(), arr[1].ConvertTo<string[]>());
 			});
-		public RedisResult<object> Sort(string key, string ByPattern, long offset, long count, string[] getPatterns, Collation? collation, bool alpha, string storeDestination) => Call<object>("OBJECT", key, ""
-			.AddIf(!string.IsNullOrWhiteSpace(ByPattern), "BY", ByPattern)
+		public RedisResult<object> Sort(string key, string byPattern, long offset, long count, string[] getPatterns, Collation? collation, bool alpha, string storeDestination) => Call<object>("OBJECT", key, ""
+			.AddIf(!string.IsNullOrWhiteSpace(byPattern), "BY", byPattern)
 			.AddIf(offset != 0 || count != 0, "LIMIT", offset, count)
 			.AddIf(getPatterns?.Any() == true, getPatterns.Select(a => new[] { "GET", a }).SelectMany(a => a).ToArray())
 			.AddIf(collation != null, collation)

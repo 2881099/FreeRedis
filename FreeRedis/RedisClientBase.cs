@@ -30,7 +30,8 @@ namespace FreeRedis
         NetworkStream _stream;
         public Stream Stream => _stream ?? throw new Exception("Redis connection was not opened");
         public Encoding Encoding { get; set; } = Encoding.UTF8;
-        public bool IsConnected => Socket != null && Socket.Connected && Stream != null ? true : false;
+        public bool IsConnected => _socket?.Connected == true && _stream != null;
+        public event EventHandler<EventArgs> Connected;
 
         public RedisClientBase(string host, bool ssl)
 		{
@@ -58,6 +59,7 @@ namespace FreeRedis
                 if (issubcmd) args[argsidx++] = subcmd;
                 foreach (var prm in parms) args[argsidx++] = prm;
             }
+            if (IsConnected == false) Connect();
             return args;
         }
 
@@ -78,21 +80,27 @@ namespace FreeRedis
             var args = PrepareCmd(command, subcommand, parms);
             Resp3Helper.Write(Stream, args, true);
             _CallReadWhileCmd = string.Join(" ", args);
-            do
+            try
             {
-                try
+                do
                 {
-                    var data = Resp3Helper.Read<object>(Stream).Value;
-                    ondata?.Invoke(data);
-                }
-                catch (IOException ex)
-                {
-                    Console.WriteLine(ex.Message);
-                    if (IsConnected) throw;
-                    break;
-                }
-            } while (next());
-            _CallReadWhileCmd = null;
+                    try
+                    {
+                        var data = Resp3Helper.Read<object>(Stream).Value;
+                        ondata?.Invoke(data);
+                    }
+                    catch (IOException ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                        if (IsConnected) throw;
+                        break;
+                    }
+                } while (next());
+            }
+            finally
+            {
+                _CallReadWhileCmd = null;
+            }
         }
 
         #region Commands Pub/Sub
@@ -125,7 +133,7 @@ namespace FreeRedis
 		#endregion
 
         #region Connect
-        public void Connect(int millisecondsTimeout)
+        public void Connect(int millisecondsTimeout = 15000)
         {
             ResetHost(_initHost);
             var endpoint = new IPEndPoint(IPAddress.Parse(Ip), Port);
@@ -136,9 +144,10 @@ namespace FreeRedis
                 throw new TimeoutException("Connect to redis-server timeout");
             _socket = localSocket;
             _stream = new NetworkStream(Socket, true);
+            Connected?.Invoke(this, new EventArgs());
         }
         TaskCompletionSource<bool> connectAsyncTcs;
-        async public Task ConnectAsync(int millisecondsTimeout)
+        async public Task ConnectAsync(int millisecondsTimeout = 15000)
         {
             ResetHost(_initHost);
             var endpoint = new IPEndPoint(IPAddress.Parse(Ip), Port);
@@ -161,6 +170,7 @@ namespace FreeRedis
             await connectAsyncTcs.Task.TimeoutAfter(TimeSpan.FromMilliseconds(millisecondsTimeout), "Connect to redis-server timeout");
             _socket = localSocket;
             _stream = new NetworkStream(Socket, true);
+            Connected?.Invoke(this, new EventArgs());
         }
         #endregion
 

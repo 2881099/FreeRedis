@@ -7,11 +7,11 @@ namespace FreeRedis
 {
 	partial class RedisClient
 	{
-		public RedisResult<string> Auth(string password) => Call<string>("AUTH", null, password);
-		public RedisResult<string> Auth(string username, string password) => Call<string>("AUTH", null, ""
+		public void Auth(string password) => Call<string>("AUTH", null, password).ThrowOrVoid();
+		public void Auth(string username, string password) => Call<string>("AUTH", null, ""
 			.AddIf(!string.IsNullOrWhiteSpace(username), username)
 			.AddIf(true, password)
-			.ToArray());
+			.ToArray()).ThrowOrVoid();
 		public RedisResult<string> ClientCaching(Confirm confirm) => Call<string>("CLIENT", "CACHING", confirm);
 		public RedisResult<string> ClientGetName() => Call<string>("CLIENT", "GETNAME");
 		public RedisResult<long> ClientGetRedir() => Call<long>("CLIENT", "GETREDIR");

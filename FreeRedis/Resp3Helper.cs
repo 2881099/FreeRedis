@@ -842,6 +842,10 @@ namespace FreeRedis
         #endregion
     }
 
+    public class RedisException : Exception
+    {
+        public RedisException(string message) : base(message) { }
+    }
     public class RedisResult<T>
     {
         public T Value { get; }
@@ -855,6 +859,10 @@ namespace FreeRedis
             this.MessageType = msgtype;
         }
         public RedisResult<T2> NewValue<T2>(Func<T, T2> value) => new RedisResult<T2>(value(this.Value), true, this.MessageType);
+        public void ThrowOrVoid()
+        {
+            if (IsError) throw new RedisException(Value?.ConvertTo<string>());
+        }
     }
 
     public enum RedisMessageType

@@ -4,14 +4,18 @@ using System.Linq;
 using System.Text;
 using Xunit;
 
-namespace FreeRedis.Tests.RedisClient
+namespace FreeRedis.Tests.RedisClientTests
 {
     public class ConnectionTests
     {
         [Fact]
         public void Auth()
         {
-            
+            using (var cli = Util.GetRedisClient())
+            {
+                cli.Auth("123456");
+                cli.Auth("default", "123456");
+            }
         }
 
         [Fact]
