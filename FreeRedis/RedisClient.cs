@@ -179,4 +179,10 @@ namespace FreeRedis
 		public decimal Score { get; set; }
 		public SortedSetMember(T member, decimal score) { this.Member = member; this.Score = score; }
 	}
+    public class KeyValue<T>
+    {
+        public string Key { get; set; }
+        public T Value { get; set; }
+        public KeyValue(string key, T value) { this.Key = key; this.Value = value; }
+    }
 }

@@ -38,8 +38,8 @@ namespace FreeRedis
 		public T[] MGet<T>(params string[] keys)
         {
 			CallWriteOnly("MGET", null, keys);
-			var rvalue = Resp3Helper.Read<object>(Stream).ThrowOrValue();
-			var list = rvalue.ConvertTo<byte[][]>();
+			var value = Resp3Helper.Read<object>(Stream).ThrowOrValue();
+			var list = value.ConvertTo<byte[][]>();
 			return list.Select(a => DeserializeRedisValue<T>(a)).ToArray();
 		}
 

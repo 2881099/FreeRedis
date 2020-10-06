@@ -822,7 +822,13 @@ namespace FreeRedis
                 if (tt == typeof(Guid?)) return vs => vs == null ? null : (Guid.TryParse(vs, out var tryval) ? (Guid?)tryval : null);
                 if (tt == typeof(BigInteger)) return vs => vs == null ? 0 : (BigInteger.TryParse(vs, NumberStyles.Any, null, out var tryval) ? tryval : 0);
                 if (tt == typeof(BigInteger?)) return vs => vs == null ? null : (BigInteger.TryParse(vs, NumberStyles.Any, null, out var tryval) ? (BigInteger?)tryval : null);
-                throw new NotSupportedException($"convert failed {valueType.DisplayCsharp()} -> {targetType.DisplayCsharp()}");
+                var localTargetType = targetType;
+                var localValueType = valueType;
+                return vs =>
+                {
+                    if (vs == null) return null;
+                    throw new NotSupportedException($"convert failed {localValueType.DisplayCsharp()} -> {localTargetType.DisplayCsharp()}");
+                };
             });
             var valueStr = valueIsNull ? null : (valueType == typeof(byte[]) ? encoding.GetString(value as byte[]) : value.ToInvariantCultureToString());
             return func(valueStr);
@@ -843,6 +849,11 @@ namespace FreeRedis
                     else that.Add(item);
                 }
             }
+            return that;
+        }
+        internal static List<object> AddRaw(this List<object> that, object item)
+        {
+            that.Add(item);
             return that;
         }
         internal static List<object> AddIf(this string that, bool condition, params object[] items)
