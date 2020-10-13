@@ -31,7 +31,7 @@ namespace FreeRedis
 			.InputIf(!string.IsNullOrWhiteSpace(nodeid), nodeid));
 		public RedisResult<string> ClusterSlaves(string nodeid) => Call<string>("CLUSTER".SubCommand("SLAVES").InputRaw(nodeid));
 		public RedisResult<object> ClusterSlots() => Call<object>("CLUSTER".SubCommand("SLOTS"));
-		public RedisResult<string> ReadOnly() => Call<string>("READONLY".SubCommand(null));
-		public RedisResult<string> ReadWrite() => Call<string>("READWRITE".SubCommand(null));
+		public RedisResult<string> ReadOnly() => Call<string>("READONLY");
+		public RedisResult<string> ReadWrite() => Call<string>("READWRITE");
     }
 }

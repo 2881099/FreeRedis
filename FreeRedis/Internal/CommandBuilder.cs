@@ -13,6 +13,7 @@ namespace FreeRedis
         public List<string> _flagKey { get; } = new List<string>();
 
         public static implicit operator List<object>(CommandBuilder cb) => cb._input;
+        public static implicit operator CommandBuilder(string cmd) => new CommandBuilder().Command(cmd);
 
         public CommandBuilder Command(string cmd, string subcmd = null)
         {
@@ -120,6 +121,8 @@ namespace FreeRedis
         public static CommandBuilder Input(this string that, string arg) => new CommandBuilder().Command(that).InputRaw(arg);
         public static CommandBuilder Input(this string that, string arg1, string arg2) => new CommandBuilder().Command(that).InputRaw(arg1).InputRaw(arg2);
         public static CommandBuilder Input(this string that, string arg1, long arg2) => new CommandBuilder().Command(that).InputRaw(arg1).InputRaw(arg2);
+        public static CommandBuilder Input(this string that, string arg1, int arg2) => new CommandBuilder().Command(that).InputRaw(arg1).InputRaw(arg2);
+        public static CommandBuilder Input(this string that, int arg1, int arg2) => new CommandBuilder().Command(that).InputRaw(arg1).InputRaw(arg2);
         public static CommandBuilder Input(this string that, string arg1, decimal arg2) => new CommandBuilder().Command(that).InputRaw(arg1).InputRaw(arg2);
         public static CommandBuilder Input(this string that, string arg1, string arg2, string arg3) => new CommandBuilder().Command(that).InputRaw(arg1).InputRaw(arg2).InputRaw(arg3);
         public static CommandBuilder Input(this string that, string arg1, string arg2, long arg3) => new CommandBuilder().Command(that).InputRaw(arg1).InputRaw(arg2).InputRaw(arg3);
