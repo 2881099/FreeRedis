@@ -30,14 +30,20 @@ namespace FreeRedis
             }
             return this;
         }
-        public CommandBuilder FlagKey(string key)
+        public CommandBuilder FlagKey(params string[] keys)
         {
-            if (!string.IsNullOrEmpty(key)) _flagKey.Add(key);
+            if (keys != null)
+                foreach (var key in keys) 
+                    if (!string.IsNullOrEmpty(key)) 
+                        _flagKey.Add(key);
             return this;
         }
         public CommandBuilder FlagKey(IEnumerable<string> keys)
         {
-            if (keys != null) _flagKey.AddRange(keys);
+            if (keys != null)
+                foreach (var key in keys)
+                    if (!string.IsNullOrEmpty(key))
+                        _flagKey.Add(key);
             return this;
         }
 
@@ -119,13 +125,16 @@ namespace FreeRedis
     {
         public static CommandBuilder SubCommand(this string that, string subcmd) => new CommandBuilder().Command(that, subcmd);
         public static CommandBuilder Input(this string that, string arg) => new CommandBuilder().Command(that).InputRaw(arg);
+        public static CommandBuilder Input(this string that, long arg) => new CommandBuilder().Command(that).InputRaw(arg);
         public static CommandBuilder Input(this string that, string arg1, string arg2) => new CommandBuilder().Command(that).InputRaw(arg1).InputRaw(arg2);
         public static CommandBuilder Input(this string that, string arg1, long arg2) => new CommandBuilder().Command(that).InputRaw(arg1).InputRaw(arg2);
         public static CommandBuilder Input(this string that, string arg1, int arg2) => new CommandBuilder().Command(that).InputRaw(arg1).InputRaw(arg2);
         public static CommandBuilder Input(this string that, int arg1, int arg2) => new CommandBuilder().Command(that).InputRaw(arg1).InputRaw(arg2);
+        public static CommandBuilder Input(this string that, long arg1, long arg2) => new CommandBuilder().Command(that).InputRaw(arg1).InputRaw(arg2);
         public static CommandBuilder Input(this string that, string arg1, decimal arg2) => new CommandBuilder().Command(that).InputRaw(arg1).InputRaw(arg2);
         public static CommandBuilder Input(this string that, string arg1, string arg2, string arg3) => new CommandBuilder().Command(that).InputRaw(arg1).InputRaw(arg2).InputRaw(arg3);
         public static CommandBuilder Input(this string that, string arg1, string arg2, long arg3) => new CommandBuilder().Command(that).InputRaw(arg1).InputRaw(arg2).InputRaw(arg3);
+        public static CommandBuilder Input(this string that, string arg1, string arg2, decimal arg3) => new CommandBuilder().Command(that).InputRaw(arg1).InputRaw(arg2).InputRaw(arg3);
         public static CommandBuilder Input(this string that, string arg1, long arg2, long arg3) => new CommandBuilder().Command(that).InputRaw(arg1).InputRaw(arg2);
         public static CommandBuilder Input(this string that, string arg1, decimal arg2, string arg3) => new CommandBuilder().Command(that).InputRaw(arg1).InputRaw(arg2).InputRaw(arg3);
         public static CommandBuilder Input(this string that, string arg1, decimal arg2, decimal arg3) => new CommandBuilder().Command(that).InputRaw(arg1).InputRaw(arg2).InputRaw(arg3);
