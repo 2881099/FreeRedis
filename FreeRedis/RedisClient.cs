@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FreeRedis.Internal.IO;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -6,12 +7,20 @@ using System.Linq;
 namespace FreeRedis
 {
 	public partial class RedisClient : RedisClientBase, IDisposable
-	{
-		public RedisClient(string host, bool ssl) : base(host, ssl) { }
+    {
+        //protected RedisSocketPool SocketPool { get; }
+        protected ConnectionStringBuilder ConnectionString { get; }
 
-		public void Dispose()
+        public RedisClient(ConnectionStringBuilder connectionString)
         {
-			base.SafeReleaseSocket();
+            
+        }
+
+        protected override RedisSocket Socket => throw new NotImplementedException();
+
+        public void Dispose()
+        {
+			base.Release();
         }
 
 		#region 序列化写入，反序列化
@@ -172,6 +181,7 @@ namespace FreeRedis
 	{
 		public long Cursor { get; set; }
 		public T[] Items { get; set; }
+        public long Length => Items.LongLength;
 		public ScanValue(long cursor, T[] items) { Cursor = cursor; Items = items; }
 	}
 	public class SortedSetMember<T>

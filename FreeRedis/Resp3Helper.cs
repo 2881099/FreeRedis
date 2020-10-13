@@ -487,7 +487,7 @@ namespace FreeRedis
                 var props = GetPropertiesDictIgnoreCase(entityType);
                 if (props.TryGetValue(propertyName, out var prop) == false)
                     throw new Exception($"{entityType.DisplayCsharp()} 未找到属性名 {propertyName}");
-                prop.SetValue(entity, value);
+                prop.SetValue(entity, value, null);
                 return;
             }
 

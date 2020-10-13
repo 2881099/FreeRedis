@@ -10,16 +10,16 @@ namespace FreeRedis
 		public bool PfAdd(string key, params string[] elements) => Call<bool>("PFADD"
 			.Input(key)
 			.Input(elements)
-			.FlagKey(key)).ThrowOrValue();
+			.FlagKey(key), rt => rt.ThrowOrValue());
 
 		public long PfCount(string[] keys) => Call<long>("PFCOUNT".SubCommand(null)
 			.InputIf(keys?.Any() == true, keys)
-			.FlagKey(keys)).ThrowOrValue();
+			.FlagKey(keys), rt => rt.ThrowOrValue());
 
 		public void PfMerge(string destkey, params string[] sourcekeys) => Call<string>("PFMERGE"
 			.Input(destkey)
 			.InputIf(sourcekeys?.Any() == true, sourcekeys)
 			.FlagKey(destkey)
-			.FlagKey(sourcekeys)).ThrowOrValue();
+			.FlagKey(sourcekeys), rt => rt.ThrowOrValue());
 	}
 }

@@ -239,6 +239,20 @@ namespace FreeRedis.Tests.RedisClientTests
         }
 
         [Fact]
+        public void SScan()
+        {
+            using (var cli = Util.GetRedisClient())
+            {
+                cli.Serialize = obj => JsonConvert.SerializeObject(obj);
+                cli.Deserialize = (json, type) => JsonConvert.DeserializeObject(json, type);
+
+                cli.Del("TestSScan1");
+                Assert.Equal(4, cli.SAdd("TestSScan1", Null, Class, String, Bytes));
+                Assert.Equal(4, cli.SScan("TestSScan1", 0, "*", 10).Items.Length);
+            }
+        }
+
+        [Fact]
         public void SUnion()
         {
             using (var cli = Util.GetRedisClient())

@@ -1,27 +1,28 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace FreeRedis
 {
     partial class RedisClient
 	{
-		public RedisResult<long> GetAdd(string key, params GeoMember[] members) => Call<long>("GEOADD"
+		public long GetAdd(string key, params GeoMember[] members) => Call<long>("GEOADD"
 			.Input(key)
 			.InputIf(members?.Any() == true, members.Select(a => new object[] { a.Longitude, a.Latitude, a.Member }).ToArray())
-			.FlagKey(key));
+			.FlagKey(key), rt => rt.ThrowOrValue());
 
-		public RedisResult<decimal> GeoDist(string key, string member1, string member2, GeoUnit unit = GeoUnit.M) => Call<decimal>("GEOADD"
+		public decimal GeoDist(string key, string member1, string member2, GeoUnit unit = GeoUnit.M) => Call<decimal>("GEOADD"
 			.Input(key, member1, member2)
 			.InputIf(unit != GeoUnit.M, unit)
-			.FlagKey(key));
-		public RedisResult<string[]> GeoHash(string key, string[] members) => Call<string[]>("GEOADD".Input(key).Input(members).FlagKey(key));
-		public RedisResult<GeoMember[]> GeoPos(string key, string[] members) => Call<object>("GEOPOS".Input(key).Input(members).FlagKey(key))
-			.NewValue(a => (a as object[]).Select((z, y) =>
+			.FlagKey(key), rt => rt.ThrowOrValue());
+		public string[] GeoHash(string key, string[] members) => Call<string[]>("GEOADD".Input(key).Input(members).FlagKey(key), rt => rt.ThrowOrValue());
+		public GeoMember[] GeoPos(string key, string[] members) => Call<object, GeoMember[]>("GEOPOS".Input(key).Input(members).FlagKey(key), rt => rt
+			.NewValue(a => (a as List<object>).Select((z, y) =>
 				{
-					var zarr = z as object[];
+					var zarr = z as List<object>;
 					return new GeoMember(zarr[0].ConvertTo<decimal>(), zarr[1].ConvertTo<decimal>(), members[y]);
 				}).ToArray()
-			);
-		public RedisResult<object> GeoRadius(string key, decimal longitude, decimal latitude, decimal radius, GeoUnit unit, bool withdoord, bool withdist, bool withhash, long count, Collation? collation, string storekey, string storedistkey) => Call<object>("GEORADIUS"
+			).ThrowOrValue());
+		public object GeoRadius(string key, decimal longitude, decimal latitude, decimal radius, GeoUnit unit, bool withdoord, bool withdist, bool withhash, long count, Collation? collation, string storekey, string storedistkey) => Call<object>("GEORADIUS"
 			.Input(key, longitude, latitude)
 			.Input(radius, unit)
 			.InputIf(withdoord, "WITHCOORD")
@@ -31,8 +32,8 @@ namespace FreeRedis
 			.InputIf(collation != null, collation)
 			.InputIf(!string.IsNullOrWhiteSpace(storekey), "STORE", storekey)
 			.InputIf(!string.IsNullOrWhiteSpace(storedistkey), "STOREDIST", storedistkey)
-			.FlagKey(key));
-		public RedisResult<object> GeoRadiusByMember(string key, string member, decimal radius, GeoUnit unit, bool withdoord, bool withdist, bool withhash, long count, Collation? collation, string storekey, string storedistkey) => Call<object>("GEORADIUSBYMEMBER"
+			.FlagKey(key), rt => rt.ThrowOrValue());
+		public object GeoRadiusByMember(string key, string member, decimal radius, GeoUnit unit, bool withdoord, bool withdist, bool withhash, long count, Collation? collation, string storekey, string storedistkey) => Call<object>("GEORADIUSBYMEMBER"
 			.Input(key, member, radius)
 			.InputRaw(unit)
 			.InputIf(withdoord, "WITHCOORD")
@@ -42,6 +43,6 @@ namespace FreeRedis
 			.InputIf(collation != null, collation)
 			.InputIf(!string.IsNullOrWhiteSpace(storekey), "STORE", storekey)
 			.InputIf(!string.IsNullOrWhiteSpace(storedistkey), "STOREDIST", storedistkey)
-			.FlagKey(key));
+			.FlagKey(key), rt => rt.ThrowOrValue());
     }
 }

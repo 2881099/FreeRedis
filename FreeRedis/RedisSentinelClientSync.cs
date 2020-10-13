@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FreeRedis.Internal.IO;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -7,36 +8,42 @@ namespace FreeRedis
 {
 	public partial class RedisSentinelClient : RedisClientBase, IDisposable
 	{
-		public RedisSentinelClient(string host) : base(host, false) { }
+		protected RedisSocket _redisSocket;
 
-		public void Dispose()
+		public RedisSentinelClient(string host)
 		{
-			base.SafeReleaseSocket();
+			_redisSocket = new RedisSocket(host, false);
 		}
 
-		public RedisResult<string> Ping() => Call<string>("PING");
-		public RedisResult<string> Info() => Call<string>("INFO");
-		public RedisResult<object> Role() => Call<object>("ROLE");
+		protected override RedisSocket Socket => _redisSocket;
+		public void Dispose()
+		{
+			Release();
+		}
 
-		public RedisResult<object> SentinelMasters() => Call<object>("SENTINEL".SubCommand("MASTERS"));
-		public RedisResult<object> SentinelMaster(string masterName) => Call<object>("SENTINEL".SubCommand("MASTER").InputRaw(masterName));
-		public RedisResult<object> SentinelReplicas(string masterName) => Call<object>("SENTINEL".SubCommand("REPLICAS").InputRaw(masterName));
-		public RedisResult<object> SentinelSentinels(string masterName) => Call<object>("SENTINEL".SubCommand("SENTINELS").InputRaw(masterName));
-		public RedisResult<string> SentinelGetMasterAddrByName(string masterName) => Call<string[]>("SENTINEL".SubCommand("get-master-addr-by-name").InputRaw(masterName)).NewValue(a => $"{a[0]}:{a[1]}");
-		public RedisResult<bool> SentinelIsMasterDownByAddr(string ip, int port, long currentEpoch, string runid) => Call<bool>("SENTINEL".SubCommand("IS-MASTER-DOWN-BY-ADDR").Input(ip, port, currentEpoch, runid));
+		public string Ping() => Call<string>("PING", rt => rt.ThrowOrValue());
+		public string Info() => Call<string>("INFO", rt => rt.ThrowOrValue());
+		public object Role() => Call<object>("ROLE", rt => rt.ThrowOrValue());
 
-		public RedisResult<object> SentinelReset(string pattern) => Call<object>("SENTINEL".SubCommand("RESET").InputRaw(pattern));
-		public RedisResult<object> SentinelFailover(string masterName) => Call<object>("SENTINEL".SubCommand("FAILOVER").InputRaw(masterName));
-		public RedisResult<object> SentinelPendingScripts() => Call<object>("SENTINEL".SubCommand("PENDING-SCRIPTS"));
-		public RedisResult<object> SentinelMonitor(string name, string ip, int port, int quorum) => Call<object>("SENTINEL".SubCommand("MONITOR").Input(name, ip, port, quorum));
-		public RedisResult<object> SentinelFlushConfig() => Call<object>("SENTINEL".SubCommand("FLUSHCONFIG"));
-		public RedisResult<object> SentinelRemove(string masterName) => Call<object>("SENTINEL".SubCommand("REMOVE").InputRaw(masterName));
-		public RedisResult<object> SentinelCkQuorum(string masterName) => Call<object>("SENTINEL".SubCommand("CKQUORUM").InputRaw(masterName));
-		public RedisResult<object> SentinelSet(string masterName, string option, string value) => Call<object>("SENTINEL".SubCommand("SET").Input(masterName, option, value));
-		public RedisResult<object> SentinelInfoCache(string masterName) => Call<object>("SENTINEL".SubCommand("INFO-CACHE").InputRaw(masterName));
-		public RedisResult<object> SentinelSimulateFailure(bool crashAfterElection, bool crashAfterPromotion) => Call<object>("SENTINEL"
+		public object SentinelMasters() => Call<object>("SENTINEL".SubCommand("MASTERS"), rt => rt.ThrowOrValue());
+		public object SentinelMaster(string masterName) => Call<object>("SENTINEL".SubCommand("MASTER").InputRaw(masterName), rt => rt.ThrowOrValue());
+		public object SentinelReplicas(string masterName) => Call<object>("SENTINEL".SubCommand("REPLICAS").InputRaw(masterName), rt => rt.ThrowOrValue());
+		public object SentinelSentinels(string masterName) => Call<object>("SENTINEL".SubCommand("SENTINELS").InputRaw(masterName), rt => rt.ThrowOrValue());
+		public string SentinelGetMasterAddrByName(string masterName) => Call<string[], string>("SENTINEL".SubCommand("get-master-addr-by-name").InputRaw(masterName), rt => rt.NewValue(a => $"{a[0]}:{a[1]}").ThrowOrValue());
+		public bool SentinelIsMasterDownByAddr(string ip, int port, long currentEpoch, string runid) => Call<bool>("SENTINEL".SubCommand("IS-MASTER-DOWN-BY-ADDR").Input(ip, port, currentEpoch, runid), rt => rt.ThrowOrValue());
+
+		public object SentinelReset(string pattern) => Call<object>("SENTINEL".SubCommand("RESET").InputRaw(pattern), rt => rt.ThrowOrValue());
+		public object SentinelFailover(string masterName) => Call<object>("SENTINEL".SubCommand("FAILOVER").InputRaw(masterName), rt => rt.ThrowOrValue());
+		public object SentinelPendingScripts() => Call<object>("SENTINEL".SubCommand("PENDING-SCRIPTS"), rt => rt.ThrowOrValue());
+		public object SentinelMonitor(string name, string ip, int port, int quorum) => Call<object>("SENTINEL".SubCommand("MONITOR").Input(name, ip, port, quorum), rt => rt.ThrowOrValue());
+		public object SentinelFlushConfig() => Call<object>("SENTINEL".SubCommand("FLUSHCONFIG"), rt => rt.ThrowOrValue());
+		public object SentinelRemove(string masterName) => Call<object>("SENTINEL".SubCommand("REMOVE").InputRaw(masterName), rt => rt.ThrowOrValue());
+		public object SentinelCkQuorum(string masterName) => Call<object>("SENTINEL".SubCommand("CKQUORUM").InputRaw(masterName), rt => rt.ThrowOrValue());
+		public object SentinelSet(string masterName, string option, string value) => Call<object>("SENTINEL".SubCommand("SET").Input(masterName, option, value), rt => rt.ThrowOrValue());
+		public object SentinelInfoCache(string masterName) => Call<object>("SENTINEL".SubCommand("INFO-CACHE").InputRaw(masterName), rt => rt.ThrowOrValue());
+		public object SentinelSimulateFailure(bool crashAfterElection, bool crashAfterPromotion) => Call<object>("SENTINEL"
 			.SubCommand("SIMULATE-FAILURE")
 			.InputIf(crashAfterElection, "crash-after-election")
-			.InputIf(crashAfterPromotion, "crash-after-promotion"));
+			.InputIf(crashAfterPromotion, "crash-after-promotion"), rt => rt.ThrowOrValue());
 	}
 }

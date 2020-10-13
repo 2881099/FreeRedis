@@ -11,20 +11,20 @@ namespace FreeRedis
 			.Input(script, keys.Length)
 			.Input(keys)
 			.Input(arguments)
-			.FlagKey(keys)).ThrowOrValue();
+			.FlagKey(keys), rt => rt.ThrowOrValue());
 
 		public object EvalSha(string sha1, string[] keys, params object[] arguments) => Call<object>("EVALSHA"
 			.Input(sha1, keys.Length)
 			.Input(keys)
 			.Input(arguments)
-			.FlagKey(keys)).ThrowOrValue();
+			.FlagKey(keys), rt => rt.ThrowOrValue());
 
-		public void ScriptDebug(ScriptDebugOption options) => Call<string>("SCRIPT".SubCommand("DEBUG").InputRaw(options)).ThrowOrValue();
-		public bool ScriptExists(string sha1) => Call<bool[]>("SCRIPT".SubCommand("EXISTS").InputRaw(sha1)).NewValue(a => a.FirstOrDefault()).ThrowOrValue();
-		public bool[] ScriptExists(string[] sha1) => Call<bool[]>("SCRIPT".SubCommand("EXISTS").InputRaw(sha1)).ThrowOrValue();
+		public void ScriptDebug(ScriptDebugOption options) => Call<string>("SCRIPT".SubCommand("DEBUG").InputRaw(options), rt => rt.ThrowOrValue());
+		public bool ScriptExists(string sha1) => Call<bool[], bool>("SCRIPT".SubCommand("EXISTS").InputRaw(sha1), rt => rt.NewValue(a => a.FirstOrDefault()).ThrowOrValue());
+		public bool[] ScriptExists(string[] sha1) => Call<bool[]>("SCRIPT".SubCommand("EXISTS").InputRaw(sha1), rt => rt.ThrowOrValue());
 
-		public void ScriptFlush() => Call<string>("SCRIPT".SubCommand("FLUSH")).ThrowOrValue();
-		public void ScriptKill() => Call<string>("SCRIPT".SubCommand("KILL")).ThrowOrValue();
-		public string ScriptLoad(string script) => Call<string>("SCRIPT".SubCommand("LOAD").InputRaw(script)).ThrowOrValue();
+		public void ScriptFlush() => Call<string>("SCRIPT".SubCommand("FLUSH"), rt => rt.ThrowOrValue());
+		public void ScriptKill() => Call<string>("SCRIPT".SubCommand("KILL"), rt => rt.ThrowOrValue());
+		public string ScriptLoad(string script) => Call<string>("SCRIPT".SubCommand("LOAD").InputRaw(script), rt => rt.ThrowOrValue());
 	}
 }
