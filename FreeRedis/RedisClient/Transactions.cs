@@ -1,16 +1,46 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 
 namespace FreeRedis
 {
-	partial class RedisClient
+    partial class RedisClient
 	{
-		public RedisResult<string> Discard() => Call<string>("DISCARD");
-		public RedisResult<object[]> Exec() => Call<object[]>("EXEC");
-		public RedisResult<string> Multi() => Call<string>("MULTI");
-		public RedisResult<string> UnWatch() => Call<string>("UNWATCH");
-		public RedisResult<string> Watch(params string[] keys) => Call<string>("WATCH", null, keys);
-    }
+		public void Discard() => Call<string>("DISCARD".SubCommand(null)).ThrowOrValue();
+		public object[] Exec()
+		{
+			try
+			{
+				return Call<object>("EXEC".SubCommand(null)).NewValue(a => a as List<object>).ThrowOrValue().ToArray();
+            }
+            catch
+            {
+				SafeReleaseSocket();
+				throw;
+            }
+            finally
+            {
+				_state = ClientStatus.Normal;
+            }
+		}
+		public void Multi()
+		{
+			if (_state != ClientStatus.Normal) throw new ArgumentException($"ClientModel current is: {_state}");
+			Call<string>("MULTI".SubCommand(null));
+			_state = ClientStatus.Normal;
+		}
+		public void UnWatch() => Call<string>("UNWATCH".SubCommand(null)).ThrowOrValue();
+		public void Watch(params string[] keys) => Call<string>("WATCH".Input(keys).FlagKey(keys)).ThrowOrValue();
+
+		// Pipeline
+		public void StartPipe()
+		{
+			if (_state != ClientStatus.Normal) throw new ArgumentException($"ClientModel current is: {_state}");
+			_state = ClientStatus.Pipeline;
+        }
+		public void EndPipe()
+        {
+			if (_state != ClientStatus.Pipeline) throw new ArgumentException($"ClientModel current is: {_state}");
+			_state = ClientStatus.Normal;
+		}
+	}
 }

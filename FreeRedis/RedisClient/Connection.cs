@@ -33,19 +33,20 @@ namespace FreeRedis
 		public void ClientPause(long timeoutMilliseconds) => Call<string>("CLIENT", "PAUSE", timeoutMilliseconds).ThrowOrValue();
 		public void ClientReply(ClientReplyType type)
 		{
-			var oldtype = _clientReplyType;
-			try
+			switch (type)
 			{
-				_clientReplyType = type;
-				if (type == ClientReplyType.On)
-					Call<string>("CLIENT", "REPLY", type).ThrowOrValue();
-				else
+				case ClientReplyType.Off:
 					CallWriteOnly("CLIENT", "REPLY", type);
-			}
-			catch
-			{
-				_clientReplyType = oldtype;
-				throw;
+					_state = ClientStatus.ClientReplyOff;
+					break;
+				case ClientReplyType.On:
+					Call<string>("CLIENT", "REPLY", type).ThrowOrValue();
+					_state = ClientStatus.Normal;
+					break;
+				case ClientReplyType.Skip:
+					CallWriteOnly("CLIENT", "REPLY", type);
+					_state = ClientStatus.ClientReplySkip;
+					break;
 			}
 		}
 		public void ClientSetName(string connectionName) => Call<string>("CLIENT", "SETNAME", connectionName).ThrowOrValue();

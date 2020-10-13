@@ -39,50 +39,45 @@ namespace FreeRedis
             Ssl = ssl;
 		}
 
-        protected string _readWhile;
-        protected ClientReplyType _clientReplyType;
-        object[] PrepareCmd(string cmd, string subcmd = null, params object[] parms)
+        protected ClientStatus _state;
+        protected Queue<Func<object>> _pipeParses = new Queue<Func<object>>();
+
+        List<object> PrepareCmd(CommandBuilder cb)
         {
-            if (!string.IsNullOrWhiteSpace(_readWhile)) throw new Exception($"无法进行新的操作，因为正在执行监听的命令：{_readWhile}");
-            if (string.IsNullOrWhiteSpace(cmd)) throw new ArgumentNullException("Redis command not is null or empty.");
-            object[] args = null;
-            if (parms?.Any() != true)
-            {
-                if (string.IsNullOrWhiteSpace(subcmd) == false) args = new object[] { cmd, subcmd };
-                else args = cmd.Split(' ').Where(a => string.IsNullOrWhiteSpace(a) == false).ToArray();
-            }
-            else
-            {
-                var issubcmd = string.IsNullOrWhiteSpace(subcmd) == false;
-                args = new object[parms.Length + 1 + (issubcmd ? 1 : 0)];
-                var argsidx = 0;
-                args[argsidx++] = cmd;
-                if (issubcmd) args[argsidx++] = subcmd;
-                foreach (var prm in parms) args[argsidx++] = prm;
-            }
+            if (string.IsNullOrWhiteSpace(cb._command)) throw new ArgumentNullException("Redis command not is null or empty.");
             if (IsConnected == false) Connect();
-            return args;
+            return cb;
         }
 
-        protected RedisResult<T> Call<T>(string cmd, string subcmd = null, params object[] parms)
+        protected RedisResult<T> Call<T>(CommandBuilder cb)
         {
-            var args = PrepareCmd(cmd, subcmd, parms);
-            Resp3Helper.Write(Stream, Encoding, args, true);
-            if (_clientReplyType != ClientReplyType.On) //CLIENT REPLY ON|OFF|SKIP
-                return new RedisResult<T>(default(T), true, RedisMessageType.SimpleString);
+            var args = PrepareCmd(cb);
+            Resp3Helper.Write(Stream, Encoding, args, RedisProtocol.RESP2);
+            switch (_state)
+            {
+                case ClientStatus.ClientReplyOff:
+                case ClientStatus.ClientReplySkip: //CLIENT REPLY ON|OFF|SKIP
+                    return new RedisResult<T>(default(T), true, RedisMessageType.SimpleString);
+                case ClientStatus.Pipeline:
+                    return new RedisResult<T>(default(T), true, RedisMessageType.SimpleString);
+                case ClientStatus.ReadWhile:
+                    return null;
+                case ClientStatus.Transaction:
+                     return new RedisResult<T>(default(T), true, RedisMessageType.SimpleString);
+            }
             var result = Resp3Helper.Read<T>(Stream, Encoding);
             return result;
         }
-        protected void CallWriteOnly(string cmd, string subcmd = null, params object[] parms)
+        protected void CallWriteOnly(CommandBuilder cb)
         {
-            var args = PrepareCmd(cmd, subcmd, parms);
-            Resp3Helper.Write(Stream, Encoding, args, true);
+            var args = PrepareCmd(cb);
+            Resp3Helper.Write(Stream, Encoding, args, RedisProtocol.RESP2);
         }
-        protected void CallReadWhile(Action<object> ondata, Func<bool> next, string command, string subcommand = null, params object[] parms)
+        protected void CallReadWhile(Action<object> ondata, Func<bool> next, CommandBuilder cb)
         {
-            var args = PrepareCmd(command, subcommand, parms);
-            Resp3Helper.Write(Stream, args, true);
-            _readWhile = string.Join(" ", args);
+            var args = PrepareCmd(cb);
+            Resp3Helper.Write(Stream, args, RedisProtocol.RESP2);
+            _state = ClientStatus.ReadWhile;
             try
             {
                 do
@@ -102,37 +97,41 @@ namespace FreeRedis
             }
             finally
             {
-                _readWhile = null;
+                _state = ClientStatus.Normal;
             }
         }
 
         #region Commands Pub/Sub
 		public void PSubscribe(string pattern, Action<object> onData)
 		{
-			if (string.IsNullOrWhiteSpace(_readWhile)) CallReadWhile(onData, () => IsConnected, "PSUBSCRIBE", null, pattern);
-			else CallWriteOnly("PSUBSCRIBE", null, pattern);
+            var cb = "PSUBSCRIBE".Input(pattern);
+            if (_state == ClientStatus.Normal) CallReadWhile(onData, () => IsConnected, cb);
+			else CallWriteOnly(cb);
 		}
 		public void PSubscribe(string[] pattern, Action<object> onData)
 		{
-			if (string.IsNullOrWhiteSpace(_readWhile)) CallReadWhile(onData, () => IsConnected, "PSUBSCRIBE", null, "".AddIf(true, pattern).ToArray());
-			else CallWriteOnly("PSUBSCRIBE", null, "".AddIf(true, pattern).ToArray());
+            var cb = "PSUBSCRIBE".Input(pattern);
+            if (_state == ClientStatus.Normal) CallReadWhile(onData, () => IsConnected, cb);
+			else CallWriteOnly(cb);
 		}
-		public RedisResult<long> Publish(string channel, string message) => Call<long>("PUBLISH", channel, message);
-		public RedisResult<string[]> PubSubChannels(string pattern) => Call<string[]>("PUBSUB", "CHANNELS", pattern);
-		public RedisResult<string[]> PubSubNumSub(params string[] channels) => Call<string[]>("PUBSUB", "NUMSUB", "".AddIf(true, channels).ToArray());
-		public RedisResult<long> PubSubNumPat() => Call<long>("PUBLISH", "NUMPAT");
-		public void PUnSubscribe(params string[] pattern) => CallWriteOnly("PUNSUBSCRIBE", null, "".AddIf(true, pattern).ToArray());
+		public RedisResult<long> Publish(string channel, string message) => Call<long>("PUBLISH".Input(channel, message).FlagKey(channel));
+		public RedisResult<string[]> PubSubChannels(string pattern) => Call<string[]>("PUBSUB".SubCommand("CHANNELS").Input(pattern));
+        public RedisResult<string[]> PubSubNumSub(params string[] channels) => Call<string[]>("PUBSUB".SubCommand("NUMSUB").Input(channels).FlagKey(channels));
+        public RedisResult<long> PubSubNumPat() => Call<long>("PUBLISH".SubCommand("NUMPAT"));
+		public void PUnSubscribe(params string[] pattern) => CallWriteOnly("PUNSUBSCRIBE".Input(pattern));
 		public void Subscribe(string channel, Action<object> onData)
 		{
-			if (string.IsNullOrWhiteSpace(_readWhile)) CallReadWhile(onData, () => IsConnected, "SUBSCRIBE", null, channel);
-			else CallWriteOnly("SUBSCRIBE", null, channel);
+            var cb = "SUBSCRIBE".Input(channel).FlagKey(channel);
+            if (_state == ClientStatus.Normal) CallReadWhile(onData, () => IsConnected, cb);
+			else CallWriteOnly(cb);
 		}
 		public void Subscribe(string[] channels, Action<object> onData)
 		{
-			if (string.IsNullOrWhiteSpace(_readWhile)) CallReadWhile(onData, () => IsConnected, "SUBSCRIBE", null, "".AddIf(true, channels).ToArray());
-			else CallWriteOnly("SUBSCRIBE", null, "".AddIf(true, channels).ToArray());
+            var cb = "SUBSCRIBE".Input(channels).FlagKey(channels);
+            if (_state == ClientStatus.Normal) CallReadWhile(onData, () => IsConnected, cb);
+			else CallWriteOnly(cb);
 		}
-		public void UnSubscribe(params string[] channels) => CallWriteOnly("UNSUBSCRIBE", null, "".AddIf(true, channels).ToArray());
+		public void UnSubscribe(params string[] channels) => CallWriteOnly("UNSUBSCRIBE".Input(channels).FlagKey(channels));
 		#endregion
 
         #region Connect
@@ -196,8 +195,8 @@ namespace FreeRedis
                 try { _socket.Dispose(); } catch { }
                 _socket = null;
             }
-            _readWhile = null;
-            _clientReplyType = ClientReplyType.On;
+            _state = ClientStatus.Normal;
+            _pipeParses.Clear();
         }
 		void ResetHost(string host)
         {

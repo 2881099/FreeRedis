@@ -25,8 +25,8 @@ namespace FreeRedis
             return rt.NewValue(a => (T)typeof(T).FromObject(a, encoding));
         }
 
-        public static void Write(Stream stream, object[] command, bool isresp2) => Write(stream, null, command, isresp2);
-        public static void Write(Stream stream, Encoding encoding, object[] command, bool isresp2) => new Resp3Writer(stream, encoding, isresp2).WriteCommand(command);
+        public static void Write(Stream stream, List<object> command, RedisProtocol protocol) => Write(stream, null, command, protocol);
+        public static void Write(Stream stream, Encoding encoding, List<object> command, RedisProtocol protocol) => new Resp3Writer(stream, encoding, protocol).WriteCommand(command);
 
         public static object DeserializeResptext(string resptext)
         {
@@ -45,13 +45,13 @@ namespace FreeRedis
                 }
             }
         }
-        public static string SerializeResptext(object data, bool isresp2)
+        public static string SerializeResptext(object data, RedisProtocol protocol)
         {
             using (var ms = new MemoryStream())
             {
                 try
                 {
-                    new Resp3Writer(ms, Encoding.UTF8, isresp2).WriteObject(data);
+                    new Resp3Writer(ms, Encoding.UTF8, protocol).WriteObject(data);
                     return Encoding.UTF8.GetString(ms.ToArray());
                 }
                 finally
@@ -316,18 +316,18 @@ namespace FreeRedis
         {
             Stream _stream;
             Encoding _encoding;
-            bool _isresp2;
+            RedisProtocol _protocol;
 
-            public Resp3Writer(Stream stream, Encoding encoding, bool isresp2)
+            public Resp3Writer(Stream stream, Encoding encoding, RedisProtocol protocol)
             {
                 _stream = stream;
                 _encoding = encoding ?? Encoding.UTF8;
-                _isresp2 = isresp2;
+                _protocol = protocol;
             }
 
-            public void WriteCommand(object[] cmd)
+            public void WriteCommand(List<object> cmd)
             {
-                WriteNumber('*', cmd.Length);
+                WriteNumber('*', cmd.Count);
                 foreach (var c in cmd)
                 {
                     if (c is byte[]) WriteClob(c as byte[]);
@@ -365,7 +365,7 @@ namespace FreeRedis
                 if (error == null) return WriteNull();
                 if (error.Contains("\r\n"))
                 {
-                    if (_isresp2) return WriteSimpleString(error.Replace("\r\n", " "));
+                    if (_protocol == RedisProtocol.RESP2) return WriteSimpleString(error.Replace("\r\n", " "));
                     return WriteBlobError(error);
                 }
                 return WriteRaw($"-{error}\r\n");
@@ -378,7 +378,7 @@ namespace FreeRedis
             Resp3Writer WriteDouble(double? number)
             {
                 if (number == null) return WriteNull();
-                if (_isresp2) return WriteBlobString(number.ToInvariantCultureToString());
+                if (_protocol == RedisProtocol.RESP2) return WriteBlobString(number.ToInvariantCultureToString());
                 switch (number)
                 {
                     case double.PositiveInfinity: return WriteRaw($",inf\r\n");
@@ -389,12 +389,12 @@ namespace FreeRedis
             Resp3Writer WriteBoolean(bool? val)
             {
                 if (val == null) return WriteNull();
-                if (_isresp2) return WriteNumber(':', val.Value ? 1 : 0);
+                if (_protocol == RedisProtocol.RESP2) return WriteNumber(':', val.Value ? 1 : 0);
                 return WriteRaw(val.Value ? $"#t\r\n" : "#f\r\n");
             }
             Resp3Writer WriteNull()
             {
-                if (_isresp2) return WriteBlobString("");
+                if (_protocol == RedisProtocol.RESP2) return WriteBlobString("");
                 _stream.Write(Null, 0, Null.Length);
                 return this;
             }
@@ -434,7 +434,7 @@ namespace FreeRedis
 
                 if (obj is IDictionary dic)
                 {
-                    if (_isresp2) WriteNumber('*', dic.Count * 2);
+                    if (_protocol == RedisProtocol.RESP2) WriteNumber('*', dic.Count * 2);
                     else WriteNumber('%', dic.Count);
                     foreach (var key in dic.Keys)
                         WriteObject(key).WriteObject(dic[key]);
@@ -444,7 +444,7 @@ namespace FreeRedis
                 {
                     using (var ms = new MemoryStream())
                     {
-                        var msWriter = new Resp3Writer(ms, _encoding, _isresp2);
+                        var msWriter = new Resp3Writer(ms, _encoding, _protocol);
                         var idx = 0;
                         foreach (var z in ie)
                         {
@@ -463,7 +463,7 @@ namespace FreeRedis
                 }
 
                 var ps = objtype.GetPropertiesDictIgnoreCase().Values;
-                if (_isresp2) WriteNumber('*', ps.Count * 2);
+                if (_protocol == RedisProtocol.RESP2) WriteNumber('*', ps.Count * 2);
                 else WriteNumber('%', ps.Count);
                 foreach (var p in ps)
                 {
@@ -834,49 +834,6 @@ namespace FreeRedis
             return func(valueStr);
         }
         #endregion
-
-        #region 工具方法
-        internal static List<object> AddIf(this List<object> that, bool condition, params object[] items)
-        {
-            if (condition)
-            {
-                foreach (var item in items)
-                {
-                    if (item is object[] objs) that.AddRange(objs);
-                    else if (item is string[] strs) that.AddRange(strs.Select(a => (object)a));
-                    else if (item is int[] ints) that.AddRange(ints.Select(a => (object)a));
-                    else if (item is long[] longs) that.AddRange(longs.Select(a => (object)a));
-                    else that.Add(item);
-                }
-            }
-            return that;
-        }
-        internal static List<object> AddRaw(this List<object> that, object item)
-        {
-            that.Add(item);
-            return that;
-        }
-        internal static List<object> AddIf(this string that, bool condition, params object[] items)
-        {
-            var ret = new List<object>();
-            if (!string.IsNullOrWhiteSpace(that)) ret.Add(that);
-            return ret.AddIf(condition, items);
-        }
-        internal static List<object> AddRaw(this string that, object item)
-        {
-            var ret = new List<object>();
-            if (!string.IsNullOrWhiteSpace(that)) ret.Add(that);
-            ret.Add(item);
-            return ret;
-        }
-        internal static object[] ToKvArray(this KeyValuePair<string, long>[] that) => that.Select(a => new object[] { a.Key, a.Value }).SelectMany(a => a).ToArray();
-        internal static object[] ToKvArray(this KeyValuePair<string, string>[] that) => that.Select(a => new object[] { a.Key, a.Value }).SelectMany(a => a).ToArray();
-        internal static object[] ToKvArray(this KeyValuePair<string, object>[] that, Func<object, object> serialize) => that.Select(a => new object[] { a.Key, serialize(a.Value) }).SelectMany(a => a).ToArray();
-        internal static object[] ToKvArray(this Dictionary<string, long> that) => that.Select(a => new object[] { a.Key, a.Value }).SelectMany(a => a).ToArray();
-        internal static object[] ToKvArray(this Dictionary<string, string> that) => that.Select(a => new object[] { a.Key, a.Value }).SelectMany(a => a).ToArray();
-        internal static object[] ToKvArray(this Dictionary<string, object> that, Func<object, object> serialize) => that.Select(a => new object[] { a.Key, serialize(a.Value) }).SelectMany(a => a).ToArray();
-
-        #endregion
     }
 
     public class RedisException : Exception
@@ -995,4 +952,6 @@ namespace FreeRedis
         /// </summary>
         Attribute,
     }
+
+    public enum RedisProtocol { RESP2, RESP3 }
 }

@@ -61,13 +61,9 @@ namespace FreeRedis
 		public long LPush(string key, params object[] elements) => Call<long>("LPUSH", key, elements.Select(a => SerializeRedisValue(a)).ToArray()).ThrowOrValue();
 		public long LPushX(string key, params object[] elements) => Call<long>("LPUSHX", key, elements.Select(a => SerializeRedisValue(a)).ToArray()).ThrowOrValue();
 		public string[] LRange(string key, long start, long stop) => Call<string[]>("LRANGE", key, start, stop).ThrowOrValue();
-		public T[] LRange<T>(string key, long start, long stop)
-		{
-			CallWriteOnly("LRANGE", key, start, stop);
-			var value = Resp3Helper.Read<object>(Stream).ThrowOrValue();
-			var list = value.ConvertTo<byte[][]>();
-			return list.Select(a => DeserializeRedisValue<T>(a)).ToArray();
-		}
+		public T[] LRange<T>(string key, long start, long stop) => Call<string[]>("LRANGE", key, start, stop)
+			.NewValue(a => a.ConvertTo<byte[][]>().Select(b => DeserializeRedisValue<T>(b)).ToArray())
+			.ThrowOrValue();
 
 		public long LRem(string key, long count, object element) => Call<long>("LREM", key, count, SerializeRedisValue(element)).ThrowOrValue();
 		public void LSet(string key, long index, object element) => Call<string>("LSET", key, index, SerializeRedisValue(element)).ThrowOrValue();

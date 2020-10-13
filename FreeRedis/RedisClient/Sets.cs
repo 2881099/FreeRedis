@@ -41,12 +41,8 @@ namespace FreeRedis
 		public T[] SUnion<T>(params string[] keys) => SReadArray<T>("SUNION", keys);
 		public long SUnionStore(string destination, params string[] keys) => Call<long>("SUNIONSTORE", destination, keys).ThrowOrValue();
 
-		T[] SReadArray<T>(string cmd, params object[] parms)
-		{
-			CallWriteOnly(cmd, null, parms);
-			var value = Resp3Helper.Read<object>(Stream).ThrowOrValue();
-			var list = value.ConvertTo<byte[][]>();
-			return list.Select(a => DeserializeRedisValue<T>(a)).ToArray();
-		}
+		T[] SReadArray<T>(string cmd, params object[] parms) => Call<object>(cmd, null, parms)
+			.NewValue(a => a.ConvertTo<byte[][]>().Select(b => DeserializeRedisValue<T>(b)).ToArray())
+			.ThrowOrValue();
 	}
 }

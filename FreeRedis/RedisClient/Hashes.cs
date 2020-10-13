@@ -17,7 +17,7 @@ namespace FreeRedis
 		public RedisResult<long> HLen(string key) => Call<long>("HLEN", key);
 		public RedisResult<string[]> HMGet(string key, params string[] fields) => Call<string[]>("HMGET", key, "".AddIf(fields?.Any() == true, fields).ToArray());
 		public RedisResult<string> HMSet(string key, Dictionary<string, string> keyValues) => Call<string>("HMSET", key, keyValues.ToKvArray());
-		public RedisResult<ScanValue<string>> HScan(string key, long cursor, string pattern, long count, string type) => Call<object>("HSCAN", key, ""
+		public RedisResult<ScanValue<string>> HScan(string key, long cursor, string pattern, long count, string type) => Call<object>("HSCAN", key, args => args
 			.AddIf(true, cursor)
 			.AddIf(!string.IsNullOrWhiteSpace(pattern), "MATCH", pattern)
 			.AddIf(count != 0, "COUNT", count)

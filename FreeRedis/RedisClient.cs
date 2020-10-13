@@ -147,6 +147,7 @@ namespace FreeRedis
         #endregion
     }
 
+    public enum ClientStatus { Normal, Transaction, Pipeline, ReadWhile, ClientReplyOff, ClientReplySkip }
     public enum ClusterSetSlotType { Importing, Migrating, Stable, Node }
 	public enum ClusterResetType { Hard, Soft }
 	public enum ClusterFailOverType { Force, TakeOver }

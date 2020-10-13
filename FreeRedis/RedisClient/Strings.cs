@@ -7,45 +7,42 @@ namespace FreeRedis
 {
 	partial class RedisClient
 	{
-		public long Append(string key, object value) => Call<long>("APPEND", key, SerializeRedisValue(value)).ThrowOrValue();
-		public long BitCount(string key, long start, long end) => Call<long>("BITCOUNT", key, start, end).ThrowOrValue();
+		public long Append(string key, object value) => Call<long>("APPEND".Input(key).InputRaw(SerializeRedisValue(value)).FlagKey(key)).ThrowOrValue();
+		public long BitCount(string key, long start, long end) => Call<long>("BITCOUNT".Input(key, start, end).FlagKey(key)).ThrowOrValue();
 		//BITFIELD key [GET type offset] [SET type offset value] [INCRBY type offset increment] [OVERFLOW WRAP|SAT|FAIL]
-		public long BitOp(BitOpOperation operation, string destkey, params string[] keys) => Call<long>("BITOP", null, "".AddIf(true, operation, destkey, keys).ToArray()).ThrowOrValue();
-		public long BitPos(string key, bool bit, long? start = null, long? end = null) => Call<long>("BITPOS", key, ""
-			.AddIf(true, bit ? "1": "0")
-			.AddIf(start != null, start)
-			.AddIf(end != null, start)
-			.ToArray()).ThrowOrValue();
-		public long Decr(string key) => Call<long>("DECR", key).ThrowOrValue();
-		public long DecrBy(string key, long decrement) => Call<long>("DECRBY", key, decrement).ThrowOrValue();
-		public string Get(string key) => Call<string>("GET", key).ThrowOrValue();
-		public T Get<T>(string key) => Call<byte[]>("GET", key).NewValue(a => DeserializeRedisValue<T>(a)).ThrowOrValue();
+		public long BitOp(BitOpOperation operation, string destkey, params string[] keys) => Call<long>("BITOP".SubCommand(null).Input(operation, destkey, keys).FlagKey(destkey).FlagKey(keys)).ThrowOrValue();
+		public long BitPos(string key, bool bit, long? start = null, long? end = null) => Call<long>("BITPOS"
+			.Input(key)
+			.InputRaw(bit ? "1": "0")
+			.InputIf(start != null, start)
+			.InputIf(end != null, start)
+			.FlagKey(key)).ThrowOrValue();
+		public long Decr(string key) => Call<long>("DECR".Input(key).FlagKey(key)).ThrowOrValue();
+		public long DecrBy(string key, long decrement) => Call<long>("DECRBY".Input(key, decrement).FlagKey(key)).ThrowOrValue();
+		public string Get(string key) => Call<string>("GET".Input(key).FlagKey(key)).ThrowOrValue();
+		public T Get<T>(string key) => Call<byte[]>("GET".Input(key).FlagKey(key)).NewValue(a => DeserializeRedisValue<T>(a)).ThrowOrValue();
 		public void Get(string key, Stream destination, int bufferSize = 1024)
 		{
-			CallWriteOnly("GET", key);
+			CallWriteOnly("GET".Input(key).FlagKey(key));
 			Resp3Helper.ReadChunk(Stream, destination, bufferSize);
 		}
-		public bool GetBit(string key, long offset) => Call<bool>("GETBIT", key, offset).ThrowOrValue();
-		public string GetRange(string key, long start, long end) => Call<string>("GETRANGE", key, start, end).ThrowOrValue();
-		public T GetRange<T>(string key, long start, long end) => Call<byte[]>("GETRANGE", key, start, end).NewValue(a => DeserializeRedisValue<T>(a)).ThrowOrValue();
+		public bool GetBit(string key, long offset) => Call<bool>("GETBIT".Input(key, offset).FlagKey(key)).ThrowOrValue();
+		public string GetRange(string key, long start, long end) => Call<string>("GETRANGE".Input(key, start, end).FlagKey(key)).ThrowOrValue();
+		public T GetRange<T>(string key, long start, long end) => Call<byte[]>("GETRANGE".Input(key, start, end).FlagKey(key)).NewValue(a => DeserializeRedisValue<T>(a)).ThrowOrValue();
 
-		public string GetSet(string key, object value) => Call<string>("GETSET", key, SerializeRedisValue(value)).ThrowOrValue();
-		public long Incr(string key) => Call<long>("INCR", key).ThrowOrValue();
-		public long IncrBy(string key, long increment) => Call<long>("INCRBY", key, increment).ThrowOrValue();
-		public decimal IncrByFloat(string key, decimal increment) => Call<decimal>("INCRBYFLOAT", key, increment).ThrowOrValue();
+		public string GetSet(string key, object value) => Call<string>("GETSET".Input(key).InputRaw(SerializeRedisValue(value)).FlagKey(key)).ThrowOrValue();
+		public long Incr(string key) => Call<long>("INCR".Input(key).FlagKey(key)).ThrowOrValue();
+		public long IncrBy(string key, long increment) => Call<long>("INCRBY".Input(key, increment).FlagKey(key)).ThrowOrValue();
+		public decimal IncrByFloat(string key, decimal increment) => Call<decimal>("INCRBYFLOAT".Input(key, increment).FlagKey(key)).ThrowOrValue();
 
-		public string[] MGet(params string[] keys) => Call<string[]>("MGET", null, keys).ThrowOrValue();
-		public T[] MGet<T>(params string[] keys)
-        {
-			CallWriteOnly("MGET", null, keys);
-			var value = Resp3Helper.Read<object>(Stream).ThrowOrValue();
-			var list = value.ConvertTo<byte[][]>();
-			return list.Select(a => DeserializeRedisValue<T>(a)).ToArray();
-		}
+		public string[] MGet(params string[] keys) => Call<string[]>("MGET".Input(keys).FlagKey(keys)).ThrowOrValue();
+		public T[] MGet<T>(params string[] keys) => Call<object>("MGET".Input(keys).FlagKey(keys))
+			.NewValue(a => a.ConvertTo<byte[][]>().Select(b => DeserializeRedisValue<T>(b)).ToArray())
+			.ThrowOrValue();
 
-		public void MSet(Dictionary<string, object> keyValues) => Call<string>("MSET", null, keyValues.ToKvArray(SerializeRedisValue)).ThrowOrValue();
-		public bool MSetNx(Dictionary<string, object> keyValues) => Call<bool>("MSETNX", null, keyValues.ToKvArray(SerializeRedisValue)).ThrowOrValue();
-		public void PSetEx(string key, long milliseconds, object value) => Call<string>("PSETEX", key, milliseconds, SerializeRedisValue(value)).ThrowOrValue();
+		public void MSet(Dictionary<string, object> keyValues) => Call<string>("MSET".SubCommand(null).InputKv(keyValues, SerializeRedisValue).FlagKey(keyValues.Keys)).ThrowOrValue();
+		public bool MSetNx(Dictionary<string, object> keyValues) => Call<bool>("MSETNX".SubCommand(null).InputKv(keyValues, SerializeRedisValue).FlagKey(keyValues.Keys)).ThrowOrValue();
+		public void PSetEx(string key, long milliseconds, object value) => Call<string>("PSETEX".Input(key, milliseconds).InputRaw(SerializeRedisValue(value)).FlagKey(key)).ThrowOrValue();
 
 		public void Set(string key, object value, int timeoutSeconds = 0) => Set(key, value, TimeSpan.FromSeconds(timeoutSeconds), false, false, false).ThrowOrValue();
 		public void Set(string key, object value, bool keepTtl) => Set(key, value, TimeSpan.Zero, keepTtl, false, false).ThrowOrValue();
@@ -53,19 +50,21 @@ namespace FreeRedis
 		public void SetNx(string key, object value, bool keepTtl) => Set(key, value, TimeSpan.Zero, keepTtl, true, false).ThrowOrValue();
 		public void SetXx(string key, object value, int timeoutSeconds = 0) => Set(key, value, TimeSpan.FromSeconds(timeoutSeconds), false, false, true).ThrowOrValue();
 		public void SetXx(string key, object value, bool keepTtl) => Set(key, value, TimeSpan.Zero, keepTtl, false, true).ThrowOrValue();
-		RedisResult<string> Set(string key, object value, TimeSpan timeout, bool keepTtl, bool nx, bool xx) => Call<string>("SET", key, ""
-			.AddRaw(SerializeRedisValue(value))
-			.AddIf(timeout.TotalSeconds >= 1, "EX", (long)timeout.TotalSeconds)
-			.AddIf(timeout.TotalSeconds < 1 && timeout.TotalMilliseconds >= 1, "PX", (long)timeout.TotalMilliseconds)
-			.AddIf(keepTtl, "KEEPTTL")
-			.AddIf(nx, "NX")
-			.AddIf(xx, "XX").ToArray());
+		RedisResult<string> Set(string key, object value, TimeSpan timeout, bool keepTtl, bool nx, bool xx) => Call<string>("SET"
+			.Input(key)
+			.InputRaw(SerializeRedisValue(value))
+			.InputIf(timeout.TotalSeconds >= 1, "EX", (long)timeout.TotalSeconds)
+			.InputIf(timeout.TotalSeconds < 1 && timeout.TotalMilliseconds >= 1, "PX", (long)timeout.TotalMilliseconds)
+			.InputIf(keepTtl, "KEEPTTL")
+			.InputIf(nx, "NX")
+			.InputIf(xx, "XX")
+			.FlagKey(key));
 
-		public long SetBit(string key, long offset, bool value) => Call<long>("SETBIT", key, offset, value ? "1" : "0").ThrowOrValue();
-		public void SetEx(string key, int seconds, object value) => Call<string>("SETEX", key, seconds, SerializeRedisValue(value)).ThrowOrValue();
-		public bool SetNx(string key, object value) => Call<bool>("SETNX", key, SerializeRedisValue(value)).ThrowOrValue();
-		public long SetRange(string key, long offset, object value) => Call<long>("SETRANGE", key, offset, SerializeRedisValue(value)).ThrowOrValue();
+		public long SetBit(string key, long offset, bool value) => Call<long>("SETBIT".Input(key, offset).InputRaw(value ? "1" : "0").FlagKey(key)).ThrowOrValue();
+		public void SetEx(string key, int seconds, object value) => Call<string>("SETEX".Input(key, seconds).InputRaw(SerializeRedisValue(value)).FlagKey(key)).ThrowOrValue();
+		public bool SetNx(string key, object value) => Call<bool>("SETNX".Input(key).InputRaw(SerializeRedisValue(value)).FlagKey(key)).ThrowOrValue();
+		public long SetRange(string key, long offset, object value) => Call<long>("SETRANGE".Input(key, offset).InputRaw(SerializeRedisValue(value)).FlagKey(key)).ThrowOrValue();
 		//STRALGO LCS algo-specific-argument [algo-specific-argument ...]
-		public long StrLen(string key) => Call<long>("STRLEN", key).ThrowOrValue();
+		public long StrLen(string key) => Call<long>("STRLEN".Input(key).FlagKey(key)).ThrowOrValue();
 	}
 }

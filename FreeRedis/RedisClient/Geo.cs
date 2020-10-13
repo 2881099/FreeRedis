@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.Linq;
 
 namespace FreeRedis
 {
-	partial class RedisClient
+    partial class RedisClient
 	{
 		public RedisResult<long> GetAdd(string key, params GeoMember[] members) => Call<long>("GEOADD", key, ""
 			.AddIf(members?.Any() == true, members.Select(a => new object[] { a.Longitude, a.Latitude, a.Member }).ToArray())
