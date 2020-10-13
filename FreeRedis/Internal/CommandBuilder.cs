@@ -121,8 +121,10 @@ namespace FreeRedis
         public static CommandBuilder Input(this string that, string arg1, string arg2) => new CommandBuilder().Command(that).InputRaw(arg1).InputRaw(arg2);
         public static CommandBuilder Input(this string that, string arg1, long arg2) => new CommandBuilder().Command(that).InputRaw(arg1).InputRaw(arg2);
         public static CommandBuilder Input(this string that, string arg1, decimal arg2) => new CommandBuilder().Command(that).InputRaw(arg1).InputRaw(arg2);
+        public static CommandBuilder Input(this string that, string arg1, string arg2, string arg3) => new CommandBuilder().Command(that).InputRaw(arg1).InputRaw(arg2).InputRaw(arg3);
         public static CommandBuilder Input(this string that, string arg1, string arg2, long arg3) => new CommandBuilder().Command(that).InputRaw(arg1).InputRaw(arg2).InputRaw(arg3);
         public static CommandBuilder Input(this string that, string arg1, long arg2, long arg3) => new CommandBuilder().Command(that).InputRaw(arg1).InputRaw(arg2);
+        public static CommandBuilder Input(this string that, string arg1, decimal arg2, string arg3) => new CommandBuilder().Command(that).InputRaw(arg1).InputRaw(arg2).InputRaw(arg3);
         public static CommandBuilder Input(this string that, string arg1, decimal arg2, decimal arg3) => new CommandBuilder().Command(that).InputRaw(arg1).InputRaw(arg2).InputRaw(arg3);
         public static CommandBuilder Input(this string that, string arg1, long arg2, long arg3, long arg4, decimal arg5) => new CommandBuilder().Command(that).InputRaw(arg1).InputRaw(arg2).InputRaw(arg3).InputRaw(arg4).InputRaw(arg5);
         public static CommandBuilder Input(this string that, string[] args) => new CommandBuilder().Command(that).Input(args);
