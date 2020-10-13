@@ -37,6 +37,6 @@ namespace FreeRedis
 		public RedisResult<object> SentinelSimulateFailure(bool crashAfterElection, bool crashAfterPromotion) => Call<object>("SENTINEL"
 			.SubCommand("SIMULATE-FAILURE")
 			.InputIf(crashAfterElection, "crash-after-election")
-			.InputIf(crashAfterElection, "crash-after-promotion"));
+			.InputIf(crashAfterPromotion, "crash-after-promotion"));
 	}
 }
