@@ -3,24 +3,58 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace FreeRedis
 {
 	public partial class RedisClient : RedisClientBase, IDisposable
     {
-        //protected RedisSocketPool SocketPool { get; }
-        protected ConnectionStringBuilder ConnectionString { get; }
-
+        protected internal RedisClientPool _pool;
         public RedisClient(ConnectionStringBuilder connectionString)
         {
-            
+            _pool = new RedisClientPool(connectionString, null);
+        }
+        protected internal IRedisSocket _singleRedisSocket;
+        protected internal RedisClient(string host, bool ssl, Action<RedisClient> connected)
+        {
+            var rds = new RedisSocket222(host, ssl);
+            rds.Connected += (s, e) => connected(this);
+            rds.Client = this;
+            _singleRedisSocket = rds;
+        }
+        protected IRedisSocket _outsiteRedisSocket;
+        protected internal RedisClient(IRedisSocket redisSocket)
+        {
+            _outsiteRedisSocket = redisSocket;
         }
 
-        protected override RedisSocket Socket => throw new NotImplementedException();
+        protected override IRedisSocket GetRedisSocket()
+        {
+            if (_pool != null)
+            {
+                var cli = _pool.Get();
+                return new RedisClientPool.RedisSocketScope(cli, _pool);
+            }
+            if (_singleRedisSocket != null) return _singleRedisSocket;
+            if (_outsiteRedisSocket != null) return _outsiteRedisSocket;
+            throw new Exception("GetRedisSocket cannot return null");
+        }
 
         public void Dispose()
         {
-			base.Release();
+            if (_pool != null)
+            {
+                _pool.Dispose();
+            }
+            if (_singleRedisSocket != null)
+            {
+                _singleRedisSocket.Dispose();
+            }
+            if (_outsiteRedisSocket != null)
+            {
+                //..
+            }
+            base.Release();
         }
 
 		#region 序列化写入，反序列化
@@ -65,16 +99,16 @@ namespace FreeRedis
             if (Serialize != null) return Serialize(value);
             return value.ConvertTo<string>();
         }
-        internal T DeserializeRedisValue<T>(byte[] value)
+        internal T DeserializeRedisValue<T>(byte[] value, Encoding encoding)
         {
             if (value == null) return default(T);
             var type = typeof(T);
             var typename = type.ToString().TrimEnd(']');
             if (typename == "System.Byte[") return (T)Convert.ChangeType(value, type);
-            if (typename == "System.String") return (T)Convert.ChangeType(Encoding.GetString(value), type);
+            if (typename == "System.String") return (T)Convert.ChangeType(encoding.GetString(value), type);
             if (typename == "System.Boolean[") return (T)Convert.ChangeType(value.Select(a => a == 49).ToArray(), type);
 
-            var valueStr = Encoding.GetString(value);
+            var valueStr = encoding.GetString(value);
             if (string.IsNullOrEmpty(valueStr)) return default(T);
             if (type.IsValueType)
             {

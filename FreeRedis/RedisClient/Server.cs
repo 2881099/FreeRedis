@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FreeRedis.Internal.IO;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -21,7 +22,7 @@ namespace FreeRedis
 		public LogInfo[] AclLog(long count = 0) => Call<object[][], LogInfo[]>("ACL"
 			.SubCommand("LOG")
 			.InputIf(count > 0, count), rt => rt
-			.NewValue(x => x.Select(a => a.MapToClass<LogInfo>(Encoding)).ToArray()).ThrowOrValue());
+			.NewValue(x => x.Select(a => a.MapToClass<LogInfo>(rt.Encoding)).ToArray()).ThrowOrValue());
 		public class LogInfo { public long Count { get; } public string Reason { get; } public string Context { get; } public string Object { get; } public string Username { get; } public decimal AgeSeconds { get; } public string ClientInfo { get; } }
 		public string AclSave() => Call<string>("ACL".SubCommand("SAVE"), rt => rt.ThrowOrValue());
 		public string AclSetUser(params string[] rule) => rule?.Any() == true ? Call<string>("ACL".SubCommand("SETUSER").Input(rule), rt => rt.ThrowOrValue()) : throw new ArgumentException(nameof(rule));
@@ -33,7 +34,7 @@ namespace FreeRedis
 		public long CommandCount() => Call<long>("COMMAND".SubCommand("COUNT"), rt => rt.ThrowOrValue());
 		public string[] CommandGetKeys(params string[] command) => command?.Any() == true ? Call<string[]>("COMMAND".SubCommand("GETKEYS").Input(command), rt => rt.ThrowOrValue()) : throw new ArgumentException(nameof(command));
 		public string[] CommandInfo(params string[] command) => command?.Any() == true ? Call<string[]>("COMMAND".SubCommand("INFO").Input( command), rt => rt.ThrowOrValue()) : throw new ArgumentException(nameof(command));
-		public Dictionary<string, string> ConfigGet(string parameter) => Call<string[], Dictionary<string, string>>("CONFIG".SubCommand("GET").InputRaw(parameter), rt => rt.NewValue(a => a.MapToHash<string>(Encoding)).ThrowOrValue());
+		public Dictionary<string, string> ConfigGet(string parameter) => Call<string[], Dictionary<string, string>>("CONFIG".SubCommand("GET").InputRaw(parameter), rt => rt.NewValue(a => a.MapToHash<string>(rt.Encoding)).ThrowOrValue());
 		public string ConfigResetStat() => Call<string>("CONFIG".SubCommand("RESETSTAT"), rt => rt.ThrowOrValue());
 		public string ConfigRewrite() => Call<string>("CONFIG".SubCommand("REWRITE"), rt => rt.ThrowOrValue());
 		public string ConfigSet(string parameter, object value) => Call<string>("CONFIG".SubCommand("SET").InputRaw(parameter).InputRaw(value), rt => rt.ThrowOrValue());
@@ -55,7 +56,7 @@ namespace FreeRedis
 		public string[] MemoryHelp() => Call<string[]>("MEMORY".SubCommand("HELP"), rt => rt.ThrowOrValue());
 		public string MemoryMallocStats() => Call<string>("MEMORY".SubCommand("MALLOC-STATS"), rt => rt.ThrowOrValue());
 		public string MemoryPurge() => Call<string>("MEMORY".SubCommand("PURGE"), rt => rt.ThrowOrValue());
-		public Dictionary<string, string> MemoryStats() => Call<string[], Dictionary<string, string>>("MEMORY".SubCommand("STATS"), rt => rt.NewValue(a => a.MapToHash<string>(Encoding)).ThrowOrValue());
+		public Dictionary<string, string> MemoryStats() => Call<string[], Dictionary<string, string>>("MEMORY".SubCommand("STATS"), rt => rt.NewValue(a => a.MapToHash<string>(rt.Encoding)).ThrowOrValue());
 		public long MemoryUsage(string key, long count = 0) => Call<long>("MEMORY"
 			.SubCommand( "USAGE")
 			.InputRaw(key)
@@ -64,7 +65,12 @@ namespace FreeRedis
 		public string[][] ModuleList() => Call<string[][]>("MODULE".SubCommand("LIST"), rt => rt.ThrowOrValue());
 		public string ModuleLoad(string path, params string[] args) => Call<string>("MODULE".SubCommand( "LOAD").InputIf(args?.Any() == true, args), rt => rt.ThrowOrValue());
 		public string ModuleUnload(string name) => Call<string>("MODULE".SubCommand("UNLOAD").InputRaw(name), rt => rt.ThrowOrValue());
-		public void Monitor(Action<object> onData) => CallReadWhile(onData, () => Socket.IsConnected, "MONITOR");
+		public RedisClient Monitor(Action<object> onData)
+		{
+			IRedisSocket rds = null;
+			rds = CallReadWhile(onData, () => rds.IsConnected, "MONITOR");
+			return rds.Client;
+		}
 		//public void PSync(string replicationid, string offset, Action<string> onData) => SendCommandListen(onData, "PSYNC", replicationid, offset);
 		public string ReplicaOf(string host, int port) => Call<string>("REPLICAOF".Input(host, port), rt => rt.ThrowOrValue());
 		public object Role() => Call<object>("ROLE", rt => rt.ThrowOrValue());

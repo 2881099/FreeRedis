@@ -14,6 +14,6 @@ namespace FreeRedis
 		public bool[] TopkQuery(string key, string[] items) => Call<bool[]>("TOPK.QUERY".Input(key).Input(items).FlagKey(key), rt => rt.ThrowOrValue());
 		public long[] TopkCount(string key, string[] items) => Call<long[]>("TOPK.COUNT".Input(key).Input(items).FlagKey(key), rt => rt.ThrowOrValue());
 		public string[] TopkList(string key) => Call<string[]>("TOPK.LIST".Input(key).FlagKey(key), rt => rt.ThrowOrValue());
-		public Dictionary<string, string> TopkInfo(string key) => Call<string[], Dictionary<string, string>>("TOPK.INFO".Input(key).FlagKey(key), rt => rt.NewValue(a => a.MapToHash<string>(Encoding)).ThrowOrValue());
+		public Dictionary<string, string> TopkInfo(string key) => Call<string[], Dictionary<string, string>>("TOPK.INFO".Input(key).FlagKey(key), rt => rt.NewValue(a => a.MapToHash<string>(rt.Encoding)).ThrowOrValue());
     }
 }

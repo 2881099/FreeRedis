@@ -846,7 +846,9 @@ namespace FreeRedis
         internal bool IsEnd { get; }
         public RedisMessageType MessageType { get; }
         public bool IsError => this.MessageType == RedisMessageType.SimpleError || this.MessageType == RedisMessageType.BlobError;
+        public bool IsErrorThrow { get; internal set; } = true;
         public string SimpleError { get; }
+        public Encoding Encoding { get; internal set; }
         internal RedisResult(T value, bool isend, RedisMessageType msgtype) : this(value, value?.ConvertTo<string>(), isend, msgtype) { }
         internal RedisResult(T value, string simpleError, bool isend, RedisMessageType msgtype)
         {
@@ -862,7 +864,7 @@ namespace FreeRedis
         }
         public T ThrowOrValue()
         {
-            if (IsError) throw new RedisException(this.SimpleError);
+            if (IsError && IsErrorThrow) throw new RedisException(this.SimpleError);
             return this.Value;
         }
     }

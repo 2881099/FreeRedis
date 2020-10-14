@@ -13,6 +13,7 @@ namespace FreeRedis
         public string User { get; set; }
         public string Password { get; set; }
         public int Database { get; set; } = 0;
+        public string Prefix { get; set; }
         public string ClientName { get; set; }
         public Encoding Encoding { get; set; } = Encoding.UTF8;
         public TimeSpan ConnectTimeout { get; set; } = TimeSpan.FromSeconds(10);
@@ -23,6 +24,7 @@ namespace FreeRedis
         public int MinPoolSize { get; set; } = 5;
 
         public static implicit operator ConnectionStringBuilder(string connectionString) => ConnectionStringBuilder.Parse(connectionString);
+        public static implicit operator string(ConnectionStringBuilder connectionString) => connectionString.ToString();
 
         public override string ToString()
         {
@@ -31,9 +33,10 @@ namespace FreeRedis
             if (Ssl) sb.Append(",ssl=true");
             if (Protocol == RedisProtocol.RESP3) sb.Append(",protocol=").Append(Protocol);
             if (!string.IsNullOrWhiteSpace(User)) sb.Append(",user=").Append(User);
-            if (!string.IsNullOrWhiteSpace(Password)) sb.Append(",password=").Append(Password);
+            if (!string.IsNullOrEmpty(Password)) sb.Append(",password=").Append(Password);
             if (Database > 0) sb.Append(",database=").Append(Database);
 
+            if (!string.IsNullOrWhiteSpace(Prefix)) sb.Append(",prefix=").Append(Prefix);
             if (!string.IsNullOrWhiteSpace(ClientName)) sb.Append(",clientName=").Append(ClientName);
             if (Encoding != Encoding.UTF8) sb.Append(",encoding=").Append(Encoding.BodyName);
 
@@ -63,10 +66,11 @@ namespace FreeRedis
                     case "ssl": if (kv.Length > 1 && kv[1].ToLower().Trim() == "true") ret.Ssl = true; break;
                     case "protocol": if (kv.Length > 1 && kv[1].ToUpper().Trim() == "RESP3") ret.Protocol = RedisProtocol.RESP3; break;
                     case "user": if (kv.Length > 1) ret.User = kv[1].Trim(); break;
-                    case "password": if (kv.Length > 1) ret.Password = kv[1].Trim(); break;
+                    case "password": if (kv.Length > 1) ret.Password = kv[1]; break;
                     case "database":
                     case "defaultdatabase": if (kv.Length > 1 && int.TryParse(kv[1].Trim(), out var database) && database > 0) ret.Database = database; break;
 
+                    case "prefix": if (kv.Length > 1) ret.Prefix = kv[1].Trim(); break;
                     case "clientname": if (kv.Length > 1) ret.ClientName = kv[1].Trim(); break;
                     case "encoding": if (kv.Length > 1) ret.Encoding = Encoding.GetEncoding(kv[1].Trim()); break;
 

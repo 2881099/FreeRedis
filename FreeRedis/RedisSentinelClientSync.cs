@@ -3,22 +3,35 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 
 namespace FreeRedis
 {
 	public partial class RedisSentinelClient : RedisClientBase, IDisposable
 	{
-		protected RedisSocket _redisSocket;
+		protected IRedisSocket _redisSocket;
 
 		public RedisSentinelClient(string host)
 		{
-			_redisSocket = new RedisSocket(host, false);
+			_redisSocket = new RedisSocket222(host, false);
 		}
 
-		protected override RedisSocket Socket => _redisSocket;
+		protected override IRedisSocket GetRedisSocket() => _redisSocket;
+
+		~RedisSentinelClient() => this.Dispose();
+		int _disposeCounter;
 		public void Dispose()
 		{
-			Release();
+			if (Interlocked.Increment(ref _disposeCounter) != 1) return;
+			try
+			{
+				_redisSocket.Dispose();
+				Release();
+			}
+			finally
+			{
+				GC.SuppressFinalize(this);
+			}
 		}
 
 		public string Ping() => Call<string>("PING", rt => rt.ThrowOrValue());

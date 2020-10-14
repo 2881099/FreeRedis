@@ -10,7 +10,7 @@ namespace FreeRedis
 		public long HDel(string key, params string[] fields) => Call<long>("HDEL".Input(key).Input(fields).FlagKey(key), rt => rt.ThrowOrValue());
 		public bool HExists(string key, string field) => Call<bool>("HEXISTS".Input(key, field).FlagKey(key), rt => rt.ThrowOrValue());
 		public string HGet(string key, string field) => Call<string>("HGET".Input(key, field).FlagKey(key), rt => rt.ThrowOrValue());
-		public Dictionary<string, string> HGetAll(string key) => Call<string[], Dictionary<string, string>>("HGETALL".Input(key).FlagKey(key), rt => rt.NewValue(a => a.MapToHash<string>(Encoding)).ThrowOrValue());
+		public Dictionary<string, string> HGetAll(string key) => Call<string[], Dictionary<string, string>>("HGETALL".Input(key).FlagKey(key), rt => rt.NewValue(a => a.MapToHash<string>(rt.Encoding)).ThrowOrValue());
 
 		public long IncrBy(string key, string field, long increment) => Call<long>("HINCRBY".Input(key, field, increment).FlagKey(key), rt => rt.ThrowOrValue());
 		public decimal IncrByFloat(string key, string field, decimal increment) => Call<decimal>("HINCRBYFLOAT".Input(key, field, increment).FlagKey(key), rt => rt.ThrowOrValue());

@@ -28,12 +28,12 @@ namespace FreeRedis
 			.FlagKey(new[] { source, destination }), rt => rt.ThrowOrValue());
 
 		public string SPop(string key) => Call<string>("SPOP".Input(key).FlagKey(key), rt => rt.ThrowOrValue());
-		public T SPop<T>(string key) => Call<byte[], T>("SPOP".Input(key).FlagKey(key), rt => rt.NewValue(a => DeserializeRedisValue<T>(a)).ThrowOrValue());
+		public T SPop<T>(string key) => Call<byte[], T>("SPOP".Input(key).FlagKey(key), rt => rt.NewValue(a => DeserializeRedisValue<T>(a, rt.Encoding)).ThrowOrValue());
 		public string[] SPop(string key, int count) => Call<string[]>("SPOP".Input(key, count).FlagKey(key), rt => rt.ThrowOrValue());
 		public T[] SPop<T>(string key, int count) => SReadArray<T>("SPOP".Input(key, count).FlagKey(key));
 
 		public string SRandMember(string key) => Call<string>("SRANDMEMBER".Input(key).FlagKey(key), rt => rt.ThrowOrValue());
-		public T SRandMember<T>(string key) => Call<byte[], T>("SRANDMEMBER".Input(key).FlagKey(key), rt => rt.NewValue(a => DeserializeRedisValue<T>(a)).ThrowOrValue());
+		public T SRandMember<T>(string key) => Call<byte[], T>("SRANDMEMBER".Input(key).FlagKey(key), rt => rt.NewValue(a => DeserializeRedisValue<T>(a, rt.Encoding)).ThrowOrValue());
 		public string[] SRandMember(string key, int count) => Call<string[]>("SRANDMEMBER".Input(key, count).FlagKey(key), rt => rt.ThrowOrValue());
 		public T[] SRandMember<T>(string key, int count) => SReadArray<T>("SRANDMEMBER".Input(key, count).FlagKey(key));
 
@@ -53,7 +53,7 @@ namespace FreeRedis
 		public long SUnionStore(string destination, params string[] keys) => Call<long>("SUNIONSTORE".Input(destination).Input(keys).FlagKey(destination).FlagKey(keys), rt => rt.ThrowOrValue());
 
 		T[] SReadArray<T>(CommandBuilder cb) => Call<object, T[]>(cb, rt => rt
-			.NewValue(a => a.ConvertTo<byte[][]>().Select(b => DeserializeRedisValue<T>(b)).ToArray())
+			.NewValue(a => a.ConvertTo<byte[][]>().Select(b => DeserializeRedisValue<T>(b, rt.Encoding)).ToArray())
 			.ThrowOrValue());
 	}
 }

@@ -32,6 +32,6 @@ namespace FreeRedis
 			return new ScanValue<byte[]>(arr[0].ConvertTo<long>(), arr[1].ConvertTo<byte[][]>());
 		}).ThrowOrValue());
 		public string CfLoadChunk(string key, long iter, byte[] data) => Call<string>("CF.LOADCHUNK".Input(key, iter).InputRaw(data).FlagKey(key), rt => rt.ThrowOrValue());
-		public Dictionary<string, string> CfInfo(string key) => Call<string[], Dictionary<string, string>>("CF.INFO".Input(key).FlagKey(key), rt => rt.NewValue(a => a.MapToHash<string>(Encoding)).ThrowOrValue());
+		public Dictionary<string, string> CfInfo(string key) => Call<string[], Dictionary<string, string>>("CF.INFO".Input(key).FlagKey(key), rt => rt.NewValue(a => a.MapToHash<string>(rt.Encoding)).ThrowOrValue());
     }
 }

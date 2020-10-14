@@ -18,6 +18,6 @@ namespace FreeRedis
 			.InputIf(weights?.Any() == true, "WEIGHTS", weights)
 			.FlagKey(dest)
 			.FlagKey(src), rt => rt.ThrowOrValue());
-		public Dictionary<string, string> CmsInfo(string key) => Call<string[], Dictionary<string, string>>("CMS.INFO".Input(key).FlagKey(key), rt => rt.NewValue(a => a.MapToHash<string>(Encoding)).ThrowOrValue());
+		public Dictionary<string, string> CmsInfo(string key) => Call<string[], Dictionary<string, string>>("CMS.INFO".Input(key).FlagKey(key), rt => rt.NewValue(a => a.MapToHash<string>(rt.Encoding)).ThrowOrValue());
     }
 }

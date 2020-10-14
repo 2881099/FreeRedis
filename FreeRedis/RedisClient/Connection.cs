@@ -8,7 +8,6 @@ namespace FreeRedis
 {
 	partial class RedisClient
 	{
-
 		public void Auth(string password) => Call<string>("AUTH".Input(password), rt => rt.ThrowOrValue());
 		public void Auth(string username, string password) => Call<string>("AUTH".SubCommand(null)
 			.InputIf(!string.IsNullOrWhiteSpace(username), username)
@@ -40,7 +39,7 @@ namespace FreeRedis
 			switch (type)
 			{
 				case ClientReplyType.Off:
-					CallWriteOnly("CLIENT".SubCommand("REPLY").InputRaw(type));
+					GetRedisSocket().Write("CLIENT".SubCommand("REPLY").InputRaw(type));
 					_state = ClientStatus.ClientReplyOff;
 					break;
 				case ClientReplyType.On:
@@ -48,7 +47,7 @@ namespace FreeRedis
 					_state = ClientStatus.Normal;
 					break;
 				case ClientReplyType.Skip:
-					CallWriteOnly("CLIENT".SubCommand("REPLY").InputRaw(type));
+					GetRedisSocket().Write("CLIENT".SubCommand("REPLY").InputRaw(type));
 					_state = ClientStatus.ClientReplySkip;
 					break;
 			}
@@ -78,7 +77,7 @@ namespace FreeRedis
 			.Input(protover)
 			.InputIf(!string.IsNullOrWhiteSpace(username) && !string.IsNullOrWhiteSpace(password), "AUTH", username, password)
 			.InputIf(!string.IsNullOrWhiteSpace(clientname), "SETNAME", clientname), rt => rt
-			.NewValue(a => a.MapToHash<object>(Encoding)).ThrowOrValue());
+			.NewValue(a => a.MapToHash<object>(rt.Encoding)).ThrowOrValue());
 		public string Ping(string message = null) => Call<string>("PING".SubCommand(null)
 			.InputIf(!string.IsNullOrEmpty(message), message), rt => rt.ThrowOrValue());
 		public void Quit() => Call<string>("QUIT", rt => rt.ThrowOrValue());

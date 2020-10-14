@@ -20,15 +20,18 @@ namespace FreeRedis
 		public long Decr(string key) => Call<long>("DECR".Input(key).FlagKey(key), rt => rt.ThrowOrValue());
 		public long DecrBy(string key, long decrement) => Call<long>("DECRBY".Input(key, decrement).FlagKey(key), rt => rt.ThrowOrValue());
 		public string Get(string key) => Call<string>("GET".Input(key).FlagKey(key), rt => rt.ThrowOrValue());
-		public T Get<T>(string key) => Call<byte[], T>("GET".Input(key).FlagKey(key), rt => rt.NewValue(a => DeserializeRedisValue<T>(a)).ThrowOrValue());
+		public T Get<T>(string key) => Call<byte[], T>("GET".Input(key).FlagKey(key), rt => rt.NewValue(a => DeserializeRedisValue<T>(a, rt.Encoding)).ThrowOrValue());
 		public void Get(string key, Stream destination, int bufferSize = 1024)
 		{
-			CallWriteOnly("GET".Input(key).FlagKey(key));
-			Resp3Helper.ReadChunk(Socket.Stream, destination, bufferSize);
+			using (var rds = GetRedisSocket())
+			{
+				rds.Write("GET".Input(key).FlagKey(key));
+				Resp3Helper.ReadChunk(rds.Stream, destination, bufferSize);
+			}
 		}
 		public bool GetBit(string key, long offset) => Call<bool>("GETBIT".Input(key, offset).FlagKey(key), rt => rt.ThrowOrValue());
 		public string GetRange(string key, long start, long end) => Call<string>("GETRANGE".Input(key, start, end).FlagKey(key), rt => rt.ThrowOrValue());
-		public T GetRange<T>(string key, long start, long end) => Call<byte[], T>("GETRANGE".Input(key, start, end).FlagKey(key), rt => rt.NewValue(a => DeserializeRedisValue<T>(a)).ThrowOrValue());
+		public T GetRange<T>(string key, long start, long end) => Call<byte[], T>("GETRANGE".Input(key, start, end).FlagKey(key), rt => rt.NewValue(a => DeserializeRedisValue<T>(a, rt.Encoding)).ThrowOrValue());
 
 		public string GetSet(string key, object value) => Call<string>("GETSET".Input(key).InputRaw(SerializeRedisValue(value)).FlagKey(key), rt => rt.ThrowOrValue());
 		public long Incr(string key) => Call<long>("INCR".Input(key).FlagKey(key), rt => rt.ThrowOrValue());
@@ -37,7 +40,7 @@ namespace FreeRedis
 
 		public string[] MGet(params string[] keys) => Call<string[]>("MGET".Input(keys).FlagKey(keys), rt => rt.ThrowOrValue());
 		public T[] MGet<T>(params string[] keys) => Call<object, T[]>("MGET".Input(keys).FlagKey(keys), rt => rt
-			.NewValue(a => a.ConvertTo<byte[][]>().Select(b => DeserializeRedisValue<T>(b)).ToArray())
+			.NewValue(a => a.ConvertTo<byte[][]>().Select(b => DeserializeRedisValue<T>(b, rt.Encoding)).ToArray())
 			.ThrowOrValue());
 
 		public void MSet(Dictionary<string, object> keyValues) => Call<string>("MSET".SubCommand(null).InputKv(keyValues, SerializeRedisValue).FlagKey(keyValues.Keys), rt => rt.ThrowOrValue());

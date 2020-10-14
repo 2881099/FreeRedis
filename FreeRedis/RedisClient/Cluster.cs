@@ -16,7 +16,7 @@ namespace FreeRedis
 		public string ClusterFlushSlots() => Call<string>("CLUSTER".SubCommand("FLUSHSLOTS"), rt => rt.ThrowOrValue());
 		public long ClusterForget(string nodeid) => Call<long>("CLUSTER".SubCommand("FORGET").InputRaw(nodeid), rt => rt.ThrowOrValue());
 		public string[] ClusterGetKeysInSlot(int slot) => Call<string[]>("CLUSTER".SubCommand("GETKEYSINSLOT").InputRaw(slot), rt => rt.ThrowOrValue());
-		public Dictionary<string, string> ClusterInfo() => Call<string[], Dictionary<string, string>>("CLUSTER".SubCommand("INFO"), rt => rt.NewValue(a => a.MapToHash<string>(Encoding)).ThrowOrValue());
+		public Dictionary<string, string> ClusterInfo() => Call<string[], Dictionary<string, string>>("CLUSTER".SubCommand("INFO"), rt => rt.NewValue(a => a.MapToHash<string>(rt.Encoding)).ThrowOrValue());
 		public int ClusterKeySlot(string key) => Call<int>("CLUSTER".SubCommand("KEYSLOT").InputRaw(key), rt => rt.ThrowOrValue());
 		public string ClusterMeet(string ip, int port) => Call<string>("CLUSTER".SubCommand("MEET").Input(ip, port), rt => rt.ThrowOrValue());
 		public string ClusterMyId() => Call<string>("CLUSTER".SubCommand("MYID"), rt => rt.ThrowOrValue());
