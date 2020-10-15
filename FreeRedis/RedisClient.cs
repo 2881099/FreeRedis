@@ -1,4 +1,5 @@
 ﻿using FreeRedis.Internal;
+using FreeRedis.Internal.ObjectPool;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,25 +10,45 @@ namespace FreeRedis
 {
 	public partial class RedisClient : RedisClientBase, IDisposable
     {
+        internal int _exclusived;
         internal RedisClientPool _pool;
-        public string Statistics => _pool?.Statistics;
+        internal RedisClientPool _pooltemp; //template flag, using Return to pool
+        internal Object<RedisClient> _pooltempItem;
+        public string Statistics => _pool?.Statistics ?? _pooltemp?.Statistics;
         public RedisClient(ConnectionStringBuilder connectionString)
         {
             _pool = new RedisClientPool(connectionString, null);
         }
 
         internal IRedisSocket _singleRedisSocket;
-        protected internal RedisClient(string host, bool ssl, Action<RedisClient> connected)
+        protected internal RedisClient(string host, bool ssl, TimeSpan connectTimeout, TimeSpan receiveTimeout, TimeSpan sendTimeout, Action<RedisClient> connected)
         {
-            var rds = new RedisSocket222(host, ssl);
+            var rds = new DefaultRedisSocket(host, ssl);
             rds.Connected += (s, e) => connected(this);
             rds.Client = this;
+            rds.ConnectTimeout = connectTimeout;
+            rds.ReceiveTimeout = receiveTimeout;
+            rds.SendTimeout = sendTimeout;
             _singleRedisSocket = rds;
         }
         IRedisSocket _outsiteRedisSocket;
         protected internal RedisClient(IRedisSocket redisSocket)
         {
             _outsiteRedisSocket = redisSocket;
+        }
+
+        public RedisClient GetExclusive()
+        {
+            if (_pool != null)
+            {
+                var cli = _pool.Get();
+                cli.Value._exclusived++;
+                cli.Value._pooltemp = _pool;
+                cli.Value._pooltempItem = cli;
+                return cli.Value;
+            }
+            _exclusived++;
+            return this;
         }
 
         protected override IRedisSocket GetRedisSocket()
@@ -44,15 +65,20 @@ namespace FreeRedis
 
         public void Dispose()
         {
-            if (_pool != null)
+            if (_exclusived > 0 && --_exclusived == 0)
+            {
+                if (_pooltemp != null)
+                    _pooltemp.Return(_pooltempItem);
+            }
+            else if (_pool != null)
             {
                 _pool.Dispose();
             }
-            if (_singleRedisSocket != null)
+            else if (_singleRedisSocket != null)
             {
                 _singleRedisSocket.Dispose();
             }
-            if (_outsiteRedisSocket != null)
+            else if (_outsiteRedisSocket != null)
             {
                 //..
             }

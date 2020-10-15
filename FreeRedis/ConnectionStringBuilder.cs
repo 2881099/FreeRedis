@@ -16,8 +16,8 @@ namespace FreeRedis
         public string Prefix { get; set; }
         public string ClientName { get; set; }
         public Encoding Encoding { get; set; } = Encoding.UTF8;
-        public TimeSpan ConnectTimeout { get; set; } = TimeSpan.FromSeconds(10);
         public TimeSpan IdleTimeout { get; set; } = TimeSpan.FromSeconds(20);
+        public TimeSpan ConnectTimeout { get; set; } = TimeSpan.FromSeconds(10);
         public TimeSpan ReceiveTimeout { get; set; } = TimeSpan.FromSeconds(10);
         public TimeSpan SendTimeout { get; set; } = TimeSpan.FromSeconds(10);
         public int MaxPoolSize { get; set; } = 100;
@@ -37,15 +37,15 @@ namespace FreeRedis
             if (Database > 0) sb.Append(",database=").Append(Database);
 
             if (!string.IsNullOrWhiteSpace(Prefix)) sb.Append(",prefix=").Append(Prefix);
-            if (!string.IsNullOrWhiteSpace(ClientName)) sb.Append(",clientName=").Append(ClientName);
+            if (!string.IsNullOrWhiteSpace(ClientName)) sb.Append(",client name=").Append(ClientName);
             if (Encoding != Encoding.UTF8) sb.Append(",encoding=").Append(Encoding.BodyName);
 
-            if (ConnectTimeout != TimeSpan.FromSeconds(10)) sb.Append(",connectTimeout=").Append((long)ConnectTimeout.TotalMilliseconds);
-            if (IdleTimeout != TimeSpan.FromSeconds(20)) sb.Append(",idleTimeout=").Append((long)IdleTimeout.TotalMilliseconds);
-            if (ReceiveTimeout != TimeSpan.FromSeconds(10)) sb.Append(",receiveTimeout=").Append((long)ReceiveTimeout.TotalMilliseconds);
-            if (SendTimeout != TimeSpan.FromSeconds(10)) sb.Append(",sendTimeout=").Append((long)SendTimeout.TotalMilliseconds);
-            if (MaxPoolSize != 100) sb.Append(",maxPoolSize=").Append(MaxPoolSize);
-            if (MinPoolSize != 5) sb.Append(",minPoolSize=").Append(MinPoolSize);
+            if (IdleTimeout != TimeSpan.FromSeconds(20)) sb.Append(",idle timeout=").Append((long)IdleTimeout.TotalMilliseconds);
+            if (ConnectTimeout != TimeSpan.FromSeconds(10)) sb.Append(",connect timeout=").Append((long)ConnectTimeout.TotalMilliseconds);
+            if (ReceiveTimeout != TimeSpan.FromSeconds(10)) sb.Append(",receive timeout=").Append((long)ReceiveTimeout.TotalMilliseconds);
+            if (SendTimeout != TimeSpan.FromSeconds(10)) sb.Append(",send timeout=").Append((long)SendTimeout.TotalMilliseconds);
+            if (MaxPoolSize != 100) sb.Append(",max pool size=").Append(MaxPoolSize);
+            if (MinPoolSize != 5) sb.Append(",min pool size=").Append(MinPoolSize);
             return sb.ToString();
         }
 
@@ -60,11 +60,12 @@ namespace FreeRedis
 
             for (var a = 1; a < vs.Length; a += 2)
             {
-                var kv = new[] { vs[a].ToLower().Trim(), vs[a + 1] };
+                var kv = new[] { Regex.Replace(vs[a].ToLower().Trim(), @"[ \t\r\n]", ""), vs[a + 1] };
                 switch (kv[0])
                 {
                     case "ssl": if (kv.Length > 1 && kv[1].ToLower().Trim() == "true") ret.Ssl = true; break;
                     case "protocol": if (kv.Length > 1 && kv[1].ToUpper().Trim() == "RESP3") ret.Protocol = RedisProtocol.RESP3; break;
+                    case "userid":
                     case "user": if (kv.Length > 1) ret.User = kv[1].Trim(); break;
                     case "password": if (kv.Length > 1) ret.Password = kv[1]; break;
                     case "database":
@@ -74,8 +75,8 @@ namespace FreeRedis
                     case "clientname": if (kv.Length > 1) ret.ClientName = kv[1].Trim(); break;
                     case "encoding": if (kv.Length > 1) ret.Encoding = Encoding.GetEncoding(kv[1].Trim()); break;
 
-                    case "connecttimeout": if (kv.Length > 1 && long.TryParse(kv[1].Trim(), out var connectTimeout) && connectTimeout > 0) ret.ConnectTimeout = TimeSpan.FromMilliseconds(connectTimeout); break;
                     case "idletimeout": if (kv.Length > 1 && long.TryParse(kv[1].Trim(), out var idleTimeout) && idleTimeout > 0) ret.IdleTimeout = TimeSpan.FromMilliseconds(idleTimeout); break;
+                    case "connecttimeout": if (kv.Length > 1 && long.TryParse(kv[1].Trim(), out var connectTimeout) && connectTimeout > 0) ret.ConnectTimeout = TimeSpan.FromMilliseconds(connectTimeout); break;
                     case "receivetimeout": if (kv.Length > 1 && long.TryParse(kv[1].Trim(), out var receiveTimeout) && receiveTimeout > 0) ret.ReceiveTimeout = TimeSpan.FromMilliseconds(receiveTimeout); break;
                     case "sendtimeout": if (kv.Length > 1 && long.TryParse(kv[1].Trim(), out var sendTimeout) && sendTimeout > 0) ret.SendTimeout = TimeSpan.FromMilliseconds(sendTimeout); break;
 

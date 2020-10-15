@@ -82,14 +82,15 @@ namespace FreeRedis.Tests.RedisClientTests
             cli.ClientReply(ClientReplyType.Off);
             cli.ClientReply(ClientReplyType.Skip);
             cli.ClientReply(ClientReplyType.On);
-
             cli.SetGetTest();
 
             cli.ClientReply(ClientReplyType.Off);
-
             var key = Guid.NewGuid().ToString();
             cli.Set(key, key);
             Assert.Null(cli.Get(key));
+
+            cli.ClientReply(ClientReplyType.On);
+            cli.SetGetTest();
         }
 
         [Fact]

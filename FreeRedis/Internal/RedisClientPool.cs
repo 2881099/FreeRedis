@@ -35,6 +35,9 @@ namespace FreeRedis.Internal
 
             public string Host => _rds.Host;
             public bool Ssl => _rds.Ssl;
+            public TimeSpan ConnectTimeout { get => _rds.ConnectTimeout; set => _rds.ConnectTimeout = value; }
+            public TimeSpan ReceiveTimeout { get => _rds.ReceiveTimeout; set => _rds.ReceiveTimeout = value; }
+            public TimeSpan SendTimeout { get => _rds.SendTimeout; set => _rds.SendTimeout = value; }
             public Socket Socket => _rds.Socket;
             public Stream Stream => _rds.Stream;
             public bool IsConnected => _rds.IsConnected;
@@ -44,10 +47,10 @@ namespace FreeRedis.Internal
 
             public RedisClient Client => _rds.Client;
 
-            public void Connect(int millisecondsTimeout = 15000) => _rds.Connect(millisecondsTimeout);
+            public void Connect() => _rds.Connect();
 #if net40
 #else
-            public Task ConnectAsync(int millisecondsTimeout = 15000) => _rds.ConnectAsync(millisecondsTimeout);
+            public Task ConnectAsync() => _rds.ConnectAsync();
 #endif
             public RedisResult<T> Read<T>() => _rds.Read<T>();
             public RedisResult<T> Read<T>(Encoding encoding) => _rds.Read<T>(encoding);
@@ -185,9 +188,8 @@ namespace FreeRedis.Internal
 
         public RedisClient OnCreate()
         {
-            RedisClient cli = null;
-            cli = new RedisClient(_connectionStringBuilder.Host, _connectionStringBuilder.Ssl, rc => Connected(cli, new EventArgs()));
-            return cli;
+            return new RedisClient(_connectionStringBuilder.Host, _connectionStringBuilder.Ssl, _connectionStringBuilder.ConnectTimeout, 
+                _connectionStringBuilder.ReceiveTimeout, _connectionStringBuilder.SendTimeout, cli => Connected(cli, new EventArgs()));
         }
 
         public void OnDestroy(RedisClient obj)
@@ -198,6 +200,8 @@ namespace FreeRedis.Internal
                 try { obj.Dispose(); } catch { }
             }
         }
+
+        public void OnReturn(Object<RedisClient> obj) { }
 
         public void OnGet(Object<RedisClient> obj)
         {
@@ -239,7 +243,6 @@ namespace FreeRedis.Internal
 #endif
 
         public void OnGetTimeout() { }
-        public void OnReturn(Object<RedisClient> obj) { }
         public void OnAvailable() { }
         public void OnUnavailable() { }
 

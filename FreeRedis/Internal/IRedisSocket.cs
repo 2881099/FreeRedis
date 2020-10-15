@@ -15,13 +15,16 @@ namespace FreeRedis.Internal
     {
         string Host { get; }
         bool Ssl { get; }
+        TimeSpan ConnectTimeout { get; set; }
+        TimeSpan ReceiveTimeout { get; set; }
+        TimeSpan SendTimeout { get; set; }
+
         Socket Socket { get; }
         Stream Stream { get; }
         bool IsConnected { get; }
         event EventHandler<EventArgs> Connected;
 
         RedisClient Client { get; }
-
         RedisProtocol Protocol { get; set; }
         Encoding Encoding { get; set; }
 
@@ -32,10 +35,10 @@ namespace FreeRedis.Internal
         RedisResult<T> Read<T>(Encoding encoding);
         void ReadChunk(Stream destination, int bufferSize = 1024);
 
-        void Connect(int millisecondsTimeout = 15000);
+        void Connect();
 #if net40
 #else
-        Task ConnectAsync(int millisecondsTimeout = 15000);
+        Task ConnectAsync();
 #endif
 
         void ResetHost(string host);

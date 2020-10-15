@@ -11,12 +11,34 @@ using System.Threading.Tasks;
 
 namespace FreeRedis.Internal
 {
-    public class RedisSocket222 : IRedisSocket
+    public class DefaultRedisSocket : IRedisSocket
     {
         public string Host { get; private set; }
         public bool Ssl { get; private set; }
         string _ip;
         int _port;
+        TimeSpan _receiveTimeout = TimeSpan.FromSeconds(10);
+        TimeSpan _sendTimeout = TimeSpan.FromSeconds(10);
+        public TimeSpan ConnectTimeout { get; set; } = TimeSpan.FromSeconds(10);
+        public TimeSpan ReceiveTimeout
+        {
+            get => _receiveTimeout;
+            set
+            {
+                if (_socket != null) _socket.ReceiveTimeout = (int)value.TotalMilliseconds;
+                _receiveTimeout = value;
+            }
+        }
+        public TimeSpan SendTimeout
+        {
+            get => _sendTimeout;
+            set
+            {
+                if (_socket != null) _socket.SendTimeout = (int)value.TotalMilliseconds;
+                _sendTimeout = value;
+            }
+        }
+
         Socket _socket;
         public Socket Socket => _socket ?? throw new Exception("Redis socket connection was not opened");
         NetworkStream _stream;
@@ -25,11 +47,10 @@ namespace FreeRedis.Internal
         public event EventHandler<EventArgs> Connected;
 
         public RedisClient Client { get; set; }
-
         public RedisProtocol Protocol { get; set; } = RedisProtocol.RESP2;
         public Encoding Encoding { get; set; } = Encoding.UTF8;
 
-        public RedisSocket222(string host, bool ssl)
+        public DefaultRedisSocket(string host, bool ssl)
         {
             Host = host;
             Ssl = ssl;
@@ -54,25 +75,25 @@ namespace FreeRedis.Internal
             Resp3Helper.ReadChunk(Stream, destination, bufferSize);
         }
 
-        public void Connect(int millisecondsTimeout = 15000)
+        public void Connect()
         {
             ResetHost(Host);
             var endpoint = new IPEndPoint(IPAddress.Parse(_ip), _port);
             var localSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
             var asyncResult = localSocket.BeginConnect(endpoint, null, null);
-            if (!asyncResult.AsyncWaitHandle.WaitOne(millisecondsTimeout, true))
+            if (!asyncResult.AsyncWaitHandle.WaitOne(ConnectTimeout, true))
                 throw new TimeoutException("Connect to redis-server timeout");
             _socket = localSocket;
             _stream = new NetworkStream(Socket, true);
-            _socket.SendTimeout = 10000;
-            _socket.ReceiveTimeout = 10000;
+            _socket.ReceiveTimeout = (int)ReceiveTimeout.TotalMilliseconds;
+            _socket.SendTimeout = (int)SendTimeout.TotalMilliseconds;
             Connected?.Invoke(this, new EventArgs());
         }
 #if net40
 #else
         TaskCompletionSource<bool> connectAsyncTcs;
-        async public Task ConnectAsync(int millisecondsTimeout = 15000)
+        async public Task ConnectAsync()
         {
             ResetHost(Host);
             var endpoint = new IPEndPoint(IPAddress.Parse(_ip), _port);
@@ -92,11 +113,11 @@ namespace FreeRedis.Internal
                     connectAsyncTcs.TrySetException(ex);
                 }
             }, null);
-            await connectAsyncTcs.Task.TimeoutAfter(TimeSpan.FromMilliseconds(millisecondsTimeout), "Connect to redis-server timeout");
+            await connectAsyncTcs.Task.TimeoutAfter(ConnectTimeout, "Connect to redis-server timeout");
             _socket = localSocket;
             _stream = new NetworkStream(Socket, true);
-            _socket.SendTimeout = 10000;
-            _socket.ReceiveTimeout = 10000;
+            _socket.ReceiveTimeout = (int)ReceiveTimeout.TotalMilliseconds;
+            _socket.SendTimeout = (int)SendTimeout.TotalMilliseconds;
             Connected?.Invoke(this, new EventArgs());
         }
 #endif
@@ -174,7 +195,7 @@ namespace FreeRedis.Internal
             }
         }
 
-        ~RedisSocket222() => this.Dispose();
+        ~DefaultRedisSocket() => this.Dispose();
         int _disposeCounter;
         public void Dispose()
         {

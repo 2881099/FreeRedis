@@ -13,7 +13,7 @@ namespace FreeRedis
 
 		public RedisSentinelClient(string host)
 		{
-			_redisSocket = new RedisSocket222(host, false);
+			_redisSocket = new DefaultRedisSocket(host, false);
 		}
 
 		protected override IRedisSocket GetRedisSocket() => _redisSocket;
