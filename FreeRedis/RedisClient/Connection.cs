@@ -1,4 +1,4 @@
-﻿using FreeRedis.Internal.IO;
+﻿using FreeRedis.Internal;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -39,16 +39,16 @@ namespace FreeRedis
 			switch (type)
 			{
 				case ClientReplyType.Off:
-					GetRedisSocket().Write("CLIENT".SubCommand("REPLY").InputRaw(type));
 					_state = ClientStatus.ClientReplyOff;
+					GetRedisSocket().Write("CLIENT".SubCommand("REPLY").InputRaw(type));
 					break;
 				case ClientReplyType.On:
-					Call<string>("CLIENT".SubCommand("REPLY").InputRaw(type), rt => rt.ThrowOrValue());
 					_state = ClientStatus.Normal;
+					Call<string>("CLIENT".SubCommand("REPLY").InputRaw(type), rt => rt.ThrowOrValue());
 					break;
 				case ClientReplyType.Skip:
-					GetRedisSocket().Write("CLIENT".SubCommand("REPLY").InputRaw(type));
 					_state = ClientStatus.ClientReplySkip;
+					GetRedisSocket().Write("CLIENT".SubCommand("REPLY").InputRaw(type));
 					break;
 			}
 		}

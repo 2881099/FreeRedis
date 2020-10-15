@@ -5,7 +5,10 @@ using System.Text;
 namespace FreeRedis.Tests
 {
     public class TestBase
-    {
+	{
+		static Lazy<RedisClient> _cliLazy = new Lazy<RedisClient>(() => new RedisClient("127.0.0.1:6379"));
+		public static RedisClient cli => _cliLazy.Value;
+
 		protected readonly object Null = null;
 		protected readonly string String = "我是中国人";
 		protected readonly byte[] Bytes = Encoding.UTF8.GetBytes("这是一个byte字节");

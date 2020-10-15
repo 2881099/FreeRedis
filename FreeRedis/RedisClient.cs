@@ -1,4 +1,4 @@
-﻿using FreeRedis.Internal.IO;
+﻿using FreeRedis.Internal;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,12 +9,14 @@ namespace FreeRedis
 {
 	public partial class RedisClient : RedisClientBase, IDisposable
     {
-        protected internal RedisClientPool _pool;
+        internal RedisClientPool _pool;
+        public string Statistics => _pool?.Statistics;
         public RedisClient(ConnectionStringBuilder connectionString)
         {
             _pool = new RedisClientPool(connectionString, null);
         }
-        protected internal IRedisSocket _singleRedisSocket;
+
+        internal IRedisSocket _singleRedisSocket;
         protected internal RedisClient(string host, bool ssl, Action<RedisClient> connected)
         {
             var rds = new RedisSocket222(host, ssl);
@@ -22,7 +24,7 @@ namespace FreeRedis
             rds.Client = this;
             _singleRedisSocket = rds;
         }
-        protected IRedisSocket _outsiteRedisSocket;
+        IRedisSocket _outsiteRedisSocket;
         protected internal RedisClient(IRedisSocket redisSocket)
         {
             _outsiteRedisSocket = redisSocket;
@@ -37,7 +39,7 @@ namespace FreeRedis
             }
             if (_singleRedisSocket != null) return _singleRedisSocket;
             if (_outsiteRedisSocket != null) return _outsiteRedisSocket;
-            throw new Exception("GetRedisSocket cannot return null");
+            throw new Exception("RedisClient.GetRedisSocket() cannot return null");
         }
 
         public void Dispose()

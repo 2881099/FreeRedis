@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace FreeRedis.Internal.IO
+namespace FreeRedis.Internal
 {
     public class RedisSocket222 : IRedisSocket
     {

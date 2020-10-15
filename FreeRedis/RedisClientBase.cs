@@ -1,4 +1,4 @@
-﻿using FreeRedis.Internal.IO;
+﻿using FreeRedis.Internal;
 using System;
 using System.Collections.Generic;
 using System.IO;

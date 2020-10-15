@@ -12,7 +12,7 @@ using System.Linq;
 using System.Net.Sockets;
 using System.IO;
 
-namespace FreeRedis.Internal.IO
+namespace FreeRedis.Internal
 {
     public class RedisClientPool : ObjectPool<RedisClient>
     {
@@ -105,7 +105,7 @@ namespace FreeRedis.Internal.IO
                             throw cli.RedisSimpleError;
                     }
                 }
-                connected(cli);
+                connected?.Invoke(cli);
             };
             this.Policy = _policy;
             _policy.ConnectionString = connectionString;
