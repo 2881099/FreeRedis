@@ -38,7 +38,7 @@ namespace FreeRedis
 		public string RandomKey() => Call<string>("RANDOMKEY", rt => rt.ThrowOrValue());
 		public void Rename(string key, string newkey) => Call<string>("RENAME".Input(key, newkey).FlagKey(key, newkey), rt => rt.ThrowOrValue());
 		public bool RenameNx(string key, string newkey) => Call<bool>("RENAMENX".Input(key, newkey).FlagKey(key, newkey), rt => rt.ThrowOrValue());
-		public void Restore(string key, int ttl, byte[] serializedValue, bool replace, bool absTtl, int idleTimeSeconds, decimal frequency) => Call<string>("RENAMENX"
+		public void Restore(string key, int ttl, byte[] serializedValue, bool replace, bool absTtl, int idleTimeSeconds, decimal frequency) => Call<string>("RESTORE"
 			.Input(key, ttl)
 			.InputRaw(serializedValue)
 			.InputIf(replace, "REPLACE")
@@ -56,7 +56,7 @@ namespace FreeRedis
 				var arr = a as List<object>;
 				return new ScanValue<string>(arr[0].ConvertTo<long>(), arr[1].ConvertTo<string[]>());
 			}).ThrowOrValue());
-		public object Sort(string key, string byPattern, long offset, long count, string[] getPatterns, Collation? collation, bool alpha, string storeDestination) => Call<object>("OBJECT"
+		public object Sort(string key, string byPattern, long offset, long count, string[] getPatterns, Collation? collation, bool alpha, string storeDestination) => Call<object>("SORT"
 			.Input(key)
 			.InputIf(!string.IsNullOrWhiteSpace(byPattern), "BY", byPattern)
 			.InputIf(offset != 0 || count != 0, "LIMIT", offset, count)

@@ -31,7 +31,7 @@ namespace FreeRedis
 			}).ThrowOrValue());
 		public bool HSet(string key, string field, string value) => Call<bool>("HSET".Input(key, field, value).FlagKey(key), rt => rt.ThrowOrValue());
 		public long HSet(string key, Dictionary<string, string> keyValues) => Call<long>("HSET".Input(key).InputKv(keyValues).FlagKey(key), rt => rt.ThrowOrValue());
-		public bool HSetNx(string key, string field, string value) => Call<bool>("HSET".Input(key, field, value).FlagKey(key), rt => rt.ThrowOrValue());
+		public bool HSetNx(string key, string field, string value) => Call<bool>("HSETNX".Input(key, field, value).FlagKey(key), rt => rt.ThrowOrValue());
 		public long HStrLen(string key, string field) => Call<long>("HSTRLEN".Input(key, field).FlagKey(key), rt => rt.ThrowOrValue());
 		public string[] HVals(string key) => Call<string[]>("HVALS".Input(key).FlagKey(key), rt => rt.ThrowOrValue());
 	}

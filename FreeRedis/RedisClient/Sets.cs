@@ -20,7 +20,7 @@ namespace FreeRedis
 
 		public bool SIsMember(string key, object member) => Call<bool>("SISMEMBER".Input(key).InputRaw(SerializeRedisValue(member)).FlagKey(key), rt => rt.ThrowOrValue());
 		public string[] SMeMembers(string key) => Call<string[]>("SMEMBERS".Input(key).FlagKey(key), rt => rt.ThrowOrValue());
-		public T[] SMeMembers<T>(string key) => SReadArray<T>("SDIFF".Input(key).FlagKey(key));
+		public T[] SMeMembers<T>(string key) => SReadArray<T>("SMISMEMBER".Input(key).FlagKey(key));
 
 		public bool SMove(string source, string destination, object member) => Call<bool>("SMOVE"
 			.Input(source, destination)

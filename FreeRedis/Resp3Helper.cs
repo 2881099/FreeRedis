@@ -710,6 +710,7 @@ namespace FreeRedis
         static ConcurrentDictionary<Type, Func<string, object>> _dicFromObject = new ConcurrentDictionary<Type, Func<string, object>>();
         public static object FromObject(this Type targetType, object value, Encoding encoding = null)
         {
+            if (targetType == typeof(object)) return value;
             if (encoding == null) encoding = Encoding.UTF8;
             var valueIsNull = value == null;
             var valueType = valueIsNull ? typeof(string) : value.GetType();

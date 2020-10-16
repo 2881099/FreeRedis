@@ -33,7 +33,7 @@ namespace FreeRedis
 		public object[] Command() => Call<object[]>("COMMAND", rt => rt.ThrowOrValue());
 		public long CommandCount() => Call<long>("COMMAND".SubCommand("COUNT"), rt => rt.ThrowOrValue());
 		public string[] CommandGetKeys(params string[] command) => command?.Any() == true ? Call<string[]>("COMMAND".SubCommand("GETKEYS").Input(command), rt => rt.ThrowOrValue()) : throw new ArgumentException(nameof(command));
-		public string[] CommandInfo(params string[] command) => command?.Any() == true ? Call<string[]>("COMMAND".SubCommand("INFO").Input( command), rt => rt.ThrowOrValue()) : throw new ArgumentException(nameof(command));
+		public object[] CommandInfo(params string[] command) => command?.Any() == true ? Call<object[]>("COMMAND".SubCommand("INFO").Input(command), rt => rt.ThrowOrValue()) : throw new ArgumentException(nameof(command));
 		public Dictionary<string, string> ConfigGet(string parameter) => Call<string[], Dictionary<string, string>>("CONFIG".SubCommand("GET").InputRaw(parameter), rt => rt.NewValue(a => a.MapToHash<string>(rt.Encoding)).ThrowOrValue());
 		public string ConfigResetStat() => Call<string>("CONFIG".SubCommand("RESETSTAT"), rt => rt.ThrowOrValue());
 		public string ConfigRewrite() => Call<string>("CONFIG".SubCommand("REWRITE"), rt => rt.ThrowOrValue());
@@ -48,10 +48,10 @@ namespace FreeRedis
 		public string LatencyDoctor() => Call<string>("LATENCY".SubCommand("DOCTOR"), rt => rt.ThrowOrValue());
 		public string LatencyGraph(string @event) => Call<string>("LATENCY".SubCommand("GRAPH").InputRaw(@event), rt => rt.ThrowOrValue());
 		public string[] LatencyHelp() => Call<string[]>("LATENCY".SubCommand("HELP"), rt => rt.ThrowOrValue());
-		public string[][] LatencyHistory(string @event) => Call<string[][]>("HISTORY".SubCommand("HELP").InputRaw(@event), rt => rt.ThrowOrValue());
-		public string[][] LatencyLatest() => Call<string[][]>("HISTORY".SubCommand("LATEST"), rt => rt.ThrowOrValue());
-		public long LatencyReset(string @event) => Call<long>("LASTSAVE".SubCommand("RESET").InputRaw(@event), rt => rt.ThrowOrValue());
-		public string Lolwut(string version) => Call<string>("LATENCY".SubCommand(null).InputIf(string.IsNullOrWhiteSpace(version) == false, "VERSION", version), rt => rt.ThrowOrValue());
+		public string[][] LatencyHistory(string @event) => Call<string[][]>("LATENCY".SubCommand("HISTORY").InputRaw(@event), rt => rt.ThrowOrValue());
+		public string[][] LatencyLatest() => Call<string[][]>("LATENCY".SubCommand("LATEST"), rt => rt.ThrowOrValue());
+		public long LatencyReset(string @event) => Call<long>("LATENCY".SubCommand("RESET").InputRaw(@event), rt => rt.ThrowOrValue());
+		public string Lolwut(string version) => Call<string>("LOLWUT".SubCommand(null).InputIf(string.IsNullOrWhiteSpace(version) == false, "VERSION", version), rt => rt.ThrowOrValue());
 		public string MemoryDoctor() => Call<string>("MEMORY".SubCommand("DOCTOR"), rt => rt.ThrowOrValue());
 		public string[] MemoryHelp() => Call<string[]>("MEMORY".SubCommand("HELP"), rt => rt.ThrowOrValue());
 		public string MemoryMallocStats() => Call<string>("MEMORY".SubCommand("MALLOC-STATS"), rt => rt.ThrowOrValue());

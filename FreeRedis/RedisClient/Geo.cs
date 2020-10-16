@@ -10,11 +10,11 @@ namespace FreeRedis
 			.InputIf(members?.Any() == true, members.Select(a => new object[] { a.Longitude, a.Latitude, a.Member }).ToArray())
 			.FlagKey(key), rt => rt.ThrowOrValue());
 
-		public decimal GeoDist(string key, string member1, string member2, GeoUnit unit = GeoUnit.M) => Call<decimal>("GEOADD"
+		public decimal GeoDist(string key, string member1, string member2, GeoUnit unit = GeoUnit.M) => Call<decimal>("GEODIST"
 			.Input(key, member1, member2)
 			.InputIf(unit != GeoUnit.M, unit)
 			.FlagKey(key), rt => rt.ThrowOrValue());
-		public string[] GeoHash(string key, string[] members) => Call<string[]>("GEOADD".Input(key).Input(members).FlagKey(key), rt => rt.ThrowOrValue());
+		public string[] GeoHash(string key, string[] members) => Call<string[]>("GEOHASH".Input(key).Input(members).FlagKey(key), rt => rt.ThrowOrValue());
 		public GeoMember[] GeoPos(string key, string[] members) => Call<object, GeoMember[]>("GEOPOS".Input(key).Input(members).FlagKey(key), rt => rt
 			.NewValue(a => (a as List<object>).Select((z, y) =>
 				{

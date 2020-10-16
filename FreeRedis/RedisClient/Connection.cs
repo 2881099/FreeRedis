@@ -10,7 +10,7 @@ namespace FreeRedis
 	{
 		T CheckSingle<T>(Func<T> call)
         {
-			if (_pool != null && _pool.Policy.PoolSize != 1) throw new RedisException("RedisClient: Method cannot be used in connection pool mode");
+			if (_pool != null && _pool.Policy.PoolSize != 1) throw new RedisException("RedisClient: Method cannot be used in connection pool mode. You can set \"max pool size=1\", but it is not singleton mode.");
 			return call();
 		}
 
