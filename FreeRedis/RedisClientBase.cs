@@ -26,15 +26,15 @@ namespace FreeRedis
 
         bool _isThrowRedisSimpleError { get; set; } = true;
         protected internal RedisException RedisSimpleError { get; private set; }
-        class NoneRedisSimpleErrorScopeImpl : IDisposable
-        {
-            public Action Release;
-            public void Dispose() => Release?.Invoke();
-        }
         protected internal IDisposable NoneRedisSimpleError()
         {
+            var old_isThrowRedisSimpleError = _isThrowRedisSimpleError;
             _isThrowRedisSimpleError = false;
-            return new NoneRedisSimpleErrorScopeImpl { Release = () => _isThrowRedisSimpleError = true };
+            return new TempDisposable(() =>
+            {
+                _isThrowRedisSimpleError = old_isThrowRedisSimpleError;
+                RedisSimpleError = null;
+            });
         }
 
         protected abstract IRedisSocket GetRedisSocket();

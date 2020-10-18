@@ -475,31 +475,37 @@ namespace FreeRedis
         }
 
         #region ExpressionTree
-        static int SetPropertyValueSupportExpressionTreeFlag = 1;
-        static ConcurrentDictionary<Type, ConcurrentDictionary<string, Action<object, string, object>>> _dicSetEntityValueWithPropertyName = new ConcurrentDictionary<Type, ConcurrentDictionary<string, Action<object, string, object>>>();
-        public static void SetPropertyValue(this Type entityType, object entity, string propertyName, object value)
+        static int SetSetPropertyOrFieldValueSupportExpressionTreeFlag = 1;
+        static ConcurrentDictionary<Type, ConcurrentDictionary<string, Action<object, string, object>>> _dicSetPropertyOrFieldValue = new ConcurrentDictionary<Type, ConcurrentDictionary<string, Action<object, string, object>>>();
+        public static void SetPropertyOrFieldValue(this Type entityType, object entity, string propertyName, object value)
         {
             if (entity == null) return;
             if (entityType == null) entityType = entity.GetType();
 
-            if (SetPropertyValueSupportExpressionTreeFlag == 0)
+            if (SetSetPropertyOrFieldValueSupportExpressionTreeFlag == 0)
             {
-                var props = GetPropertiesDictIgnoreCase(entityType);
-                if (props.TryGetValue(propertyName, out var prop) == false)
-                    throw new Exception($"{entityType.DisplayCsharp()} 未找到属性名 {propertyName}");
-                prop.SetValue(entity, value, null);
-                return;
+                if (GetPropertiesDictIgnoreCase(entityType).TryGetValue(propertyName, out var prop))
+                {
+                    prop.SetValue(entity, value, null);
+                    return;
+                }
+                if (GetFieldsDictIgnoreCase(entityType).TryGetValue(propertyName, out var field))
+                {
+                    field.SetValue(entity, value);
+                    return;
+                }
+                throw new Exception($"{entityType.DisplayCsharp()} 未找到属性名 {propertyName}");
             }
 
             Action<object, string, object> func = null;
             try
             {
-                func = _dicSetEntityValueWithPropertyName
+                func = _dicSetPropertyOrFieldValue
                     .GetOrAdd(entityType, et => new ConcurrentDictionary<string, Action<object, string, object>>())
                     .GetOrAdd(propertyName, pn =>
                     {
                         var t = entityType;
-                        var props = GetPropertiesDictIgnoreCase(t);
+                        MemberInfo memberinfo = entityType.GetPropertyOrFieldIgnoreCase(pn);
                         var parm1 = Expression.Parameter(typeof(object));
                         var parm2 = Expression.Parameter(typeof(string));
                         var parm3 = Expression.Parameter(typeof(object));
@@ -507,15 +513,14 @@ namespace FreeRedis
                         var exps = new List<Expression>(new Expression[] {
                             Expression.Assign(var1Parm, Expression.TypeAs(parm1, t))
                         });
-                        if (props.ContainsKey(pn))
+                        if (memberinfo != null)
                         {
-                            var prop = props[pn];
                             exps.Add(
                                 Expression.Assign(
-                                    Expression.MakeMemberAccess(var1Parm, prop),
+                                    Expression.MakeMemberAccess(var1Parm, memberinfo),
                                     Expression.Convert(
                                         parm3,
-                                        prop.PropertyType
+                                        memberinfo.GetPropertyOrFieldType()
                                     )
                                 )
                             );
@@ -525,8 +530,8 @@ namespace FreeRedis
             }
             catch
             {
-                System.Threading.Interlocked.Exchange(ref SetPropertyValueSupportExpressionTreeFlag, 0);
-                SetPropertyValue(entityType, entity, propertyName, value);
+                System.Threading.Interlocked.Exchange(ref SetSetPropertyOrFieldValueSupportExpressionTreeFlag, 0);
+                SetPropertyOrFieldValue(entityType, entity, propertyName, value);
                 return;
             }
             func(entity, propertyName, value);
@@ -661,34 +666,62 @@ namespace FreeRedis
         }
 
         static ConcurrentDictionary<Type, Dictionary<string, PropertyInfo>> _dicGetPropertiesDictIgnoreCase = new ConcurrentDictionary<Type, Dictionary<string, PropertyInfo>>();
-        static Dictionary<string, PropertyInfo> GetPropertiesDictIgnoreCase(this Type that) => that == null ? null : _dicGetPropertiesDictIgnoreCase.GetOrAdd(that, tp =>
+        public static Dictionary<string, PropertyInfo> GetPropertiesDictIgnoreCase(this Type that) => that == null ? null : _dicGetPropertiesDictIgnoreCase.GetOrAdd(that, tp =>
         {
-            var props = that.GetProperties().GroupBy(p => p.DeclaringType).Reverse().SelectMany(p => p);
+            var props = that.GetProperties().GroupBy(p => p.DeclaringType).Reverse().SelectMany(p => p); //将基类的属性位置放在前面 #164
             var dict = new Dictionary<string, PropertyInfo>(StringComparer.CurrentCultureIgnoreCase);
             foreach (var prop in props)
             {
-                if (dict.ContainsKey(prop.Name)) continue;
+                if (dict.TryGetValue(prop.Name, out var existsProp))
+                {
+                    if (existsProp.DeclaringType != prop) dict[prop.Name] = prop;
+                    continue;
+                }
                 dict.Add(prop.Name, prop);
             }
             return dict;
+        }); 
+        static ConcurrentDictionary<Type, Dictionary<string, FieldInfo>> _dicGetFieldsDictIgnoreCase = new ConcurrentDictionary<Type, Dictionary<string, FieldInfo>>();
+        public static Dictionary<string, FieldInfo> GetFieldsDictIgnoreCase(this Type that) => that == null ? null : _dicGetFieldsDictIgnoreCase.GetOrAdd(that, tp =>
+        {
+            var fields = that.GetFields().GroupBy(p => p.DeclaringType).Reverse().SelectMany(p => p); //将基类的属性位置放在前面 #164
+            var dict = new Dictionary<string, FieldInfo>(StringComparer.CurrentCultureIgnoreCase);
+            foreach (var field in fields)
+            {
+                if (dict.ContainsKey(field.Name)) dict[field.Name] = field;
+                else dict.Add(field.Name, field);
+            }
+            return dict;
         });
+        public static MemberInfo GetPropertyOrFieldIgnoreCase(this Type that, string name)
+        {
+            if (GetPropertiesDictIgnoreCase(that).TryGetValue(name, out var prop)) return prop;
+            if (GetFieldsDictIgnoreCase(that).TryGetValue(name, out var field)) return field;
+            return null;
+        }
+        public static Type GetPropertyOrFieldType(this MemberInfo that)
+        {
+            if (that is PropertyInfo prop) return prop.PropertyType;
+            if (that is FieldInfo field) return field.FieldType;
+            return null;
+        }
         #endregion
 
         #region 类型转换
         public static string ToInvariantCultureToString(this object obj) => string.Format(CultureInfo.InvariantCulture, @"{0}", obj);
         public static T MapToClass<T>(this object[] list, Encoding encoding)
         {
-            if (list?.Length % 2 != 0) throw new ArgumentException(nameof(list));
+            if (list == null) return default(T);
+            if (list.Length % 2 != 0) throw new ArgumentException(nameof(list));
             var ttype = typeof(T);
             var ret = (T)ttype.CreateInstanceGetDefaultValue();
-            var props = ttype.GetPropertiesDictIgnoreCase();
             for (var a = 0; a < list.Length; a += 2)
             {
-                var name = list[a].ToString().Replace("-", "");
-                if (props.TryGetValue(name, out var tryprop) == false) throw new ArgumentException($"{typeof(T).DisplayCsharp()} undefined Property {list[a]}");
-                var val = list[a + 1];
-                if (val == null) continue;
-                ttype.SetPropertyValue(ret, tryprop.Name, tryprop.PropertyType.FromObject(val, encoding));
+                var name = list[a].ToString().Replace("-", "_");
+                var prop = ttype.GetPropertyOrFieldIgnoreCase(name);
+                if (prop == null) throw new ArgumentException($"{typeof(T).DisplayCsharp()} undefined Property {list[a]}");
+                if (list[a + 1] == null) continue;
+                ttype.SetPropertyOrFieldValue(ret, prop.Name, prop.GetPropertyOrFieldType().FromObject(list[a + 1], encoding));
             }
             return ret;
         }
@@ -823,6 +856,16 @@ namespace FreeRedis
                 if (tt == typeof(Guid?)) return vs => vs == null ? null : (Guid.TryParse(vs, out var tryval) ? (Guid?)tryval : null);
                 if (tt == typeof(BigInteger)) return vs => vs == null ? 0 : (BigInteger.TryParse(vs, NumberStyles.Any, null, out var tryval) ? tryval : 0);
                 if (tt == typeof(BigInteger?)) return vs => vs == null ? null : (BigInteger.TryParse(vs, NumberStyles.Any, null, out var tryval) ? (BigInteger?)tryval : null);
+                if (tt.NullableTypeOrThis().IsEnum)
+                {
+                    var tttype = tt.NullableTypeOrThis();
+                    var ttdefval = tt.CreateInstanceGetDefaultValue();
+                    return vs =>
+                    {
+                        if (string.IsNullOrWhiteSpace(vs)) return ttdefval;
+                        return Enum.Parse(tttype, vs, true);
+                    };
+                }
                 var localTargetType = targetType;
                 var localValueType = valueType;
                 return vs =>
@@ -850,17 +893,24 @@ namespace FreeRedis
         public bool IsErrorThrow { get; internal set; } = true;
         public string SimpleError { get; }
         public Encoding Encoding { get; internal set; }
-        internal RedisResult(T value, bool isend, RedisMessageType msgtype) : this(value, value?.ConvertTo<string>(), isend, msgtype) { }
+        internal RedisResult(T value, bool isend, RedisMessageType msgtype)
+        {
+            this.IsEnd = isend;
+            this.MessageType = msgtype;
+            if (IsError) this.SimpleError = value?.ConvertTo<string>();
+            else this.Value = value;
+        }
         internal RedisResult(T value, string simpleError, bool isend, RedisMessageType msgtype)
         {
             this.Value = value;
+            this.SimpleError = simpleError;
             this.IsEnd = isend;
             this.MessageType = msgtype;
-            this.SimpleError = simpleError;
         }
         public RedisResult<T2> NewValue<T2>(Func<T, T2> value)
         {
             if (typeof(T) == typeof(T2)) return this as RedisResult<T2>;
+            if (this.Value == null) return new RedisResult<T2>(default(T2), this.SimpleError, true, this.MessageType);
             return new RedisResult<T2>(value(this.Value), this.SimpleError, true, this.MessageType);
         }
         public T ThrowOrValue()

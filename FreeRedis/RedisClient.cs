@@ -2,6 +2,7 @@
 using FreeRedis.Internal.ObjectPool;
 using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -15,12 +16,57 @@ namespace FreeRedis
         internal RedisClientPool _pooltemp; //template flag, using Return to pool
         internal Object<RedisClient> _pooltempItem;
         public string Statistics => _pool?.Statistics ?? _pooltemp?.Statistics;
+        /// <summary>
+        /// Pooling RedisClient
+        /// </summary>
         public RedisClient(ConnectionStringBuilder connectionString)
         {
             _pool = new RedisClientPool(connectionString, null);
         }
 
+        /// <summary>
+        /// Cluster RedisClient
+        /// </summary>
+        public RedisClient(ConnectionStringBuilder[] clusterConnectionStrings)
+        {
+
+        }
+
+        ConcurrentDictionary<int, RedisClientPool> _sentinelPools = new ConcurrentDictionary<int, RedisClientPool>();
+        ConnectionStringBuilder _sentinelConnectionString;
+        string[] _sentinels;
+        /// <summary>
+        /// Sentinel RedisClient
+        /// </summary>
+        public RedisClient(ConnectionStringBuilder sentinelConnectionString, string[] sentinels)
+        {
+            _sentinelConnectionString = sentinelConnectionString;
+            _sentinels = sentinels;
+        }
+        internal void SentinelSelect()
+        {
+            foreach (var host in _sentinels)
+            {
+                List<ConnectionStringBuilder> connectionStrings = new List<ConnectionStringBuilder>();
+                try
+                {
+                    using (var cli = new RedisSentinelClient(host))
+                    {
+                        ConnectionStringBuilder connectionString = _sentinelConnectionString.ToString();
+                        connectionString.Host = cli.SentinelGetMasterAddrByName(_sentinelConnectionString.Host);
+                        var replicas = cli.SentinelSalves(_sentinelConnectionString.Host);
+                    }
+                }
+                catch
+                {
+                }
+            }
+        }
+
         internal IRedisSocket _singleRedisSocket;
+        /// <summary>
+        /// Single socket RedisClient
+        /// </summary>
         protected internal RedisClient(string host, bool ssl, TimeSpan connectTimeout, TimeSpan receiveTimeout, TimeSpan sendTimeout, Action<RedisClient> connected)
         {
             var rds = new DefaultRedisSocket(host, ssl);
@@ -32,6 +78,9 @@ namespace FreeRedis
             _singleRedisSocket = rds;
         }
         IRedisSocket _outsiteRedisSocket;
+        /// <summary>
+        /// Outesite socket RedisClient
+        /// </summary>
         protected internal RedisClient(IRedisSocket redisSocket)
         {
             _outsiteRedisSocket = redisSocket;
@@ -68,7 +117,11 @@ namespace FreeRedis
             if (_exclusived > 0 && --_exclusived == 0)
             {
                 if (_pooltemp != null)
+                {
                     _pooltemp.Return(_pooltempItem);
+                    _pooltemp = null;
+                    _pooltempItem = null;
+                }
             }
             else if (_pool != null)
             {
