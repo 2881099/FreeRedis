@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace FreeRedis.Internal
 {
-    public class DefaultRedisSocket : IRedisSocket
+    class DefaultRedisSocket : IRedisSocket
     {
         public string Host { get; private set; }
         public bool Ssl { get; private set; }
@@ -60,19 +60,19 @@ namespace FreeRedis.Internal
         public void Write(Encoding encoding, CommandBuilder cmd)
         {
             if (IsConnected == false) Connect();
-            Resp3Helper.Write(Stream, encoding, cmd, Protocol);
+            RespHelper.Write(Stream, encoding, cmd, Protocol);
         }
 
         public RedisResult<T> Read<T>() => Read<T>(Encoding);
         public RedisResult<T> Read<T>(Encoding encoding)
         {
             if (IsConnected == false) Connect();
-            return Resp3Helper.Read<T>(Stream, encoding);
+            return RespHelper.Read<T>(Stream, encoding);
         }
         public void ReadChunk(Stream destination, int bufferSize = 1024)
         {
             if (IsConnected == false) Connect();
-            Resp3Helper.ReadChunk(Stream, destination, bufferSize);
+            RespHelper.ReadChunk(Stream, destination, bufferSize);
         }
 
         public void Connect()

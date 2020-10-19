@@ -1,4 +1,5 @@
 ﻿using FreeRedis.Internal;
+using FreeRedis.Model;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -73,7 +74,7 @@ namespace FreeRedis
 		}
 		//public void PSync(string replicationid, string offset, Action<string> onData) => SendCommandListen(onData, "PSYNC", replicationid, offset);
 		public string ReplicaOf(string host, int port) => Call<string>("REPLICAOF".Input(host, port), rt => rt.ThrowOrValue());
-		public object Role() => Call<object>("ROLE", rt => rt.ThrowOrValue());
+		public RoleResult Role() => Call<object, RoleResult>("ROLE", rt => rt.NewValueToRole().ThrowOrValue());
 		public string Save() => Call<string>("SAVE", rt => rt.ThrowOrValue());
 		public string Shutdown(bool save) => Call<string>("SHUTDOWN".Input(save ? "SAVE" : "NOSAVE"), rt => rt.ThrowOrValue());
 		public string SlaveOf(string host, int port) => Call<string>("SLAVEOF".Input(host, port), rt => rt.ThrowOrValue());

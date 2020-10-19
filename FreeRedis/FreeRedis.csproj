@@ -14,4 +14,8 @@
     <DefineConstants>net40</DefineConstants>
   </PropertyGroup>
   
+  <ItemGroup>
+    <ProjectReference Include="..\..\IdleBus\IdleBus\IdleBus.csproj" />
+  </ItemGroup>
+  
 </Project>

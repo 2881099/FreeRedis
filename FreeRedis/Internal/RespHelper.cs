@@ -13,7 +13,7 @@ using System.Text;
 
 namespace FreeRedis
 {
-    public static class Resp3Helper
+    public static class RespHelper
     {
         public static RedisResult<T> Read<T>(Stream stream) => new Resp3Reader(stream, null).ReadObject().ConvertTo<T>(null);
         public static RedisResult<T> Read<T>(Stream stream, Encoding encoding) => new Resp3Reader(stream, typeof(T) == typeof(byte[]) ? null : encoding).ReadObject().ConvertTo<T>(encoding);

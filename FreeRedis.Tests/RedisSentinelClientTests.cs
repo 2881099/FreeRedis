@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FreeRedis.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -34,77 +35,77 @@ namespace FreeRedis.Tests
             using (var cli = GetClient())
             {
                 var rt = cli.Role();
-                Assert.Equal(Model.SentinelRoleType.Sentinel, rt.Role);
-                Assert.True(rt.Masters.Any());
-                Assert.Equal("mymaster", rt.Masters.FirstOrDefault());
+                Assert.Equal(RoleType.Sentinel, rt.role);
+                Assert.True(rt.masters.Any());
+                Assert.Equal("mymaster", rt.masters.FirstOrDefault());
             }
         }
 
         [Fact]
-        public void SentinelMasters()
+        public void Masters()
         {
             using (var cli = GetClient())
             {
-                var rt = cli.SentinelMasters();
+                var rt = cli.Masters();
                 Assert.True(rt.Any());
                 Assert.Equal("mymaster", rt[0].name);
             }
         }
 
         [Fact]
-        public void SentinelMaster()
+        public void Master()
         {
             using (var cli = GetClient())
             {
-                var rt = cli.SentinelMaster("mymaster");
+                var rt = cli.Master("mymaster");
                 Assert.NotNull(rt);
                 Assert.Equal("mymaster", rt.name);
 
                 Assert.Equal("ERR No such master with that name",
-                    Assert.Throws<RedisException>(() => cli.SentinelMaster("mymaster222")).Message);
+                    Assert.Throws<RedisException>(() => cli.Master("mymaster222")).Message);
             }
         }
 
         [Fact]
-        public void SentinelSalves()
+        public void Salves()
         {
             using (var cli = GetClient())
             {
-                var rt = cli.SentinelSalves("mymaster");
+                var rt = cli.Salves("mymaster");
                 Assert.True(rt.Any());
                 Assert.Equal("ok", rt[0].master_link_status);
             }
         }
 
         [Fact]
-        public void SentinelSentinels()
+        public void Sentinels()
         {
             using (var cli = GetClient())
             {
-                var rt = cli.SentinelSentinels("mymaster");
+                var rt = cli.Sentinels("mymaster");
                 Assert.True(rt.Any());
                 Assert.Equal("127.0.0.1", rt[0].ip);
             }
         }
 
         [Fact]
-        public void SentinelGetMasterAddrByName()
+        public void GetMasterAddrByName()
         {
             using (var cli = GetClient())
             {
-                var rt = cli.SentinelGetMasterAddrByName("mymaster");
+                var rt = cli.GetMasterAddrByName("mymaster");
                 Assert.False(string.IsNullOrEmpty(rt));
             }
         }
 
         [Fact]
-        public void SentinelIsMasterDownByAddr()
+        public void IsMasterDownByAddr()
         {
             using (var cli = GetClient())
             {
-                var st = cli.SentinelSentinels("mymaster");
+                var st = cli.Sentinels("mymaster");
                 Assert.True(st.Any());
-                var rt = cli.SentinelIsMasterDownByAddr(st[0].name, st[0].port, st[0].voted_leader_epoch, st[0].runid);
+                var rt = cli.IsMasterDownByAddr(st[0].name, st[0].port, st[0].voted_leader_epoch, st[0].runid);
                 Assert.NotNull(rt);
                 Assert.False(rt.down_state);
                 Assert.Equal("*", rt.leader);
@@ -113,93 +114,93 @@ namespace FreeRedis.Tests
         }
 
         [Fact]
-        public void SentinelReset()
+        public void Reset()
         {
             using (var cli = GetClient())
             {
-                var rt = cli.SentinelReset("*");
+                var rt = cli.Reset("*");
                 Assert.True(rt > 0);
             }
         }
 
         [Fact]
-        public void SentinelFailover()
+        public void Failover()
         {
             using (var cli = GetClient())
             {
-                cli.SentinelFailover("mymaster");
+                cli.Failover("mymaster");
 
                 Assert.Equal("ERR No such master with that name",
-                    Assert.Throws<RedisException>(() => cli.SentinelFailover("mymaster222")).Message);
+                    Assert.Throws<RedisException>(() => cli.Failover("mymaster222")).Message);
             }
         }
 
         [Fact]
-        public void SentinelPendingScripts()
+        public void PendingScripts()
         {
             using (var cli = GetClient())
             {
-                var rt = cli.SentinelPendingScripts();
+                var rt = cli.PendingScripts();
             }
         }
 
         [Fact]
-        public void SentinelFlushConfig()
+        public void FlushConfig()
         {
             using (var cli = GetClient())
             {
-                cli.SentinelFlushConfig();
+                cli.FlushConfig();
             }
         }
 
         [Fact]
-        public void SentinelRemove()
+        public void Remove()
         {
             using (var cli = GetClient())
             {
-                //cli.SentinelRemove("mymaster");
+                //cli.Remove("mymaster");
 
                 Assert.Equal("ERR No such master with that name",
-                    Assert.Throws<RedisException>(() => cli.SentinelRemove("mymaster222")).Message);
+                    Assert.Throws<RedisException>(() => cli.Remove("mymaster222")).Message);
             }
         }
 
         [Fact]
-        public void SentinelCkQuorum()
+        public void CkQuorum()
         {
             using (var cli = GetClient())
             {
-                var rt = cli.SentinelCkQuorum("mymaster");
+                var rt = cli.CkQuorum("mymaster");
 
                 Assert.Equal("ERR No such master with that name",
-                    Assert.Throws<RedisException>(() => cli.SentinelCkQuorum("mymaster222")).Message);
+                    Assert.Throws<RedisException>(() => cli.CkQuorum("mymaster222")).Message);
             }
         }
 
         [Fact]
-        public void SentinelSet()
+        public void Set()
         {
             using (var cli = GetClient())
             {
-                cli.SentinelSet("mymaster", "down-after-milliseconds", "5000");
+                cli.Set("mymaster", "down-after-milliseconds", "5000");
             }
         }
 
         [Fact]
-        public void SentinelInfoCache()
+        public void InfoCache()
         {
             using (var cli = GetClient())
             {
-                var rt = cli.SentinelInfoCache("mymaster");
+                var rt = cli.InfoCache("mymaster");
             }
         }
 
         [Fact]
-        public void SentinelSimulateFailure()
+        public void SimulateFailure()
         {
             using (var cli = GetClient())
             {
-                cli.SentinelSimulateFailure(true, true);
+                cli.SimulateFailure(true, true);
             }
         }
     }

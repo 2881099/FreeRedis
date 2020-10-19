@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FreeRedis.Internal;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -23,10 +24,11 @@ namespace FreeRedis
 		public T Get<T>(string key) => Call<byte[], T>("GET".Input(key).FlagKey(key), rt => rt.NewValue(a => DeserializeRedisValue<T>(a, rt.Encoding)).ThrowOrValue());
 		public void Get(string key, Stream destination, int bufferSize = 1024)
 		{
-			using (var rds = GetRedisSocket())
+			var cb = "GET".Input(key).FlagKey(key);
+			using (var rds = GetRedisSocket(cb))
 			{
-				rds.Write("GET".Input(key).FlagKey(key));
-				Resp3Helper.ReadChunk(rds.Stream, destination, bufferSize);
+				rds.Write(cb);
+				RespHelper.ReadChunk(rds.Stream, destination, bufferSize);
 			}
 		}
 		public bool GetBit(string key, long offset) => Call<bool>("GETBIT".Input(key, offset).FlagKey(key), rt => rt.ThrowOrValue());

@@ -25,9 +25,10 @@ namespace FreeRedis
 		public KeyValue<T> BRPop<T>(string[] keys, int timeoutSeconds) => BLRPop<T>("BRPOP", keys, timeoutSeconds);
 		KeyValue<T> BLRPop<T>(string cmd, string[] keys, int timeoutSeconds)
 		{
-			using (var rds = GetRedisSocket())
+			var cb = cmd.SubCommand(null).Input(keys).InputRaw(timeoutSeconds).FlagKey(keys);
+			using (var rds = GetRedisSocket(cb))
 			{
-				rds.Write(cmd.SubCommand(null).Input(keys).InputRaw(timeoutSeconds).FlagKey(keys));
+				rds.Write(cb);
 				var value = rds.Read<object>();
 				var list = value.ConvertTo<byte[][]>();
 				if (list?.Length != 2) return null;

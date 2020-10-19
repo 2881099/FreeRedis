@@ -84,34 +84,34 @@ public void {UFString(cmd)}({parms}) {{ }}";
 
 
 			var sboptions = new StringBuilder();
-			foreach (var cmd in CommandConfig._allCommands)
-            {
-				if (diccmd.TryGetValue(cmd, out var tryv))
-                {
-					sboptions.Append($@"
-                [""{cmd}""] = new CommandConfig(");
+//			foreach (var cmd in CommandConfig._allCommands)
+//			{
+//				if (diccmd.TryGetValue(cmd, out var tryv))
+//				{
+//					sboptions.Append($@"
+//[""{cmd}""] = new CommandConfig(");
 
-					for (var x = 0; x < tryv.Item1.Length; x++)
-					{
-						if (x > 0) sboptions.Append(" | ");
-						sboptions.Append($"CommandFlag.{tryv.Item1[x].Replace("readonly", "@readonly")}");
-					}
+//					for (var x = 0; x < tryv.Item1.Length; x++)
+//					{
+//						if (x > 0) sboptions.Append(" | ");
+//						sboptions.Append($"CommandFlag.{tryv.Item1[x].Replace("readonly", "@readonly")}");
+//					}
 
-					sboptions.Append(", ");
-					for (var x = 0; x < tryv.Item2.Length; x++)
-					{
-						if (x > 0) sboptions.Append(" | ");
-						sboptions.Append($"CommandTag.{tryv.Item2[x].TrimStart('@').Replace("string", "@string")}");
-					}
+//					sboptions.Append(", ");
+//					for (var x = 0; x < tryv.Item2.Length; x++)
+//					{
+//						if (x > 0) sboptions.Append(" | ");
+//						sboptions.Append($"CommandTag.{tryv.Item2[x].TrimStart('@').Replace("string", "@string")}");
+//					}
 
-					sboptions.Append("),");
-                }
-				else
-                {
-					sboptions.Append($@"
-                [""{cmd}""] = new CommandConfig(CommandFlag.none, CommandTag.none), ");
-				}
-            }
+//					sboptions.Append("),");
+//				}
+//				else
+//				{
+//					sboptions.Append($@"
+//[""{cmd}""] = new CommandConfig(CommandFlag.none, CommandTag.none), ");
+//				}
+//			}
 
 			var optioncode = sboptions.ToString();
 		}

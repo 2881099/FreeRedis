@@ -2,16 +2,15 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace FreeRedis.Model
+namespace FreeRedis.Model.Sentinel
 {
-    //1) "sentinel"
-    //2) 1) "mymaster"
-    public class SentinelRoleResult
+    public class RoleResult
     {
-        public SentinelRoleType Role { get; set; }
-        public string[] Masters { get; set; }
+        public static implicit operator RoleResult(Model.RoleResult rt) => new RoleResult { role = rt.role, masters = rt.data as string[] };
+
+        public RoleType role;
+        public string[] masters;
     }
-    public enum SentinelRoleType { Sentinel }
 
     //# Server
     //redis_version:3.2.100
@@ -72,12 +71,12 @@ namespace FreeRedis.Model
     //sentinel_scripts_queue_length:0
     //sentinel_simulate_failure_flags:0
     //master0:name=mymaster,status=ok,address=127.0.0.1:6381,slaves=2,sentinels=4
-    public class SentinelInfoResult
+    public class InfoResult
     {
-        public string Text { get; }
-        public SentinelInfoResult(string text)
+        public string text;
+        public InfoResult(string text)
         {
-            this.Text = text;
+            this.text = text;
         }
     }
 
@@ -121,7 +120,7 @@ namespace FreeRedis.Model
     //38) "15000"
     //39) "parallel-syncs"
     //40) "1"
-    public class SentinelMasterResult
+    public class MasterResult
     {
         public string name;
         public string ip;
@@ -187,7 +186,7 @@ namespace FreeRedis.Model
     //40) "100"
     //41) "slave-repl-offset"
     //42) "0"
-    public class SentinelSalveResult
+    public class SalveResult
     {
         public string name;
         public string ip;
@@ -240,7 +239,7 @@ namespace FreeRedis.Model
     //26) "?"
     //27) "voted-leader-epoch"
     //28) "0"
-    public class SentinelSentinelResult
+    public class SentinelResult
     {
         public string name;
         public string ip;
@@ -258,7 +257,7 @@ namespace FreeRedis.Model
         public long voted_leader_epoch;
     }
 
-    public class SentinelIsMaterDownByAddrResult
+    public class IsMaterDownByAddrResult
     {
         public bool down_state;
         public string leader;

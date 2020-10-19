@@ -10,8 +10,20 @@ namespace FreeRedis
 	{
 		T CheckSingle<T>(Func<T> call)
         {
-			if (_pool != null && _pool.Policy.PoolSize != 1) throw new RedisException("RedisClient: Method cannot be used in connection pool mode. You can set \"max pool size=1\", but it is not singleton mode.");
-			return call();
+            switch (_usetype)
+            {
+				case UseType.Pooling:
+					if (_ib.Get(_poolingBag.masterHost).Policy.PoolSize == 1) return call();
+					throw new RedisException($"RedisClient: Method cannot be used in {_usetype} mode. You can set \"max pool size=1\", but it is not singleton mode.");
+
+				case UseType.Sentinel:
+					if (_ib.Get(_poolingBag.masterHost).Policy.PoolSize == 1) return call();
+					throw new RedisException($"RedisClient: Method cannot be used in {_usetype} mode. You can set \"max pool size=1\", but it is not singleton mode.");
+
+				case UseType.SingleInsideSocket:
+				case UseType.OutsideSocket: return call();
+			}
+			throw new RedisException($"RedisClient: Method cannot be used in {_usetype} mode.");
 		}
 
 		public void Auth(string password) => CheckSingle(() => Call<string>("AUTH".Input(password), rt => rt.ThrowOrValue()));
@@ -48,7 +60,8 @@ namespace FreeRedis
 			{
 				case ClientReplyType.Off:
 					_state = ClientStatus.ClientReplyOff;
-					GetRedisSocket().Write("CLIENT".SubCommand("REPLY").InputRaw(type));
+					var cb1 = "CLIENT".SubCommand("REPLY").InputRaw(type);
+					GetRedisSocket(cb1).Write(cb1);
 					break;
 				case ClientReplyType.On:
 					_state = ClientStatus.Normal;
@@ -56,7 +69,8 @@ namespace FreeRedis
 					break;
 				case ClientReplyType.Skip:
 					_state = ClientStatus.ClientReplySkip;
-					GetRedisSocket().Write("CLIENT".SubCommand("REPLY").InputRaw(type));
+					var cb3 = "CLIENT".SubCommand("REPLY").InputRaw(type);
+					GetRedisSocket(cb3).Write(cb3);
 					break;
 			}
 			return 0;
