@@ -272,43 +272,37 @@ namespace FreeRedis
         #endregion
     }
 
-    public enum ClusterSetSlotType { Importing, Migrating, Stable, Node }
-	public enum ClusterResetType { Hard, Soft }
-	public enum ClusterFailOverType { Force, TakeOver }
-	public enum ClientUnBlockType { Timeout, Error }
-	public enum ClientReplyType { On, Off, Skip }
-	public enum ClientType { Normal, Master, Slave, PubSub }
-	public enum Confirm { Yes, No }
-	public enum GeoUnit { M, KM, MI, FT }
-	public enum Collation { Asc, Desc }
-	public enum InsertDirection { Before, After }
-	public enum ScriptDebugOption { Yes, Sync, No }
-	public enum BitOpOperation { And, Or, Xor, Not }
-	public class GeoMember
-	{
-		public decimal Longitude { get; set; }
-		public decimal Latitude { get; set; }
-		public string Member { get; set; }
+    public enum ClusterSetSlotType { importing, migrating, stable, node }
+	public enum ClusterResetType { hard, soft }
+	public enum ClusterFailOverType { force, takeover }
+	public enum ClientUnBlockType { timeout, error }
+	public enum ClientReplyType { on, off, skip }
+	public enum ClientType { normal, master, slave, pubsub }
+	public enum Confirm { yes, no }
+	public enum GeoUnit { m, km, mi, ft }
+	public enum Collation { asc, desc }
+	public enum InsertDirection { before, after }
+	public enum ScriptDebugOption { yes, sync, no }
+	public enum BitOpOperation { and, or, xor, not }
 
-		public GeoMember(decimal longitude, decimal latitude, string member) { Longitude = longitude; Latitude = latitude; Member = member; }
-	}
-	public class ScanValue<T>
+    public class GeoMember
+    {
+        public readonly decimal longitude;
+        public readonly decimal latitude;
+        public readonly string member;
+
+        public GeoMember(decimal longitude, decimal latitude, string member) { this.longitude = longitude; this.latitude = latitude; this.member = member; }
+    }
+    public class SortedSetMember<T>
 	{
-		public long Cursor { get; set; }
-		public T[] Items { get; set; }
-        public long Length => Items.LongLength;
-		public ScanValue(long cursor, T[] items) { Cursor = cursor; Items = items; }
-	}
-	public class SortedSetMember<T>
-	{
-		public T Member { get; set; }
-		public decimal Score { get; set; }
-		public SortedSetMember(T member, decimal score) { this.Member = member; this.Score = score; }
+        public readonly T member;
+        public readonly decimal score;
+		public SortedSetMember(T member, decimal score) { this.member = member; this.score = score; }
 	}
     public class KeyValue<T>
     {
-        public string Key { get; set; }
-        public T Value { get; set; }
-        public KeyValue(string key, T value) { this.Key = key; this.Value = value; }
+        public readonly string key;
+        public readonly T value;
+        public KeyValue(string key, T value) { this.key = key; this.value = value; }
     }
 }

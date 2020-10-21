@@ -24,14 +24,14 @@ namespace FreeRedis.Tests.RedisClientTests
                 Thread.CurrentThread.Join(500);
                 cli.RPush("TestBLPop1", "testv1");
             }).Start();
-            Assert.Equal("testv1", cli.BRPop(new[] { "TestBLPop1", "TestBLPop2" }, 5)?.Value);
+            Assert.Equal("testv1", cli.BRPop(new[] { "TestBLPop1", "TestBLPop2" }, 5)?.value);
 
             new Thread(() =>
             {
                 Thread.CurrentThread.Join(500);
                 cli.RPush("TestBLPop2", "testv2");
             }).Start();
-            Assert.Equal("testv2", cli.BRPop(new[] { "TestBLPop1", "TestBLPop2" }, 5)?.Value);
+            Assert.Equal("testv2", cli.BRPop(new[] { "TestBLPop1", "TestBLPop2" }, 5)?.value);
         }
 
         [Fact]
@@ -44,13 +44,13 @@ namespace FreeRedis.Tests.RedisClientTests
                 Thread.CurrentThread.Join(500);
                 cli.LPush("TestBRPop1", "testv1");
             }).Start();
-            Assert.Equal("testv1", cli.BRPop(new[] { "TestBRPop1", "TestBRPop2" }, 5)?.Value);
+            Assert.Equal("testv1", cli.BRPop(new[] { "TestBRPop1", "TestBRPop2" }, 5)?.value);
 
             new Thread(() =>
             {
                 cli.LPush("TestBRPop2", "testv2");
             }).Start();
-            Assert.Equal("testv2", cli.BRPop(new[] { "TestBRPop1", "TestBRPop2" }, 5)?.Value);
+            Assert.Equal("testv2", cli.BRPop(new[] { "TestBRPop1", "TestBRPop2" }, 5)?.value);
         }
 
         [Fact]
@@ -81,12 +81,12 @@ namespace FreeRedis.Tests.RedisClientTests
 
             cli.Del("TestLInsertBefore", "TestLInsertAfter");
             Assert.Equal(8, cli.RPush("TestLInsertBefore", Class, Class, Bytes, Bytes, String, String, Null, Null));
-            Assert.Equal(9, cli.LInsert("TestLInsertBefore", InsertDirection.Before, Class, "TestLInsertBefore"));
+            Assert.Equal(9, cli.LInsert("TestLInsertBefore", InsertDirection.before, Class, "TestLInsertBefore"));
             Assert.Equal("TestLInsertBefore", cli.LIndex("TestLInsertBefore", 0));
             Assert.Equal(Class.ToString(), cli.LIndex<TestClass>("TestLInsertBefore", 1).ToString());
 
             Assert.Equal(8, cli.RPush("TestLInsertAfter", Class, Class, Bytes, Bytes, String, String, Null, Null));
-            Assert.Equal(9, cli.LInsert("TestLInsertAfter", InsertDirection.After, Class, "TestLInsertAfter"));
+            Assert.Equal(9, cli.LInsert("TestLInsertAfter", InsertDirection.after, Class, "TestLInsertAfter"));
             Assert.Equal("TestLInsertAfter", cli.LIndex("TestLInsertAfter", 1));
             Assert.Equal(Class.ToString(), cli.LIndex<TestClass>("TestLInsertAfter", 0).ToString());
             Assert.Equal(Class.ToString(), cli.LIndex<TestClass>("TestLInsertAfter", 2).ToString());

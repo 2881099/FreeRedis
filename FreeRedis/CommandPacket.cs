@@ -41,7 +41,7 @@ namespace FreeRedis
             if (_redisSocket == null) throw new Exception("The command has not been sent");
             if (_readed) return ReadResult as RedisResult<T>;
             _readed = true;
-            if (_redisSocket.ClientReply == ClientReplyType.On)
+            if (_redisSocket.ClientReply == ClientReplyType.on)
             {
                 if (_redisSocket.IsConnected == false) _redisSocket.Connect();
                 var rt = RespHelper.Read<T>(_redisSocket.Stream, encoding);
@@ -57,7 +57,7 @@ namespace FreeRedis
             if (_redisSocket == null) throw new Exception("The command has not been sent");
             if (_readed) return;
             _readed = true;
-            if (_redisSocket.ClientReply == ClientReplyType.On)
+            if (_redisSocket.ClientReply == ClientReplyType.on)
             {
                 if (_redisSocket.IsConnected == false) _redisSocket.Connect();
                 RespHelper.ReadChunk(_redisSocket.Stream, destination, bufferSize);

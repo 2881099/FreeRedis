@@ -191,7 +191,7 @@ namespace FreeRedis.Tests.RedisClientTests
 
             cli.Del("TestSScan1");
             Assert.Equal(4, cli.SAdd("TestSScan1", Null, Class, String, Bytes));
-            Assert.Equal(4, cli.SScan("TestSScan1", 0, "*", 10).Items.Length);
+            Assert.Equal(4, cli.SScan("TestSScan1", 0, "*", 10).items.Length);
         }
 
         [Fact]

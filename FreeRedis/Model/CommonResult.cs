@@ -91,4 +91,12 @@ namespace FreeRedis.Model
         }
     }
     public enum RoleType { Master, Slave, Sentinel }
+
+    public class ScanResult<T>
+    {
+        public readonly long cursor;
+        public readonly T[] items;
+        public readonly long length;
+        public ScanResult(long cursor, T[] items) { this.cursor = cursor; this.items = items; this.length = items.LongLength; }
+    }
 }

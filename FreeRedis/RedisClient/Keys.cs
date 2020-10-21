@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FreeRedis.Model;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -46,7 +47,7 @@ namespace FreeRedis
 			.InputIf(idleTimeSeconds != 0, "IDLETIME", idleTimeSeconds)
 			.InputIf(frequency != 0, "FREQ", frequency)
 			.FlagKey(key), rt => rt.ThrowOrValue());
-		public ScanValue<string> Scan(long cursor, string pattern, long count, string type) => Call<object, ScanValue<string>>("SCAN"
+		public ScanResult<string> Scan(long cursor, string pattern, long count, string type) => Call<object, ScanResult<string>>("SCAN"
 			.Input(cursor)
 			.InputIf(!string.IsNullOrWhiteSpace(pattern), "MATCH", pattern)
 			.InputIf(count > 0, "COUNT", count)
@@ -54,7 +55,7 @@ namespace FreeRedis
 			.NewValue(a =>
 			{
 				var arr = a as List<object>;
-				return new ScanValue<string>(arr[0].ConvertTo<long>(), arr[1].ConvertTo<string[]>());
+				return new ScanResult<string>(arr[0].ConvertTo<long>(), arr[1].ConvertTo<string[]>());
 			}).ThrowOrValue());
 		public object Sort(string key, string byPattern, long offset, long count, string[] getPatterns, Collation? collation, bool alpha, string storeDestination) => Call<object>("SORT"
 			.Input(key)

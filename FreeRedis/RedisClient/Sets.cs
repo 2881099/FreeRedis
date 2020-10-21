@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FreeRedis.Model;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -38,14 +39,14 @@ namespace FreeRedis
 		public T[] SRandMember<T>(string key, int count) => SReadArray<T>("SRANDMEMBER".Input(key, count).FlagKey(key));
 
 		public long SRem(string key, params object[] members) => Call<long>("SREM".Input(key).Input(members.Select(a => SerializeRedisValue(a)).ToArray()).FlagKey(key), rt => rt.ThrowOrValue());
-		public ScanValue<string> SScan(string key, long cursor, string pattern, long count) => Call<object, ScanValue<string>>("SSCAN"
+		public ScanResult<string> SScan(string key, long cursor, string pattern, long count) => Call<object, ScanResult<string>>("SSCAN"
 			.Input(key, cursor)
 			.InputIf(!string.IsNullOrWhiteSpace(pattern), "MATCH", pattern)
 			.InputIf(count != 0, "COUNT", count)
 			.FlagKey(key), rt => rt.NewValue(a =>
 			{
 				var arr = a as List<object>;
-				return new ScanValue<string>(arr[0].ConvertTo<long>(), arr[1].ConvertTo<string[]>());
+				return new ScanResult<string>(arr[0].ConvertTo<long>(), arr[1].ConvertTo<string[]>());
 			}).ThrowOrValue());
 
 		public string[] SUnion(params string[] keys) => Call<string[]>("SUNION".Input(keys).FlagKey(keys), rt => rt.ThrowOrValue());

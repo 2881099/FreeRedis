@@ -18,8 +18,8 @@ namespace FreeRedis.Tests.RedisClientTests
         [Fact]
         public void ClientCaching()
         {
-            cli.ClientCaching(Confirm.Yes);
-            cli.ClientCaching(Confirm.No);
+            cli.ClientCaching(Confirm.yes);
+            cli.ClientCaching(Confirm.no);
         }
 
         [Fact]
@@ -48,10 +48,10 @@ namespace FreeRedis.Tests.RedisClientTests
             try
             {
                 cli.ClientKill("localhost");
-                cli.ClientKill("localhost", 1, ClientType.Master, "default", "127.0.0.1:50618", Confirm.Yes);
-                cli.ClientKill("localhost", 1, ClientType.Normal, "default", "127.0.0.1:50618", Confirm.Yes);
-                cli.ClientKill("localhost", 1, ClientType.PubSub, "default", "127.0.0.1:50618", Confirm.Yes);
-                cli.ClientKill("localhost", 1, ClientType.Slave, "default", "127.0.0.1:50618", Confirm.Yes);
+                cli.ClientKill("localhost", 1, ClientType.master, "default", "127.0.0.1:50618", Confirm.yes);
+                cli.ClientKill("localhost", 1, ClientType.normal, "default", "127.0.0.1:50618", Confirm.yes);
+                cli.ClientKill("localhost", 1, ClientType.pubsub, "default", "127.0.0.1:50618", Confirm.yes);
+                cli.ClientKill("localhost", 1, ClientType.slave, "default", "127.0.0.1:50618", Confirm.yes);
             }
             catch (RedisException ex)
             {
@@ -63,10 +63,10 @@ namespace FreeRedis.Tests.RedisClientTests
         public void ClientList()
         {
             var r1 = cli.ClientList();
-            var r2 = cli.ClientList(ClientType.Master);
-            var r3 = cli.ClientList(ClientType.Normal);
-            var r4 = cli.ClientList(ClientType.PubSub);
-            var r5 = cli.ClientList(ClientType.Slave);
+            var r2 = cli.ClientList(ClientType.master);
+            var r3 = cli.ClientList(ClientType.normal);
+            var r4 = cli.ClientList(ClientType.pubsub);
+            var r5 = cli.ClientList(ClientType.slave);
         }
 
         [Fact]
@@ -79,17 +79,17 @@ namespace FreeRedis.Tests.RedisClientTests
         public void ClientReply()
         {
             //cli.ClientReply(ClientReplyType.On);
-            cli.ClientReply(ClientReplyType.Off);
-            cli.ClientReply(ClientReplyType.Skip);
-            cli.ClientReply(ClientReplyType.On);
+            cli.ClientReply(ClientReplyType.off);
+            cli.ClientReply(ClientReplyType.skip);
+            cli.ClientReply(ClientReplyType.on);
             cli.SetGetTest();
 
-            cli.ClientReply(ClientReplyType.Off);
+            cli.ClientReply(ClientReplyType.off);
             var key = Guid.NewGuid().ToString();
             cli.Set(key, key);
             Assert.Null(cli.Get(key));
 
-            cli.ClientReply(ClientReplyType.On);
+            cli.ClientReply(ClientReplyType.on);
             cli.SetGetTest();
         }
 
@@ -113,8 +113,8 @@ namespace FreeRedis.Tests.RedisClientTests
         {
             var r1 = cli.ClientUnBlock(1);
             var r2 = cli.ClientUnBlock(11);
-            var r3 = cli.ClientUnBlock(11, ClientUnBlockType.Error);
-            var r4 = cli.ClientUnBlock(11, ClientUnBlockType.Timeout);
+            var r3 = cli.ClientUnBlock(11, ClientUnBlockType.error);
+            var r4 = cli.ClientUnBlock(11, ClientUnBlockType.timeout);
         }
 
         [Fact]

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FreeRedis.Model;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -26,10 +27,10 @@ namespace FreeRedis
 		public bool CfExists(string key, string item) => Call<bool>("CF.EXISTS".Input(key, item).FlagKey(key), rt => rt.ThrowOrValue());
 		public bool CfDel(string key, string item) => Call<bool>("CF.DEL".Input(key, item).FlagKey(key), rt => rt.ThrowOrValue());
 		public long CfCount(string key, string item) => Call<long>("CF.COUNT".Input(key, item).FlagKey(key), rt => rt.ThrowOrValue());
-		public ScanValue<byte[]> CfScanDump(string key, long iter) => Call<object, ScanValue<byte[]>>("CF.SCANDUMP".Input(key, iter).FlagKey(key), rt => rt.NewValue(a =>
+		public ScanResult<byte[]> CfScanDump(string key, long iter) => Call<object, ScanResult<byte[]>>("CF.SCANDUMP".Input(key, iter).FlagKey(key), rt => rt.NewValue(a =>
 		{
 			var arr = a as List<object>;
-			return new ScanValue<byte[]>(arr[0].ConvertTo<long>(), arr[1].ConvertTo<byte[][]>());
+			return new ScanResult<byte[]>(arr[0].ConvertTo<long>(), arr[1].ConvertTo<byte[][]>());
 		}).ThrowOrValue());
 		public string CfLoadChunk(string key, long iter, byte[] data) => Call<string>("CF.LOADCHUNK".Input(key, iter).InputRaw(data).FlagKey(key), rt => rt.ThrowOrValue());
 		public Dictionary<string, string> CfInfo(string key) => Call<string[], Dictionary<string, string>>("CF.INFO".Input(key).FlagKey(key), rt => rt.NewValue(a => a.MapToHash<string>(rt.Encoding)).ThrowOrValue());

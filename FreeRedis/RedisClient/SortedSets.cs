@@ -51,7 +51,7 @@ namespace FreeRedis
 			.InputIf(xx, "XX")
 			.InputIf(ch, "CH")
 			.InputIf(incr, "INCR")
-			.InputIf(true, memberScores.Select(a => new object[] { a.Score, a.Member }).SelectMany(a => a).ToArray())
+			.InputIf(true, memberScores.Select(a => new object[] { a.score, a.member }).SelectMany(a => a).ToArray())
 			.FlagKey(key), rt => rt.ThrowOrValue());
 
 		public long ZCard(string key) => Call<long>("ZCARD".Input(key).FlagKey(key), rt => rt.ThrowOrValue());

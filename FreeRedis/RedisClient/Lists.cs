@@ -10,7 +10,7 @@ namespace FreeRedis
         {
             var kv = BLRPop<T>("BLPOP", new[] { key }, timeoutSeconds);
             if (kv == null) return default(T);
-            return kv.Value;
+            return kv.value;
         }
 		public KeyValue<string> BLPop(string[] keys, int timeoutSeconds) => BLRPop<string>("BLPOP", keys, timeoutSeconds);
 		public KeyValue<T> BLPop<T>(string[] keys, int timeoutSeconds) => BLRPop<T>("BLPOP", keys, timeoutSeconds);
@@ -19,7 +19,7 @@ namespace FreeRedis
 		{
 			var kv = BLRPop<T>("BRPOP", new[] { key }, timeoutSeconds);
 			if (kv == null) return default(T);
-			return kv.Value;
+			return kv.value;
 		}
 		public KeyValue<string> BRPop(string[] keys, int timeoutSeconds) => BLRPop<string>("BRPOP", keys, timeoutSeconds);
 		public KeyValue<T> BRPop<T>(string[] keys, int timeoutSeconds) => BLRPop<T>("BRPOP", keys, timeoutSeconds);

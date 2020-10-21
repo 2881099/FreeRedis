@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FreeRedis.Model;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -19,7 +20,7 @@ namespace FreeRedis
 
 		public string[] HMGet(string key, params string[] fields) => Call<string[]>("HMGET".Input(key).Input(fields).FlagKey(key), rt => rt.ThrowOrValue());
 		public void HMSet(string key, Dictionary<string, string> keyValues) => Call<string>("HMSET".Input(key).InputKv(keyValues).FlagKey(key), rt => rt.ThrowOrValue());
-		public ScanValue<string> HScan(string key, long cursor, string pattern, long count) => Call<object, ScanValue<string>>("HSCAN"
+		public ScanResult<string> HScan(string key, long cursor, string pattern, long count) => Call<object, ScanResult<string>>("HSCAN"
 			.Input(key, cursor)
 			.InputIf(!string.IsNullOrWhiteSpace(pattern), "MATCH", pattern)
 			.InputIf(count != 0, "COUNT", count)
@@ -27,7 +28,7 @@ namespace FreeRedis
 			.NewValue(a =>
 			{
 				var arr = a as List<object>;
-				return new ScanValue<string>(arr[0].ConvertTo<long>(), arr[1].ConvertTo<string[]>());
+				return new ScanResult<string>(arr[0].ConvertTo<long>(), arr[1].ConvertTo<string[]>());
 			}).ThrowOrValue());
 		public bool HSet(string key, string field, string value) => Call<bool>("HSET".Input(key, field, value).FlagKey(key), rt => rt.ThrowOrValue());
 		public long HSet(string key, Dictionary<string, string> keyValues) => Call<long>("HSET".Input(key).InputKv(keyValues).FlagKey(key), rt => rt.ThrowOrValue());

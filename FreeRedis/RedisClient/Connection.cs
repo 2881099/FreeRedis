@@ -47,12 +47,12 @@ namespace FreeRedis
 					rds.Write(cmd);
 					switch (type)
 					{
-						case ClientReplyType.Off:
+						case ClientReplyType.off:
 							break;
-						case ClientReplyType.On:
+						case ClientReplyType.on:
 							cmd.Read<string>().ThrowOrValue();
 							break;
-						case ClientReplyType.Skip:
+						case ClientReplyType.skip:
 							break;
 					}
 				}

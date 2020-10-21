@@ -51,7 +51,7 @@ namespace FreeRedis.Tests.RedisClientTests
         {
             cli.SetBit("BitOp1", 100, true);
             cli.SetBit("BitOp2", 100, true);
-            var r1 = cli.BitOp(BitOpOperation.And, "BitOp3", "BitOp1", "BitOp2");
+            var r1 = cli.BitOp(BitOpOperation.and, "BitOp3", "BitOp1", "BitOp2");
         }
 
         [Fact]

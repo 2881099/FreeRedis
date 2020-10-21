@@ -328,7 +328,7 @@ namespace FreeRedis
                 foreach (var c in cmd)
                 {
                     if (c is byte[]) WriteClob(c as byte[]);
-                    else if (c is Enum) WriteBlobString(c.ToInvariantCultureToString().ToUpper());
+                    else if (c is Enum) WriteBlobString(c.ToInvariantCultureToString()); //.ToUpper()); geo km 
                     else WriteBlobString(c.ToInvariantCultureToString());
                 }
             }
