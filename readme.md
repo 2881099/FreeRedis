@@ -14,15 +14,13 @@ FreeRedis 是功能强大的 redis 客户端组件，支持 .NETCore 2.1+ 或 .N
 
 QQ群：4336577(已满)、8578575(在线)、52508226(在线)
 
-## Single machine redis (单机)
+#### Single machine redis (单机)
 
 ```csharp
-var cli = new FreeRedis.RedisClient("127.0.0.1:6379,password=123,defaultDatabase=13");
+public static RedisClient cli = new RedisClient("127.0.0.1:6379,password=123,defaultDatabase=13");
 
 var value = cli.Get("key1");
 ```
-
-> 注意：FreeRedis 仍然是单例模式设计，请勿重复创建
 
 | Parameter         | Default   | Explain |
 | :---------------- | --------: | :------------------- |
@@ -43,10 +41,10 @@ var value = cli.Get("key1");
 
 > IPv6: [fe80::b164:55b3:4b4f:7ce6%15]:6379
 
-## Master-Slave (读写分离)
+#### Master-Slave (读写分离)
 
 ```csharp
-var cli = new FreeRedis.RedisClient(
+public static cli = new RedisClient(
     "127.0.0.1:6379,password=123,defaultDatabase=13",
     "127.0.0.1:6380,password=123,defaultDatabase=13",
     "127.0.0.1:6381,password=123,defaultDatabase=13");
@@ -56,10 +54,10 @@ var value = cli.Get("key1");
 
 > 内部读取数据时，随机连接 6380 6381 执行命令
 
-## Redis Sentinel (哨兵高可用)
+#### Redis Sentinel (哨兵高可用)
 
 ```csharp
-var cli = new FreeRedis.RedisClient(
+public static cli = new RedisClient(
     "mymaster,password=123", 
     new [] { "192.169.1.10:26379", "192.169.1.11:26379", "192.169.1.12:26379" },
     true);
@@ -67,11 +65,11 @@ var cli = new FreeRedis.RedisClient(
 
 > 哨兵高可用模式，第三个参数设置读写分离
 
-## Redis Cluster (集群)
+#### Redis Cluster (集群)
 
 待完成...
 
-## Pipeline (管道)
+#### Pipeline (管道)
 
 ```csharp
 using (var pipe = cli.StartPipe())
@@ -83,7 +81,7 @@ using (var pipe = cli.StartPipe())
 }
 ```
 
-## Transaction (事务)
+#### Transaction (事务)
 
 ```csharp
 using (var tran = cli.Multi())
@@ -95,7 +93,7 @@ using (var tran = cli.Multi())
 }
 ```
 
-## 💕 　Donation
+#### 💕 　Donation
 
 > Thank you for your donation
 
