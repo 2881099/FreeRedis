@@ -24,11 +24,11 @@ namespace FreeRedis
 
                 _ib = new IdleBus<RedisClientPool>();
                 _ib.Notice += new EventHandler<IdleBus<string, RedisClientPool>.NoticeEventArgs>((_, e) => { });
-                _ib.Register(_masterHost, () => new RedisClientPool(connectionString, null));
+                _ib.Register(_masterHost, () => new RedisClientPool(connectionString, null, _cli.Serialize, _cli.Deserialize));
 
                 if (_rw_plitting)
                     foreach (var slave in slaveConnectionStrings)
-                        _ib.TryRegister($"slave_{slave.Host}", () => new RedisClientPool(slave, null));
+                        _ib.TryRegister($"slave_{slave.Host}", () => new RedisClientPool(slave, null, _cli.Serialize, _cli.Deserialize));
             }
 
             public override T CheckSingle<T>(Func<T> func)
