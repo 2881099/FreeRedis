@@ -17,9 +17,9 @@ QQ群：4336577(已满)、8578575(在线)、52508226(在线)
 ## Single machine redis (单机)
 
 ```csharp
-var redis = new FreeRedis.RedisClient("127.0.0.1:6379,password=123,defaultDatabase=13");
+var cli = new FreeRedis.RedisClient("127.0.0.1:6379,password=123,defaultDatabase=13");
 
-var value = redis.Get("key1");
+var value = cli.Get("key1");
 ```
 
 > 注意：FreeRedis 仍然是单例模式设计，请勿重复创建
@@ -39,19 +39,19 @@ var value = redis.Get("key1");
 | encoding          | utf-8     | string charset |
 | ssl               | false     | Enable encrypted transmission |
 | name              | \<Empty\> | Connection name, use client list command to view |
-| prefix            | \<Empty\> | key前辍，所有方法都会附带此前辍，csredis.Set(prefix + "key", 111); |
+| prefix            | \<Empty\> | key前辍，所有方法都会附带此前辍，cli.Set(prefix + "key", 111); |
 
 > IPv6: [fe80::b164:55b3:4b4f:7ce6%15]:6379
 
 ## Master-Slave (读写分离)
 
 ```csharp
-var redis = new FreeRedis.RedisClient(
+var cli = new FreeRedis.RedisClient(
     "127.0.0.1:6379,password=123,defaultDatabase=13",
     "127.0.0.1:6380,password=123,defaultDatabase=13",
     "127.0.0.1:6381,password=123,defaultDatabase=13");
 
-var value = redis.Get("key1");
+var value = cli.Get("key1");
 ```
 
 > 内部读取数据时，随机连接 6380 6381 执行命令
@@ -59,7 +59,7 @@ var value = redis.Get("key1");
 ## Redis Sentinel (哨兵高可用)
 
 ```csharp
-var redis = new FreeRedis.RedisClient(
+var cli = new FreeRedis.RedisClient(
     "mymaster,password=123", 
     new [] { "192.169.1.10:26379", "192.169.1.11:26379", "192.169.1.12:26379" },
     true);
@@ -74,7 +74,7 @@ var redis = new FreeRedis.RedisClient(
 ## Pipeline (管道)
 
 ```csharp
-using (var pipe = redis.StartPipe())
+using (var pipe = cli.StartPipe())
 {
     pipe.IncrBy("key1", 10);
     pipe.Set("key2", Null);
@@ -86,7 +86,7 @@ using (var pipe = redis.StartPipe())
 ## Transaction (事务)
 
 ```csharp
-using (var tran = redis.Multi())
+using (var tran = cli.Multi())
 {
     tran.IncrBy("key1", 10);
     tran.Set("key2", Null);
