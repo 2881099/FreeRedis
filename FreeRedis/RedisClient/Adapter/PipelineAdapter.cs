@@ -38,10 +38,7 @@ namespace FreeRedis
                 _commands.Clear();
             }
 
-            public override IRedisSocket GetRedisSocket(CommandPacket cmd)
-            {
-                throw new Exception($"RedisClient: Method cannot be used in {UseType} mode.");
-            }
+            public override IRedisSocket GetRedisSocket(CommandPacket cmd) => throw CannotUseType();
             public override T2 AdapaterCall<T1, T2>(CommandPacket cmd, Func<RedisResult<T1>, T2> parse)
             {
                 _commands.Add(new PipelineCommand

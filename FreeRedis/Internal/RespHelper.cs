@@ -724,7 +724,7 @@ namespace FreeRedis
         }
         public static Dictionary<string, T> MapToHash<T>(this object[] list, Encoding encoding)
         {
-            if (list?.Length % 2 != 0) throw new ArgumentException(nameof(list));
+            if (list?.Length % 2 != 0) throw new ArgumentException($"Array {nameof(list)} length is not even");
             var dic = new Dictionary<string, T>();
             for (var a = 0; a < list.Length; a += 2)
             {

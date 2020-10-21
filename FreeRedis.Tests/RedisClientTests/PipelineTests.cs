@@ -13,9 +13,6 @@ namespace FreeRedis.Tests.RedisClientTests
         [Fact]
         public void StartPipe()
         {
-            cli.Serialize = obj => JsonConvert.SerializeObject(obj);
-            cli.Deserialize = (json, type) => JsonConvert.DeserializeObject(json, type);
-
             var key = Guid.NewGuid().ToString();
             using (var pipe = cli.StartPipe())
             {

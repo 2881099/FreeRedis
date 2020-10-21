@@ -14,9 +14,6 @@ namespace FreeRedis.Tests.RedisClientTests
         [Fact]
         public void BLPop()
         {
-            //cli.Serialize = obj => JsonConvert.SerializeObject(obj);
-            //cli.Deserialize = (json, type) => JsonConvert.DeserializeObject(json, type);
-
             Assert.Null(cli.BRPop(new[] { "TestBLPop1", "TestBLPop2" }, 1));
 
             new Thread(() =>
@@ -61,9 +58,6 @@ namespace FreeRedis.Tests.RedisClientTests
         [Fact]
         public void LIndex()
         {
-            cli.Serialize = obj => JsonConvert.SerializeObject(obj);
-            cli.Deserialize = (json, type) => JsonConvert.DeserializeObject(json, type);
-
             cli.Del("TestLIndex");
             Assert.Equal(8, cli.RPush("TestLIndex", Class, Class, Bytes, Bytes, String, String, Null, Null));
 
@@ -76,9 +70,6 @@ namespace FreeRedis.Tests.RedisClientTests
         [Fact]
         public void LInsert()
         {
-            cli.Serialize = obj => JsonConvert.SerializeObject(obj);
-            cli.Deserialize = (json, type) => JsonConvert.DeserializeObject(json, type);
-
             cli.Del("TestLInsertBefore", "TestLInsertAfter");
             Assert.Equal(8, cli.RPush("TestLInsertBefore", Class, Class, Bytes, Bytes, String, String, Null, Null));
             Assert.Equal(9, cli.LInsert("TestLInsertBefore", InsertDirection.before, Class, "TestLInsertBefore"));
@@ -106,9 +97,6 @@ namespace FreeRedis.Tests.RedisClientTests
         [Fact]
         public void LPop()
         {
-            cli.Serialize = obj => JsonConvert.SerializeObject(obj);
-            cli.Deserialize = (json, type) => JsonConvert.DeserializeObject(json, type);
-
             cli.Del("TestLPop");
             Assert.Equal(8, cli.LPush("TestLPop", Class, Class, Bytes, Bytes, String, String, Null, Null));
             Assert.Equal("", cli.LPop("TestLPop"));
@@ -129,9 +117,6 @@ namespace FreeRedis.Tests.RedisClientTests
         [Fact]
         public void LPush()
         {
-            cli.Serialize = obj => JsonConvert.SerializeObject(obj);
-            cli.Deserialize = (json, type) => JsonConvert.DeserializeObject(json, type);
-
             cli.Del("TestLPush");
             Assert.Equal(8, cli.LPush("TestLPush", Class, Class, Bytes, Bytes, String, String, Null, Null));
 
@@ -171,9 +156,6 @@ namespace FreeRedis.Tests.RedisClientTests
         [Fact]
         public void LRange()
         {
-            cli.Serialize = obj => JsonConvert.SerializeObject(obj);
-            cli.Deserialize = (json, type) => JsonConvert.DeserializeObject(json, type);
-
             cli.Del("TestLRange");
             cli.LPush("TestLRange", Class, Class, Bytes, Bytes, String, String, Null, Null);
 
@@ -235,9 +217,6 @@ namespace FreeRedis.Tests.RedisClientTests
         [Fact]
         public void RPop()
         {
-            cli.Serialize = obj => JsonConvert.SerializeObject(obj);
-            cli.Deserialize = (json, type) => JsonConvert.DeserializeObject(json, type);
-
             cli.Del("TestRPop");
             Assert.Equal(8, cli.RPush("TestRPop", Class, Class, Bytes, Bytes, String, String, Null, Null));
             Assert.Equal("", cli.RPop("TestRPop"));
@@ -253,9 +232,6 @@ namespace FreeRedis.Tests.RedisClientTests
         [Fact]
         public void RPopLPush()
         {
-            cli.Serialize = obj => JsonConvert.SerializeObject(obj);
-            cli.Deserialize = (json, type) => JsonConvert.DeserializeObject(json, type);
-
             cli.Del("TestRPopLPush");
             Assert.Equal(8, cli.RPush("TestRPopLPush", Class, Class, Bytes, Bytes, String, String, Null, Null));
 
@@ -272,9 +248,6 @@ namespace FreeRedis.Tests.RedisClientTests
         [Fact]
         public void RPush()
         {
-            cli.Serialize = obj => JsonConvert.SerializeObject(obj);
-            cli.Deserialize = (json, type) => JsonConvert.DeserializeObject(json, type);
-
             cli.Del("TestRPush");
             Assert.Equal(8, cli.RPush("TestRPush", Null, Null, String, String, Bytes, Bytes, Class, Class));
 

@@ -9,12 +9,21 @@ namespace FreeRedis
     partial class RedisClient
     {
 
-        protected internal enum UseType { Pooling, Cluster, Sentinel, SingleInside, SingleTemp, Pipeline, Transaction }
+        protected internal enum UseType {
+            Pooling,
+            Cluster,
+            Sentinel,
+            SingleInside, 
+            SingleTemp, 
+            Pipeline, 
+            Transaction,
+        }
 
         protected internal abstract class BaseAdapter
         {
             public static ThreadLocal<Random> _rnd = new ThreadLocal<Random>(() => new Random());
             public UseType UseType { get; protected set; }
+            protected Exception CannotUseType() => new Exception($"RedisClient: Method cannot be used in {UseType} mode.");
 
             public abstract IRedisSocket GetRedisSocket(CommandPacket cmd);
             public abstract void Dispose();

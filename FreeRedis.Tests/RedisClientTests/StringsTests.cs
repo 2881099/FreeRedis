@@ -79,9 +79,6 @@ namespace FreeRedis.Tests.RedisClientTests
         [Fact]
         public void Get()
         {
-            cli.Serialize = obj => JsonConvert.SerializeObject(obj);
-            cli.Deserialize = (json, type) => JsonConvert.DeserializeObject(json, type);
-
             var key = "TestGet_null";
             cli.Set(key, Null);
             Assert.Equal((cli.Get(key))?.ToString() ?? "", Null?.ToString() ?? "");
@@ -162,9 +159,6 @@ namespace FreeRedis.Tests.RedisClientTests
         [Fact]
         public void MGet()
         {
-            cli.Serialize = obj => JsonConvert.SerializeObject(obj);
-            cli.Deserialize = (json, type) => JsonConvert.DeserializeObject(json, type);
-
             cli.Set("TestMGet_null1", Null);
             cli.Set("TestMGet_string1", String);
             cli.Set("TestMGet_bytes1", Bytes);
@@ -199,9 +193,6 @@ namespace FreeRedis.Tests.RedisClientTests
         [Fact]
         public void MSet()
         {
-            cli.Serialize = obj => JsonConvert.SerializeObject(obj);
-            cli.Deserialize = (json, type) => JsonConvert.DeserializeObject(json, type);
-
             cli.MSet(new Dictionary<string, object> { ["TestMSet_null1"] = Null, ["TestMSet_string1"] = String, ["TestMSet_bytes1"] = Bytes, ["TestMSet_class1"] = Class });
             Assert.Equal("", cli.Get("TestMSet_null1"));
             Assert.Equal(String, cli.Get("TestMSet_string1"));
@@ -212,9 +203,6 @@ namespace FreeRedis.Tests.RedisClientTests
         [Fact]
         public void MSetNx()
         {
-            cli.Serialize = obj => JsonConvert.SerializeObject(obj);
-            cli.Deserialize = (json, type) => JsonConvert.DeserializeObject(json, type);
-
             cli.Del("TestMSetNx_null", "TestMSetNx_string", "TestMSetNx_bytes", "TestMSetNx_class", "abctest",
                 "TestMSetNx_null1", "TestMSetNx_string1", "TestMSetNx_bytes1", "TestMSetNx_class1");
 
@@ -247,9 +235,6 @@ namespace FreeRedis.Tests.RedisClientTests
         [Fact]
         public void PSetNx()
         {
-            cli.Serialize = obj => JsonConvert.SerializeObject(obj);
-            cli.Deserialize = (json, type) => JsonConvert.DeserializeObject(json, type);
-
             cli.PSetEx("TestSetNx_null", 10000, Null);
             Assert.Equal("", cli.Get("TestSetNx_null"));
 
@@ -266,9 +251,6 @@ namespace FreeRedis.Tests.RedisClientTests
         [Fact]
         public void Set()
         {
-            cli.Serialize = obj => JsonConvert.SerializeObject(obj);
-            cli.Deserialize = (json, type) => JsonConvert.DeserializeObject(json, type);
-
             cli.Set("TestSet_null", Null);
             Assert.Equal("", cli.Get("TestSet_null"));
 
@@ -285,9 +267,6 @@ namespace FreeRedis.Tests.RedisClientTests
         [Fact]
         public void SetNx()
         {
-            cli.Serialize = obj => JsonConvert.SerializeObject(obj);
-            cli.Deserialize = (json, type) => JsonConvert.DeserializeObject(json, type);
-
             cli.Del("TestSetNx_null", "TestSetNx_string", "TestSetNx_bytes", "TestSetNx_class");
 
             Assert.True(cli.SetNx("TestSetNx_null", Null));

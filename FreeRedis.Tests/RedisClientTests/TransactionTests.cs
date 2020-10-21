@@ -13,9 +13,6 @@ namespace FreeRedis.Tests.RedisClientTests
         [Fact]
         public void Multi()
         {
-            cli.Serialize = obj => JsonConvert.SerializeObject(obj);
-            cli.Deserialize = (json, type) => JsonConvert.DeserializeObject(json, type);
-
             using (var tran = cli.Multi())
             {
                 tran.Discard();

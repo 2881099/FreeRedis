@@ -54,9 +54,19 @@ namespace FreeRedis
             _adapter = new SingleInsideAdapter(this, host, ssl, connectTimeout, receiveTimeout, sendTimeout, connected);
         }
 
+        ~RedisClient() => this.Dispose();
+        int _disposeCounter;
         public void Dispose()
         {
-            _adapter.Dispose();
+            if (Interlocked.Increment(ref _disposeCounter) != 1) return;
+            try
+            {
+                _adapter.Dispose();
+            }
+            finally
+            {
+                GC.SuppressFinalize(this);
+            }
         }
 
         protected void CheckUseTypeOrThrow(params UseType[] useTypes)

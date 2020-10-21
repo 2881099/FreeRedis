@@ -50,5 +50,28 @@ namespace FreeRedis
                 (_adapter as PipelineAdapter).Dispose();
             }
         }
+
+
+
+        // GetClient
+        public GetClientHook GetClient()
+        {
+            CheckUseTypeOrThrow(UseType.Pooling, UseType.Sentinel, UseType.SingleInside);
+            var rds = _adapter.GetRedisSocket(null);
+            return new GetClientHook(this, new SingleTempAdapter(this, rds, () => rds.Dispose()));
+        }
+        public class GetClientHook: RedisClient
+        {
+            internal GetClientHook(RedisClient cli, BaseAdapter adapter) : base(adapter)
+            {
+                this.Serialize = cli.Serialize;
+                this.Deserialize = cli.Deserialize;
+            }
+
+            ~GetClientHook()
+            {
+                (_adapter as SingleTempAdapter).Dispose();
+            }
+        }
     }
 }

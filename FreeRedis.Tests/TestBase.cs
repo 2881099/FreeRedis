@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
@@ -11,6 +12,8 @@ namespace FreeRedis.Tests
 		static Lazy<RedisClient> _cliLazy = new Lazy<RedisClient>(() =>
 		{
 			var r = new RedisClient("127.0.0.1:6379,database=1");
+			r.Serialize = obj => JsonConvert.SerializeObject(obj);
+			r.Deserialize = (json, type) => JsonConvert.DeserializeObject(json, type);
 			r.Notice += (s, e) => Trace.WriteLine(e.Log);
 			return r;
 		});

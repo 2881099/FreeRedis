@@ -39,13 +39,14 @@ namespace FreeRedis
 		public string RandomKey() => Call<string>("RANDOMKEY", rt => rt.ThrowOrValue());
 		public void Rename(string key, string newkey) => Call<string>("RENAME".Input(key, newkey).FlagKey(key, newkey), rt => rt.ThrowOrValue());
 		public bool RenameNx(string key, string newkey) => Call<bool>("RENAMENX".Input(key, newkey).FlagKey(key, newkey), rt => rt.ThrowOrValue());
-		public void Restore(string key, int ttl, byte[] serializedValue, bool replace, bool absTtl, int idleTimeSeconds, decimal frequency) => Call<string>("RESTORE"
+		public void Restore(string key, byte[] serializedValue) => Restore(key, 0, serializedValue);
+		public void Restore(string key, int ttl, byte[] serializedValue, bool replace = false, bool absTtl = false, int? idleTimeSeconds = null, decimal? frequency = null) => Call<string>("RESTORE"
 			.Input(key, ttl)
 			.InputRaw(serializedValue)
 			.InputIf(replace, "REPLACE")
 			.InputIf(absTtl, "ABSTTL")
-			.InputIf(idleTimeSeconds != 0, "IDLETIME", idleTimeSeconds)
-			.InputIf(frequency != 0, "FREQ", frequency)
+			.InputIf(idleTimeSeconds != null, "IDLETIME", idleTimeSeconds)
+			.InputIf(frequency != null, "FREQ", frequency)
 			.FlagKey(key), rt => rt.ThrowOrValue());
 		public ScanResult<string> Scan(long cursor, string pattern, long count, string type) => Call<object, ScanResult<string>>("SCAN"
 			.Input(cursor)

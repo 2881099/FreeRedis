@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace FreeRedis
 {
@@ -50,7 +51,9 @@ namespace FreeRedis
 			.ThrowOrValue());
 
 		public void MSet(Dictionary<string, object> keyValues) => Call<string>("MSET".SubCommand(null).InputKv(keyValues, SerializeRedisValue).FlagKey(keyValues.Keys), rt => rt.ThrowOrValue());
+		public void MSet(params object[] keyValues) => MSet(keyValues.MapToHash<object>(Encoding.UTF8));
 		public bool MSetNx(Dictionary<string, object> keyValues) => Call<bool>("MSETNX".SubCommand(null).InputKv(keyValues, SerializeRedisValue).FlagKey(keyValues.Keys), rt => rt.ThrowOrValue());
+		public bool MSetNx(params object[] keyValues) => MSetNx(keyValues.MapToHash<object>(Encoding.UTF8));
 		public void PSetEx(string key, long milliseconds, object value) => Call<string>("PSETEX".Input(key, milliseconds).InputRaw(SerializeRedisValue(value)).FlagKey(key), rt => rt.ThrowOrValue());
 
 		public void Set(string key, object value, int timeoutSeconds = 0) => Set(key, value, TimeSpan.FromSeconds(timeoutSeconds), false, false, false);
