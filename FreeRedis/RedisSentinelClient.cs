@@ -33,13 +33,12 @@ namespace FreeRedis
             }
         }
 
-        protected T2 Call<T2>(CommandBuilder cmd, Func<RedisResult<T2>, T2> parse) => Call<T2, T2>(cmd, parse);
-        protected T2 Call<T1, T2>(CommandBuilder cmd, Func<RedisResult<T1>, T2> parse)
+        protected T2 Call<T2>(CommandPacket cmd, Func<RedisResult<T2>, T2> parse) => Call<T2, T2>(cmd, parse);
+        protected T2 Call<T1, T2>(CommandPacket cmd, Func<RedisResult<T1>, T2> parse)
         {
             var rds = _redisSocket;
             rds.Write(cmd);
-            var result = rds.Read<T1>();
-            result.Encoding = rds.Encoding;
+            var result = cmd.Read<T1>();
             return parse(result);
         }
 

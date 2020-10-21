@@ -13,6 +13,45 @@ namespace FreeRedis.Internal
 {
     class DefaultRedisSocket : IRedisSocket
     {
+        internal class TempRedisSocket : IRedisSocket
+        {
+            IRedisSocket _rds;
+            string _poolkey;
+            Action _dispose;
+            public TempRedisSocket(IRedisSocket owner, string poolkey, Action dispose)
+            {
+                _rds = owner;
+                _poolkey = poolkey;
+                _dispose = dispose;
+            }
+
+            public void Dispose() => _dispose?.Invoke();
+
+            public string Host => _rds.Host;
+            public bool Ssl => _rds.Ssl;
+            public TimeSpan ConnectTimeout { get => _rds.ConnectTimeout; set => _rds.ConnectTimeout = value; }
+            public TimeSpan ReceiveTimeout { get => _rds.ReceiveTimeout; set => _rds.ReceiveTimeout = value; }
+            public TimeSpan SendTimeout { get => _rds.SendTimeout; set => _rds.SendTimeout = value; }
+            public Socket Socket => _rds.Socket;
+            public Stream Stream => _rds.Stream;
+            public bool IsConnected => _rds.IsConnected;
+            public RedisProtocol Protocol { get => _rds.Protocol; set => _rds.Protocol = value; }
+            public Encoding Encoding { get => _rds.Encoding; set => _rds.Encoding = value; }
+            public event EventHandler<EventArgs> Connected { add { _rds.Connected += value; } remove { _rds.Connected -= value; } }
+
+            public RedisClient Client => _rds.Client;
+
+            public void Connect() => _rds.Connect();
+#if net40
+#else
+            public Task ConnectAsync() => _rds.ConnectAsync();
+#endif
+            public void ResetHost(string host) => _rds.ResetHost(host);
+            public void Write(CommandPacket cmd) => _rds.Write(cmd);
+            public void Write(Encoding encoding, CommandPacket cmd) => _rds.Write(encoding, cmd);
+            public ClientReplyType ClientReply => _rds.ClientReply;
+        }
+
         public string Host { get; private set; }
         public bool Ssl { get; private set; }
         string _ip;
@@ -56,24 +95,19 @@ namespace FreeRedis.Internal
             Ssl = ssl;
         }
 
-        public void Write(CommandBuilder cmd) => Write(Encoding, cmd);
-        public void Write(Encoding encoding, CommandBuilder cmd)
+        public void Write(CommandPacket cmd) => Write(Encoding, cmd);
+        public void Write(Encoding encoding, CommandPacket cmd)
         {
             if (IsConnected == false) Connect();
             RespHelper.Write(Stream, encoding, cmd, Protocol);
+            if (string.Compare(cmd._command, "CLIENT", true) == 0 &&
+                string.Compare(cmd._subcommand, "REPLY", true) == 0)
+            {
+                var type = cmd._input.FirstOrDefault().ConvertTo<ClientReplyType>();
+                if (type != ClientReply) ClientReply = type;
+            }
         }
-
-        public RedisResult<T> Read<T>() => Read<T>(Encoding);
-        public RedisResult<T> Read<T>(Encoding encoding)
-        {
-            if (IsConnected == false) Connect();
-            return RespHelper.Read<T>(Stream, encoding);
-        }
-        public void ReadChunk(Stream destination, int bufferSize = 1024)
-        {
-            if (IsConnected == false) Connect();
-            RespHelper.ReadChunk(Stream, destination, bufferSize);
-        }
+        public ClientReplyType ClientReply { get; protected set; }
 
         public void Connect()
         {

@@ -28,12 +28,9 @@ namespace FreeRedis.Internal
         RedisProtocol Protocol { get; set; }
         Encoding Encoding { get; set; }
 
-        void Write(CommandBuilder cmd);
-        void Write(Encoding encoding, CommandBuilder cmd);
-
-        RedisResult<T> Read<T>();
-        RedisResult<T> Read<T>(Encoding encoding);
-        void ReadChunk(Stream destination, int bufferSize = 1024);
+        void Write(CommandPacket cmd);
+        void Write(Encoding encoding, CommandPacket cmd);
+        ClientReplyType ClientReply { get; }
 
         void Connect();
 #if net40

@@ -25,7 +25,7 @@ namespace FreeRedis
 		public void Get(string key, Stream destination, int bufferSize = 1024)
 		{
 			var cb = "GET".Input(key).FlagKey(key);
-			using (var rds = GetRedisSocket(cb))
+			using (var rds = _adapter.GetRedisSocket(cb))
 			{
 				rds.Write(cb);
 				RespHelper.ReadChunk(rds.Stream, destination, bufferSize);

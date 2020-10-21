@@ -66,12 +66,12 @@ namespace FreeRedis
 		public string[][] ModuleList() => Call<string[][]>("MODULE".SubCommand("LIST"), rt => rt.ThrowOrValue());
 		public string ModuleLoad(string path, params string[] args) => Call<string>("MODULE".SubCommand( "LOAD").InputIf(args?.Any() == true, args), rt => rt.ThrowOrValue());
 		public string ModuleUnload(string name) => Call<string>("MODULE".SubCommand("UNLOAD").InputRaw(name), rt => rt.ThrowOrValue());
-		public RedisClient Monitor(Action<object> onData)
-		{
-			IRedisSocket rds = null;
-			rds = CallReadWhile(onData, () => rds.IsConnected, "MONITOR");
-			return rds.Client;
-		}
+		//public RedisClient Monitor(Action<object> onData)
+		//{
+		//	IRedisSocket rds = null;
+		//	rds = CallReadWhile(onData, () => rds.IsConnected, "MONITOR");
+		//	return rds.Client;
+		//}
 		//public void PSync(string replicationid, string offset, Action<string> onData) => SendCommandListen(onData, "PSYNC", replicationid, offset);
 		public string ReplicaOf(string host, int port) => Call<string>("REPLICAOF".Input(host, port), rt => rt.ThrowOrValue());
 		public RoleResult Role() => Call<object, RoleResult>("ROLE", rt => rt.NewValueToRole().ThrowOrValue());

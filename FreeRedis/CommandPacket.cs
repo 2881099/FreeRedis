@@ -3,20 +3,55 @@ using System.Collections.Generic;
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Text;
+using FreeRedis.Internal;
+using System.IO;
 
 namespace FreeRedis
 {
-    public class CommandBuilder
+    public class CommandPacket
     {
         public string _command { get; private set; }
         public string _subcommand { get; private set; }
         public List<object> _input { get; } = new List<object>();
         public List<string> _flagKey { get; } = new List<string>();
 
-        public static implicit operator List<object>(CommandBuilder cb) => cb._input;
-        public static implicit operator CommandBuilder(string cmd) => new CommandBuilder().Command(cmd);
+        public static implicit operator List<object>(CommandPacket cb) => cb._input;
+        public static implicit operator CommandPacket(string cmd) => new CommandPacket().Command(cmd);
 
-        public CommandBuilder Command(string cmd, string subcmd = null)
+        internal IRedisSocket _redisSocket;
+        public bool _writed => _redisSocket != null;
+        public bool _readed { get; internal set; }
+        RedisResult _result;
+        public RedisResult<T> Read<T>() => Read<T>(_redisSocket?.Encoding);
+        public RedisResult<T> Read<T>(Encoding encoding)
+        {
+            if (_redisSocket == null) throw new Exception("The command has not been sent");
+            if (!_readed) return _result as RedisResult<T>;
+            _readed = true;
+            if (_redisSocket.ClientReply == ClientReplyType.On)
+            {
+                if (_redisSocket.IsConnected == false) _redisSocket.Connect();
+                var rt = RespHelper.Read<T>(_redisSocket.Stream, encoding);
+                rt.Encoding = _redisSocket.Encoding;
+                _result = rt;
+                return rt;
+            }
+            _result = new RedisResult<T>(default(T), null, true, RedisMessageType.SimpleString) { Encoding = _redisSocket.Encoding };
+            return _result as RedisResult<T>;
+        }
+        public void ReadChunk(Stream destination, int bufferSize = 1024)
+        {
+            if (_redisSocket == null) throw new Exception("The command has not been sent");
+            if (!_readed) return;
+            _readed = true;
+            if (_redisSocket.ClientReply == ClientReplyType.On)
+            {
+                if (_redisSocket.IsConnected == false) _redisSocket.Connect();
+                RespHelper.ReadChunk(_redisSocket.Stream, destination, bufferSize);
+            }
+        }
+
+        public CommandPacket Command(string cmd, string subcmd = null)
         {
             if (!string.IsNullOrWhiteSpace(_command) && _command.Equals(_input.FirstOrDefault())) _input.RemoveAt(0);
             if (!string.IsNullOrWhiteSpace(_subcommand) && _subcommand.Equals(_input.FirstOrDefault())) _input.RemoveAt(0);
@@ -31,7 +66,7 @@ namespace FreeRedis
             }
             return this;
         }
-        public CommandBuilder FlagKey(params string[] keys)
+        public CommandPacket FlagKey(params string[] keys)
         {
             if (keys != null)
                 foreach (var key in keys) 
@@ -39,7 +74,7 @@ namespace FreeRedis
                         _flagKey.Add(key);
             return this;
         }
-        public CommandBuilder FlagKey(IEnumerable<string> keys)
+        public CommandPacket FlagKey(IEnumerable<string> keys)
         {
             if (keys != null)
                 foreach (var key in keys)
@@ -48,28 +83,28 @@ namespace FreeRedis
             return this;
         }
 
-        public CommandBuilder InputRaw(object arg)
+        public CommandPacket InputRaw(object arg)
         {
             _input.Add(arg);
             return this;
         }
-        public CommandBuilder Input(string[] args)
+        public CommandPacket Input(string[] args)
         {
             foreach (var arg in args) _input.Add(arg);
             return this;
         }
-        public CommandBuilder Input(int[] args)
+        public CommandPacket Input(int[] args)
         {
             foreach (var arg in args) _input.Add(arg);
             return this;
         }
-        public CommandBuilder Input(long[] args)
+        public CommandPacket Input(long[] args)
         {
             foreach (var arg in args) _input.Add(arg);
             return this;
         }
-        public CommandBuilder Input(params object[] args) => this.InputIf(true, args);
-        public CommandBuilder InputIf(bool condition, params object[] args)
+        public CommandPacket Input(params object[] args) => this.InputIf(true, args);
+        public CommandPacket InputIf(bool condition, params object[] args)
         {
             if (condition && args != null)
             {
@@ -89,58 +124,58 @@ namespace FreeRedis
             return this;
         }
 
-        public CommandBuilder InputKv(KeyValuePair<string, long>[] args)
+        public CommandPacket InputKv(KeyValuePair<string, long>[] args)
         {
             _input.AddRange(args.Select(a => new object[] { a.Key, a.Value }).SelectMany(a => a).ToArray());
             return this;
         }
-        public CommandBuilder InputKv(KeyValuePair<string, string>[] args)
+        public CommandPacket InputKv(KeyValuePair<string, string>[] args)
         {
             _input.AddRange(args.Select(a => new object[] { a.Key, a.Value }).SelectMany(a => a).ToArray());
             return this;
         }
-        public CommandBuilder InputKv(KeyValuePair<string, object>[] args, Func<object, object> serialize)
+        public CommandPacket InputKv(KeyValuePair<string, object>[] args, Func<object, object> serialize)
         {
             _input.AddRange(args.Select(a => new object[] { a.Key, serialize(a.Value) }).SelectMany(a => a).ToArray());
             return this;
         }
 
-        public CommandBuilder InputKv(Dictionary<string, long> args)
+        public CommandPacket InputKv(Dictionary<string, long> args)
         {
             _input.AddRange(args.Select(a => new object[] { a.Key, a.Value }).SelectMany(a => a).ToArray());
             return this;
         }
-        public CommandBuilder InputKv(Dictionary<string, string> args)
+        public CommandPacket InputKv(Dictionary<string, string> args)
         {
             _input.AddRange(args.Select(a => new object[] { a.Key, a.Value }).SelectMany(a => a).ToArray());
             return this;
         }
-        public CommandBuilder InputKv(Dictionary<string, object> args, Func<object, object> serialize)
+        public CommandPacket InputKv(Dictionary<string, object> args, Func<object, object> serialize)
         {
             _input.AddRange(args.Select(a => new object[] { a.Key, serialize(a.Value) }).SelectMany(a => a).ToArray());
             return this;
         }
     }
 
-    static class CommandBuilderExtensions
+    static class CommandPacketExtensions
     {
-        public static CommandBuilder SubCommand(this string that, string subcmd) => new CommandBuilder().Command(that, subcmd);
-        public static CommandBuilder Input(this string that, string arg) => new CommandBuilder().Command(that).InputRaw(arg);
-        public static CommandBuilder Input(this string that, long arg) => new CommandBuilder().Command(that).InputRaw(arg);
-        public static CommandBuilder Input(this string that, string arg1, string arg2) => new CommandBuilder().Command(that).InputRaw(arg1).InputRaw(arg2);
-        public static CommandBuilder Input(this string that, string arg1, long arg2) => new CommandBuilder().Command(that).InputRaw(arg1).InputRaw(arg2);
-        public static CommandBuilder Input(this string that, string arg1, int arg2) => new CommandBuilder().Command(that).InputRaw(arg1).InputRaw(arg2);
-        public static CommandBuilder Input(this string that, int arg1, int arg2) => new CommandBuilder().Command(that).InputRaw(arg1).InputRaw(arg2);
-        public static CommandBuilder Input(this string that, long arg1, long arg2) => new CommandBuilder().Command(that).InputRaw(arg1).InputRaw(arg2);
-        public static CommandBuilder Input(this string that, string arg1, decimal arg2) => new CommandBuilder().Command(that).InputRaw(arg1).InputRaw(arg2);
-        public static CommandBuilder Input(this string that, string arg1, string arg2, string arg3) => new CommandBuilder().Command(that).InputRaw(arg1).InputRaw(arg2).InputRaw(arg3);
-        public static CommandBuilder Input(this string that, string arg1, string arg2, long arg3) => new CommandBuilder().Command(that).InputRaw(arg1).InputRaw(arg2).InputRaw(arg3);
-        public static CommandBuilder Input(this string that, string arg1, string arg2, decimal arg3) => new CommandBuilder().Command(that).InputRaw(arg1).InputRaw(arg2).InputRaw(arg3);
-        public static CommandBuilder Input(this string that, string arg1, long arg2, long arg3) => new CommandBuilder().Command(that).InputRaw(arg1).InputRaw(arg2).InputRaw(arg3);
-        public static CommandBuilder Input(this string that, string arg1, decimal arg2, string arg3) => new CommandBuilder().Command(that).InputRaw(arg1).InputRaw(arg2).InputRaw(arg3);
-        public static CommandBuilder Input(this string that, string arg1, decimal arg2, decimal arg3) => new CommandBuilder().Command(that).InputRaw(arg1).InputRaw(arg2).InputRaw(arg3);
-        public static CommandBuilder Input(this string that, string arg1, long arg2, long arg3, long arg4, decimal arg5) => new CommandBuilder().Command(that).InputRaw(arg1).InputRaw(arg2).InputRaw(arg3).InputRaw(arg4).InputRaw(arg5);
-        public static CommandBuilder Input(this string that, string[] args) => new CommandBuilder().Command(that).Input(args);
+        public static CommandPacket SubCommand(this string that, string subcmd) => new CommandPacket().Command(that, subcmd);
+        public static CommandPacket Input(this string that, string arg) => new CommandPacket().Command(that).InputRaw(arg);
+        public static CommandPacket Input(this string that, long arg) => new CommandPacket().Command(that).InputRaw(arg);
+        public static CommandPacket Input(this string that, string arg1, string arg2) => new CommandPacket().Command(that).InputRaw(arg1).InputRaw(arg2);
+        public static CommandPacket Input(this string that, string arg1, long arg2) => new CommandPacket().Command(that).InputRaw(arg1).InputRaw(arg2);
+        public static CommandPacket Input(this string that, string arg1, int arg2) => new CommandPacket().Command(that).InputRaw(arg1).InputRaw(arg2);
+        public static CommandPacket Input(this string that, int arg1, int arg2) => new CommandPacket().Command(that).InputRaw(arg1).InputRaw(arg2);
+        public static CommandPacket Input(this string that, long arg1, long arg2) => new CommandPacket().Command(that).InputRaw(arg1).InputRaw(arg2);
+        public static CommandPacket Input(this string that, string arg1, decimal arg2) => new CommandPacket().Command(that).InputRaw(arg1).InputRaw(arg2);
+        public static CommandPacket Input(this string that, string arg1, string arg2, string arg3) => new CommandPacket().Command(that).InputRaw(arg1).InputRaw(arg2).InputRaw(arg3);
+        public static CommandPacket Input(this string that, string arg1, string arg2, long arg3) => new CommandPacket().Command(that).InputRaw(arg1).InputRaw(arg2).InputRaw(arg3);
+        public static CommandPacket Input(this string that, string arg1, string arg2, decimal arg3) => new CommandPacket().Command(that).InputRaw(arg1).InputRaw(arg2).InputRaw(arg3);
+        public static CommandPacket Input(this string that, string arg1, long arg2, long arg3) => new CommandPacket().Command(that).InputRaw(arg1).InputRaw(arg2).InputRaw(arg3);
+        public static CommandPacket Input(this string that, string arg1, decimal arg2, string arg3) => new CommandPacket().Command(that).InputRaw(arg1).InputRaw(arg2).InputRaw(arg3);
+        public static CommandPacket Input(this string that, string arg1, decimal arg2, decimal arg3) => new CommandPacket().Command(that).InputRaw(arg1).InputRaw(arg2).InputRaw(arg3);
+        public static CommandPacket Input(this string that, string arg1, long arg2, long arg3, long arg4, decimal arg5) => new CommandPacket().Command(that).InputRaw(arg1).InputRaw(arg2).InputRaw(arg3).InputRaw(arg4).InputRaw(arg5);
+        public static CommandPacket Input(this string that, string[] args) => new CommandPacket().Command(that).Input(args);
     }
 
     public class CommandConfig

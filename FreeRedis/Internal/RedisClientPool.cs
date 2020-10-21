@@ -16,50 +16,6 @@ namespace FreeRedis.Internal
 {
     public class RedisClientPool : ObjectPool<RedisClient>
     {
-        internal class RedisSocketScope : IRedisSocket
-        {
-            Object<RedisClient> _cli;
-            RedisClientPool _pool;
-            Exception _exception;
-            IRedisSocket _rds => _cli.Value._singleRedisSocket;
-            public RedisSocketScope(Object<RedisClient> cli, RedisClientPool pool)
-            {
-                _cli = cli;
-                _pool = pool;
-            }
-
-            public void Dispose()
-            {
-                _pool.Return(_cli, _exception);
-            }
-
-            public string Host => _rds.Host;
-            public bool Ssl => _rds.Ssl;
-            public TimeSpan ConnectTimeout { get => _rds.ConnectTimeout; set => _rds.ConnectTimeout = value; }
-            public TimeSpan ReceiveTimeout { get => _rds.ReceiveTimeout; set => _rds.ReceiveTimeout = value; }
-            public TimeSpan SendTimeout { get => _rds.SendTimeout; set => _rds.SendTimeout = value; }
-            public Socket Socket => _rds.Socket;
-            public Stream Stream => _rds.Stream;
-            public bool IsConnected => _rds.IsConnected;
-            public RedisProtocol Protocol { get => _rds.Protocol; set => _rds.Protocol = value; }
-            public Encoding Encoding { get => _rds.Encoding; set => _rds.Encoding = value; }
-            public event EventHandler<EventArgs> Connected { add { _rds.Connected += value; } remove { _rds.Connected -= value; } }
-
-            public RedisClient Client => _rds.Client;
-
-            public void Connect() => _rds.Connect();
-#if net40
-#else
-            public Task ConnectAsync() => _rds.ConnectAsync();
-#endif
-            public RedisResult<T> Read<T>() => _rds.Read<T>();
-            public RedisResult<T> Read<T>(Encoding encoding) => _rds.Read<T>(encoding);
-            public void ReadChunk(Stream destination, int bufferSize = 1024) => _rds.ReadChunk(destination, bufferSize);
-            public void ResetHost(string host) => _rds.ResetHost(host);
-            public void Write(CommandBuilder cmd) => _rds.Write(cmd);
-            public void Write(Encoding encoding, CommandBuilder cmd) => _rds.Write(encoding, cmd);
-        }
-
         public RedisClientPool(string connectionString, Action<RedisClient> connected) : base(null)
         {
             _policy = new RedisClientPoolPolicy
@@ -69,18 +25,19 @@ namespace FreeRedis.Internal
             _policy.Connected += (s, o) =>
             {
                 var cli = s as RedisClient;
+                var rds = cli._adapter.GetRedisSocket(null);
                 using (cli.NoneRedisSimpleError())
                 {
-                    cli._singleRedisSocket.Socket.ReceiveTimeout = (int)_policy._connectionStringBuilder.ReceiveTimeout.TotalMilliseconds;
-                    cli._singleRedisSocket.Socket.SendTimeout = (int)_policy._connectionStringBuilder.SendTimeout.TotalMilliseconds;
-                    cli._singleRedisSocket.Encoding = _policy._connectionStringBuilder.Encoding;
+                    rds.Socket.ReceiveTimeout = (int)_policy._connectionStringBuilder.ReceiveTimeout.TotalMilliseconds;
+                    rds.Socket.SendTimeout = (int)_policy._connectionStringBuilder.SendTimeout.TotalMilliseconds;
+                    rds.Encoding = _policy._connectionStringBuilder.Encoding;
 
                     if (_policy._connectionStringBuilder.Protocol == RedisProtocol.RESP3)
                     {
                         cli.Hello("3", _policy._connectionStringBuilder.User, _policy._connectionStringBuilder.Password, _policy._connectionStringBuilder.ClientName);
                         if (cli.RedisSimpleError != null)
                             throw cli.RedisSimpleError;
-                        cli._singleRedisSocket.Protocol = RedisProtocol.RESP3;
+                        rds.Protocol = RedisProtocol.RESP3;
                     }
                     else if (!string.IsNullOrEmpty(_policy._connectionStringBuilder.User) && !string.IsNullOrEmpty(_policy._connectionStringBuilder.Password))
                     {
@@ -207,7 +164,7 @@ namespace FreeRedis.Internal
         {
             if (_pool.IsAvailable)
             {
-                if (DateTime.Now.Subtract(obj.LastReturnTime).TotalSeconds > 60 || obj.Value._singleRedisSocket.IsConnected == false)
+                if (DateTime.Now.Subtract(obj.LastReturnTime).TotalSeconds > 60 || obj.Value._adapter.GetRedisSocket(null).IsConnected == false)
                 {
                     try
                     {
@@ -226,7 +183,7 @@ namespace FreeRedis.Internal
         {
             if (_pool.IsAvailable)
             {
-                if (DateTime.Now.Subtract(obj.LastReturnTime).TotalSeconds > 60 || obj.Value._singleRedisSocket.IsConnected == false)
+                if (DateTime.Now.Subtract(obj.LastReturnTime).TotalSeconds > 60 || obj.Value._adapter.GetRedisSocket(null).IsConnected == false)
                 {
                     try
                     {

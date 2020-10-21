@@ -52,7 +52,7 @@ namespace FreeRedis
 		public T[] SUnion<T>(params string[] keys) => SReadArray<T>("SUNION".Input(keys).FlagKey(keys));
 		public long SUnionStore(string destination, params string[] keys) => Call<long>("SUNIONSTORE".Input(destination).Input(keys).FlagKey(destination).FlagKey(keys), rt => rt.ThrowOrValue());
 
-		T[] SReadArray<T>(CommandBuilder cb) => Call<object, T[]>(cb, rt => rt
+		T[] SReadArray<T>(CommandPacket cb) => Call<object, T[]>(cb, rt => rt
 			.NewValue(a => a.ConvertTo<byte[][]>().Select(b => DeserializeRedisValue<T>(b, rt.Encoding)).ToArray())
 			.ThrowOrValue());
 	}

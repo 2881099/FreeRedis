@@ -884,28 +884,33 @@ namespace FreeRedis
     {
         public RedisException(string message) : base(message) { }
     }
-    public class RedisResult<T>
+    public abstract class RedisResult
     {
-        public T Value { get; }
-        internal bool IsEnd { get; }
-        public RedisMessageType MessageType { get; }
+        public abstract object GetValue();
+        protected internal bool IsEnd { get; protected set; }
+        public RedisMessageType MessageType { get; protected set; }
         public bool IsError => this.MessageType == RedisMessageType.SimpleError || this.MessageType == RedisMessageType.BlobError;
         public bool IsErrorThrow { get; internal set; } = true;
-        public string SimpleError { get; }
+        public string SimpleError { get; protected set; }
         public Encoding Encoding { get; internal set; }
+    }
+    public class RedisResult<T> : RedisResult
+    {
+        public T Value { get; }
+        public override object GetValue() => this.Value;
         internal RedisResult(T value, bool isend, RedisMessageType msgtype)
         {
-            this.IsEnd = isend;
-            this.MessageType = msgtype;
-            if (IsError) this.SimpleError = value?.ConvertTo<string>();
+            base.IsEnd = isend;
+            base.MessageType = msgtype;
+            if (IsError) base.SimpleError = value?.ConvertTo<string>();
             else this.Value = value;
         }
         internal RedisResult(T value, string simpleError, bool isend, RedisMessageType msgtype)
         {
             this.Value = value;
-            this.SimpleError = simpleError;
-            this.IsEnd = isend;
-            this.MessageType = msgtype;
+            base.SimpleError = simpleError;
+            base.IsEnd = isend;
+            base.MessageType = msgtype;
         }
         public RedisResult<T2> NewValue<T2>(Func<T, T2> value)
         {
