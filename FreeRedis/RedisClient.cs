@@ -7,12 +7,14 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Diagnostics;
 
 namespace FreeRedis
 {
 	public partial class RedisClient : IDisposable
     {
         internal readonly BaseAdapter _adapter;
+        public event EventHandler<NoticeEventArgs> Notice;
 
         protected RedisClient(BaseAdapter adapter)
         {
@@ -76,9 +78,66 @@ namespace FreeRedis
             });
         }
 
-        protected T2 Call<T2>(CommandPacket cmd, Func<RedisResult<T2>, T2> parse) => _adapter.Call(cmd, parse);
-        protected T2 Call<T1, T2>(CommandPacket cmd, Func<RedisResult<T1>, T2> parse) => _adapter.Call(cmd, parse);
-        public object Call(CommandPacket cmd) => _adapter.Call<object, object>(cmd, rt => rt.ThrowOrValue());
+        public object Call(CommandPacket cmd) => _adapter.AdapaterCall<object, object>(cmd, rt => rt.ThrowOrValue());
+        protected T2 Call<T2>(CommandPacket cmd, Func<RedisResult<T2>, T2> parse) => _adapter.AdapaterCall(cmd, parse);
+        protected T2 Call<T1, T2>(CommandPacket cmd, Func<RedisResult<T1>, T2> parse) => _adapter.AdapaterCall(cmd, parse);
+
+        internal T LogCall<T>(CommandPacket cmd, Func<T> func)
+        {
+            if (this.Notice == null) return func();
+            Exception exception = null;
+            Stopwatch sw = new Stopwatch();
+            T ret = default(T);
+            sw.Start();
+            try
+            {
+                ret = func();
+                return ret;
+            }
+            catch (Exception ex)
+            {
+                exception = ex;
+                throw ex;
+            }
+            finally
+            {
+                sw.Stop();
+                if (exception == null && _isThrowRedisSimpleError) exception = this.RedisSimpleError;
+                string log;
+                if (exception != null) log = $" > {exception.Message}";
+                else if (cmd.ReadResult != null) log = $"\r\n{cmd.ReadResult.GetValue().ToInvariantCultureToString()}";
+                else log = $"\r\n{ret.ToInvariantCultureToString()}";
+                this.OnNotice(new NoticeEventArgs(
+                    NoticeType.Call,
+                    exception ?? this.RedisSimpleError,
+                    $"{cmd._redisSocket.Host} ({sw.ElapsedMilliseconds}ms) > {cmd} {log}",
+                    cmd.ReadResult?.GetValue() ?? ret));
+            }
+        }
+        public class NoticeEventArgs : EventArgs
+        {
+            public NoticeType NoticeType { get; }
+            public Exception Exception { get; }
+            public string Log { get; }
+            public object Tag { get; }
+
+            public NoticeEventArgs(NoticeType noticeType, Exception exception, string log, object tag)
+            {
+                this.NoticeType = noticeType;
+                this.Exception = exception;
+                this.Log = log;
+                this.Tag = tag;
+            }
+        }
+        public enum NoticeType
+        {
+            Call, 
+        }
+        void OnNotice(NoticeEventArgs e)
+        {
+            if (this.Notice != null) this.Notice(this, e);
+            else Trace.WriteLine($"[{DateTime.Now.ToString("HH:mm:ss")}] 线程{Thread.CurrentThread.ManagedThreadId}：{e.Log}");
+        }
 
         #region 序列化写入，反序列化
         public Func<object, string> Serialize;

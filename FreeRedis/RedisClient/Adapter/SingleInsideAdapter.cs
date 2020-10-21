@@ -36,14 +36,17 @@ namespace FreeRedis
 
             public override IRedisSocket GetRedisSocket(CommandPacket cmd)
             {
-                return new DefaultRedisSocket.TempRedisSocket(_redisSocket, null, null);
+                return new DefaultRedisSocket.TempRedisSocket(_redisSocket, null);
             }
-            public override T2 Call<T1, T2>(CommandPacket cmd, Func<RedisResult<T1>, T2> parse)
+            public override T2 AdapaterCall<T1, T2>(CommandPacket cmd, Func<RedisResult<T1>, T2> parse)
             {
-                _redisSocket.Write(cmd);
-                var rt = cmd.Read<T1>();
-                rt.IsErrorThrow = _cli._isThrowRedisSimpleError;
-                return parse(rt);
+                return _cli.LogCall(cmd, () =>
+                {
+                    _redisSocket.Write(cmd);
+                    var rt = cmd.Read<T1>();
+                    rt.IsErrorThrow = _cli._isThrowRedisSimpleError;
+                    return parse(rt);
+                });
             }
         }
     }

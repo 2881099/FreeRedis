@@ -42,7 +42,7 @@ namespace FreeRedis
             {
                 throw new Exception($"RedisClient: Method cannot be used in {UseType} mode.");
             }
-            public override T2 Call<T1, T2>(CommandPacket cmd, Func<RedisResult<T1>, T2> parse)
+            public override T2 AdapaterCall<T1, T2>(CommandPacket cmd, Func<RedisResult<T1>, T2> parse)
             {
                 _commands.Add(new PipelineCommand
                 {
@@ -54,6 +54,7 @@ namespace FreeRedis
                         return parse(rt);
                     }
                 });
+                _cli.OnNotice(new NoticeEventArgs(NoticeType.Call, null, $"Pipeline > {cmd}", null));
                 return default(T2);
             }
 
@@ -69,10 +70,19 @@ namespace FreeRedis
                         case UseType.Cluster: return ClusterEndPipe();
                         case UseType.Sentinel:
                         case UseType.SingleInside: break;
+                        case UseType.SingleTemp: break;
                     }
 
-                    EndPipe(_cli._adapter.GetRedisSocket(null), _commands);
-                    return _commands.Select(a => a.Result).ToArray();
+                    CommandPacket epcmd = "EndPipe";
+                    return _cli.LogCall(epcmd, () =>
+                    {
+                        using (var rds = _cli._adapter.GetRedisSocket(null))
+                        {
+                            epcmd._redisSocket = rds;
+                            EndPipe(rds, _commands);
+                        }
+                        return _commands.Select(a => a.Result).ToArray();
+                    });
                 }
                 finally
                 {
@@ -96,10 +106,12 @@ namespace FreeRedis
                         RespHelper.Write(ms, rds.Encoding, cmd.Command, rds.Protocol);
 
                     if (rds.IsConnected == false) rds.Connect();
+                    ms.Position = 0;
                     ms.CopyTo(rds.Stream);
 
                     foreach (var pc in cmds)
                     {
+                        pc.Command._redisSocket = rds;
                         pc.Result = pc.Parse(pc);
                         if (pc.Command.ReadResult.IsError) err.Add(pc);
                     }

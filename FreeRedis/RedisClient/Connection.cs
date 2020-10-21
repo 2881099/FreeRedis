@@ -37,24 +37,27 @@ namespace FreeRedis
 			.SubCommand("PAUSE")
 			.InputRaw(timeoutMilliseconds), rt => rt.ThrowOrValue()));
 
-		public void ClientReply(ClientReplyType type) => _adapter.CheckSingle<int>(() =>
+		public void ClientReply(ClientReplyType type) => _adapter.CheckSingle<string>(() =>
 		{
 			var cmd = "CLIENT".SubCommand("REPLY").InputRaw(type);
-			using (var rds = _adapter.GetRedisSocket(null))
+			return LogCall(cmd, () =>
 			{
-				rds.Write(cmd);
-				switch (type)
+				using (var rds = _adapter.GetRedisSocket(null))
 				{
-					case ClientReplyType.Off:
-						break;
-					case ClientReplyType.On:
-						cmd.Read<string>().ThrowOrValue();
-						break;
-					case ClientReplyType.Skip:
-						break;
+					rds.Write(cmd);
+					switch (type)
+					{
+						case ClientReplyType.Off:
+							break;
+						case ClientReplyType.On:
+							cmd.Read<string>().ThrowOrValue();
+							break;
+						case ClientReplyType.Skip:
+							break;
+					}
 				}
-			}
-			return 0;
+				return default(string);
+			});
 		});
 		public void ClientSetName(string connectionName) => _adapter.CheckSingle(() => Call<string>("CLIENT"
 			.SubCommand("SETNAME")

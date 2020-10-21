@@ -42,41 +42,45 @@ namespace FreeRedis
             public override IRedisSocket GetRedisSocket(CommandPacket cmd)
             {
                 TryMulti();
-                return new DefaultRedisSocket.TempRedisSocket(_redisSocket, null, null);
+                return new DefaultRedisSocket.TempRedisSocket(_redisSocket, null);
             }
-            public override T2 Call<T1, T2>(CommandPacket cmd, Func<RedisResult<T1>, T2> parse)
+            public override T2 AdapaterCall<T1, T2>(CommandPacket cmd, Func<RedisResult<T1>, T2> parse)
             {
                 TryMulti();
-                if (_redisSocket.IsConnected == false) _redisSocket.Connect();
-                _redisSocket.Write(cmd);
-                cmd.Read<T1>().ThrowOrValue();
-                cmd._readed = false; //exec 还需要再读一次
-                _commands.Add(new TransactionCommand
+                return _cli.LogCall(cmd, () =>
                 {
-                    Command = cmd,
-                    Parse = obj => parse(new RedisResult<T1>(obj.ConvertTo<T1>(), null, true, RedisMessageType.SimpleString) { Encoding = _redisSocket.Encoding })
+                    _redisSocket.Write(cmd);
+                    cmd.Read<T1>().ThrowOrValue();
+                    cmd._readed = false; //exec 还需要再读一次
+                    _commands.Add(new TransactionCommand
+                    {
+                        Command = cmd,
+                        Parse = obj => parse(new RedisResult<T1>(obj.ConvertTo<T1>(), null, true, RedisMessageType.SimpleString) { Encoding = _redisSocket.Encoding })
+                    });
+                    return default(T2);
                 });
-                return default(T2);
             }
 
-            object CallTransactionCommand(CommandPacket cmd)
+            object SelfCall(CommandPacket cmd)
             {
-                _redisSocket.Write(cmd);
-                return cmd.Read<object>().ThrowOrValue();
+                return _cli.LogCall(cmd, () =>
+                {
+                    _redisSocket.Write(cmd);
+                    return cmd.Read<object>().ThrowOrValue();
+                });
             }
             public void TryMulti()
             {
                 if (_redisSocket == null)
                 {
                     _redisSocket = _cli._adapter.GetRedisSocket(null);
-                    if (_redisSocket.IsConnected == false) _redisSocket.Connect();
-                    CallTransactionCommand("MULTI");
+                    SelfCall("MULTI");
                 }
             }
             public void Discard()
             {
                 if (_redisSocket == null) return;
-                CallTransactionCommand("DISCARD");
+                SelfCall("DISCARD");
                 _commands.Clear();
                 _redisSocket?.Dispose();
                 _redisSocket = null;
@@ -86,8 +90,7 @@ namespace FreeRedis
                 if (_redisSocket == null) return new object[0];
                 try
                 {
-                    if (_redisSocket.IsConnected == false) _redisSocket.Connect();
-                    var ret = CallTransactionCommand("EXEC") as List<object>;
+                    var ret = SelfCall("EXEC") as List<object>;
 
                     for (var a = 0; a < ret.Count; a++)
                         _commands[a].Result = _commands[a].Parse(ret[a]);
@@ -103,12 +106,12 @@ namespace FreeRedis
             public void UnWatch()
             {
                 if (_redisSocket == null) return;
-                CallTransactionCommand("UNWATCH");
+                SelfCall("UNWATCH");
             }
             public void Watch(params string[] keys)
             {
                 if (_redisSocket == null) return;
-                CallTransactionCommand("WATCH".Input(keys).FlagKey(keys));
+                SelfCall("WATCH".Input(keys).FlagKey(keys));
             }
         }
     }

@@ -15,7 +15,6 @@ namespace FreeRedis
 {
     public static class RespHelper
     {
-        public static RedisResult<T> Read<T>(Stream stream) => new Resp3Reader(stream, null).ReadObject().ConvertTo<T>(null);
         public static RedisResult<T> Read<T>(Stream stream, Encoding encoding) => new Resp3Reader(stream, typeof(T) == typeof(byte[]) ? null : encoding).ReadObject().ConvertTo<T>(encoding);
         public static void ReadChunk(Stream stream, Stream destination, int bufferSize = 1024) => new Resp3Reader(stream, null).ReadBlobStringChunk(destination, bufferSize);
         static RedisResult<T> ConvertTo<T>(this RedisResult<object> rt, Encoding encoding)
@@ -24,8 +23,6 @@ namespace FreeRedis
             if (obj is T val) return rt.NewValue(a => val);
             return rt.NewValue(a => (T)typeof(T).FromObject(a, encoding));
         }
-
-        public static void Write(Stream stream, List<object> command, RedisProtocol protocol) => Write(stream, null, command, protocol);
         public static void Write(Stream stream, Encoding encoding, List<object> command, RedisProtocol protocol) => new Resp3Writer(stream, encoding, protocol).WriteCommand(command);
 
         public static object DeserializeResptext(string resptext)

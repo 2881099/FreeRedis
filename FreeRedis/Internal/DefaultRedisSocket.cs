@@ -16,12 +16,10 @@ namespace FreeRedis.Internal
         internal class TempRedisSocket : IRedisSocket
         {
             IRedisSocket _rds;
-            string _poolkey;
             Action _dispose;
-            public TempRedisSocket(IRedisSocket owner, string poolkey, Action dispose)
+            public TempRedisSocket(IRedisSocket owner, Action dispose)
             {
                 _rds = owner;
-                _poolkey = poolkey;
                 _dispose = dispose;
             }
 
@@ -46,7 +44,6 @@ namespace FreeRedis.Internal
 #endif
             public void ResetHost(string host) => _rds.ResetHost(host);
             public void Write(CommandPacket cmd) => _rds.Write(cmd);
-            public void Write(Encoding encoding, CommandPacket cmd) => _rds.Write(encoding, cmd);
             public ClientReplyType ClientReply => _rds.ClientReply;
         }
 
@@ -83,7 +80,6 @@ namespace FreeRedis.Internal
         public bool IsConnected => _socket?.Connected == true && _stream != null;
         public event EventHandler<EventArgs> Connected;
 
-        public RedisClient Client { get; set; }
         public RedisProtocol Protocol { get; set; } = RedisProtocol.RESP2;
         public Encoding Encoding { get; set; } = Encoding.UTF8;
 
@@ -93,11 +89,10 @@ namespace FreeRedis.Internal
             Ssl = ssl;
         }
 
-        public void Write(CommandPacket cmd) => Write(Encoding, cmd);
-        public void Write(Encoding encoding, CommandPacket cmd)
+        public void Write(CommandPacket cmd)
         {
             if (IsConnected == false) Connect();
-            RespHelper.Write(Stream, encoding, cmd, Protocol);
+            RespHelper.Write(Stream, Encoding, cmd, Protocol);
             if (string.Compare(cmd._command, "CLIENT", true) == 0 &&
                 string.Compare(cmd._subcommand, "REPLY", true) == 0)
             {

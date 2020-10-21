@@ -24,12 +24,16 @@ namespace FreeRedis
 		public T Get<T>(string key) => Call<byte[], T>("GET".Input(key).FlagKey(key), rt => rt.NewValue(a => DeserializeRedisValue<T>(a, rt.Encoding)).ThrowOrValue());
 		public void Get(string key, Stream destination, int bufferSize = 1024)
 		{
-			var cb = "GET".Input(key).FlagKey(key);
-			using (var rds = _adapter.GetRedisSocket(cb))
+			var cmd = "GET".Input(key).FlagKey(key);
+			LogCall(cmd, () =>
 			{
-				rds.Write(cb);
-				RespHelper.ReadChunk(rds.Stream, destination, bufferSize);
-			}
+				using (var rds = _adapter.GetRedisSocket(cmd))
+				{
+					rds.Write(cmd);
+					RespHelper.ReadChunk(rds.Stream, destination, bufferSize);
+				}
+				return default(string);
+			});
 		}
 		public bool GetBit(string key, long offset) => Call<bool>("GETBIT".Input(key, offset).FlagKey(key), rt => rt.ThrowOrValue());
 		public string GetRange(string key, long start, long end) => Call<string>("GETRANGE".Input(key, start, end).FlagKey(key), rt => rt.ThrowOrValue());

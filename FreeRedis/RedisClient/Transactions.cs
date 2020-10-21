@@ -7,7 +7,7 @@ namespace FreeRedis
 	{
         public TransactionHook Multi()
         {
-            CheckUseTypeOrThrow(UseType.Pooling, UseType.Cluster, UseType.Sentinel, UseType.SingleInside);
+            CheckUseTypeOrThrow(UseType.Pooling, UseType.Cluster, UseType.Sentinel, UseType.SingleInside, UseType.SingleTemp);
             return new TransactionHook(this);
         }
         public class TransactionHook : RedisClient
@@ -21,6 +21,11 @@ namespace FreeRedis
             public object[] Exec() => (_adapter as TransactionAdapter).Exec();
             public void UnWatch() => (_adapter as TransactionAdapter).UnWatch();
             public void Watch(params string[] keys) => (_adapter as TransactionAdapter).Watch(keys);
+
+            ~TransactionHook()
+            {
+                (_adapter as TransactionAdapter).Dispose();
+            }
         }
 
 
@@ -28,7 +33,7 @@ namespace FreeRedis
         // Pipeline
         public PipelineHook StartPipe()
         {
-            CheckUseTypeOrThrow(UseType.Pooling, UseType.Cluster, UseType.Sentinel, UseType.SingleInside);
+            CheckUseTypeOrThrow(UseType.Pooling, UseType.Cluster, UseType.Sentinel, UseType.SingleInside, UseType.SingleTemp);
             return new PipelineHook(this);
         }
         public class PipelineHook : RedisClient
@@ -39,6 +44,11 @@ namespace FreeRedis
                 this.Deserialize = cli.Deserialize;
             }
             public object[] EndPipe() => (_adapter as PipelineAdapter).EndPipe();
+
+            ~PipelineHook()
+            {
+                (_adapter as PipelineAdapter).Dispose();
+            }
         }
     }
 }

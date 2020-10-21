@@ -36,7 +36,7 @@ namespace FreeRedis
                 throw new NotImplementedException();
             }
 
-            public override T2 Call<T1, T2>(CommandPacket cmd, Func<RedisResult<T1>, T2> parse)
+            public override T2 AdapaterCall<T1, T2>(CommandPacket cmd, Func<RedisResult<T1>, T2> parse)
             {
                 throw new NotImplementedException();
             }

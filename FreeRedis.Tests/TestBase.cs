@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 namespace FreeRedis.Tests
@@ -7,7 +8,12 @@ namespace FreeRedis.Tests
     public class TestBase
 	{
 		//static Lazy<RedisClient> _cliLazy = new Lazy<RedisClient>(() => new RedisClient("127.0.0.1:6379,database=1", "127.0.0.1:6379,database=1"));
-		static Lazy<RedisClient> _cliLazy = new Lazy<RedisClient>(() => new RedisClient("127.0.0.1:6379,database=1"));
+		static Lazy<RedisClient> _cliLazy = new Lazy<RedisClient>(() =>
+		{
+			var r = new RedisClient("127.0.0.1:6379,database=1");
+			r.Notice += (s, e) => Trace.WriteLine(e.Log);
+			return r;
+		});
 		//static Lazy<RedisClient> _cliLazy = new Lazy<RedisClient>(() => new RedisClient("192.168.164.10:6379,database=1"));
 		public static RedisClient cli => _cliLazy.Value;
 

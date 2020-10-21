@@ -9,7 +9,7 @@ namespace FreeRedis
     partial class RedisClient
     {
 
-        protected internal enum UseType { Pooling, Cluster, Sentinel, SingleInside, Pipeline, Transaction }
+        protected internal enum UseType { Pooling, Cluster, Sentinel, SingleInside, SingleTemp, Pipeline, Transaction }
 
         protected internal abstract class BaseAdapter
         {
@@ -20,7 +20,7 @@ namespace FreeRedis
             public abstract void Dispose();
 
             public abstract T CheckSingle<T>(Func<T> func);
-            public abstract T2 Call<T1, T2>(CommandPacket cmd, Func<RedisResult<T1>, T2> parse);
+            public abstract T2 AdapaterCall<T1, T2>(CommandPacket cmd, Func<RedisResult<T1>, T2> parse);
         }
     }
 }

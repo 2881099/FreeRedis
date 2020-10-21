@@ -26,14 +26,17 @@ namespace FreeRedis
 		KeyValue<T> BLRPop<T>(string cmd, string[] keys, int timeoutSeconds)
 		{
 			var cb = cmd.SubCommand(null).Input(keys).InputRaw(timeoutSeconds).FlagKey(keys);
-			using (var rds = _adapter.GetRedisSocket(cb))
+			return LogCall(cb, () =>
 			{
-				rds.Write(cb);
-				var value = cb.Read<object>().ThrowOrValue();
-				var list = value.ConvertTo<byte[][]>();
-				if (list?.Length != 2) return null;
-				return new KeyValue<T>(rds.Encoding.GetString(list.FirstOrDefault()), DeserializeRedisValue<T>(list.LastOrDefault(), rds.Encoding));
-			}
+				using (var rds = _adapter.GetRedisSocket(cb))
+				{
+					rds.Write(cb);
+					var value = cb.Read<object>().ThrowOrValue();
+					var list = value.ConvertTo<byte[][]>();
+					if (list?.Length != 2) return null;
+					return new KeyValue<T>(rds.Encoding.GetString(list.FirstOrDefault()), DeserializeRedisValue<T>(list.LastOrDefault(), rds.Encoding));
+				}
+			});
 		}
 
 		public string BRPopLPush(string source, string destination, int timeoutSeconds) => Call<string>("BRPOPLPUSH"

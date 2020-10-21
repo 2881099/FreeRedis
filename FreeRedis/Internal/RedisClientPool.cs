@@ -224,7 +224,7 @@ namespace FreeRedis.Internal
             {
                 var conn = pool.Get();
                 initConns.Add(conn);
-                pool.Policy.OnCheckAvailable(conn);
+                conn.Value.Ping();
             }
             catch (Exception ex)
             {
@@ -244,7 +244,7 @@ namespace FreeRedis.Internal
                         {
                             var conn = pool.Get();
                             initConns.Add(conn);
-                            pool.Policy.OnCheckAvailable(conn);
+                            conn.Value.Ping();
                         }
                         catch
                         {

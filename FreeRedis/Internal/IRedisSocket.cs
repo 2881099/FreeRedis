@@ -28,7 +28,6 @@ namespace FreeRedis.Internal
         Encoding Encoding { get; set; }
 
         void Write(CommandPacket cmd);
-        void Write(Encoding encoding, CommandPacket cmd);
         ClientReplyType ClientReply { get; }
 
         void Connect();

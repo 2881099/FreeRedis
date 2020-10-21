@@ -61,7 +61,7 @@ namespace FreeRedis
                                 var rndpool = _ib.Get(rndkey);
                                 var rndcli = rndpool.Get();
                                 var rndrds = rndcli.Value._adapter.GetRedisSocket(null);
-                                return new DefaultRedisSocket.TempRedisSocket(rndrds, rndkey, () => rndpool.Return(rndcli));
+                                return new DefaultRedisSocket.TempRedisSocket(rndrds, () => rndpool.Return(rndcli));
                             }
                         }
                     }
@@ -70,17 +70,20 @@ namespace FreeRedis
                 var pool = _ib.Get(poolkey);
                 var cli = pool.Get();
                 var rds = cli.Value._adapter.GetRedisSocket(null);
-                return new DefaultRedisSocket.TempRedisSocket(rds, poolkey, () => pool.Return(cli));
+                return new DefaultRedisSocket.TempRedisSocket(rds, () => pool.Return(cli));
             }
-            public override T2 Call<T1, T2>(CommandPacket cmd, Func<RedisResult<T1>, T2> parse)
+            public override T2 AdapaterCall<T1, T2>(CommandPacket cmd, Func<RedisResult<T1>, T2> parse)
             {
-                using (var rds = GetRedisSocket(cmd))
+                return _cli.LogCall(cmd, () =>
                 {
-                    rds.Write(cmd);
-                    var rt = cmd.Read<T1>();
-                    rt.IsErrorThrow = _cli._isThrowRedisSimpleError;
-                    return parse(rt);
-                }
+                    using (var rds = GetRedisSocket(cmd))
+                    {
+                        rds.Write(cmd);
+                        var rt = cmd.Read<T1>();
+                        rt.IsErrorThrow = _cli._isThrowRedisSimpleError;
+                        return parse(rt);
+                    }
+                });
             }
         }
     }

@@ -73,6 +73,7 @@ namespace FreeRedis
                     case "defaultdatabase": if (kv.Length > 1 && int.TryParse(kv[1].Trim(), out var database) && database > 0) ret.Database = database; break;
 
                     case "prefix": if (kv.Length > 1) ret.Prefix = kv[1].Trim(); break;
+                    case "name":
                     case "clientname": if (kv.Length > 1) ret.ClientName = kv[1].Trim(); break;
                     case "encoding": if (kv.Length > 1) ret.Encoding = Encoding.GetEncoding(kv[1].Trim()); break;
 
