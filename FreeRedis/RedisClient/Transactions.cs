@@ -53,22 +53,22 @@ namespace FreeRedis
 
 
 
-        // GetClient
-        public GetClientHook GetClient()
+        // GetSharing
+        public GetSharingHook GetSharing()
         {
             CheckUseTypeOrThrow(UseType.Pooling, UseType.Sentinel, UseType.SingleInside);
             var rds = _adapter.GetRedisSocket(null);
-            return new GetClientHook(this, new SingleTempAdapter(this, rds, () => rds.Dispose()));
+            return new GetSharingHook(this, new SingleTempAdapter(this, rds, () => rds.Dispose()));
         }
-        public class GetClientHook: RedisClient
+        public class GetSharingHook: RedisClient
         {
-            internal GetClientHook(RedisClient cli, BaseAdapter adapter) : base(adapter)
+            internal GetSharingHook(RedisClient cli, BaseAdapter adapter) : base(adapter)
             {
                 this.Serialize = cli.Serialize;
                 this.Deserialize = cli.Deserialize;
             }
 
-            ~GetClientHook()
+            ~GetSharingHook()
             {
                 (_adapter as SingleTempAdapter).Dispose();
             }

@@ -333,8 +333,8 @@ namespace FreeRedis
                 }
             }
 
-            readonly byte[] Crlf = new byte[] { 13, 10 };
-            readonly byte[] Null = new byte[] { 93, 13, 10 }; //_\r\n
+            static readonly byte[] Crlf = new byte[] { 13, 10 };
+            static readonly byte[] Null = new byte[] { 93, 13, 10 }; //_\r\n
             Resp3Writer WriteBlobString(string text, char msgtype = '$')
             {
                 if (text == null) return WriteNull();
@@ -732,7 +732,7 @@ namespace FreeRedis
                 if (dic.ContainsKey(key)) continue;
                 var val = list[a + 1];
                 if (val == null) dic.Add(key, default(T));
-                dic.Add(key, val is T conval ? conval : (T)typeof(T).FromObject(list[a + 1], encoding));
+                else dic.Add(key, val is T conval ? conval : (T)typeof(T).FromObject(list[a + 1], encoding));
             }
             return dic;
         }

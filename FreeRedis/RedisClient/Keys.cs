@@ -26,13 +26,13 @@ namespace FreeRedis
 			.FlagKey(key)
 			.FlagKey(keys), rt => rt.ThrowOrValue());
 		public bool Move(string key, int db) => Call<bool>("MOVE".Input(key, db).FlagKey(key), rt => rt.ThrowOrValue());
-		public long ObjectRefCount(string key) => Call<long>("OBJECT".SubCommand( "REFCOUNT").Input(key).FlagKey(key), rt => rt.ThrowOrValue());
+		public long? ObjectRefCount(string key) => Call<long?>("OBJECT".SubCommand( "REFCOUNT").Input(key).FlagKey(key), rt => rt.ThrowOrValue());
 		public long ObjectIdleTime(string key) => Call<long>("OBJECT".SubCommand("IDLETIME").Input(key).FlagKey(key), rt => rt.ThrowOrValue());
 		public object ObjectEncoding(string key) => Call<object>("OBJECT".SubCommand("ENCODING").Input(key).FlagKey(key), rt => rt.ThrowOrValue());
 		public object ObjectFreq(string key) => Call<object>("OBJECT".SubCommand("FREQ").Input(key).FlagKey(key), rt => rt.ThrowOrValue());
 		public object ObjectHelp(string key) => Call<object>("OBJECT".SubCommand("HELP").Input(key).FlagKey(key), rt => rt.ThrowOrValue());
 
-		public bool Presist(string key) => Call<bool>("PERSIST".Input(key).FlagKey(key), rt => rt.ThrowOrValue());
+		public bool Persist(string key) => Call<bool>("PERSIST".Input(key).FlagKey(key), rt => rt.ThrowOrValue());
 		public bool PExpire(string key, int milliseconds) => Call<bool>("PEXPIRE".Input(key, milliseconds).FlagKey(key), rt => rt.ThrowOrValue());
 		public bool PExpireAt(string key, DateTime timestamp) => Call<bool>("PEXPIREAT".Input(key, (long)timestamp.Subtract(new DateTime(1970, 1, 1)).TotalMilliseconds).FlagKey(key), rt => rt.ThrowOrValue());
 		public long PTtl(string key) => Call<long>("PTTL".Input(key).FlagKey(key), rt => rt.ThrowOrValue());
@@ -69,7 +69,7 @@ namespace FreeRedis
 			.FlagKey(key, storeDestination), rt => rt.ThrowOrValue());
 		public long Touch(params string[] keys) => Call<long>("TOUCH".Input(keys).FlagKey(keys), rt => rt.ThrowOrValue());
 		public long Ttl(string key) => Call<long>("TTL".Input(key).FlagKey(key), rt => rt.ThrowOrValue());
-		public string Type(string key) => Call<string>("TYPE".Input(key).FlagKey(key), rt => rt.ThrowOrValue());
+		public KeyType Type(string key) => Call<KeyType>("TYPE".Input(key).FlagKey(key), rt => rt.ThrowOrValue());
 		public long UnLink(params string[] keys) => Call<long>("UNLINK".Input(keys).FlagKey(keys), rt => rt.ThrowOrValue());
 		public long Wait(long numreplicas, long timeoutMilliseconds) => Call<long>("WAIT".Input(numreplicas, timeoutMilliseconds), rt => rt.ThrowOrValue());
 	}

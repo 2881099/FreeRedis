@@ -31,7 +31,16 @@ namespace FreeRedis
             return sb.ToString();
         }
 
-        internal IRedisSocket _redisSocket;
+        IRedisSocket _redisSocketPriv;
+        internal IRedisSocket _redisSocket { 
+            get => _redisSocketPriv;
+            set
+            {
+                _redisSocketPriv = value;
+                _readed = false;
+                ReadResult = null;
+            }
+        }
         public bool _writed => _redisSocket != null;
         public bool _readed { get; internal set; }
         public RedisResult ReadResult { get; protected set; }

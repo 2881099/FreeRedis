@@ -294,6 +294,7 @@ namespace FreeRedis
 	public enum InsertDirection { before, after }
 	public enum ScriptDebugOption { yes, sync, no }
 	public enum BitOpOperation { and, or, xor, not }
+    public enum KeyType { none, @string, list, set, zset, hash, stream }
 
     public class GeoMember
     {
