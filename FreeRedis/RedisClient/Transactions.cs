@@ -5,47 +5,33 @@ namespace FreeRedis
 {
     partial class RedisClient
 	{
-        //public void Discard() => Call<string>("DISCARD", rt => rt.ThrowOrValue());
-        //public object[] Exec()
-        //{
-        //	try
-        //	{
-        //		return Call<object, List<object>>("EXEC", rt => rt.NewValue(a => a as List<object>).ThrowOrValue()).ToArray();
-        //          }
-        //          catch
-        //          {
-        //		_adapter.Reset();
-        //		throw;
-        //          }
-        //          finally
-        //          {
-        //		_state = ClientStatus.Normal;
-        //          }
-        //}
-        //public void Multi()
-        //{
-        //	if (_state != ClientStatus.Normal) throw new ArgumentException($"ClientModel current is: {_state}");
-        //	Call<string>("MULTI", rt => rt.ThrowOrValue());
-        //	_state = ClientStatus.Normal;
-        //}
-        //public void UnWatch() => Call<string>("UNWATCH", rt => rt.ThrowOrValue());
-        //public void Watch(params string[] keys) => Call<string>("WATCH".Input(keys).FlagKey(keys), rt => rt.ThrowOrValue());
-
-        // Pipeline
-        public Pipeline StartPipe()
+        public TransactionHook Multi()
         {
             CheckUseTypeOrThrow(UseType.Pooling, UseType.Cluster, UseType.Sentinel, UseType.SingleInside);
-            return new Pipeline(this);
+            Call<string>("MULTI", rt => rt.ThrowOrValue());
+            return new TransactionHook(this);
         }
-        public class Pipeline : RedisClient
+        public class TransactionHook : RedisClient
         {
-            PipelineAdapter _pipelineAdapter;
-            internal Pipeline(RedisClient cli) : base(new PipelineAdapter(cli))
-            {
-                _pipelineAdapter = base._adapter as PipelineAdapter;
-            }
+            internal TransactionHook(RedisClient cli) : base(new TransactionAdapter(cli)) { }
+            public void Discard() => (_adapter as TransactionAdapter).Discard();
+            public object[] Exec() => (_adapter as TransactionAdapter).Exec();
+            public void UnWatch() => (_adapter as TransactionAdapter).UnWatch();
+            public void Watch(params string[] keys) => (_adapter as TransactionAdapter).Watch(keys);
+        }
 
-            public object[] EndPipe() => _pipelineAdapter.EndPipe();
+
+
+        // Pipeline
+        public PipelineHook StartPipe()
+        {
+            CheckUseTypeOrThrow(UseType.Pooling, UseType.Cluster, UseType.Sentinel, UseType.SingleInside);
+            return new PipelineHook(this);
+        }
+        public class PipelineHook : RedisClient
+        {
+            internal PipelineHook(RedisClient cli) : base(new PipelineAdapter(cli)) { }
+            public object[] EndPipe() => (_adapter as PipelineAdapter).EndPipe();
         }
     }
 }

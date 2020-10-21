@@ -9,23 +9,24 @@ namespace FreeRedis
 {
     partial class RedisClient
     {
-        class PipelineAdapter : BaseAdapter
+        class TransactionAdapter : BaseAdapter
         {
             readonly RedisClient _cli;
-            readonly List<PipelineCommand> _commands;
+            IRedisSocket _redisSocket;
+            readonly List<TransactionCommand> _commands;
 
-            internal class PipelineCommand
+            internal class TransactionCommand
             {
                 public CommandPacket Command { get; set; }
-                public Func<PipelineCommand, object> Parse { get; set; }
+                public Func<TransactionCommand, object> Parse { get; set; }
                 public object Result { get; set; }
             }
 
-            public PipelineAdapter(RedisClient cli)
+            public TransactionAdapter(RedisClient cli)
             {
-                UseType = UseType.Pipeline;
+                UseType = UseType.Transaction;
                 _cli = cli;
-                _commands = new List<PipelineCommand>();
+                _commands = new List<TransactionCommand>();
             }
 
             public override T CheckSingle<T>(Func<T> func)
@@ -35,16 +36,26 @@ namespace FreeRedis
 
             public override void Dispose()
             {
-                _commands.Clear();
+                Discard();
             }
 
             public override IRedisSocket GetRedisSocket(CommandPacket cmd)
             {
-                throw new Exception($"RedisClient: Method cannot be used in {UseType} mode.");
+                if (_redisSocket == null)
+                    _redisSocket = _cli._adapter.GetRedisSocket(null);
+
+                return new DefaultRedisSocket.TempRedisSocket(_redisSocket, null, null);
             }
             public override T2 Call<T1, T2>(CommandPacket cmd, Func<RedisResult<T1>, T2> parse)
             {
-                _commands.Add(new PipelineCommand
+                if (_redisSocket == null)
+                    _redisSocket = _cli._adapter.GetRedisSocket(null);
+
+                if (_redisSocket.IsConnected == false) _redisSocket.Connect();
+                _redisSocket.Write(cmd);
+                cmd.Read<string>().ThrowOrValue();
+                cmd._readed = false; //exec 还需要再读一次
+                _commands.Add(new TransactionCommand
                 {
                     Command = cmd,
                     Parse = pc =>
@@ -57,21 +68,32 @@ namespace FreeRedis
                 return default(T2);
             }
 
-            public object[] EndPipe()
-            {
-                if (_commands.Any() == false) return new object[0];
 
+            public void Discard()
+            {
+                if (_redisSocket == null) return;
+                Call<string, string>("DISCARD", rt => rt.ThrowOrValue());
+                _commands.Clear();
+                _redisSocket?.Dispose();
+                _redisSocket = null;
+            }
+            public object[] Exec()
+            {
+                if (_redisSocket == null) return new object[0];
                 try
                 {
+                    if (_redisSocket.IsConnected == false) _redisSocket.Connect();
+                    _redisSocket.Write("EXEC");
+
                     switch (UseType)
                     {
                         case UseType.Pooling: break;
-                        case UseType.Cluster: return ClusterEndPipe();
+                        case UseType.Cluster: return ClusterExec();
                         case UseType.Sentinel:
                         case UseType.SingleInside: break;
                     }
 
-                    EndPipe(_cli._adapter.GetRedisSocket(null), _commands);
+                    Exec(_redisSocket, _commands);
                     return _commands.Select(a => a.Result).ToArray();
                 }
                 finally
@@ -79,25 +101,18 @@ namespace FreeRedis
                     _commands.Clear();
                 }
 
-                object[] ClusterEndPipe()
+                object[] ClusterExec()
                 {
                     throw new NotSupportedException();
                 }
             }
-
-            static void EndPipe(IRedisSocket rds, IEnumerable<PipelineCommand> cmds)
+            static void Exec(IRedisSocket rds, IEnumerable<TransactionCommand> cmds)
             {
-                var err = new List<PipelineCommand>();
+                var err = new List<TransactionCommand>();
                 var ms = new MemoryStream();
 
                 try
                 {
-                    foreach (var cmd in cmds)
-                        RespHelper.Write(ms, rds.Encoding, cmd.Command, rds.Protocol);
-
-                    if (rds.IsConnected == false) rds.Connect();
-                    ms.CopyTo(rds.Stream);
-
                     foreach (var pc in cmds)
                     {
                         pc.Result = pc.Parse(pc);
@@ -122,6 +137,17 @@ namespace FreeRedis
                     }
                     throw new RedisException(sb.ToString());
                 }
+            }
+
+            public void UnWatch()
+            {
+                if (_redisSocket == null) return;
+                Call<string, string>("UNWATCH", rt => rt.ThrowOrValue());
+            }
+            public void Watch(params string[] keys)
+            {
+                if (_redisSocket == null) return;
+                Call<string, string>("WATCH".Input(keys).FlagKey(keys), rt => rt.ThrowOrValue());
             }
         }
     }

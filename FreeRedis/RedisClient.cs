@@ -76,45 +76,9 @@ namespace FreeRedis
             });
         }
 
-        protected T2 Call<T2>(CommandPacket cmd, Func<RedisResult<T2>, T2> parse) => Call<T2, T2>(cmd, parse);
-        protected T2 Call<T1, T2>(CommandPacket cmd, Func<RedisResult<T1>, T2> parse) => _adapter.Call<T1, T2>(cmd, parse);
-        //protected IRedisSocket CallReadWhile(Action<object> ondata, Func<bool> next, CommandBuilder cmd)
-        //{
-        //    var rds = GetRedisSocket(cmd);
-        //    var cli = rds.Client ?? this;
-        //    rds.Write(cmd);
-
-        //    new Thread(() =>
-        //    {
-        //        cli._state = ClientStatus.ReadWhile;
-        //        var oldRecieveTimeout = rds.Socket.ReceiveTimeout;
-        //        rds.Socket.ReceiveTimeout = 0;
-        //        try
-        //        {
-        //            do
-        //            {
-        //                try
-        //                {
-        //                    var data = rds.Read<object>().Value;
-        //                    ondata?.Invoke(data);
-        //                }
-        //                catch (IOException ex)
-        //                {
-        //                    Console.WriteLine(ex.Message);
-        //                    if (rds.IsConnected) throw;
-        //                    break;
-        //                }
-        //            } while (next());
-        //        }
-        //        finally
-        //        {
-        //            rds.Socket.ReceiveTimeout = oldRecieveTimeout;
-        //            cli._state = ClientStatus.Normal;
-        //        }
-        //    }).Start();
-
-        //    return rds;
-        //}
+        protected T2 Call<T2>(CommandPacket cmd, Func<RedisResult<T2>, T2> parse) => _adapter.Call(cmd, parse);
+        protected T2 Call<T1, T2>(CommandPacket cmd, Func<RedisResult<T1>, T2> parse) => _adapter.Call(cmd, parse);
+        public object Call(CommandPacket cmd) => _adapter.Call<object, object>(cmd, rt => rt.ThrowOrValue());
 
         #region 序列化写入，反序列化
         public Func<object, string> Serialize;

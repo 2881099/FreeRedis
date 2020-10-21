@@ -23,6 +23,7 @@ namespace FreeRedis
                 _rw_plitting = slaveConnectionStrings?.Any() == true;
 
                 _ib = new IdleBus<RedisClientPool>();
+                _ib.Notice += new EventHandler<IdleBus<string, RedisClientPool>.NoticeEventArgs>((_, e) => { });
                 _ib.Register(_masterHost, () => new RedisClientPool(connectionString, null));
 
                 if (_rw_plitting)

@@ -9,7 +9,7 @@ namespace FreeRedis
     partial class RedisClient
     {
 
-        protected internal enum UseType { Pooling, Cluster, Sentinel, SingleInside, Pipeline }
+        protected internal enum UseType { Pooling, Cluster, Sentinel, SingleInside, Pipeline, Transaction }
 
         protected internal abstract class BaseAdapter
         {

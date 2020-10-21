@@ -40,13 +40,10 @@ namespace FreeRedis
             }
             public override T2 Call<T1, T2>(CommandPacket cmd, Func<RedisResult<T1>, T2> parse)
             {
-                using (var rds = GetRedisSocket(cmd))
-                {
-                    rds.Write(cmd);
-                    var rt = cmd.Read<T1>();
-                    rt.IsErrorThrow = _cli._isThrowRedisSimpleError;
-                    return parse(rt);
-                }
+                _redisSocket.Write(cmd);
+                var rt = cmd.Read<T1>();
+                rt.IsErrorThrow = _cli._isThrowRedisSimpleError;
+                return parse(rt);
             }
         }
     }

@@ -18,6 +18,7 @@ namespace FreeRedis
                 UseType = UseType.Cluster;
                 _cli = cli;
                 _ib = new IdleBus<RedisClientPool>();
+                _ib.Notice += new EventHandler<IdleBus<string, RedisClientPool>.NoticeEventArgs>((_, e) => { });
             }
 
             public override T CheckSingle<T>(Func<T> func)
