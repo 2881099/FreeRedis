@@ -39,8 +39,6 @@ namespace FreeRedis.Internal
             public Encoding Encoding { get => _rds.Encoding; set => _rds.Encoding = value; }
             public event EventHandler<EventArgs> Connected { add { _rds.Connected += value; } remove { _rds.Connected -= value; } }
 
-            public RedisClient Client => _rds.Client;
-
             public void Connect() => _rds.Connect();
 #if net40
 #else
@@ -106,6 +104,7 @@ namespace FreeRedis.Internal
                 var type = cmd._input.FirstOrDefault().ConvertTo<ClientReplyType>();
                 if (type != ClientReply) ClientReply = type;
             }
+            cmd._redisSocket = this;
         }
         public ClientReplyType ClientReply { get; protected set; }
 

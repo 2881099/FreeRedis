@@ -40,7 +40,7 @@ namespace FreeRedis
 		public void ClientReply(ClientReplyType type) => _adapter.CheckSingle<int>(() =>
 		{
 			var cmd = "CLIENT".SubCommand("REPLY").InputRaw(type);
-			using (var rds = _adapter.GetRedisSocket(cmd))
+			using (var rds = _adapter.GetRedisSocket(null))
 			{
 				rds.Write(cmd);
 				switch (type)
@@ -48,7 +48,7 @@ namespace FreeRedis
 					case ClientReplyType.Off:
 						break;
 					case ClientReplyType.On:
-						cmd.Read<string>();
+						cmd.Read<string>().ThrowOrValue();
 						break;
 					case ClientReplyType.Skip:
 						break;

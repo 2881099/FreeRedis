@@ -6,8 +6,8 @@ namespace FreeRedis.Tests
 {
     public class TestBase
 	{
-		//static Lazy<RedisClient> _cliLazy = new Lazy<RedisClient>(() => new RedisClient("127.0.0.1:6379"));
-		static Lazy<RedisClient> _cliLazy = new Lazy<RedisClient>(() => new RedisClient("192.168.164.10:6379"));
+		static Lazy<RedisClient> _cliLazy = new Lazy<RedisClient>(() => new RedisClient("127.0.0.1:6379,database=1", "127.0.0.1:6379,database=1"));
+		//static Lazy<RedisClient> _cliLazy = new Lazy<RedisClient>(() => new RedisClient("192.168.164.10:6379,database=1"));
 		public static RedisClient cli => _cliLazy.Value;
 
 		protected readonly object Null = null;

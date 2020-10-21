@@ -18,31 +18,44 @@ namespace FreeRedis
         public static implicit operator List<object>(CommandPacket cb) => cb._input;
         public static implicit operator CommandPacket(string cmd) => new CommandPacket().Command(cmd);
 
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            for (var b = 0; b < _input.Count; b++)
+            {
+                if (b > 0) sb.Append(" ");
+                var tmpstr = _input[b].ToInvariantCultureToString().Replace("\r\n", "\\r\\n");
+                if (tmpstr.Length > 96) tmpstr = $"{tmpstr.Substring(0, 96).Trim()}..";
+                sb.Append(tmpstr);
+            }
+            return sb.ToString();
+        }
+
         internal IRedisSocket _redisSocket;
         public bool _writed => _redisSocket != null;
         public bool _readed { get; internal set; }
-        RedisResult _result;
+        public RedisResult ReadResult { get; protected set; }
         public RedisResult<T> Read<T>() => Read<T>(_redisSocket?.Encoding);
         public RedisResult<T> Read<T>(Encoding encoding)
         {
             if (_redisSocket == null) throw new Exception("The command has not been sent");
-            if (!_readed) return _result as RedisResult<T>;
+            if (_readed) return ReadResult as RedisResult<T>;
             _readed = true;
             if (_redisSocket.ClientReply == ClientReplyType.On)
             {
                 if (_redisSocket.IsConnected == false) _redisSocket.Connect();
                 var rt = RespHelper.Read<T>(_redisSocket.Stream, encoding);
                 rt.Encoding = _redisSocket.Encoding;
-                _result = rt;
+                ReadResult = rt;
                 return rt;
             }
-            _result = new RedisResult<T>(default(T), null, true, RedisMessageType.SimpleString) { Encoding = _redisSocket.Encoding };
-            return _result as RedisResult<T>;
+            ReadResult = new RedisResult<T>(default(T), null, true, RedisMessageType.SimpleString) { Encoding = _redisSocket.Encoding };
+            return ReadResult as RedisResult<T>;
         }
         public void ReadChunk(Stream destination, int bufferSize = 1024)
         {
             if (_redisSocket == null) throw new Exception("The command has not been sent");
-            if (!_readed) return;
+            if (_readed) return;
             _readed = true;
             if (_redisSocket.ClientReply == ClientReplyType.On)
             {
@@ -182,7 +195,6 @@ namespace FreeRedis
     {
         public CommandFlag Flag { get; }
         public CommandTag Tag { get; }
-        public bool CheckMaxPoolSizeEqualOne { get; }
 
         public CommandConfig(CommandFlag flag, CommandTag tag)
         {
@@ -820,94 +832,94 @@ namespace FreeRedis
     [Flags]
     public enum CommandFlag : long
     {
-        none,
+        none = 1,
         /// <summary>
         /// command may result in modifications
         /// </summary>
-        write,
+        write = 1 << 1,
         /// <summary>
         /// command will never modify keys
         /// </summary>
-        @readonly,
+        @readonly = 1 << 2,
         /// <summary>
         /// reject command if currently out of memory
         /// </summary>
-        denyoom,
+        denyoom = 1 << 3,
         /// <summary>
         /// server admin command
         /// </summary>
-        admin,
+        admin = 1 << 4,
         /// <summary>
         /// pubsub-related command
         /// </summary>
-        pubsub,
+        pubsub = 1 << 5,
         /// <summary>
         /// deny this command from scripts
         /// </summary>
-        noscript,
+        noscript = 1 << 6,
         /// <summary>
         /// command has random results, dangerous for scripts
         /// </summary>
-        random,
+        random = 1 << 7,
         /// <summary>
         /// if called from script, sort output
         /// </summary>
-        sort_for_script,
+        sort_for_script = 1 << 8,
         /// <summary>
         /// allow command while database is loading
         /// </summary>
-        loading,
+        loading = 1 << 9,
         /// <summary>
         /// allow command while replica has stale data
         /// </summary>
-        stale,
+        stale = 1 << 10,
         /// <summary>
         /// do not show this command in MONITOR
         /// </summary>
-        skip_monitor,
+        skip_monitor = 1 << 11,
         /// <summary>
         /// cluster related - accept even if importing
         /// </summary>
-        asking,
+        asking = 1 << 12,
         /// <summary>
         /// command operates in constant or log(N) time. Used for latency monitoring.
         /// </summary>
-        fast,
+        fast = 1 << 13,
         /// <summary>
         /// keys have no pre-determined position. You must discover keys yourself.
         /// </summary>
-        movablekeys,
-        no_auth,
+        movablekeys = 1 << 14,
+        no_auth = 1 << 15,
         /// <summary>
         /// do not show this command in SLOWLOG
         /// </summary>
-        skip_slowlog,
+        skip_slowlog = 1 << 16,
     }
 
     [Flags]
     public enum CommandTag : long
     {
-        none,
-        admin,
-        bitmap,
-        blocking,
-        connection,
-        dangerous,
-        fast,
-        geo,
-        hash,
-        hyperloglog,
-        keyspace,
-        list,
-        pubsub,
-        read,
-        scripting,
-        set,
-        slow,
-        sortedset,
-        stream,
-        @string,
-        transaction,
-        write,
+        none = 1,
+        admin = 1 << 1,
+        bitmap = 1 << 2,
+        blocking = 1 << 3,
+        connection = 1 << 4,
+        dangerous = 1 << 5,
+        fast = 1 << 6,
+        geo = 1 << 7,
+        hash = 1 << 8,
+        hyperloglog = 1 << 9,
+        keyspace = 1 << 10,
+        list = 1 << 11,
+        pubsub = 1 << 12,
+        read = 1 << 13,
+        scripting = 1 << 14,
+        set = 1 << 15,
+        slow = 1 << 16,
+        sortedset = 1 << 17,
+        stream = 1 << 18,
+        @string = 1 << 19,
+        transaction = 1 << 20,
+        write = 1 << 21,
     }
 }

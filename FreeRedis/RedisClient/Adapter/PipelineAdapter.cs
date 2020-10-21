@@ -18,14 +18,13 @@ namespace FreeRedis
             {
                 public CommandPacket Command { get; set; }
                 public Func<PipelineCommand, object> Parse { get; set; }
-                public RedisResult RedisResult { get; set; }
                 public object Result { get; set; }
             }
 
-            public PipelineAdapter(RedisClient client)
+            public PipelineAdapter(RedisClient cli)
             {
                 UseType = UseType.Pipeline;
-                _cli = client;
+                _cli = cli;
                 _commands = new List<PipelineCommand>();
             }
 
@@ -36,9 +35,7 @@ namespace FreeRedis
 
             public override void Dispose()
             {
-            }
-            public override void Reset()
-            {
+                _commands.Clear();
             }
 
             public override IRedisSocket GetRedisSocket(CommandPacket cmd)
@@ -53,7 +50,7 @@ namespace FreeRedis
                     Parse = pc =>
                     {
                         var rt = pc.Command.Read<T1>();
-                        pc.RedisResult = rt;
+                        rt.IsErrorThrow = _cli._isThrowRedisSimpleError;
                         return parse(rt);
                     }
                 });
@@ -63,16 +60,24 @@ namespace FreeRedis
             public object[] EndPipe()
             {
                 if (_commands.Any() == false) return new object[0];
-                switch (UseType)
-                {
-                    case UseType.Pooling: break;
-                    case UseType.Cluster: return ClusterEndPipe();
-                    case UseType.Sentinel:
-                    case UseType.SingleInside: break;
-                }
 
-                EndPipe(_cli._adapter.GetRedisSocket(null), _commands);
-                return _commands.Select(a => a.Result).ToArray();
+                try
+                {
+                    switch (UseType)
+                    {
+                        case UseType.Pooling: break;
+                        case UseType.Cluster: return ClusterEndPipe();
+                        case UseType.Sentinel:
+                        case UseType.SingleInside: break;
+                    }
+
+                    EndPipe(_cli._adapter.GetRedisSocket(null), _commands);
+                    return _commands.Select(a => a.Result).ToArray();
+                }
+                finally
+                {
+                    _commands.Clear();
+                }
 
                 object[] ClusterEndPipe()
                 {
@@ -80,7 +85,7 @@ namespace FreeRedis
                 }
             }
 
-            static void EndPipe(IRedisSocket rds, List<PipelineCommand> cmds)
+            static void EndPipe(IRedisSocket rds, IEnumerable<PipelineCommand> cmds)
             {
                 var err = new List<PipelineCommand>();
                 var ms = new MemoryStream();
@@ -95,14 +100,12 @@ namespace FreeRedis
 
                     foreach (var pc in cmds)
                     {
-                        var result = pc.Command.Read<object>();
                         pc.Result = pc.Parse(pc);
-                        if (pc.RedisResult.IsError) err.Add(pc);
+                        if (pc.Command.ReadResult.IsError) err.Add(pc);
                     }
                 }
                 finally
                 {
-                    cmds.Clear();
                     ms.Close();
                     ms.Dispose();
                     rds?.Dispose();
@@ -113,17 +116,9 @@ namespace FreeRedis
                     var sb = new StringBuilder();
                     for (var a = 0; a < err.Count; a++)
                     {
+                        var cmd = err[a].Command;
                         if (a > 0) sb.Append("\r\n");
-                        sb.Append(err[a].RedisResult.SimpleError).Append(" {");
-                        List<object> cmdlst = err[a].Command;
-                        for (var b = 0; b < cmdlst.Count; b++)
-                        {
-                            if (b > 0) sb.Append(" ");
-                            var tmpstr = cmdlst[b].ToInvariantCultureToString().Replace("\r\n", "\\r\\n");
-                            if (tmpstr.Length > 32) tmpstr = $"{tmpstr.Substring(0, 32).Trim()}..";
-                            sb.Append(tmpstr);
-                        }
-                        sb.Append("}");
+                        sb.Append(cmd.ReadResult.SimpleError).Append(" {").Append(cmd.ToString()).Append("}");
                     }
                     throw new RedisException(sb.ToString());
                 }

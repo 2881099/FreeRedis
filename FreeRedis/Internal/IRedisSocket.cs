@@ -24,7 +24,6 @@ namespace FreeRedis.Internal
         bool IsConnected { get; }
         event EventHandler<EventArgs> Connected;
 
-        RedisClient Client { get; }
         RedisProtocol Protocol { get; set; }
         Encoding Encoding { get; set; }
 

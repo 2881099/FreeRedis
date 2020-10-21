@@ -10,11 +10,13 @@ namespace FreeRedis
     {
         class ClusterAdapter : BaseAdapter
         {
+            readonly RedisClient _cli;
             readonly IdleBus<RedisClientPool> _ib;
 
-            public ClusterAdapter(ConnectionStringBuilder[] clusterConnectionStrings)
+            public ClusterAdapter(RedisClient cli, ConnectionStringBuilder[] clusterConnectionStrings)
             {
                 UseType = UseType.Cluster;
+                _cli = cli;
                 _ib = new IdleBus<RedisClientPool>();
             }
 
@@ -26,10 +28,6 @@ namespace FreeRedis
             public override void Dispose()
             {
                 _ib.Dispose();
-            }
-            public override void Reset()
-            {
-                throw new NotImplementedException();
             }
 
             public override IRedisSocket GetRedisSocket(CommandPacket cmd)

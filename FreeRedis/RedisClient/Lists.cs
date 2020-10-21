@@ -29,7 +29,7 @@ namespace FreeRedis
 			using (var rds = _adapter.GetRedisSocket(cb))
 			{
 				rds.Write(cb);
-				var value = cb.Read<object>();
+				var value = cb.Read<object>().ThrowOrValue();
 				var list = value.ConvertTo<byte[][]>();
 				if (list?.Length != 2) return null;
 				return new KeyValue<T>(rds.Encoding.GetString(list.FirstOrDefault()), DeserializeRedisValue<T>(list.LastOrDefault(), rds.Encoding));

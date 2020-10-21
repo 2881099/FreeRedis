@@ -11,15 +11,17 @@ namespace FreeRedis
     {
         class SentinelAdapter : BaseAdapter
         {
+            readonly RedisClient _cli;
             readonly IdleBus<RedisClientPool> _ib;
             readonly ConnectionStringBuilder _connectionString;
             readonly LinkedList<string> _sentinels;
             string _masterHost;
             readonly bool _rw_splitting;
 
-            public SentinelAdapter(ConnectionStringBuilder sentinelConnectionString, string[] sentinels, bool rw_splitting)
+            public SentinelAdapter(RedisClient cli, ConnectionStringBuilder sentinelConnectionString, string[] sentinels, bool rw_splitting)
             {
                 UseType = UseType.Sentinel;
+                _cli = cli;
                 _connectionString = sentinelConnectionString;
                 _sentinels = new LinkedList<string>(sentinels?.Select(a => a.ToLower()).Distinct() ?? new string[0]);
                 _rw_splitting = rw_splitting;
@@ -40,10 +42,6 @@ namespace FreeRedis
             {
                 _ib.Dispose();
             }
-            public override void Reset()
-            {
-                throw new NotImplementedException();
-            }
 
             public override IRedisSocket GetRedisSocket(CommandPacket cmd)
             {
@@ -53,8 +51,8 @@ namespace FreeRedis
                     if (cmdcfg != null)
                     {
                         if (
-                            (cmdcfg.Tag | CommandTag.read) == CommandTag.read &&
-                            (cmdcfg.Flag | CommandFlag.@readonly) == CommandFlag.@readonly)
+                            (cmdcfg.Tag & CommandTag.read) == CommandTag.read &&
+                            (cmdcfg.Flag & CommandFlag.@readonly) == CommandFlag.@readonly)
                         {
                             var rndkeys = _ib.GetKeys(v => v == null || v.IsAvailable && v._policy._connectionStringBuilder.Host != _masterHost);
                             if (rndkeys.Any())
@@ -81,6 +79,7 @@ namespace FreeRedis
                 {
                     rds.Write(cmd);
                     var rt = cmd.Read<T1>();
+                    rt.IsErrorThrow = _cli._isThrowRedisSimpleError;
                     return parse(rt);
                 }
             }

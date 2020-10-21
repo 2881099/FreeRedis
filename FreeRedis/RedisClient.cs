@@ -24,7 +24,7 @@ namespace FreeRedis
         /// </summary>
         public RedisClient(ConnectionStringBuilder connectionString, params ConnectionStringBuilder[] slaveConnectionStrings)
         {
-            _adapter = new PoolingAdapter(connectionString, slaveConnectionStrings);
+            _adapter = new PoolingAdapter(this, connectionString, slaveConnectionStrings);
         }
 
         /// <summary>
@@ -32,7 +32,8 @@ namespace FreeRedis
         /// </summary>
         public RedisClient(ConnectionStringBuilder[] clusterConnectionStrings)
         {
-            _adapter = new ClusterAdapter(clusterConnectionStrings);
+            throw new NotImplementedException();
+            //_adapter = new ClusterAdapter(clusterConnectionStrings);
         }
 
         /// <summary>
@@ -40,7 +41,7 @@ namespace FreeRedis
         /// </summary>
         public RedisClient(ConnectionStringBuilder sentinelConnectionString, string[] sentinels, bool rw_splitting)
         {
-            _adapter = new SentinelAdapter(sentinelConnectionString, sentinels, rw_splitting);
+            _adapter = new SentinelAdapter(this, sentinelConnectionString, sentinels, rw_splitting);
         }
 
         /// <summary>
@@ -54,7 +55,6 @@ namespace FreeRedis
         public void Dispose()
         {
             _adapter.Dispose();
-            _adapter.Reset();
         }
 
         protected void CheckUseTypeOrThrow(params UseType[] useTypes)
@@ -63,7 +63,7 @@ namespace FreeRedis
             throw new RedisException($"RedisClient: Method cannot be used in {_adapter.UseType} mode.");
         }
 
-        bool _isThrowRedisSimpleError { get; set; } = true;
+        internal bool _isThrowRedisSimpleError { get; set; } = true;
         protected internal RedisException RedisSimpleError { get; private set; }
         protected internal IDisposable NoneRedisSimpleError()
         {

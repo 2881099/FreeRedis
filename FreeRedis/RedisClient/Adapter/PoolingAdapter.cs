@@ -10,13 +10,15 @@ namespace FreeRedis
     {
         class PoolingAdapter : BaseAdapter
         {
+            readonly RedisClient _cli;
             readonly IdleBus<RedisClientPool> _ib;
             readonly string _masterHost;
             readonly bool _rw_plitting;
 
-            public PoolingAdapter(ConnectionStringBuilder connectionString, params ConnectionStringBuilder[] slaveConnectionStrings)
+            public PoolingAdapter(RedisClient cli, ConnectionStringBuilder connectionString, params ConnectionStringBuilder[] slaveConnectionStrings)
             {
-                UseType = UseType.Pooling;
+                UseType = UseType.Pooling; 
+                _cli = cli;
                 _masterHost = connectionString.Host;
                 _rw_plitting = slaveConnectionStrings?.Any() == true;
 
@@ -39,10 +41,6 @@ namespace FreeRedis
             {
                 _ib.Dispose();
             }
-            public override void Reset()
-            {
-                throw new NotImplementedException();
-            }
 
             public override IRedisSocket GetRedisSocket(CommandPacket cmd)
             {
@@ -52,8 +50,8 @@ namespace FreeRedis
                     if (cmdcfg != null)
                     {
                         if (
-                            (cmdcfg.Tag | CommandTag.read) == CommandTag.read &&
-                            (cmdcfg.Flag | CommandFlag.@readonly) == CommandFlag.@readonly)
+                            (cmdcfg.Tag & CommandTag.read) == CommandTag.read &&
+                            (cmdcfg.Flag & CommandFlag.@readonly) == CommandFlag.@readonly)
                         {
                             var rndkeys = _ib.GetKeys(v => v == null || v.IsAvailable && v._policy._connectionStringBuilder.Host != _masterHost);
                             if (rndkeys.Any())
@@ -79,6 +77,7 @@ namespace FreeRedis
                 {
                     rds.Write(cmd);
                     var rt = cmd.Read<T1>();
+                    rt.IsErrorThrow = _cli._isThrowRedisSimpleError;
                     return parse(rt);
                 }
             }

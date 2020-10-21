@@ -11,7 +11,7 @@ namespace FreeRedis
 {
     public partial class RedisSentinelClient : IDisposable
     {
-        protected IRedisSocket _redisSocket;
+        readonly IRedisSocket _redisSocket;
 
         public RedisSentinelClient(string host, bool ssl = false)
         {
@@ -36,8 +36,7 @@ namespace FreeRedis
         protected T2 Call<T2>(CommandPacket cmd, Func<RedisResult<T2>, T2> parse) => Call<T2, T2>(cmd, parse);
         protected T2 Call<T1, T2>(CommandPacket cmd, Func<RedisResult<T1>, T2> parse)
         {
-            var rds = _redisSocket;
-            rds.Write(cmd);
+            _redisSocket.Write(cmd);
             var result = cmd.Read<T1>();
             return parse(result);
         }

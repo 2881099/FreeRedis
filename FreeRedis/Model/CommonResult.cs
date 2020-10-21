@@ -5,7 +5,7 @@ using System.Text;
 
 namespace FreeRedis.Model
 {
-    static class ResultResultNewValueExtensions
+    static class RedisResultNewValueExtensions
     {
         public static RedisResult<RoleResult> NewValueToRole(this RedisResult<object> rt) =>
             rt.NewValue(a =>

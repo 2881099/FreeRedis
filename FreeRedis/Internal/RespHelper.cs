@@ -708,7 +708,7 @@ namespace FreeRedis
         #endregion
 
         #region 类型转换
-        public static string ToInvariantCultureToString(this object obj) => string.Format(CultureInfo.InvariantCulture, @"{0}", obj);
+        internal static string ToInvariantCultureToString(this object obj) => string.Format(CultureInfo.InvariantCulture, @"{0}", obj);
         public static T MapToClass<T>(this object[] list, Encoding encoding)
         {
             if (list == null) return default(T);

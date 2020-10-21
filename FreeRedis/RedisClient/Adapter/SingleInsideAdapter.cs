@@ -10,14 +10,15 @@ namespace FreeRedis
     {
         class SingleInsideAdapter : BaseAdapter
         {
+            readonly RedisClient _cli;
             readonly IRedisSocket _redisSocket;
 
-            public SingleInsideAdapter(RedisClient client, string host, bool ssl, TimeSpan connectTimeout, TimeSpan receiveTimeout, TimeSpan sendTimeout, Action<RedisClient> connected)
+            public SingleInsideAdapter(RedisClient cli, string host, bool ssl, TimeSpan connectTimeout, TimeSpan receiveTimeout, TimeSpan sendTimeout, Action<RedisClient> connected)
             {
                 UseType = UseType.SingleInside;
-                var _redisSocket = new DefaultRedisSocket(host, ssl);
-                _redisSocket.Connected += (s, e) => connected(client);
-                _redisSocket.Client = client;
+                _cli = cli;
+                _redisSocket = new DefaultRedisSocket(host, ssl);
+                _redisSocket.Connected += (s, e) => connected(cli);
                 _redisSocket.ConnectTimeout = connectTimeout;
                 _redisSocket.ReceiveTimeout = receiveTimeout;
                 _redisSocket.SendTimeout = sendTimeout;
@@ -32,9 +33,6 @@ namespace FreeRedis
             {
                 _redisSocket.Dispose();
             }
-            public override void Reset()
-            {
-            }
 
             public override IRedisSocket GetRedisSocket(CommandPacket cmd)
             {
@@ -46,6 +44,7 @@ namespace FreeRedis
                 {
                     rds.Write(cmd);
                     var rt = cmd.Read<T1>();
+                    rt.IsErrorThrow = _cli._isThrowRedisSimpleError;
                     return parse(rt);
                 }
             }

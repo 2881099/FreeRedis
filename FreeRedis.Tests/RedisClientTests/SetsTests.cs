@@ -19,7 +19,7 @@ namespace FreeRedis.Tests.RedisClientTests
 
             cli.Del("TestSAdd1");
             Assert.Equal(4, cli.SAdd("TestSAdd1", Null, Class, String, Bytes));
-            Assert.Equal(Class.ToString(), cli.SPop<TestClass>("TestSAdd1").ToString());
+            Assert.Equal(Class.ToString(), cli.SPop<TestClass>("TestSAdd1")?.ToString());
             Assert.Equal(3, cli.SCard("TestSAdd1"));
         }
 
@@ -147,8 +147,8 @@ namespace FreeRedis.Tests.RedisClientTests
 
             cli.Del("TestSPop1");
             Assert.Equal(4, cli.SAdd("TestSPop1", Null, Class, String, Bytes));
-            Assert.Equal(Class.ToString(), cli.SPop<TestClass>("TestSPop1").ToString());
-            Assert.Equal(Class.ToString(), cli.SPop<TestClass>("TestSPop1").ToString());
+            Assert.Equal(Class.ToString(), cli.SPop<TestClass>("TestSPop1")?.ToString());
+            Assert.Equal(Class.ToString(), cli.SPop<TestClass>("TestSPop1")?.ToString());
             Assert.Equal(Encoding.UTF8.GetString(Bytes), Encoding.UTF8.GetString(cli.SPop<byte[]>("TestSPop1")));
             Assert.Equal(Encoding.UTF8.GetString(Bytes), Encoding.UTF8.GetString(cli.SPop<byte[]>("TestSPop1")));
             Assert.Equal(String, cli.SPop("TestSPop1"));
