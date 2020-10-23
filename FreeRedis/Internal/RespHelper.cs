@@ -726,7 +726,8 @@ namespace FreeRedis
         }
         public static Dictionary<string, T> MapToHash<T>(this object[] list, Encoding encoding)
         {
-            if (list?.Length % 2 != 0) throw new ArgumentException($"Array {nameof(list)} length is not even");
+            if (list == null) return null;
+            if (list.Length % 2 != 0) throw new ArgumentException($"Array {nameof(list)} length is not even");
             var dic = new Dictionary<string, T>();
             for (var a = 0; a < list.Length; a += 2)
             {
@@ -737,6 +738,18 @@ namespace FreeRedis
                 else dic.Add(key, val is T conval ? conval : (T)typeof(T).FromObject(list[a + 1], encoding));
             }
             return dic;
+        }
+        public static List<T> MapToList<T>(this object[] list, Func<object, object, T> selector)
+        {
+            if (list == null) return null;
+            if (list.Length % 2 != 0) throw new ArgumentException($"Array {nameof(list)} length is not even");
+            var ret = new List<T>();
+            for (var a = 0; a < list.Length; a += 2)
+            {
+                var selval = selector(list[a], list[a + 1]);
+                if (selval != null) ret.Add(selval);
+            }
+            return ret;
         }
         internal static T ConvertTo<T>(this object value) => (T)typeof(T).FromObject(value);
         static ConcurrentDictionary<Type, Func<string, object>> _dicFromObject = new ConcurrentDictionary<Type, Func<string, object>>();

@@ -2,56 +2,47 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace FreeRedis
 {
 	partial class RedisClient
 	{
-		public SortedSetMember<string> BZPopMin(string key, int timeoutSeconds) => BZPopMaxMin(false, key, timeoutSeconds);
-		public SortedSetMember<string>[] BZPopMin(string[] keys, int timeoutSeconds) => BZPopMaxMin(false, keys, timeoutSeconds);
-		public SortedSetMember<string> BZPopMax(string key, int timeoutSeconds) => BZPopMaxMin(true, key, timeoutSeconds);
-		public SortedSetMember<string>[] BZPopMax(string[] keys, int timeoutSeconds) => BZPopMaxMin(true, keys, timeoutSeconds);
-		SortedSetMember<string> BZPopMaxMin(bool ismax, string key, int timeoutSeconds) => Call<string[], SortedSetMember<string>>((ismax ? "BZPOPMAX" : "BZPOPMIN")
-			.Input(key, timeoutSeconds)
-			.FlagKey(key), rt => rt
-			.NewValue(a => a == null ? null : new SortedSetMember<string>(a[1], a[2].ConvertTo<decimal>())).ThrowOrValue());
-		/// <summary>
-		/// 弹出多个 keys 有序集合值，返回 [] 的下标与之对应
-		/// </summary>
-		/// <param name="keys"></param>
-		/// <param name="timeoutSeconds"></param>
-		/// <returns></returns>
-		SortedSetMember<string>[] BZPopMaxMin(bool ismax, string[] keys, int timeoutSeconds)
+		public ZMember BZPopMin(string key, int timeoutSeconds) => BZPop(false, new[] { key }, timeoutSeconds)?.value;
+		public KeyValue<ZMember> BZPopMin(string[] keys, int timeoutSeconds) => BZPop(false, keys, timeoutSeconds);
+		public ZMember BZPopMax(string key, int timeoutSeconds) => BZPop(true, new[] { key }, timeoutSeconds)?.value;
+		public KeyValue<ZMember> BZPopMax(string[] keys, int timeoutSeconds) => BZPop(true, keys, timeoutSeconds);
+		KeyValue<ZMember> BZPop(bool ismax, string[] keys, int timeoutSeconds) => Call<string[], KeyValue<ZMember>>((ismax ? "BZPOPMAX" : "BZPOPMIN")
+			.Input(keys)
+			.InputRaw(timeoutSeconds)
+			.FlagKey(keys), rt => rt
+			.NewValue(a => a == null ? null : new KeyValue<ZMember>(a[0], new ZMember(a[1], a[2].ConvertTo<decimal>()))).ThrowOrValue());
+		public long ZAdd(string key, decimal score, string member, params object[] scoreMembers) => ZAdd<long>(key, false, false, null, false, false, score, member, scoreMembers);
+		public long ZAdd(string key, ZMember[] scoreMembers, ZAddThan? than = null, bool ch = false) => ZAdd<long>(key, false, false, than, ch, false, scoreMembers);
+
+		public long ZAddNx(string key, decimal score, string member, params object[] scoreMembers) => ZAdd<long>(key, true, false, null, false, false, score, member, scoreMembers);
+		public long ZAddNx(string key, ZMember[] scoreMembers, ZAddThan? than = null, bool ch = false) => ZAdd<long>(key, true, false, than, ch, false, scoreMembers);
+
+		public long ZAddXx(string key, decimal score, string member, params object[] scoreMembers) => ZAdd<long>(key, false, true, null, false, false, score, member, scoreMembers);
+		public long ZAddXx(string key, ZMember[] scoreMembers, ZAddThan? than = null, bool ch = false) => ZAdd<long>(key, false, true, than, ch, false, scoreMembers);
+		T ZAdd<T>(string key, bool nx, bool xx, ZAddThan? than, bool ch, bool incr, decimal score, string member, params object[] scoreMembers)
 		{
-			return Call<string[], SortedSetMember<string>[]>((ismax ? "BZPOPMAX" : "BZPOPMIN").SubCommand(null)
-				.Input(keys)
-				.InputRaw(timeoutSeconds)
-				.FlagKey(keys), rt => rt
-				.NewValue(a =>
-				{
-					if (a == null) return null;
-					var result = new SortedSetMember<string>[keys.Length];
-					var oldkeys = keys.ToList();
-					for (var z = 0; z < a.Length; z += 3)
-					{
-						var oldkeysIdx = oldkeys.FindIndex(x => x == a[z]);
-						result[oldkeysIdx] = new SortedSetMember<string>(a[z + 1], a[z + 2].ConvertTo<decimal>());
-						oldkeys[oldkeysIdx] = null;
-					}
-					return result;
-				}).ThrowOrValue());
+			if (scoreMembers?.Length > 0)
+			{
+				var members = scoreMembers.MapToList((sco, mem) => new ZMember(mem.ConvertTo<string>(), sco.ConvertTo<decimal>()));
+				members.Insert(0, new ZMember(member, score));
+				return ZAdd<T>(key, nx, xx, than, ch, incr, members);
+			}
+			return ZAdd<T>(key, nx, xx, than, ch, incr, new[] { new ZMember(member, score) });
 		}
-		public long ZAdd(string key, decimal score, string member) => ZAdd<long>(key, new[] { new SortedSetMember<string>(member, score) }, false, false, false, false);
-		public long ZAdd(string key, SortedSetMember<string>[] memberScores) => ZAdd<long>(key, memberScores, false, false, false, false);
-		public long ZAdd(string key, SortedSetMember<string>[] memberScores, bool nx, bool xx, bool ch) => ZAdd<long>(key, memberScores, nx, xx, ch, false);
-		public string[] ZAddIncr(string key, SortedSetMember<string>[] memberScores, bool nx, bool xx, bool ch) => ZAdd<string[]>(key, memberScores, nx, xx, ch, true);
-		TReturn ZAdd<TReturn>(string key, SortedSetMember<string>[] memberScores, bool nx, bool xx, bool ch, bool incr) => Call<TReturn>("ZADD"
+		TReturn ZAdd<TReturn>(string key, bool nx, bool xx, ZAddThan? than, bool ch, bool incr, IEnumerable<ZMember> scoreMembers) => Call<TReturn>("ZADD"
 			.Input(key)
 			.InputIf(nx, "NX")
 			.InputIf(xx, "XX")
+			.InputIf(than != null, than)
 			.InputIf(ch, "CH")
 			.InputIf(incr, "INCR")
-			.InputIf(true, memberScores.Select(a => new object[] { a.score, a.member }).SelectMany(a => a).ToArray())
+			.InputIf(true, scoreMembers.Select(a => new object[] { a.score, a.member }).SelectMany(a => a).ToArray())
 			.FlagKey(key), rt => rt.ThrowOrValue());
 
 		public long ZCard(string key) => Call<long>("ZCARD".Input(key).FlagKey(key), rt => rt.ThrowOrValue());
@@ -61,25 +52,21 @@ namespace FreeRedis
 		//ZINTERSTORE destination numkeys key [key ...] [WEIGHTS weight [weight ...]] [AGGREGATE SUM|MIN|MAX]
 		public long ZLexCount(string key, string min, string max) => Call<long>("ZLEXCOUNT".Input(key, min, max).FlagKey(key), rt => rt.ThrowOrValue());
 
-		public SortedSetMember<string> ZPopMin(string key) => ZPopMaxMin(false, key);
-		public SortedSetMember<string>[] ZPopMin(string key, int count) => ZPopMaxMin(false, key, count);
-		public SortedSetMember<string> ZPopMax(string key) => ZPopMaxMin(true, key);
-		public SortedSetMember<string>[] ZPopMax(string key, int count) => ZPopMaxMin(true, key, count);
-		SortedSetMember<string> ZPopMaxMin(bool ismax, string key) => Call<string[], SortedSetMember<string>>((ismax ? "ZPOPMAX" : "ZPOPMIN").Input(key).FlagKey(key), rt => rt
-			.NewValue(a => a == null ? null : new SortedSetMember<string>(a[1], a[2].ConvertTo<decimal>())).ThrowOrValue());
-		SortedSetMember<string>[] ZPopMaxMin(bool ismax, string key, int count) => Call<string[], SortedSetMember<string>[]>((ismax ? "ZPOPMAX" : "ZPOPMIN").Input(key, count).FlagKey(key), rt => rt
-			.NewValue(a => a == null ? null : a.MapToHash<decimal>(rt.Encoding).Select(b => new SortedSetMember<string>(b.Key, b.Value)).ToArray()).ThrowOrValue());
+		public ZMember ZPopMin(string key) => ZPop(false, key);
+		public ZMember[] ZPopMin(string key, int count) => ZPop(false, key, count);
+		public ZMember ZPopMax(string key) => ZPop(true, key);
+		public ZMember[] ZPopMax(string key, int count) => ZPop(true, key, count);
+		ZMember ZPop(bool ismax, string key) => Call<string[], ZMember>((ismax ? "ZPOPMAX" : "ZPOPMIN").Input(key).FlagKey(key), rt => rt
+			.NewValue(a => a.Length == 0 ? null : new ZMember(a[0], a[1].ConvertTo<decimal>())).ThrowOrValue());
+		ZMember[] ZPop(bool ismax, string key, int count) => Call<string[], ZMember[]>((ismax ? "ZPOPMAX" : "ZPOPMIN").Input(key, count).FlagKey(key), rt => rt
+			.NewValue(a => a == null ? null : a.MapToHash<decimal>(rt.Encoding).Select(b => new ZMember(b.Key, b.Value)).ToArray()).ThrowOrValue());
 
 		public string[] ZRange(string key, decimal start, decimal stop) => Call<string[]>("ZRANGE".Input(key, start, stop).FlagKey(key), rt => rt.ThrowOrValue());
-		public SortedSetMember<string>[] ZRangeWithScores(string key, decimal start, decimal stop) => Call<string[], SortedSetMember<string>[]>("ZRANGE"
+		public ZMember[] ZRangeWithScores(string key, decimal start, decimal stop) => Call<string[], ZMember[]>("ZRANGE"
 			.Input(key, start, stop)
 			.Input("WITHSCORES")
 			.FlagKey(key), rt => rt
-			.NewValue(a => a == null ? null : a.MapToHash<decimal>(rt.Encoding).Select(b => new SortedSetMember<string>(b.Key, b.Value)).ToArray()).ThrowOrValue());
-		public string[] ZRangeByLex(string key, decimal min, decimal max, int offset = 0, int count = 0) => Call<string[]>("ZRANGEBYLEX"
-			.Input(key, min, max)
-			.InputIf(offset > 0 || count > 0, "LIMIT", offset, count)
-			.FlagKey(key), rt => rt.ThrowOrValue());
+			.NewValue(a => a == null ? null : a.MapToHash<decimal>(rt.Encoding).Select(b => new ZMember(b.Key, b.Value)).ToArray()).ThrowOrValue());
 		public string[] ZRangeByLex(string key, string min, string max, int offset = 0, int count = 0) => Call<string[]>("ZRANGEBYLEX"
 			.Input(key, min, max)
 			.InputIf(offset > 0 || count > 0, "LIMIT", offset, count)
@@ -92,16 +79,18 @@ namespace FreeRedis
 			.Input(key, min, max)
 			.InputIf(offset > 0 || count > 0, "LIMIT", offset, count)
 			.FlagKey(key), rt => rt.ThrowOrValue());
-		public SortedSetMember<string>[] ZRangeByScoreWithScores(string key, decimal min, decimal max, int offset = 0, int count = 0) => Call<string[], SortedSetMember<string>[]>("ZRANGEBYSCORE"
+		public ZMember[] ZRangeByScoreWithScores(string key, decimal min, decimal max, int offset = 0, int count = 0) => Call<string[], ZMember[]>("ZRANGEBYSCORE"
 			.Input(key, min, max)
+			.Input("WITHSCORES")
 			.InputIf(offset > 0 || count > 0, "LIMIT", offset, count)
 			.FlagKey(key), rt => rt
-			.NewValue(a => a == null ? null : a.MapToHash<decimal>(rt.Encoding).Select(b => new SortedSetMember<string>(b.Key, b.Value)).ToArray()).ThrowOrValue());
-		public SortedSetMember<string>[] ZRangeByScoreWithScores(string key, string min, string max, int offset = 0, int count = 0) => Call<string[], SortedSetMember<string>[]>("ZRANGEBYSCORE"
+			.NewValue(a => a == null ? null : a.MapToHash<decimal>(rt.Encoding).Select(b => new ZMember(b.Key, b.Value)).ToArray()).ThrowOrValue());
+		public ZMember[] ZRangeByScoreWithScores(string key, string min, string max, int offset = 0, int count = 0) => Call<string[], ZMember[]>("ZRANGEBYSCORE"
 			.Input(key, min, max)
+			.Input("WITHSCORES")
 			.InputIf(offset > 0 || count > 0, "LIMIT", offset, count)
 			.FlagKey(key), rt => rt
-			.NewValue(a => a == null ? null : a.MapToHash<decimal>(rt.Encoding).Select(b => new SortedSetMember<string>(b.Key, b.Value)).ToArray()).ThrowOrValue());
+			.NewValue(a => a == null ? null : a.MapToHash<decimal>(rt.Encoding).Select(b => new ZMember(b.Key, b.Value)).ToArray()).ThrowOrValue());
 
 		public long ZRank(string key, string member) => Call<long>("ZRANK".Input(key, member).FlagKey(key), rt => rt.ThrowOrValue());
 		public long ZRem(string key, params string[] members) => Call<long>("ZREM".Input(key).Input(members).FlagKey(key), rt => rt.ThrowOrValue());
@@ -110,11 +99,11 @@ namespace FreeRedis
 		public long ZRemRangeByScore(string key, decimal min, decimal max) => Call<long>("ZREMRANGEBYSCORE".Input(key, min, max).FlagKey(key), rt => rt.ThrowOrValue());
 		public long ZRemRangeByScore(string key, string min, string max) => Call<long>("ZREMRANGEBYSCORE".Input(key, min, max).FlagKey(key), rt => rt.ThrowOrValue());
 		public string[] ZRevRange(string key, decimal start, decimal stop) => Call<string[]>("ZREVRANGE".Input(key, start, stop).FlagKey(key), rt => rt.ThrowOrValue());
-		public SortedSetMember<string>[] ZRevRangeWithScores(string key, decimal start, decimal stop) => Call<string[], SortedSetMember<string>[]>("ZREVRANGE"
+		public ZMember[] ZRevRangeWithScores(string key, decimal start, decimal stop) => Call<string[], ZMember[]>("ZREVRANGE"
 			.Input(key, start, stop)
 			.Input("WITHSCORES")
 			.FlagKey(key), rt => rt
-			.NewValue(a => a == null ? null : a.MapToHash<decimal>(rt.Encoding).Select(b => new SortedSetMember<string>(b.Key, b.Value)).ToArray()).ThrowOrValue());
+			.NewValue(a => a == null ? null : a.MapToHash<decimal>(rt.Encoding).Select(b => new ZMember(b.Key, b.Value)).ToArray()).ThrowOrValue());
 		public string[] ZRevRangeByLex(string key, decimal max, decimal min, int offset = 0, int count = 0) => Call<string[]>("ZREVRANGEBYLEX"
 			.Input(key, max, min)
 			.InputIf(offset > 0 || count > 0, "LIMIT", offset, count)
@@ -131,16 +120,18 @@ namespace FreeRedis
 			.Input(key, max, min)
 			.InputIf(offset > 0 || count > 0, "LIMIT", offset, count)
 			.FlagKey(key), rt => rt.ThrowOrValue());
-		public SortedSetMember<string>[] ZRevRangeByScoreWithScores(string key, decimal max, decimal min, int offset = 0, int count = 0) => Call<string[], SortedSetMember<string>[]>("ZREVRANGEBYSCORE"
+		public ZMember[] ZRevRangeByScoreWithScores(string key, decimal max, decimal min, int offset = 0, int count = 0) => Call<string[], ZMember[]>("ZREVRANGEBYSCORE"
 			.Input(key, max, min)
+			.Input("WITHSCORES")
 			.InputIf(offset > 0 || count > 0, "LIMIT", offset, count)
 			.FlagKey(key), rt => rt
-			.NewValue(a => a == null ? null : a.MapToHash<decimal>(rt.Encoding).Select(b => new SortedSetMember<string>(b.Key, b.Value)).ToArray()).ThrowOrValue());
-		public SortedSetMember<string>[] ZRevRangeByScoreWithScores(string key, string max, string min, int offset = 0, int count = 0) => Call<string[], SortedSetMember<string>[]>("ZREVRANGEBYSCORE"
+			.NewValue(a => a == null ? null : a.MapToHash<decimal>(rt.Encoding).Select(b => new ZMember(b.Key, b.Value)).ToArray()).ThrowOrValue());
+		public ZMember[] ZRevRangeByScoreWithScores(string key, string max, string min, int offset = 0, int count = 0) => Call<string[], ZMember[]>("ZREVRANGEBYSCORE"
 			.Input(key, max, min)
+			.Input("WITHSCORES")
 			.InputIf(offset > 0 || count > 0, "LIMIT", offset, count)
 			.FlagKey(key), rt => rt
-			.NewValue(a => a == null ? null : a.MapToHash<decimal>(rt.Encoding).Select(b => new SortedSetMember<string>(b.Key, b.Value)).ToArray()).ThrowOrValue());
+			.NewValue(a => a == null ? null : a.MapToHash<decimal>(rt.Encoding).Select(b => new ZMember(b.Key, b.Value)).ToArray()).ThrowOrValue());
 		public long ZRevRank(string key, string member) => Call<long>("ZREVRANK".Input(key, member).FlagKey(key), rt => rt.ThrowOrValue());
 		//ZSCAN key cursor [MATCH pattern] [COUNT count]
 		public decimal ZScore(string key, string member) => Call<decimal>("ZSCORE".Input(key, member).FlagKey(key), rt => rt.ThrowOrValue());

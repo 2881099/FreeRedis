@@ -300,15 +300,18 @@ namespace FreeRedis
         public readonly decimal longitude;
         public readonly decimal latitude;
         public readonly string member;
-
         public GeoMember(decimal longitude, decimal latitude, string member) { this.longitude = longitude; this.latitude = latitude; this.member = member; }
     }
-    public class SortedSetMember<T>
-	{
-        public readonly T member;
+    public class ZMember
+    {
+        public readonly string member;
         public readonly decimal score;
-		public SortedSetMember(T member, decimal score) { this.member = member; this.score = score; }
-	}
+        public ZMember(string member, decimal score) { this.member = member; this.score = score; }
+    }
+    /// <summary>
+    /// redis version >=6.2: Added the GT and LT options.
+    /// </summary>
+    public enum ZAddThan { gt, lt }
     public class KeyValue<T>
     {
         public readonly string key;

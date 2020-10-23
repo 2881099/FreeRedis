@@ -22,7 +22,7 @@ namespace console_netcore31
         static RedisClient cli => _cliLazy.Value;
 
         static void Main(string[] args)
-        {
+       {
             RedisHelper.Initialization(new CSRedis.CSRedisClient("127.0.0.1:6379,database=2"));
             cli.Set("TestMGet_null1", Class);
             RedisHelper.Set("TestMGet_null1", Class);

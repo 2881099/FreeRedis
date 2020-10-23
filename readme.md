@@ -28,8 +28,8 @@ var value = cli.Get("key1");
 | user              | \<empty\> | Redis server username, requires redis-server 6.0 |
 | password          | \<empty\> | Redis server password |
 | defaultDatabase   | 0         | Redis server database |
-| max pool size     | 100       | Connection max pool size |
-| min pool size     | 5         | Connection min pool size |
+| max poolsize      | 100       | Connection max pool size |
+| min poolsize      | 5         | Connection min pool size |
 | idleTimeout       | 20000     | Idle time of elements in the connection pool (MS), suitable for connecting to remote redis server |
 | connectTimeout    | 5000      | Connection timeout (MS) |
 | receiveTimeout    | 10000     | Receive timeout (MS) |
