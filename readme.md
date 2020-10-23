@@ -52,7 +52,7 @@ public static cli = new RedisClient(
 var value = cli.Get("key1");
 ```
 
-> 内部读取数据时，随机连接 6380 6381 执行命令
+> 写入连接 127.0.0.1:6379，读取随机连接 6380 6381
 
 #### Redis Sentinel (哨兵高可用)
 
@@ -60,10 +60,9 @@ var value = cli.Get("key1");
 public static cli = new RedisClient(
     "mymaster,password=123", 
     new [] { "192.169.1.10:26379", "192.169.1.11:26379", "192.169.1.12:26379" },
-    true);
+    true //是否读写分离
+    );
 ```
-
-> 哨兵高可用模式，第三个参数设置读写分离
 
 #### Redis Cluster (集群)
 
