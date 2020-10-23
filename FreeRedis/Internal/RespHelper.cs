@@ -739,6 +739,20 @@ namespace FreeRedis
             }
             return dic;
         }
+        public static List<KeyValuePair<string, T>> MapToKvList<T>(this object[] list, Encoding encoding)
+        {
+            if (list == null) return null;
+            if (list.Length % 2 != 0) throw new ArgumentException($"Array {nameof(list)} length is not even");
+            var ret = new List<KeyValuePair<string, T>>();
+            for (var a = 0; a < list.Length; a += 2)
+            {
+                var key = list[a].ToInvariantCultureToString();
+                var val = list[a + 1];
+                if (val == null) ret.Add(new KeyValuePair<string, T>(key, default(T)));
+                else ret.Add(new KeyValuePair<string, T>(key, val is T conval ? conval : (T)typeof(T).FromObject(list[a + 1], encoding)));
+            }
+            return ret;
+        }
         public static List<T> MapToList<T>(this object[] list, Func<object, object, T> selector)
         {
             if (list == null) return null;

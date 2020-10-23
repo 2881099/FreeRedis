@@ -50,10 +50,22 @@ namespace FreeRedis
 			.NewValue(a => a.ConvertTo<byte[][]>().Select(b => DeserializeRedisValue<T>(b, rt.Encoding)).ToArray())
 			.ThrowOrValue());
 
+		public void MSet(string key, object value, params object[] keyValues) => MSet(false, key, value, keyValues);
 		public void MSet(Dictionary<string, object> keyValues) => Call<string>("MSET".SubCommand(null).InputKv(keyValues, SerializeRedisValue).FlagKey(keyValues.Keys), rt => rt.ThrowOrValue());
-		public void MSet(params object[] keyValues) => MSet(keyValues.MapToHash<object>(Encoding.UTF8));
+		public void MSetNx(string key, object value, params object[] keyValues) => MSet(true, key, value, keyValues);
 		public bool MSetNx(Dictionary<string, object> keyValues) => Call<bool>("MSETNX".SubCommand(null).InputKv(keyValues, SerializeRedisValue).FlagKey(keyValues.Keys), rt => rt.ThrowOrValue());
-		public bool MSetNx(params object[] keyValues) => MSetNx(keyValues.MapToHash<object>(Encoding.UTF8));
+		void MSet(bool nx, string key, object value, params object[] keyValues)
+		{
+			if (keyValues?.Any() == true)
+			{
+				var kvs = keyValues.MapToKvList<object>(Encoding.UTF8);
+				kvs.Insert(0, new KeyValuePair<string, object>(key, value));
+				Call<string>((nx ? "MSETNX" : "MSET").SubCommand(null).InputKv(kvs, SerializeRedisValue).FlagKey(kvs.Select(a => a.Key).ToArray()), rt => rt.ThrowOrValue());
+				return;
+			}
+			Call<string>((nx ? "MSETNX" : "MSET").SubCommand(null).InputRaw(key).InputRaw(SerializeRedisValue(value)).FlagKey(key), rt => rt.ThrowOrValue());
+		}
+
 		public void PSetEx(string key, long milliseconds, object value) => Call<string>("PSETEX".Input(key, milliseconds).InputRaw(SerializeRedisValue(value)).FlagKey(key), rt => rt.ThrowOrValue());
 
 		public void Set(string key, object value, int timeoutSeconds = 0) => Set(key, value, TimeSpan.FromSeconds(timeoutSeconds), false, false, false);

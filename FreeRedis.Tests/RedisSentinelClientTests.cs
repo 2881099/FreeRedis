@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using Xunit;
 
-namespace FreeRedis.Tests
+namespace FreeRedis.Tests.RedisClientTests
 {
-    public class RedisSentinelClientTests
+    public class SentinelTests
     {
         public static RedisSentinelClient GetClient() => new RedisSentinelClient("127.0.0.1:21479");
 

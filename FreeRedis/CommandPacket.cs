@@ -160,6 +160,11 @@ namespace FreeRedis
             _input.AddRange(args.Select(a => new object[] { a.Key, serialize(a.Value) }).SelectMany(a => a).ToArray());
             return this;
         }
+        public CommandPacket InputKv(List<KeyValuePair<string, object>> args, Func<object, object> serialize)
+        {
+            _input.AddRange(args.Select(a => new object[] { a.Key, serialize(a.Value) }).SelectMany(a => a).ToArray());
+            return this;
+        }
 
         public CommandPacket InputKv(Dictionary<string, long> args)
         {

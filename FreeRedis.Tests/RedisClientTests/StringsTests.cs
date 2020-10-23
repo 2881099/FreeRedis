@@ -198,7 +198,15 @@ namespace FreeRedis.Tests.RedisClientTests
         [Fact]
         public void MSet()
         {
+            cli.Del("TestMSet_null1", "TestMSet_string1", "TestMSet_bytes1", "TestMSet_class1");
             cli.MSet(new Dictionary<string, object> { ["TestMSet_null1"] = Null, ["TestMSet_string1"] = String, ["TestMSet_bytes1"] = Bytes, ["TestMSet_class1"] = Class });
+            Assert.Equal("", cli.Get("TestMSet_null1"));
+            Assert.Equal(String, cli.Get("TestMSet_string1"));
+            Assert.Equal(Bytes, cli.Get<byte[]>("TestMSet_bytes1"));
+            Assert.Equal(Class.ToString(), cli.Get<TestClass>("TestMSet_class1").ToString());
+
+            cli.Del("TestMSet_null1", "TestMSet_string1", "TestMSet_bytes1", "TestMSet_class1");
+            cli.MSet("TestMSet_null1", Null, "TestMSet_string1", String, "TestMSet_bytes1", Bytes, "TestMSet_class1", Class);
             Assert.Equal("", cli.Get("TestMSet_null1"));
             Assert.Equal(String, cli.Get("TestMSet_string1"));
             Assert.Equal(Bytes, cli.Get<byte[]>("TestMSet_bytes1"));
@@ -231,6 +239,13 @@ namespace FreeRedis.Tests.RedisClientTests
             Assert.False(cli.MSetNx(new Dictionary<string, object> { ["abctest"] = 2, ["TestMSetNx_null1"] = Null, ["TestMSetNx_string1"] = String, ["TestMSetNx_bytes1"] = Bytes, ["TestMSetNx_class1"] = Class }));
             Assert.True(cli.MSetNx(new Dictionary<string, object> { ["TestMSetNx_null1"] = Null, ["TestMSetNx_string1"] = String, ["TestMSetNx_bytes1"] = Bytes, ["TestMSetNx_class1"] = Class }));
             Assert.Equal(1, cli.Get<int>("abctest"));
+            Assert.Equal("", cli.Get("TestMSetNx_null1"));
+            Assert.Equal(String, cli.Get("TestMSetNx_string1"));
+            Assert.Equal(Bytes, cli.Get<byte[]>("TestMSetNx_bytes1"));
+            Assert.Equal(Class.ToString(), cli.Get<TestClass>("TestMSetNx_class1").ToString());
+
+            cli.Del("TestMSetNx_null", "TestMSetNx_string", "TestMSetNx_bytes", "TestMSetNx_class");
+            cli.MSetNx("TestMSetNx_null1", Null, "TestMSetNx_string1", String, "TestMSetNx_bytes1", Bytes, "TestMSetNx_class1", Class);
             Assert.Equal("", cli.Get("TestMSetNx_null1"));
             Assert.Equal(String, cli.Get("TestMSetNx_string1"));
             Assert.Equal(Bytes, cli.Get<byte[]>("TestMSetNx_bytes1"));
