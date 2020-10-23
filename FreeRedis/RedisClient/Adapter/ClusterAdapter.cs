@@ -21,11 +21,6 @@ namespace FreeRedis
                 _ib.Notice += new EventHandler<IdleBus<string, RedisClientPool>.NoticeEventArgs>((_, e) => { });
             }
 
-            public override T CheckSingle<T>(Func<T> func)
-            {
-                throw new NotImplementedException();
-            }
-
             public override void Dispose()
             {
                 _ib.Dispose();

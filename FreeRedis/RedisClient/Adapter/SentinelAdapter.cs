@@ -17,6 +17,7 @@ namespace FreeRedis
             readonly LinkedList<string> _sentinels;
             string _masterHost;
             readonly bool _rw_splitting;
+            readonly bool _is_single;
 
             public SentinelAdapter(RedisClient cli, ConnectionStringBuilder sentinelConnectionString, string[] sentinels, bool rw_splitting)
             {
@@ -25,18 +26,12 @@ namespace FreeRedis
                 _connectionString = sentinelConnectionString;
                 _sentinels = new LinkedList<string>(sentinels?.Select(a => a.ToLower()).Distinct() ?? new string[0]);
                 _rw_splitting = rw_splitting;
+                _is_single = !_rw_splitting && sentinelConnectionString.MaxPoolSize == 1;
                 if (_sentinels.Any() == false) throw new ArgumentNullException(nameof(sentinels));
 
                 _ib = new IdleBus<RedisClientPool>();
                 _ib.Notice += new EventHandler<IdleBus<string, RedisClientPool>.NoticeEventArgs>((_, e) => { });
                 ResetSentinel();
-            }
-
-            public override T CheckSingle<T>(Func<T> func)
-            {
-                if (_ib.Get(_masterHost).Policy.PoolSize != 1)
-                    throw new RedisException($"RedisClient: Method cannot be used in {UseType} mode. You can set \"max pool size=1\", but it is not singleton mode.");
-                return func();
             }
 
             public override void Dispose()
@@ -46,14 +41,17 @@ namespace FreeRedis
 
             public override IRedisSocket GetRedisSocket(CommandPacket cmd)
             {
-                if (_rw_splitting && cmd != null)
+                if (cmd != null && (_rw_splitting || !_is_single))
                 {
-                    var cmdcfg = CommandConfig.Get(cmd._command);
-                    if (cmdcfg != null)
+                    var cmdset = CommandSets.Get(cmd._command);
+                    if (cmdset != null)
                     {
-                        if (
-                            (cmdcfg.Tag & CommandTag.read) == CommandTag.read &&
-                            (cmdcfg.Flag & CommandFlag.@readonly) == CommandFlag.@readonly)
+                        if (!_is_single && (cmdset.Status & CommandSets.LocalStatus.check_single) == CommandSets.LocalStatus.check_single)
+                            throw new RedisException($"RedisClient: Method cannot be used in {UseType} mode. You can set \"max pool size=1\", but it is not singleton mode.");
+
+                        if (_rw_splitting &&
+                            ((cmdset.Tag & CommandSets.ServerTag.read) == CommandSets.ServerTag.read ||
+                            (cmdset.Flag & CommandSets.ServerFlag.@readonly) == CommandSets.ServerFlag.@readonly))
                         {
                             var rndkeys = _ib.GetKeys(v => v == null || v.IsAvailable && v._policy._connectionStringBuilder.Host != _masterHost);
                             if (rndkeys.Any())
@@ -62,7 +60,7 @@ namespace FreeRedis
                                 var rndpool = _ib.Get(rndkey);
                                 var rndcli = rndpool.Get();
                                 var rndrds = rndcli.Value._adapter.GetRedisSocket(null);
-                                return new DefaultRedisSocket.TempRedisSocket(rndrds, () => rndpool.Return(rndcli));
+                                return DefaultRedisSocket.CreateTempProxy(rndrds, () => rndpool.Return(rndcli));
                             }
                         }
                     }
@@ -72,7 +70,7 @@ namespace FreeRedis
                 var pool = _ib.Get(poolkey);
                 var cli = pool.Get();
                 var rds = cli.Value._adapter.GetRedisSocket(null);
-                return new DefaultRedisSocket.TempRedisSocket(rds, () => pool.Return(cli));
+                return DefaultRedisSocket.CreateTempProxy(rds, () => pool.Return(cli));
             }
             public override T2 AdapaterCall<T1, T2>(CommandPacket cmd, Func<RedisResult<T1>, T2> parse)
             {
@@ -170,7 +168,7 @@ namespace FreeRedis
             }
             bool SentinelBackgroundGetMasterHostIng = false;
             object SentinelBackgroundGetMasterHostIngLock = new object();
-            bool SentinelBackgroundGetMasterHost(DefaultRedisSocket.TempRedisSocket rds)
+            bool SentinelBackgroundGetMasterHost(IRedisSocket rds)
             {
                 if (rds == null) return false;
                 //if (rds._host != _masterHost) return false;

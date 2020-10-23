@@ -28,11 +28,6 @@ namespace FreeRedis
                 _commands = new List<PipelineCommand>();
             }
 
-            public override T CheckSingle<T>(Func<T> func)
-            {
-                return func();
-            }
-
             public override void Dispose()
             {
                 _commands.Clear();

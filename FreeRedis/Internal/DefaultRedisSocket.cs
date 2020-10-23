@@ -13,38 +13,44 @@ namespace FreeRedis.Internal
 {
     class DefaultRedisSocket : IRedisSocket
     {
-        internal class TempRedisSocket : IRedisSocket
+        public static IRedisSocket CreateTempProxy(IRedisSocket rds, Action dispose)
         {
-            IRedisSocket _rds;
+            if (rds is TempProxyRedisSocket proxy) 
+                return new TempProxyRedisSocket(proxy._owner, dispose);
+            return new TempProxyRedisSocket(rds, dispose);
+        }
+        class TempProxyRedisSocket : IRedisSocket
+        {
+            internal IRedisSocket _owner;
             Action _dispose;
-            public TempRedisSocket(IRedisSocket owner, Action dispose)
+            public TempProxyRedisSocket(IRedisSocket owner, Action dispose)
             {
-                _rds = owner;
+                _owner = owner;
                 _dispose = dispose;
             }
 
             public void Dispose() => _dispose?.Invoke();
 
-            public string Host => _rds.Host;
-            public bool Ssl => _rds.Ssl;
-            public TimeSpan ConnectTimeout { get => _rds.ConnectTimeout; set => _rds.ConnectTimeout = value; }
-            public TimeSpan ReceiveTimeout { get => _rds.ReceiveTimeout; set => _rds.ReceiveTimeout = value; }
-            public TimeSpan SendTimeout { get => _rds.SendTimeout; set => _rds.SendTimeout = value; }
-            public Socket Socket => _rds.Socket;
-            public Stream Stream => _rds.Stream;
-            public bool IsConnected => _rds.IsConnected;
-            public RedisProtocol Protocol { get => _rds.Protocol; set => _rds.Protocol = value; }
-            public Encoding Encoding { get => _rds.Encoding; set => _rds.Encoding = value; }
-            public event EventHandler<EventArgs> Connected { add { _rds.Connected += value; } remove { _rds.Connected -= value; } }
+            public string Host => _owner.Host;
+            public bool Ssl => _owner.Ssl;
+            public TimeSpan ConnectTimeout { get => _owner.ConnectTimeout; set => _owner.ConnectTimeout = value; }
+            public TimeSpan ReceiveTimeout { get => _owner.ReceiveTimeout; set => _owner.ReceiveTimeout = value; }
+            public TimeSpan SendTimeout { get => _owner.SendTimeout; set => _owner.SendTimeout = value; }
+            public Socket Socket => _owner.Socket;
+            public Stream Stream => _owner.Stream;
+            public bool IsConnected => _owner.IsConnected;
+            public RedisProtocol Protocol { get => _owner.Protocol; set => _owner.Protocol = value; }
+            public Encoding Encoding { get => _owner.Encoding; set => _owner.Encoding = value; }
+            public event EventHandler<EventArgs> Connected { add { _owner.Connected += value; } remove { _owner.Connected -= value; } }
 
-            public void Connect() => _rds.Connect();
+            public void Connect() => _owner.Connect();
 #if net40
 #else
-            public Task ConnectAsync() => _rds.ConnectAsync();
+            public Task ConnectAsync() => _owner.ConnectAsync();
 #endif
-            public void ResetHost(string host) => _rds.ResetHost(host);
-            public void Write(CommandPacket cmd) => _rds.Write(cmd);
-            public ClientReplyType ClientReply => _rds.ClientReply;
+            public void ResetHost(string host) => _owner.ResetHost(host);
+            public void Write(CommandPacket cmd) => _owner.Write(cmd);
+            public ClientReplyType ClientReply => _owner.ClientReply;
         }
 
         public string Host { get; private set; }

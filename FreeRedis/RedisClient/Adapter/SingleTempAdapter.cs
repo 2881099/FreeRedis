@@ -22,11 +22,6 @@ namespace FreeRedis
                 _dispose = dispose;
             }
 
-            public override T CheckSingle<T>(Func<T> func)
-            {
-                return func();
-            }
-
             public override void Dispose()
             {
                 _dispose?.Invoke();
@@ -34,7 +29,7 @@ namespace FreeRedis
 
             public override IRedisSocket GetRedisSocket(CommandPacket cmd)
             {
-                return new DefaultRedisSocket.TempRedisSocket(_redisSocket, null);
+                return DefaultRedisSocket.CreateTempProxy(_redisSocket, null);
             }
             public override T2 AdapaterCall<T1, T2>(CommandPacket cmd, Func<RedisResult<T1>, T2> parse)
             {
