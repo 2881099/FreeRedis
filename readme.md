@@ -25,8 +25,8 @@ var value = cli.Get("key1");
 | Parameter         | Default   | Explain |
 | :---------------- | --------: | :------------------- |
 | protocol          | RESP2     | If you use RESP3, you need redis 6.0 environment | 
-| user              | \<Empty\> | Redis server username, requires redis-server 6.0 |
-| password          | \<Empty\> | Redis server password |
+| user              | \<empty\> | Redis server username, requires redis-server 6.0 |
+| password          | \<empty\> | Redis server password |
 | database          | 0         | Redis server database |
 | max pool size     | 100       | Connection max pool size |
 | min pool size     | 5         | Connection min pool size |
@@ -36,8 +36,8 @@ var value = cli.Get("key1");
 | send timeout      | 10000     | Send timeout (MS) |
 | encoding          | utf-8     | string charset |
 | ssl               | false     | Enable encrypted transmission |
-| name              | \<Empty\> | Connection name, use client list command to view |
-| prefix            | \<Empty\> | key前辍，所有方法都会附带此前辍，cli.Set(prefix + "key", 111); |
+| name              | \<empty\> | Connection name, use client list command to view |
+| prefix            | \<empty\> | key前辍，所有方法都会附带此前辍，cli.Set(prefix + "key", 111); |
 
 > IPv6: [fe80::b164:55b3:4b4f:7ce6%15]:6379
 
