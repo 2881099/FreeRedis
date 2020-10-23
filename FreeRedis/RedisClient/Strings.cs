@@ -28,7 +28,7 @@ namespace FreeRedis
 			var cmd = "GET".Input(key).FlagKey(key);
 			LogCall(cmd, () =>
 			{
-				using (var rds = _adapter.GetRedisSocket(cmd))
+				using (var rds = Adapter.GetRedisSocket(cmd))
 				{
 					rds.Write(cmd);
 					RespHelper.ReadChunk(rds.Stream, destination, bufferSize);

@@ -58,7 +58,7 @@ namespace FreeRedis
                                 var rndkey = rndkeys[_rnd.Value.Next(0, rndkeys.Length)];
                                 var rndpool = _ib.Get(rndkey);
                                 var rndcli = rndpool.Get();
-                                var rndrds = rndcli.Value._adapter.GetRedisSocket(null);
+                                var rndrds = rndcli.Value.Adapter.GetRedisSocket(null);
                                 return DefaultRedisSocket.CreateTempProxy(rndrds, () => rndpool.Return(rndcli));
                             }
                         }
@@ -67,7 +67,7 @@ namespace FreeRedis
                 var poolkey = _masterHost;
                 var pool = _ib.Get(poolkey);
                 var cli = pool.Get();
-                var rds = cli.Value._adapter.GetRedisSocket(null);
+                var rds = cli.Value.Adapter.GetRedisSocket(null);
                 return DefaultRedisSocket.CreateTempProxy(rds, () => pool.Return(cli));
             }
             public override T2 AdapaterCall<T1, T2>(CommandPacket cmd, Func<RedisResult<T1>, T2> parse)

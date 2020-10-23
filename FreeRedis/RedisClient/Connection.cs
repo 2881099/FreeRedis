@@ -39,7 +39,7 @@ namespace FreeRedis
 			var cmd = "CLIENT".SubCommand("REPLY").InputRaw(type);
 			LogCall(cmd, () =>
 			{
-				using (var rds = _adapter.GetRedisSocket(null))
+				using (var rds = Adapter.GetRedisSocket(null))
 				{
 					rds.Write(cmd);
 					switch (type)

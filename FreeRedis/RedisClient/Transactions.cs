@@ -17,14 +17,14 @@ namespace FreeRedis
                 this.Serialize = cli.Serialize;
                 this.Deserialize = cli.Deserialize;
             }
-            public void Discard() => (_adapter as TransactionAdapter).Discard();
-            public object[] Exec() => (_adapter as TransactionAdapter).Exec();
-            public void UnWatch() => (_adapter as TransactionAdapter).UnWatch();
-            public void Watch(params string[] keys) => (_adapter as TransactionAdapter).Watch(keys);
+            public void Discard() => (Adapter as TransactionAdapter).Discard();
+            public object[] Exec() => (Adapter as TransactionAdapter).Exec();
+            public void UnWatch() => (Adapter as TransactionAdapter).UnWatch();
+            public void Watch(params string[] keys) => (Adapter as TransactionAdapter).Watch(keys);
 
             ~TransactionHook()
             {
-                (_adapter as TransactionAdapter).Dispose();
+                (Adapter as TransactionAdapter).Dispose();
             }
         }
 
@@ -43,34 +43,34 @@ namespace FreeRedis
                 this.Serialize = cli.Serialize;
                 this.Deserialize = cli.Deserialize;
             }
-            public object[] EndPipe() => (_adapter as PipelineAdapter).EndPipe();
+            public object[] EndPipe() => (Adapter as PipelineAdapter).EndPipe();
 
             ~PipelineHook()
             {
-                (_adapter as PipelineAdapter).Dispose();
+                (Adapter as PipelineAdapter).Dispose();
             }
         }
 
 
 
-        // GetSharing
-        public GetSharingHook GetSharing()
+        // GetShareClient
+        public ShareClientHook GetShareClient()
         {
             CheckUseTypeOrThrow(UseType.Pooling, UseType.Sentinel, UseType.SingleInside);
-            var rds = _adapter.GetRedisSocket(null);
-            return new GetSharingHook(this, new SingleTempAdapter(this, rds, () => rds.Dispose()));
+            var rds = Adapter.GetRedisSocket(null);
+            return new ShareClientHook(this, new SingleTempAdapter(this, rds, () => rds.Dispose()));
         }
-        public class GetSharingHook: RedisClient
+        public class ShareClientHook: RedisClient
         {
-            internal GetSharingHook(RedisClient cli, BaseAdapter adapter) : base(adapter)
+            internal ShareClientHook(RedisClient cli, BaseAdapter adapter) : base(adapter)
             {
                 this.Serialize = cli.Serialize;
                 this.Deserialize = cli.Deserialize;
             }
 
-            ~GetSharingHook()
+            ~ShareClientHook()
             {
-                (_adapter as SingleTempAdapter).Dispose();
+                (Adapter as SingleTempAdapter).Dispose();
             }
         }
     }

@@ -91,7 +91,7 @@ namespace FreeRedis.Tests.RedisClientTests
             Assert.True(cli.Move("TestMove_string1", 1));
             Assert.False(cli.Exists("TestMove_string1"));
 
-            using (var sh = cli.GetSharing())
+            using (var sh = cli.GetShareClient())
             {
                 sh.Select(1);
                 Assert.Equal(base.String, sh.Get("TestMove_string1"));
@@ -102,7 +102,7 @@ namespace FreeRedis.Tests.RedisClientTests
             Assert.False(cli.Move("TestMove_string1", 1));
             Assert.Equal(base.String, cli.Get("TestMove_string1"));
 
-            using (var sh = cli.GetSharing())
+            using (var sh = cli.GetShareClient())
             {
                 sh.Select(1);
                 Assert.Equal(base.String, sh.Get("TestMove_string1"));

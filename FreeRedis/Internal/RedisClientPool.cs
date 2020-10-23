@@ -26,7 +26,7 @@ namespace FreeRedis.Internal
             _policy.Connected += (s, o) =>
             {
                 var cli = s as RedisClient;
-                var rds = cli._adapter.GetRedisSocket(null);
+                var rds = cli.Adapter.GetRedisSocket(null);
                 using (cli.NoneRedisSimpleError())
                 {
                     rds.Socket.ReceiveTimeout = (int)_policy._connectionStringBuilder.ReceiveTimeout.TotalMilliseconds;
@@ -173,7 +173,7 @@ namespace FreeRedis.Internal
         {
             if (_pool.IsAvailable)
             {
-                if (DateTime.Now.Subtract(obj.LastReturnTime).TotalSeconds > 60 || obj.Value._adapter.GetRedisSocket(null).IsConnected == false)
+                if (DateTime.Now.Subtract(obj.LastReturnTime).TotalSeconds > 60 || obj.Value.Adapter.GetRedisSocket(null).IsConnected == false)
                 {
                     try
                     {
@@ -192,7 +192,7 @@ namespace FreeRedis.Internal
         {
             if (_pool.IsAvailable)
             {
-                if (DateTime.Now.Subtract(obj.LastReturnTime).TotalSeconds > 60 || obj.Value._adapter.GetRedisSocket(null).IsConnected == false)
+                if (DateTime.Now.Subtract(obj.LastReturnTime).TotalSeconds > 60 || obj.Value.Adapter.GetRedisSocket(null).IsConnected == false)
                 {
                     try
                     {

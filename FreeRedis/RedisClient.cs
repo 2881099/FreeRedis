@@ -13,12 +13,12 @@ namespace FreeRedis
 {
 	public partial class RedisClient : IDisposable
     {
-        internal readonly BaseAdapter _adapter;
+        internal BaseAdapter Adapter { get; }
         public event EventHandler<NoticeEventArgs> Notice;
 
         protected RedisClient(BaseAdapter adapter)
         {
-            _adapter = adapter;
+            Adapter = adapter;
         }
 
         /// <summary>
@@ -26,7 +26,7 @@ namespace FreeRedis
         /// </summary>
         public RedisClient(ConnectionStringBuilder connectionString, params ConnectionStringBuilder[] slaveConnectionStrings)
         {
-            _adapter = new PoolingAdapter(this, connectionString, slaveConnectionStrings);
+            Adapter = new PoolingAdapter(this, connectionString, slaveConnectionStrings);
         }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace FreeRedis
         /// </summary>
         public RedisClient(ConnectionStringBuilder sentinelConnectionString, string[] sentinels, bool rw_splitting)
         {
-            _adapter = new SentinelAdapter(this, sentinelConnectionString, sentinels, rw_splitting);
+            Adapter = new SentinelAdapter(this, sentinelConnectionString, sentinels, rw_splitting);
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace FreeRedis
         /// </summary>
         protected internal RedisClient(string host, bool ssl, TimeSpan connectTimeout, TimeSpan receiveTimeout, TimeSpan sendTimeout, Action<RedisClient> connected)
         {
-            _adapter = new SingleInsideAdapter(this, host, ssl, connectTimeout, receiveTimeout, sendTimeout, connected);
+            Adapter = new SingleInsideAdapter(this, host, ssl, connectTimeout, receiveTimeout, sendTimeout, connected);
         }
 
         ~RedisClient() => this.Dispose();
@@ -61,7 +61,7 @@ namespace FreeRedis
             if (Interlocked.Increment(ref _disposeCounter) != 1) return;
             try
             {
-                _adapter.Dispose();
+                Adapter.Dispose();
             }
             finally
             {
@@ -71,8 +71,8 @@ namespace FreeRedis
 
         protected void CheckUseTypeOrThrow(params UseType[] useTypes)
         {
-            if (useTypes?.Contains(_adapter.UseType) == true) return;
-            throw new RedisException($"RedisClient: Method cannot be used in {_adapter.UseType} mode.");
+            if (useTypes?.Contains(Adapter.UseType) == true) return;
+            throw new RedisException($"RedisClient: Method cannot be used in {Adapter.UseType} mode.");
         }
 
         internal bool _isThrowRedisSimpleError { get; set; } = true;
@@ -88,9 +88,9 @@ namespace FreeRedis
             });
         }
 
-        public object Call(CommandPacket cmd) => _adapter.AdapaterCall<object, object>(cmd, rt => rt.ThrowOrValue());
-        protected T2 Call<T2>(CommandPacket cmd, Func<RedisResult<T2>, T2> parse) => _adapter.AdapaterCall(cmd, parse);
-        protected T2 Call<T1, T2>(CommandPacket cmd, Func<RedisResult<T1>, T2> parse) => _adapter.AdapaterCall(cmd, parse);
+        public object Call(CommandPacket cmd) => Adapter.AdapaterCall<object, object>(cmd, rt => rt.ThrowOrValue());
+        protected T2 Call<T2>(CommandPacket cmd, Func<RedisResult<T2>, T2> parse) => Adapter.AdapaterCall(cmd, parse);
+        protected T2 Call<T1, T2>(CommandPacket cmd, Func<RedisResult<T1>, T2> parse) => Adapter.AdapaterCall(cmd, parse);
 
         internal T LogCall<T>(CommandPacket cmd, Func<T> func)
         {

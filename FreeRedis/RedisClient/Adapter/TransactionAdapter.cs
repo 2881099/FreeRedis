@@ -68,7 +68,7 @@ namespace FreeRedis
             {
                 if (_redisSocket == null)
                 {
-                    _redisSocket = _cli._adapter.GetRedisSocket(null);
+                    _redisSocket = _cli.Adapter.GetRedisSocket(null);
                     SelfCall("MULTI");
                 }
             }
