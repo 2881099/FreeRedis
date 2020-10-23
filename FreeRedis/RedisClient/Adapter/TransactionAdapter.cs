@@ -85,9 +85,9 @@ namespace FreeRedis
                 if (_redisSocket == null) return new object[0];
                 try
                 {
-                    var ret = SelfCall("EXEC") as List<object>;
+                    var ret = SelfCall("EXEC") as object[];
 
-                    for (var a = 0; a < ret.Count; a++)
+                    for (var a = 0; a < ret.Length; a++)
                         _commands[a].Result = _commands[a].Parse(ret[a]);
                     return _commands.Select(a => a.Result).ToArray();
                 }

@@ -47,7 +47,7 @@ namespace FreeRedis
 
         public MasterResult[] Masters() => Call<object, MasterResult[]>("SENTINEL".SubCommand("MASTERS"), rt => rt.NewValue(a =>
         {
-            var objs = a as List<object>;
+            var objs = a as object[];
             return objs.Select(x => x.ConvertTo<string[]>().MapToClass<MasterResult>(rt.Encoding)).ToArray();
         }).ThrowOrValue());
         public MasterResult Master(string masterName) => Call<string[], MasterResult>("SENTINEL".SubCommand("MASTER").InputRaw(masterName),
@@ -55,12 +55,12 @@ namespace FreeRedis
 
         public SalveResult[] Salves(string masterName) => Call<object, SalveResult[]>("SENTINEL".SubCommand("SLAVES").InputRaw(masterName), rt => rt.NewValue(a =>
         {
-            var objs = a as List<object>;
+            var objs = a as object[];
             return objs.Select(x => x.ConvertTo<string[]>().MapToClass<SalveResult>(rt.Encoding)).ToArray();
         }).ThrowOrValue());
         public SentinelResult[] Sentinels(string masterName) => Call<object, SentinelResult[]>("SENTINEL".SubCommand("SENTINELS").InputRaw(masterName), rt => rt.NewValue(a =>
         {
-            var objs = a as List<object>;
+            var objs = a as object[];
             return objs.Select(x => x.ConvertTo<string[]>().MapToClass<SentinelResult>(rt.Encoding)).ToArray();
         }).ThrowOrValue());
         public string GetMasterAddrByName(string masterName) => Call<string[], string>("SENTINEL".SubCommand("GET-MASTER-ADDR-BY-NAME").InputRaw(masterName), rt => rt.NewValue(a => $"{a[0]}:{a[1]}").ThrowOrValue());

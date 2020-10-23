@@ -18,7 +18,7 @@ namespace FreeRedis
                 UseType = UseType.SingleInside;
                 _cli = cli;
                 _redisSocket = new DefaultRedisSocket(host, ssl);
-                _redisSocket.Connected += (s, e) => connected(cli);
+                _redisSocket.Connected += (s, e) => connected?.Invoke(cli);
                 _redisSocket.ConnectTimeout = connectTimeout;
                 _redisSocket.ReceiveTimeout = receiveTimeout;
                 _redisSocket.SendTimeout = sendTimeout;

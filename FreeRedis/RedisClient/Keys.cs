@@ -55,7 +55,7 @@ namespace FreeRedis
 			.InputIf(!string.IsNullOrWhiteSpace(type), "TYPE", type), rt => rt
 			.NewValue(a =>
 			{
-				var arr = a as List<object>;
+				var arr = a as object[];
 				return new ScanResult<string>(arr[0].ConvertTo<long>(), arr[1].ConvertTo<string[]>());
 			}).ThrowOrValue());
 		public object Sort(string key, string byPattern, long offset, long count, string[] getPatterns, Collation? collation, bool alpha, string storeDestination) => Call<object>("SORT"

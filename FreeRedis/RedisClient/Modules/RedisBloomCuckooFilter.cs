@@ -29,7 +29,7 @@ namespace FreeRedis
 		public long CfCount(string key, string item) => Call<long>("CF.COUNT".Input(key, item).FlagKey(key), rt => rt.ThrowOrValue());
 		public ScanResult<byte[]> CfScanDump(string key, long iter) => Call<object, ScanResult<byte[]>>("CF.SCANDUMP".Input(key, iter).FlagKey(key), rt => rt.NewValue(a =>
 		{
-			var arr = a as List<object>;
+			var arr = a as object[];
 			return new ScanResult<byte[]>(arr[0].ConvertTo<long>(), arr[1].ConvertTo<byte[][]>());
 		}).ThrowOrValue());
 		public string CfLoadChunk(string key, long iter, byte[] data) => Call<string>("CF.LOADCHUNK".Input(key, iter).InputRaw(data).FlagKey(key), rt => rt.ThrowOrValue());

@@ -292,7 +292,6 @@ namespace FreeRedis
 	public enum GeoUnit { m, km, mi, ft }
 	public enum Collation { asc, desc }
 	public enum InsertDirection { before, after }
-	public enum ScriptDebugOption { yes, sync, no }
 	public enum BitOpOperation { and, or, xor, not }
     public enum KeyType { none, @string, list, set, zset, hash, stream }
 

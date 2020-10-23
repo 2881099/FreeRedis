@@ -29,7 +29,7 @@ namespace FreeRedis
                 _is_single = !_rw_splitting && sentinelConnectionString.MaxPoolSize == 1;
                 if (_sentinels.Any() == false) throw new ArgumentNullException(nameof(sentinels));
 
-                _ib = new IdleBus<RedisClientPool>();
+                _ib = new IdleBus<RedisClientPool>(TimeSpan.FromMinutes(10));
                 _ib.Notice += new EventHandler<IdleBus<string, RedisClientPool>.NoticeEventArgs>((_, e) => { });
                 ResetSentinel();
             }

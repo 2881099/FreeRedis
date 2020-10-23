@@ -22,10 +22,10 @@ namespace FreeRedis
 
 		public GeoMember GeoPos(string key, string member) => GeoPos(key, new[] { member }).FirstOrDefault();
 		public GeoMember[] GeoPos(string key, string[] members) => Call<object, GeoMember[]>("GEOPOS".Input(key).Input(members).FlagKey(key), rt => rt
-			.NewValue(a => (a as List<object>).Select((z, y) =>
+			.NewValue(a => (a as object[]).Select((z, y) =>
 				{
 					if (z == null) return null;
-					var zarr = z as List<object>;
+					var zarr = z as object[];
 					return new GeoMember(zarr[0].ConvertTo<decimal>(), zarr[1].ConvertTo<decimal>(), members[y]);
 				}).ToArray()
 			).ThrowOrValue());
@@ -66,10 +66,10 @@ namespace FreeRedis
 			{
 				if (withdoord || withdist || withhash)
 				{
-					var objs = a as List<object>;
+					var objs = a as object[];
 					return objs.Select(x =>
 					{
-						var objs2 = x as List<object>;
+						var objs2 = x as object[];
 						var grr = new GeoRadiusResult { member = objs2[0].ConvertTo<string>() };
 						var objs2idx = 0;
 						if (withdist) grr.dist = objs2[++objs2idx].ConvertTo<decimal>();
@@ -83,7 +83,7 @@ namespace FreeRedis
 						return grr;
 					}).ToArray();
 				}
-				return (a as List<object>).Select(x => new GeoRadiusResult { member = x.ConvertTo<string>() }).ToArray();
+				return (a as object[]).Select(x => new GeoRadiusResult { member = x.ConvertTo<string>() }).ToArray();
 			}).ThrowOrValue());
 
 		public GeoRadiusResult[] GeoRadiusByMember(string key, string member, decimal radius, GeoUnit unit = GeoUnit.m,

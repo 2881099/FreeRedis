@@ -10,7 +10,7 @@ namespace FreeRedis.Model
         public static RedisResult<RoleResult> NewValueToRole(this RedisResult<object> rt) =>
             rt.NewValue(a =>
             {
-                var objs = a as List<object>;
+                var objs = a as object[];
                 if (objs.Any())
                 {
                     var role = new RoleResult { role = objs[0].ConvertTo<RoleType>() };
@@ -20,9 +20,9 @@ namespace FreeRedis.Model
                             role.data = new RoleResult.MasterInfo
                             {
                                 _replication_offset = objs[1].ConvertTo<long>(),
-                                _slaves = (objs[2] as List<object>)?.Select(x =>
+                                _slaves = (objs[2] as object[])?.Select(x =>
                                 {
-                                    var xs = x as List<object>;
+                                    var xs = x as object[];
                                     return new RoleResult.MasterInfo.SlaveInfo
                                     {
                                         ip = xs[0].ConvertTo<string>(),

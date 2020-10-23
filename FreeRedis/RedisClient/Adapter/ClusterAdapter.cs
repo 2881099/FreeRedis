@@ -17,7 +17,7 @@ namespace FreeRedis
             {
                 UseType = UseType.Cluster;
                 _cli = cli;
-                _ib = new IdleBus<RedisClientPool>();
+                _ib = new IdleBus<RedisClientPool>(TimeSpan.FromMinutes(10));
                 _ib.Notice += new EventHandler<IdleBus<string, RedisClientPool>.NoticeEventArgs>((_, e) => { });
             }
 

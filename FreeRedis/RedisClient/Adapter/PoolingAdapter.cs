@@ -24,7 +24,7 @@ namespace FreeRedis
                 _rw_splitting = slaveConnectionStrings?.Any() == true;
                 _is_single = !_rw_splitting && connectionString.MaxPoolSize == 1;
 
-                _ib = new IdleBus<RedisClientPool>();
+                _ib = new IdleBus<RedisClientPool>(TimeSpan.FromMinutes(10));
                 _ib.Notice += new EventHandler<IdleBus<string, RedisClientPool>.NoticeEventArgs>((_, e) => { });
                 _ib.Register(_masterHost, () => new RedisClientPool(connectionString, null, _cli.Serialize, _cli.Deserialize));
 

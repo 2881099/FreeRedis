@@ -58,10 +58,9 @@ namespace FreeRedis
 
 		public void Set(string key, object value, int timeoutSeconds = 0) => Set(key, value, TimeSpan.FromSeconds(timeoutSeconds), false, false, false);
 		public void Set(string key, object value, bool keepTtl) => Set(key, value, TimeSpan.Zero, keepTtl, false, false);
-		public void SetNx(string key, object value, int timeoutSeconds) => Set(key, value, TimeSpan.FromSeconds(timeoutSeconds), false, true, false);
-		public void SetNx(string key, object value, bool keepTtl) => Set(key, value, TimeSpan.Zero, keepTtl, true, false);
-		public void SetXx(string key, object value, int timeoutSeconds = 0) => Set(key, value, TimeSpan.FromSeconds(timeoutSeconds), false, false, true);
-		public void SetXx(string key, object value, bool keepTtl) => Set(key, value, TimeSpan.Zero, keepTtl, false, true);
+		public bool SetNx(string key, object value, int timeoutSeconds) => Set(key, value, TimeSpan.FromSeconds(timeoutSeconds), false, true, false) == "OK";
+		public bool SetXx(string key, object value, int timeoutSeconds = 0) => Set(key, value, TimeSpan.FromSeconds(timeoutSeconds), false, false, true) == "OK";
+		public bool SetXx(string key, object value, bool keepTtl) => Set(key, value, TimeSpan.Zero, keepTtl, false, true) == "OK";
 		string Set(string key, object value, TimeSpan timeout, bool keepTtl, bool nx, bool xx) => Call<string>("SET"
 			.Input(key)
 			.InputRaw(SerializeRedisValue(value))

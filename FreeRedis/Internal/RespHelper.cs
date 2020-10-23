@@ -188,45 +188,47 @@ namespace FreeRedis
                 throw new ProtocolViolationException($"Expecting fail Double '{msgtype}t', got '{msgtype}{boolstr}'");
             }
 
-            List<object> ReadArray(char msgtype)
+            object[] ReadArray(char msgtype)
             {
-                var arr = new List<object>();
                 var lenstr = ReadLine(null);
                 if (int.TryParse(lenstr, out var len))
                 {
                     if (len < 0) return null;
+                    var arr = new object[len];
                     for (var a = 0; a < len; a++)
-                        arr.Add(ReadObject().Value);
+                        arr[a] = ReadObject().Value;
                     return arr;
                 }
                 if (lenstr == "?")
                 {
+                    var arr = new List<object>();
                     while (true)
                     {
                         var ro = ReadObject();
                         if (ro.IsEnd) break;
                         arr.Add(ro.Value);
                     }
-                    return arr;
+                    return arr.ToArray();
                 }
                 throw new ProtocolViolationException($"Expecting fail Array '{msgtype}3', got '{msgtype}{lenstr}'");
             }
-            List<object> ReadMap(char msgtype)
+            object[] ReadMap(char msgtype)
             {
-                var arr = new List<object>();
                 var lenstr = ReadLine(null);
                 if (int.TryParse(lenstr, out var len))
                 {
                     if (len < 0) return null;
+                    var arr = new object[len * 2];
                     for (var a = 0; a < len; a++)
                     {
-                        arr.Add(ReadObject().Value);
-                        arr.Add(ReadObject().Value);
+                        arr[a * 2] = ReadObject().Value;
+                        arr[a * 2 + 1] = ReadObject().Value;
                     }
                     return arr;
                 }
                 if (lenstr == "?")
                 {
+                    var arr = new List<object>();
                     while (true)
                     {
                         var rokey = ReadObject();
@@ -235,7 +237,7 @@ namespace FreeRedis
                         arr.Add(rokey.Value);
                         arr.Add(roval.Value);
                     }
-                    return arr;
+                    return arr.ToArray();
                 }
                 throw new ProtocolViolationException($"Expecting fail Map '{msgtype}3', got '{msgtype}{lenstr}'");
             }

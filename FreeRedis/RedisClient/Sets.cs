@@ -45,7 +45,7 @@ namespace FreeRedis
 			.InputIf(count != 0, "COUNT", count)
 			.FlagKey(key), rt => rt.NewValue(a =>
 			{
-				var arr = a as List<object>;
+				var arr = a as object[];
 				return new ScanResult<string>(arr[0].ConvertTo<long>(), arr[1].ConvertTo<string[]>());
 			}).ThrowOrValue());
 

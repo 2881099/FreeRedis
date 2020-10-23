@@ -29,7 +29,7 @@ namespace FreeRedis
 		public bool[] BfMExists(string key, string[] items) => Call<bool[]>("BF.MEXISTS".Input(key).Input(items).FlagKey(key), rt => rt.ThrowOrValue());
 		public ScanResult<byte[]> BfScanDump(string key, long iter) => Call<object, ScanResult<byte[]>>("BF.SCANDUMP".Input(key, iter).FlagKey(key), rt => rt.NewValue(a =>
 		{
-			var arr = a as List<object>;
+			var arr = a as object[];
 			return new ScanResult<byte[]>(arr[0].ConvertTo<long>(), arr[1].ConvertTo<byte[][]>());
 		}).ThrowOrValue());
 		public string BfLoadChunk(string key, long iter, byte[] data) => Call<string>("BF.LOADCHUNK".Input(key, iter).InputRaw(data).FlagKey(key), rt => rt.ThrowOrValue());

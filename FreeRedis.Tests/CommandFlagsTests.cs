@@ -29,17 +29,17 @@ namespace FreeRedis.Tests
 			var flags7 = new List<string>();
 			var diccmd = new Dictionary<string, (string[], string[])>();
 
-			var sb = string.Join("\r\n\r\n", (rt).OrderBy(a1 => (a1 as List<object>)[0].ToString()).Select(a1 =>
+			var sb = string.Join("\r\n\r\n", (rt).OrderBy(a1 => (a1 as object[])[0].ToString()).Select(a1 =>
 			{
-				var a = a1 as List<object>;
+				var a = a1 as object[];
 				var cmd = a[0].ToString();
 				var plen = int.Parse(a[1].ToString());
 				var firstKey = int.Parse(a[3].ToString());
 				var lastKey = int.Parse(a[4].ToString());
 				var stepCount = int.Parse(a[5].ToString());
 
-				var aflags = (a[2] as List<object>).Select(a => a.ToString()).ToArray();
-				var fopts = (a[6] as List<object>).Select(a => a.ToString()).ToArray();
+				var aflags = (a[2] as object[]).Select(a => a.ToString()).ToArray();
+				var fopts = (a[6] as object[]).Select(a => a.ToString()).ToArray();
 				flags.AddRange(aflags);
 				flags7.AddRange(fopts);
 
@@ -75,8 +75,8 @@ namespace FreeRedis.Tests
 				}
 
 				return $@"
-//{string.Join(", ", a[2] as List<object>)}
-//{string.Join(", ", a[6] as List<object>)}
+//{string.Join(", ", a[2] as object[])}
+//{string.Join(", ", a[6] as object[])}
 public void {UFString(cmd)}({parms}) {{ }}";
 			}));
 			flags = flags.Distinct().ToList();

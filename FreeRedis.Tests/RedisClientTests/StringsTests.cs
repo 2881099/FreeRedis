@@ -36,6 +36,7 @@ namespace FreeRedis.Tests.RedisClientTests
         [Fact]
         public void BitCount()
         {
+            cli.Del("TestBitCount");
             var key = "TestBitCount";
             cli.SetBit(key, 100, true);
             cli.SetBit(key, 90, true);
@@ -49,6 +50,7 @@ namespace FreeRedis.Tests.RedisClientTests
         [Fact]
         public void BitOp()
         {
+            cli.Del("BitOp1", "BitOp2");
             cli.SetBit("BitOp1", 100, true);
             cli.SetBit("BitOp2", 100, true);
             var r1 = cli.BitOp(BitOpOperation.and, "BitOp3", "BitOp1", "BitOp2");
@@ -57,9 +59,10 @@ namespace FreeRedis.Tests.RedisClientTests
         [Fact]
         public void BitPos()
         {
+            cli.Del("BitPos1");
             cli.SetBit("BitPos1", 100, true);
-            var r1 = cli.BitPos("BitPos1", true);
-            var r2 = cli.BitPos("BitPos1", true, 1, 100);
+            Assert.Equal(100, cli.BitPos("BitPos1", true));
+            Assert.Equal(-1, cli.BitPos("BitPos1", true, 1, 100));
         }
 
         [Fact]
@@ -105,8 +108,10 @@ namespace FreeRedis.Tests.RedisClientTests
         [Fact]
         public void GetBit()
         {
+            cli.Del("GetBit1");
             cli.SetBit("GetBit1", 100, true);
-            var r1 = cli.GetBit("BitPos1", 10);
+            Assert.False(cli.GetBit("GetBit1", 10));
+            Assert.True(cli.GetBit("GetBit1", 100));
         }
 
         [Fact]
@@ -131,8 +136,8 @@ namespace FreeRedis.Tests.RedisClientTests
         public void GetSet()
         {
             cli.Del("GetSet1");
-            var r1 = cli.GetSet("GetSet1", "123456");
-            var r2 = cli.GetSet("GetSet1", "123456789");
+            Assert.Null(cli.GetSet("GetSet1", "123456"));
+            Assert.Equal("123456", cli.GetSet("GetSet1", "123456789"));
         }
 
         [Fact]
@@ -251,6 +256,7 @@ namespace FreeRedis.Tests.RedisClientTests
         [Fact]
         public void Set()
         {
+            cli.Del("TestSetNx_null", "TestSetNx_string", "TestSetNx_bytes", "TestSetNx_class");
             cli.Set("TestSet_null", Null);
             Assert.Equal("", cli.Get("TestSet_null"));
 
@@ -262,13 +268,38 @@ namespace FreeRedis.Tests.RedisClientTests
 
             cli.Set("TestSet_class", Class);
             Assert.Equal(Class.ToString(), cli.Get<TestClass>("TestSet_class").ToString());
+
+            cli.Del("TestSetNx_null", "TestSetNx_string", "TestSetNx_bytes", "TestSetNx_class");
+            cli.Set("TestSet_null", Null, 10);
+            Assert.Equal("", cli.Get("TestSet_null"));
+
+            cli.Set("TestSet_string", String, 10);
+            Assert.Equal(String, cli.Get("TestSet_string"));
+
+            cli.Set("TestSet_bytes", Bytes, 10);
+            Assert.Equal(Bytes, cli.Get<byte[]>("TestSet_bytes"));
+
+            cli.Set("TestSet_class", Class, 10);
+            Assert.Equal(Class.ToString(), cli.Get<TestClass>("TestSet_class").ToString());
+
+            cli.Del("TestSetNx_null", "TestSetNx_string", "TestSetNx_bytes", "TestSetNx_class");
+            cli.Set("TestSet_null", Null, true);
+            Assert.Equal("", cli.Get("TestSet_null"));
+
+            cli.Set("TestSet_string", String, true);
+            Assert.Equal(String, cli.Get("TestSet_string"));
+
+            cli.Set("TestSet_bytes", Bytes, true);
+            Assert.Equal(Bytes, cli.Get<byte[]>("TestSet_bytes"));
+
+            cli.Set("TestSet_class", Class, true);
+            Assert.Equal(Class.ToString(), cli.Get<TestClass>("TestSet_class").ToString());
         }
 
         [Fact]
         public void SetNx()
         {
             cli.Del("TestSetNx_null", "TestSetNx_string", "TestSetNx_bytes", "TestSetNx_class");
-
             Assert.True(cli.SetNx("TestSetNx_null", Null));
             Assert.False(cli.SetNx("TestSetNx_null", Null));
             Assert.Equal("", cli.Get("TestSetNx_null"));
@@ -284,21 +315,101 @@ namespace FreeRedis.Tests.RedisClientTests
             Assert.True(cli.SetNx("TestSetNx_class", Class));
             Assert.False(cli.SetNx("TestSetNx_class", Class));
             Assert.Equal(Class.ToString(), cli.Get<TestClass>("TestSetNx_class").ToString());
+
+            cli.Del("TestSetNx_null", "TestSetNx_string", "TestSetNx_bytes", "TestSetNx_class");
+            Assert.True(cli.SetNx("TestSetNx_null", Null, 10));
+            Assert.False(cli.SetNx("TestSetNx_null", Null, 10));
+            Assert.Equal("", cli.Get("TestSetNx_null"));
+
+            Assert.True(cli.SetNx("TestSetNx_string", String, 10));
+            Assert.False(cli.SetNx("TestSetNx_string", String, 10));
+            Assert.Equal(String, cli.Get("TestSetNx_string"));
+
+            Assert.True(cli.SetNx("TestSetNx_bytes", Bytes, 10));
+            Assert.False(cli.SetNx("TestSetNx_bytes", Bytes, 10));
+            Assert.Equal(Bytes, cli.Get<byte[]>("TestSetNx_bytes"));
+
+            Assert.True(cli.SetNx("TestSetNx_class", Class, 10));
+            Assert.False(cli.SetNx("TestSetNx_class", Class, 10));
+            Assert.Equal(Class.ToString(), cli.Get<TestClass>("TestSetNx_class").ToString());
         }
 
         [Fact]
         public void SetXx()
         {
+            cli.Del("TestSetXx_null");
+            Assert.False(cli.SetXx("TestSetXx_null", Null, 10));
+            cli.Set("TestSetXx_null", 1, true);
+            Assert.True(cli.SetXx("TestSetXx_null", Null, 10));
+            Assert.Equal("", cli.Get("TestSetXx_null"));
+
+            cli.Del("TestSetXx_string");
+            Assert.False(cli.SetXx("TestSetXx_string", String, 10));
+            cli.Set("TestSetXx_string", 1, true);
+            Assert.True(cli.SetXx("TestSetXx_string", String, 10));
+            Assert.Equal(String, cli.Get("TestSetXx_string"));
+
+            cli.Del("TestSetXx_bytes");
+            Assert.False(cli.SetXx("TestSetXx_bytes", Bytes, 10));
+            cli.Set("TestSetXx_bytes", 1, true);
+            Assert.True(cli.SetXx("TestSetXx_bytes", Bytes, 10));
+            Assert.Equal(Bytes, cli.Get<byte[]>("TestSetXx_bytes"));
+
+            cli.Del("TestSetXx_class");
+            Assert.False(cli.SetXx("TestSetXx_class", Class, 10));
+            cli.Set("TestSetXx_class", 1, true);
+            Assert.True(cli.SetXx("TestSetXx_class", Class, 10));
+            Assert.Equal(Class.ToString(), cli.Get<TestClass>("TestSetXx_class").ToString());
+
+            cli.Del("TestSetXx_null");
+            Assert.False(cli.SetXx("TestSetXx_null", Null, true));
+            cli.Set("TestSetXx_null", 1, true);
+            Assert.True(cli.SetXx("TestSetXx_null", Null, true));
+            Assert.Equal("", cli.Get("TestSetXx_null"));
+
+            cli.Del("TestSetXx_string");
+            Assert.False(cli.SetXx("TestSetXx_string", String, true));
+            cli.Set("TestSetXx_string", 1, true);
+            Assert.True(cli.SetXx("TestSetXx_string", String, true));
+            Assert.Equal(String, cli.Get("TestSetXx_string"));
+
+            cli.Del("TestSetXx_bytes");
+            Assert.False(cli.SetXx("TestSetXx_bytes", Bytes, true));
+            cli.Set("TestSetXx_bytes", 1, true);
+            Assert.True(cli.SetXx("TestSetXx_bytes", Bytes, true));
+            Assert.Equal(Bytes, cli.Get<byte[]>("TestSetXx_bytes"));
+
+            cli.Del("TestSetXx_class");
+            Assert.False(cli.SetXx("TestSetXx_class", Class, true));
+            cli.Set("TestSetXx_class", 1, true);
+            Assert.True(cli.SetXx("TestSetXx_class", Class, true));
+            Assert.Equal(Class.ToString(), cli.Get<TestClass>("TestSetXx_class").ToString());
         }
 
         [Fact]
         public void SetBit()
         {
+            cli.Del("SetBit1");
+            cli.SetBit("SetBit1", 100, true);
+            Assert.False(cli.GetBit("SetBit1", 10));
+            Assert.True(cli.GetBit("SetBit1", 100));
         }
 
         [Fact]
         public void SetEx()
         {
+            cli.Del("TestSetEx_null", "TestSetEx_string", "TestSetEx_bytes", "TestSetEx_class");
+            cli.SetEx("TestSet_null", 10, Null);
+            Assert.Equal("", cli.Get("TestSet_null"));
+
+            cli.SetEx("TestSet_string", 10, String);
+            Assert.Equal(String, cli.Get("TestSet_string"));
+
+            cli.SetEx("TestSet_bytes", 10, Bytes);
+            Assert.Equal(Bytes, cli.Get<byte[]>("TestSet_bytes"));
+
+            cli.SetEx("TestSet_class", 10, Class);
+            Assert.Equal(Class.ToString(), cli.Get<TestClass>("TestSet_class").ToString());
         }
 
         [Fact]
