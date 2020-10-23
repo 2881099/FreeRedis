@@ -27,13 +27,13 @@ var value = cli.Get("key1");
 | protocol          | RESP2     | If you use RESP3, you need redis 6.0 environment | 
 | user              | \<Empty\> | Redis server username, requires redis-server 6.0 |
 | password          | \<Empty\> | Redis server password |
-| defaultDatabase   | 0         | Redis server database |
+| database          | 0         | Redis server database |
 | max pool size     | 100       | Connection max pool size |
 | min pool size     | 5         | Connection min pool size |
-| idleTimeout       | 20000     | Idle time of elements in the connection pool (MS), suitable for connecting to remote redis server |
-| connectTimeout    | 5000      | Connection timeout (MS) |
-| receiveTimeout    | 10000     | Receive timeout (MS) |
-| sendTimeout       | 10000     | Send timeout (MS) |
+| idle timeout      | 20000     | Idle time of elements in the connection pool (MS), suitable for connecting to remote redis server |
+| connect timeout   | 5000      | Connection timeout (MS) |
+| receive timeout   | 10000     | Receive timeout (MS) |
+| send timeout      | 10000     | Send timeout (MS) |
 | encoding          | utf-8     | string charset |
 | ssl               | false     | Enable encrypted transmission |
 | name              | \<Empty\> | Connection name, use client list command to view |
