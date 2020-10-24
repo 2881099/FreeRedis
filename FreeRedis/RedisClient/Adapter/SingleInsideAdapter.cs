@@ -10,15 +10,14 @@ namespace FreeRedis
     {
         class SingleInsideAdapter : BaseAdapter
         {
-            readonly RedisClient _cli;
             readonly IRedisSocket _redisSocket;
 
-            public SingleInsideAdapter(RedisClient cli, string host, bool ssl, TimeSpan connectTimeout, TimeSpan receiveTimeout, TimeSpan sendTimeout, Action<RedisClient> connected)
+            public SingleInsideAdapter(RedisClient topOwner, RedisClient owner, string host, bool ssl, TimeSpan connectTimeout, TimeSpan receiveTimeout, TimeSpan sendTimeout, Action<RedisClient> connected)
             {
                 UseType = UseType.SingleInside;
-                _cli = cli;
+                TopOwner = topOwner;
                 _redisSocket = new DefaultRedisSocket(host, ssl);
-                _redisSocket.Connected += (s, e) => connected?.Invoke(cli);
+                _redisSocket.Connected += (s, e) => connected?.Invoke(owner);
                 _redisSocket.ConnectTimeout = connectTimeout;
                 _redisSocket.ReceiveTimeout = receiveTimeout;
                 _redisSocket.SendTimeout = sendTimeout;
@@ -35,11 +34,11 @@ namespace FreeRedis
             }
             public override T2 AdapaterCall<T1, T2>(CommandPacket cmd, Func<RedisResult<T1>, T2> parse)
             {
-                return _cli.LogCall(cmd, () =>
+                return TopOwner.LogCall(cmd, () =>
                 {
                     _redisSocket.Write(cmd);
                     var rt = cmd.Read<T1>();
-                    rt.IsErrorThrow = _cli._isThrowRedisSimpleError;
+                    rt.IsErrorThrow = TopOwner._isThrowRedisSimpleError;
                     return parse(rt);
                 });
             }

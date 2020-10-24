@@ -10,27 +10,26 @@ namespace FreeRedis
     {
         class PoolingAdapter : BaseAdapter
         {
-            readonly RedisClient _cli;
             readonly IdleBus<RedisClientPool> _ib;
             readonly string _masterHost;
             readonly bool _rw_splitting;
             readonly bool _is_single;
 
-            public PoolingAdapter(RedisClient cli, ConnectionStringBuilder connectionString, params ConnectionStringBuilder[] slaveConnectionStrings)
+            public PoolingAdapter(RedisClient topOwner, ConnectionStringBuilder connectionString, params ConnectionStringBuilder[] slaveConnectionStrings)
             {
-                UseType = UseType.Pooling; 
-                _cli = cli;
+                UseType = UseType.Pooling;
+                TopOwner = topOwner;
                 _masterHost = connectionString.Host;
                 _rw_splitting = slaveConnectionStrings?.Any() == true;
                 _is_single = !_rw_splitting && connectionString.MaxPoolSize == 1;
 
                 _ib = new IdleBus<RedisClientPool>(TimeSpan.FromMinutes(10));
                 _ib.Notice += new EventHandler<IdleBus<string, RedisClientPool>.NoticeEventArgs>((_, e) => { });
-                _ib.Register(_masterHost, () => new RedisClientPool(connectionString, null, _cli.Serialize, _cli.Deserialize));
+                _ib.Register(_masterHost, () => new RedisClientPool(connectionString, null, TopOwner));
 
                 if (_rw_splitting)
                     foreach (var slave in slaveConnectionStrings)
-                        _ib.TryRegister($"slave_{slave.Host}", () => new RedisClientPool(slave, null, _cli.Serialize, _cli.Deserialize));
+                        _ib.TryRegister($"slave_{slave.Host}", () => new RedisClientPool(slave, null, TopOwner));
             }
 
             public override void Dispose()
@@ -72,13 +71,13 @@ namespace FreeRedis
             }
             public override T2 AdapaterCall<T1, T2>(CommandPacket cmd, Func<RedisResult<T1>, T2> parse)
             {
-                return _cli.LogCall(cmd, () =>
+                return TopOwner.LogCall(cmd, () =>
                 {
                     using (var rds = GetRedisSocket(cmd))
                     {
                         rds.Write(cmd);
                         var rt = cmd.Read<T1>();
-                        rt.IsErrorThrow = _cli._isThrowRedisSimpleError;
+                        rt.IsErrorThrow = TopOwner._isThrowRedisSimpleError;
                         return parse(rt);
                     }
                 });

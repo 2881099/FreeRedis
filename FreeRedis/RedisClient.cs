@@ -49,9 +49,9 @@ namespace FreeRedis
         /// <summary>
         /// Single inside RedisClient
         /// </summary>
-        protected internal RedisClient(string host, bool ssl, TimeSpan connectTimeout, TimeSpan receiveTimeout, TimeSpan sendTimeout, Action<RedisClient> connected)
+        protected internal RedisClient(RedisClient topOwner, string host, bool ssl, TimeSpan connectTimeout, TimeSpan receiveTimeout, TimeSpan sendTimeout, Action<RedisClient> connected)
         {
-            Adapter = new SingleInsideAdapter(this, host, ssl, connectTimeout, receiveTimeout, sendTimeout, connected);
+            Adapter = new SingleInsideAdapter(topOwner ?? this, this, host, ssl, connectTimeout, receiveTimeout, sendTimeout, connected);
         }
 
         ~RedisClient() => this.Dispose();
@@ -120,7 +120,7 @@ namespace FreeRedis
                 this.OnNotice(new NoticeEventArgs(
                     NoticeType.Call,
                     exception ?? this.RedisSimpleError,
-                    $"{cmd._redisSocket.Host} ({sw.ElapsedMilliseconds}ms) > {cmd} {log}",
+                    $"{(cmd._redisSocket?.Host ?? "Not connected")} ({sw.ElapsedMilliseconds}ms) > {cmd} {log}",
                     cmd.ReadResult?.GetValue() ?? ret));
             }
         }
@@ -188,7 +188,8 @@ namespace FreeRedis
                 }
             }
 
-            if (Serialize != null) return Serialize(value);
+            var ser = Adapter.TopOwner.Serialize;
+            if (ser != null) return ser(value);
             return value.ConvertTo<string>();
         }
         internal T DeserializeRedisValue<T>(byte[] value, Encoding encoding)
@@ -276,7 +277,8 @@ namespace FreeRedis
                 }
             }
 
-            if (Deserialize != null) return (T)Deserialize(valueStr, typeof(T));
+            var deser = Adapter.TopOwner.Deserialize;
+            if (deser != null) return (T)deser(valueStr, typeof(T));
             return valueStr.ConvertTo<T>();
         }
         #endregion

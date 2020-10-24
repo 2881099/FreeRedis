@@ -8,15 +8,11 @@ namespace FreeRedis
         public TransactionHook Multi()
         {
             CheckUseTypeOrThrow(UseType.Pooling, UseType.Cluster, UseType.Sentinel, UseType.SingleInside, UseType.SingleTemp);
-            return new TransactionHook(this);
+            return new TransactionHook(new TransactionAdapter(Adapter.TopOwner));
         }
         public class TransactionHook : RedisClient
         {
-            internal TransactionHook(RedisClient cli) : base(new TransactionAdapter(cli))
-            {
-                this.Serialize = cli.Serialize;
-                this.Deserialize = cli.Deserialize;
-            }
+            internal TransactionHook(TransactionAdapter adapter) : base(adapter) { }
             public void Discard() => (Adapter as TransactionAdapter).Discard();
             public object[] Exec() => (Adapter as TransactionAdapter).Exec();
             public void UnWatch() => (Adapter as TransactionAdapter).UnWatch();
@@ -34,15 +30,11 @@ namespace FreeRedis
         public PipelineHook StartPipe()
         {
             CheckUseTypeOrThrow(UseType.Pooling, UseType.Cluster, UseType.Sentinel, UseType.SingleInside, UseType.SingleTemp);
-            return new PipelineHook(this);
+            return new PipelineHook(new PipelineAdapter(Adapter.TopOwner));
         }
         public class PipelineHook : RedisClient
         {
-            internal PipelineHook(RedisClient cli) : base(new PipelineAdapter(cli))
-            {
-                this.Serialize = cli.Serialize;
-                this.Deserialize = cli.Deserialize;
-            }
+            internal PipelineHook(PipelineAdapter adapter) : base(adapter) { }
             public object[] EndPipe() => (Adapter as PipelineAdapter).EndPipe();
 
             ~PipelineHook()
@@ -58,15 +50,11 @@ namespace FreeRedis
         {
             CheckUseTypeOrThrow(UseType.Pooling, UseType.Sentinel, UseType.SingleInside);
             var rds = Adapter.GetRedisSocket(null);
-            return new ShareClientHook(this, new SingleTempAdapter(this, rds, () => rds.Dispose()));
+            return new ShareClientHook(new SingleTempAdapter(Adapter.TopOwner, rds, () => rds.Dispose()));
         }
         public class ShareClientHook: RedisClient
         {
-            internal ShareClientHook(RedisClient cli, BaseAdapter adapter) : base(adapter)
-            {
-                this.Serialize = cli.Serialize;
-                this.Deserialize = cli.Deserialize;
-            }
+            internal ShareClientHook(BaseAdapter adapter) : base(adapter) { }
 
             ~ShareClientHook()
             {

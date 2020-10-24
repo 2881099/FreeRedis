@@ -15,7 +15,7 @@ namespace FreeRedis
         public List<string> _flagKey { get; } = new List<string>();
 
         public static implicit operator List<object>(CommandPacket cb) => cb._input;
-        public static implicit operator CommandPacket(string cmd) => new CommandPacket().Command(cmd);
+        public static implicit operator CommandPacket(string cmd) => new CommandPacket(cmd);
 
         public override string ToString()
         {
@@ -72,6 +72,7 @@ namespace FreeRedis
             }
         }
 
+        public CommandPacket(string cmd, string subcmd = null) => this.Command(cmd, subcmd);
         public CommandPacket Command(string cmd, string subcmd = null)
         {
             if (!string.IsNullOrWhiteSpace(_command) && _command.Equals(_input.FirstOrDefault())) _input.RemoveAt(0);
@@ -185,22 +186,22 @@ namespace FreeRedis
 
     static class CommandPacketExtensions
     {
-        public static CommandPacket SubCommand(this string that, string subcmd) => new CommandPacket().Command(that, subcmd);
-        public static CommandPacket Input(this string that, string arg) => new CommandPacket().Command(that).InputRaw(arg);
-        public static CommandPacket Input(this string that, long arg) => new CommandPacket().Command(that).InputRaw(arg);
-        public static CommandPacket Input(this string that, string arg1, string arg2) => new CommandPacket().Command(that).InputRaw(arg1).InputRaw(arg2);
-        public static CommandPacket Input(this string that, string arg1, long arg2) => new CommandPacket().Command(that).InputRaw(arg1).InputRaw(arg2);
-        public static CommandPacket Input(this string that, string arg1, int arg2) => new CommandPacket().Command(that).InputRaw(arg1).InputRaw(arg2);
-        public static CommandPacket Input(this string that, int arg1, int arg2) => new CommandPacket().Command(that).InputRaw(arg1).InputRaw(arg2);
-        public static CommandPacket Input(this string that, long arg1, long arg2) => new CommandPacket().Command(that).InputRaw(arg1).InputRaw(arg2);
-        public static CommandPacket Input(this string that, string arg1, decimal arg2) => new CommandPacket().Command(that).InputRaw(arg1).InputRaw(arg2);
-        public static CommandPacket Input(this string that, string arg1, string arg2, string arg3) => new CommandPacket().Command(that).InputRaw(arg1).InputRaw(arg2).InputRaw(arg3);
-        public static CommandPacket Input(this string that, string arg1, string arg2, long arg3) => new CommandPacket().Command(that).InputRaw(arg1).InputRaw(arg2).InputRaw(arg3);
-        public static CommandPacket Input(this string that, string arg1, string arg2, decimal arg3) => new CommandPacket().Command(that).InputRaw(arg1).InputRaw(arg2).InputRaw(arg3);
-        public static CommandPacket Input(this string that, string arg1, long arg2, long arg3) => new CommandPacket().Command(that).InputRaw(arg1).InputRaw(arg2).InputRaw(arg3);
-        public static CommandPacket Input(this string that, string arg1, decimal arg2, string arg3) => new CommandPacket().Command(that).InputRaw(arg1).InputRaw(arg2).InputRaw(arg3);
-        public static CommandPacket Input(this string that, string arg1, decimal arg2, decimal arg3) => new CommandPacket().Command(that).InputRaw(arg1).InputRaw(arg2).InputRaw(arg3);
-        public static CommandPacket Input(this string that, string arg1, long arg2, long arg3, long arg4, decimal arg5) => new CommandPacket().Command(that).InputRaw(arg1).InputRaw(arg2).InputRaw(arg3).InputRaw(arg4).InputRaw(arg5);
-        public static CommandPacket Input(this string that, string[] args) => new CommandPacket().Command(that).Input(args);
+        public static CommandPacket SubCommand(this string that, string subcmd) => new CommandPacket(that, subcmd);
+        public static CommandPacket Input(this string that, string arg) => new CommandPacket(that).InputRaw(arg);
+        public static CommandPacket Input(this string that, long arg) => new CommandPacket(that).InputRaw(arg);
+        public static CommandPacket Input(this string that, string arg1, string arg2) => new CommandPacket(that).InputRaw(arg1).InputRaw(arg2);
+        public static CommandPacket Input(this string that, string arg1, long arg2) => new CommandPacket(that).InputRaw(arg1).InputRaw(arg2);
+        public static CommandPacket Input(this string that, string arg1, int arg2) => new CommandPacket(that).InputRaw(arg1).InputRaw(arg2);
+        public static CommandPacket Input(this string that, int arg1, int arg2) => new CommandPacket(that).InputRaw(arg1).InputRaw(arg2);
+        public static CommandPacket Input(this string that, long arg1, long arg2) => new CommandPacket(that).InputRaw(arg1).InputRaw(arg2);
+        public static CommandPacket Input(this string that, string arg1, decimal arg2) => new CommandPacket(that).InputRaw(arg1).InputRaw(arg2);
+        public static CommandPacket Input(this string that, string arg1, string arg2, string arg3) => new CommandPacket(that).InputRaw(arg1).InputRaw(arg2).InputRaw(arg3);
+        public static CommandPacket Input(this string that, string arg1, string arg2, long arg3) => new CommandPacket(that).InputRaw(arg1).InputRaw(arg2).InputRaw(arg3);
+        public static CommandPacket Input(this string that, string arg1, string arg2, decimal arg3) => new CommandPacket(that).InputRaw(arg1).InputRaw(arg2).InputRaw(arg3);
+        public static CommandPacket Input(this string that, string arg1, long arg2, long arg3) => new CommandPacket(that).InputRaw(arg1).InputRaw(arg2).InputRaw(arg3);
+        public static CommandPacket Input(this string that, string arg1, decimal arg2, string arg3) => new CommandPacket(that).InputRaw(arg1).InputRaw(arg2).InputRaw(arg3);
+        public static CommandPacket Input(this string that, string arg1, decimal arg2, decimal arg3) => new CommandPacket(that).InputRaw(arg1).InputRaw(arg2).InputRaw(arg3);
+        public static CommandPacket Input(this string that, string arg1, long arg2, long arg3, long arg4, decimal arg5) => new CommandPacket(that).InputRaw(arg1).InputRaw(arg2).InputRaw(arg3).InputRaw(arg4).InputRaw(arg5);
+        public static CommandPacket Input(this string that, string[] args) => new CommandPacket(that).Input(args);
     }
 }

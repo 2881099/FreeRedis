@@ -81,8 +81,32 @@ namespace FreeRedis
 			.InputIf(!string.IsNullOrWhiteSpace(clientname), "SETNAME", clientname), rt => rt
 			.NewValue(a => a.MapToHash<object>(rt.Encoding)).ThrowOrValue());
 
-		public string Ping(string message = null) => Call<string>("PING".SubCommand(null)
-			.InputIf(!string.IsNullOrEmpty(message), message), rt => rt.ThrowOrValue());
+		public string Ping(string message = null)
+		{
+			if (Adapter.UseType == UseType.SingleInside && 
+				_pubsubPriv?.IsSubscribed == true && 
+				this == Adapter.TopOwner)
+            {
+				_pubsub.Call("PING");
+				return message ?? "PONG";
+			}
+
+			return Call<object, string>("PING".SubCommand(null)
+				.InputIf(!string.IsNullOrEmpty(message), message), rt => rt.NewValue(a =>
+			   {
+				   if (a is string str) return str;
+				   if (a is object[] objs)
+				   {
+						//If the client is subscribed to a channel or a pattern, 
+						//it will instead return a multi-bulk with a "pong" in the first position and an empty bulk in the second position, 
+						//unless an argument is provided in which case it returns a copy of the argument.
+						var str2 = objs[1].ConvertTo<string>();
+					   if (!string.IsNullOrEmpty(str2)) return str2;
+					   return objs[0].ConvertTo<string>();
+				   }
+				   return a.ConvertTo<string>();
+			   }).ThrowOrValue());
+		}
 
 		public void Quit() => Call<string>("QUIT", rt => rt.ThrowOrValue());
 		public void Select(int index) => Call<string>("SELECT".Input(index), rt => rt.ThrowOrValue());

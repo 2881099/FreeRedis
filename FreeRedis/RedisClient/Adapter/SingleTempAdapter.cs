@@ -10,14 +10,13 @@ namespace FreeRedis
     {
         class SingleTempAdapter : BaseAdapter
         {
-            readonly RedisClient _cli;
             readonly IRedisSocket _redisSocket;
             readonly Action _dispose;
 
-            public SingleTempAdapter(RedisClient cli, IRedisSocket redisSocket, Action dispose)
+            public SingleTempAdapter(RedisClient topOwner, IRedisSocket redisSocket, Action dispose)
             {
                 UseType = UseType.SingleInside;
-                _cli = cli;
+                TopOwner = topOwner;
                 _redisSocket = redisSocket;
                 _dispose = dispose;
             }
@@ -33,11 +32,11 @@ namespace FreeRedis
             }
             public override T2 AdapaterCall<T1, T2>(CommandPacket cmd, Func<RedisResult<T1>, T2> parse)
             {
-                return _cli.LogCall(cmd, () =>
+                return TopOwner.LogCall(cmd, () =>
                 {
                     _redisSocket.Write(cmd);
                     var rt = cmd.Read<T1>();
-                    rt.IsErrorThrow = _cli._isThrowRedisSimpleError;
+                    rt.IsErrorThrow = TopOwner._isThrowRedisSimpleError;
                     return parse(rt);
                 });
             }

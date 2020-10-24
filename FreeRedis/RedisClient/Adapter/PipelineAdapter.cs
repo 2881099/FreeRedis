@@ -9,9 +9,8 @@ namespace FreeRedis
 {
     partial class RedisClient
     {
-        class PipelineAdapter : BaseAdapter
+        internal class PipelineAdapter : BaseAdapter
         {
-            readonly RedisClient _cli;
             readonly List<PipelineCommand> _commands;
 
             internal class PipelineCommand
@@ -21,10 +20,10 @@ namespace FreeRedis
                 public object Result { get; set; }
             }
 
-            public PipelineAdapter(RedisClient cli)
+            public PipelineAdapter(RedisClient topOwner)
             {
                 UseType = UseType.Pipeline;
-                _cli = cli;
+                TopOwner = topOwner;
                 _commands = new List<PipelineCommand>();
             }
 
@@ -45,11 +44,11 @@ namespace FreeRedis
                     Parse = pc =>
                     {
                         var rt = pc.Command.Read<T1>();
-                        rt.IsErrorThrow = _cli._isThrowRedisSimpleError;
+                        rt.IsErrorThrow = TopOwner._isThrowRedisSimpleError;
                         return parse(rt);
                     }
                 });
-                _cli.OnNotice(new NoticeEventArgs(NoticeType.Call, null, $"Pipeline > {cmd}", null));
+                TopOwner.OnNotice(new NoticeEventArgs(NoticeType.Call, null, $"Pipeline > {cmd}", null));
                 return default(T2);
             }
 
@@ -69,9 +68,9 @@ namespace FreeRedis
                     }
 
                     CommandPacket epcmd = "EndPipe";
-                    return _cli.LogCall(epcmd, () =>
+                    return TopOwner.LogCall(epcmd, () =>
                     {
-                        using (var rds = _cli.Adapter.GetRedisSocket(null))
+                        using (var rds = TopOwner.Adapter.GetRedisSocket(null))
                         {
                             epcmd._redisSocket = rds;
                             EndPipe(rds, _commands);

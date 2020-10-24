@@ -11,7 +11,6 @@ namespace FreeRedis
     {
         class SentinelAdapter : BaseAdapter
         {
-            readonly RedisClient _cli;
             readonly IdleBus<RedisClientPool> _ib;
             readonly ConnectionStringBuilder _connectionString;
             readonly LinkedList<string> _sentinels;
@@ -19,10 +18,10 @@ namespace FreeRedis
             readonly bool _rw_splitting;
             readonly bool _is_single;
 
-            public SentinelAdapter(RedisClient cli, ConnectionStringBuilder sentinelConnectionString, string[] sentinels, bool rw_splitting)
+            public SentinelAdapter(RedisClient topOwner, ConnectionStringBuilder sentinelConnectionString, string[] sentinels, bool rw_splitting)
             {
                 UseType = UseType.Sentinel;
-                _cli = cli;
+                TopOwner = topOwner;
                 _connectionString = sentinelConnectionString;
                 _sentinels = new LinkedList<string>(sentinels?.Select(a => a.ToLower()).Distinct() ?? new string[0]);
                 _rw_splitting = rw_splitting;
@@ -74,13 +73,13 @@ namespace FreeRedis
             }
             public override T2 AdapaterCall<T1, T2>(CommandPacket cmd, Func<RedisResult<T1>, T2> parse)
             {
-                return _cli.LogCall(cmd, () =>
+                return TopOwner.LogCall(cmd, () =>
                 {
                     using (var rds = GetRedisSocket(cmd))
                     {
                         rds.Write(cmd);
                         var rt = cmd.Read<T1>();
-                        rt.IsErrorThrow = _cli._isThrowRedisSimpleError;
+                        rt.IsErrorThrow = TopOwner._isThrowRedisSimpleError;
                         return parse(rt);
                     }
                 });
@@ -160,7 +159,7 @@ namespace FreeRedis
                     connectionString.MinPoolSize = connectionString.MinPoolSize;
                     connectionString.MaxPoolSize = connectionString.MaxPoolSize;
 
-                    _ib.TryRegister(host, () => new RedisClientPool(connectionString, null, _cli.Serialize, _cli.Deserialize));
+                    _ib.TryRegister(host, () => new RedisClientPool(connectionString, null, TopOwner));
                     allkeys.Remove(host);
 
                     return connectionString;

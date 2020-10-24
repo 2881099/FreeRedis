@@ -37,5 +37,6 @@ namespace FreeRedis.Internal
 #endif
 
         void ResetHost(string host);
+        void ReleaseSocket();
     }
 }

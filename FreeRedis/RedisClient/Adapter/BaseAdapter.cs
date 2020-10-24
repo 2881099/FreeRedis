@@ -23,6 +23,7 @@ namespace FreeRedis
         {
             public static ThreadLocal<Random> _rnd = new ThreadLocal<Random>(() => new Random());
             public UseType UseType { get; protected set; }
+            protected internal RedisClient TopOwner { get; internal set; }
 
             public abstract IRedisSocket GetRedisSocket(CommandPacket cmd);
             public abstract void Dispose();

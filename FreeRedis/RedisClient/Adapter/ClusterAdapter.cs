@@ -10,13 +10,12 @@ namespace FreeRedis
     {
         class ClusterAdapter : BaseAdapter
         {
-            readonly RedisClient _cli;
             readonly IdleBus<RedisClientPool> _ib;
 
-            public ClusterAdapter(RedisClient cli, ConnectionStringBuilder[] clusterConnectionStrings)
+            public ClusterAdapter(RedisClient topOwner, ConnectionStringBuilder[] clusterConnectionStrings)
             {
                 UseType = UseType.Cluster;
-                _cli = cli;
+                TopOwner = topOwner;
                 _ib = new IdleBus<RedisClientPool>(TimeSpan.FromMinutes(10));
                 _ib.Notice += new EventHandler<IdleBus<string, RedisClientPool>.NoticeEventArgs>((_, e) => { });
             }

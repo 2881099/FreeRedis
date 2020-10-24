@@ -16,8 +16,7 @@ namespace FreeRedis.Internal
 {
     public class RedisClientPool : ObjectPool<RedisClient>
     {
-        public RedisClientPool(string connectionString, Action<RedisClient> connected,
-            Func<object, string> serialize, Func<string, Type, object> deserialize) : base(null)
+        public RedisClientPool(string connectionString, Action<RedisClient> connected, RedisClient topOwner) : base(null)
         {
             _policy = new RedisClientPoolPolicy
             {
@@ -69,8 +68,7 @@ namespace FreeRedis.Internal
                 connected?.Invoke(cli);
             };
             this.Policy = _policy;
-            this.Serialize = serialize;
-            this.Deserialize = deserialize;
+            this.TopOwner = topOwner;
             _policy.ConnectionString = connectionString;
         }
 
@@ -110,8 +108,7 @@ namespace FreeRedis.Internal
         internal RedisClientPoolPolicy _policy;
         public string Key => _policy.Key;
         public string Prefix => _policy._connectionStringBuilder.Prefix;
-        public Func<object, string> Serialize;
-        public Func<string, Type, object> Deserialize;
+        internal RedisClient TopOwner;
     }
 
     public class RedisClientPoolPolicy : IPolicy<RedisClient>
@@ -150,12 +147,8 @@ namespace FreeRedis.Internal
 
         public RedisClient OnCreate()
         {
-            return new RedisClient(_connectionStringBuilder.Host, _connectionStringBuilder.Ssl, _connectionStringBuilder.ConnectTimeout,
-                _connectionStringBuilder.ReceiveTimeout, _connectionStringBuilder.SendTimeout, cli => Connected(cli, new EventArgs()))
-            {
-                 Serialize = _pool.Serialize,
-                 Deserialize = _pool.Deserialize
-            };
+            return new RedisClient(_pool.TopOwner, _connectionStringBuilder.Host, _connectionStringBuilder.Ssl, _connectionStringBuilder.ConnectTimeout,
+                _connectionStringBuilder.ReceiveTimeout, _connectionStringBuilder.SendTimeout, cli => Connected(cli, new EventArgs()));
         }
 
         public void OnDestroy(RedisClient obj)
@@ -244,7 +237,6 @@ namespace FreeRedis.Internal
                         {
                             var conn = pool.Get();
                             initConns.Add(conn);
-                            conn.Value.Ping();
                         }
                         catch
                         {

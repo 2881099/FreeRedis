@@ -9,9 +9,8 @@ namespace FreeRedis
 {
     partial class RedisClient
     {
-        class TransactionAdapter : BaseAdapter
+        internal class TransactionAdapter : BaseAdapter
         {
-            readonly RedisClient _cli;
             IRedisSocket _redisSocket;
             readonly List<TransactionCommand> _commands;
 
@@ -22,10 +21,10 @@ namespace FreeRedis
                 public object Result { get; set; }
             }
 
-            public TransactionAdapter(RedisClient cli)
+            public TransactionAdapter(RedisClient topOwner)
             {
                 UseType = UseType.Transaction;
-                _cli = cli;
+                TopOwner = topOwner;
                 _commands = new List<TransactionCommand>();
             }
 
@@ -42,7 +41,7 @@ namespace FreeRedis
             public override T2 AdapaterCall<T1, T2>(CommandPacket cmd, Func<RedisResult<T1>, T2> parse)
             {
                 TryMulti();
-                return _cli.LogCall(cmd, () =>
+                return TopOwner.LogCall(cmd, () =>
                 {
                     _redisSocket.Write(cmd);
                     cmd.Read<T1>().ThrowOrValue();
@@ -58,7 +57,7 @@ namespace FreeRedis
 
             object SelfCall(CommandPacket cmd)
             {
-                return _cli.LogCall(cmd, () =>
+                return TopOwner.LogCall(cmd, () =>
                 {
                     _redisSocket.Write(cmd);
                     return cmd.Read<object>().ThrowOrValue();
@@ -68,7 +67,7 @@ namespace FreeRedis
             {
                 if (_redisSocket == null)
                 {
-                    _redisSocket = _cli.Adapter.GetRedisSocket(null);
+                    _redisSocket = TopOwner.Adapter.GetRedisSocket(null);
                     SelfCall("MULTI");
                 }
             }

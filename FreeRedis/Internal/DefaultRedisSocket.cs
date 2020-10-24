@@ -49,6 +49,7 @@ namespace FreeRedis.Internal
             public Task ConnectAsync() => _owner.ConnectAsync();
 #endif
             public void ResetHost(string host) => _owner.ResetHost(host);
+            public void ReleaseSocket() => _owner.ReleaseSocket();
             public void Write(CommandPacket cmd) => _owner.Write(cmd);
             public ClientReplyType ClientReply => _owner.ClientReply;
         }
@@ -158,7 +159,7 @@ namespace FreeRedis.Internal
 
         public void ResetHost(string host)
         {
-            SafeReleaseSocket();
+            ReleaseSocket();
             if (string.IsNullOrWhiteSpace(host?.Trim()))
             {
                 _ip = "127.0.0.1";
@@ -212,20 +213,20 @@ namespace FreeRedis.Internal
             _port = 6379;
         }
 
-        public void SafeReleaseSocket()
+        public void ReleaseSocket()
         {
-            if (_stream != null)
-            {
-                try { _stream.Close(); } catch { }
-                try { _stream.Dispose(); } catch { }
-                _stream = null;
-            }
             if (_socket != null)
             {
                 try { _socket.Shutdown(SocketShutdown.Both); } catch { }
                 try { _socket.Close(); } catch { }
                 try { _socket.Dispose(); } catch { }
                 _socket = null;
+            }
+            if (_stream != null)
+            {
+                try { _stream.Close(); } catch { }
+                try { _stream.Dispose(); } catch { }
+                _stream = null;
             }
         }
 
@@ -236,7 +237,7 @@ namespace FreeRedis.Internal
             if (Interlocked.Increment(ref _disposeCounter) != 1) return;
             try
             {
-                SafeReleaseSocket();
+                ReleaseSocket();
             }
             finally
             {
