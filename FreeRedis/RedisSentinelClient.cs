@@ -18,69 +18,54 @@ namespace FreeRedis
             _redisSocket = new DefaultRedisSocket(host, ssl);
         }
 
-        ~RedisSentinelClient() => this.Dispose();
+        //~RedisSentinelClient() => this.Dispose();
         int _disposeCounter;
         public void Dispose()
         {
             if (Interlocked.Increment(ref _disposeCounter) != 1) return;
-            try
-            {
-                _redisSocket.Dispose();
-            }
-            finally
-            {
-                GC.SuppressFinalize(this);
-            }
+            _redisSocket.Dispose();
         }
 
-        protected T2 Call<T2>(CommandPacket cmd, Func<RedisResult<T2>, T2> parse) => Call<T2, T2>(cmd, parse);
-        protected T2 Call<T1, T2>(CommandPacket cmd, Func<RedisResult<T1>, T2> parse)
+
+        protected TValue Call<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
         {
             _redisSocket.Write(cmd);
-            var result = cmd.Read<T1>();
+            var result = cmd.Read<string>();
             return parse(result);
         }
 
-        public string Ping() => Call<string>("PING", rt => rt.ThrowOrValue());
-        public InfoResult Info() => Call<string, InfoResult>("INFO", rt => rt.NewValue(a => new InfoResult(a)).ThrowOrValue());
-        public Model.Sentinel.RoleResult Role() => Call<object, Model.Sentinel.RoleResult>("ROLE", rt => rt.NewValueToRole().ThrowOrValue());
+        public string Ping() => Call("PING", rt => rt.ThrowOrValue<string>());
+        public InfoResult Info() => Call("INFO", rt => rt.ThrowOrValue(a => new InfoResult(a.ConvertTo<string>())));
+        public Model.Sentinel.RoleResult Role() => Call("ROLE", rt => rt.ThrowOrValueToRole());
 
-        public MasterResult[] Masters() => Call<object, MasterResult[]>("SENTINEL".SubCommand("MASTERS"), rt => rt.NewValue(a =>
-        {
-            var objs = a as object[];
-            return objs.Select(x => x.ConvertTo<string[]>().MapToClass<MasterResult>(rt.Encoding)).ToArray();
-        }).ThrowOrValue());
-        public MasterResult Master(string masterName) => Call<string[], MasterResult>("SENTINEL".SubCommand("MASTER").InputRaw(masterName),
-            rt => rt.NewValue(a => a.MapToClass<MasterResult>(rt.Encoding)).ThrowOrValue());
+        public MasterResult[] Masters() => Call("SENTINEL".SubCommand("MASTERS"), rt => rt.ThrowOrValue((a, _) =>
+            a.Select(x => x.ConvertTo<string[]>().MapToClass<MasterResult>(rt.Encoding)).ToArray()));
+        public MasterResult Master(string masterName) => Call("SENTINEL".SubCommand("MASTER").InputRaw(masterName), rt => rt.ThrowOrValue(a => 
+            a.ConvertTo<string[]>().MapToClass<MasterResult>(rt.Encoding)));
 
-        public SalveResult[] Salves(string masterName) => Call<object, SalveResult[]>("SENTINEL".SubCommand("SLAVES").InputRaw(masterName), rt => rt.NewValue(a =>
-        {
-            var objs = a as object[];
-            return objs.Select(x => x.ConvertTo<string[]>().MapToClass<SalveResult>(rt.Encoding)).ToArray();
-        }).ThrowOrValue());
-        public SentinelResult[] Sentinels(string masterName) => Call<object, SentinelResult[]>("SENTINEL".SubCommand("SENTINELS").InputRaw(masterName), rt => rt.NewValue(a =>
-        {
-            var objs = a as object[];
-            return objs.Select(x => x.ConvertTo<string[]>().MapToClass<SentinelResult>(rt.Encoding)).ToArray();
-        }).ThrowOrValue());
-        public string GetMasterAddrByName(string masterName) => Call<string[], string>("SENTINEL".SubCommand("GET-MASTER-ADDR-BY-NAME").InputRaw(masterName), rt => rt.NewValue(a => $"{a[0]}:{a[1]}").ThrowOrValue());
-        public IsMaterDownByAddrResult IsMasterDownByAddr(string ip, int port, long currentEpoch, string runid) => Call<string[], IsMaterDownByAddrResult>("SENTINEL".SubCommand("IS-MASTER-DOWN-BY-ADDR").Input(ip, port, currentEpoch, runid),
-            rt => rt.NewValue(a => new IsMaterDownByAddrResult { down_state = a[0].ConvertTo<bool>(), leader = a[1], vote_epoch = a[1].ConvertTo<long>() }).ThrowOrValue());
+        public SalveResult[] Salves(string masterName) => Call("SENTINEL".SubCommand("SLAVES").InputRaw(masterName), rt => rt.ThrowOrValue((a, _) =>
+            a.Select(x => x.ConvertTo<string[]>().MapToClass<SalveResult>(rt.Encoding)).ToArray()));
+        public SentinelResult[] Sentinels(string masterName) => Call("SENTINEL".SubCommand("SENTINELS").InputRaw(masterName), rt => rt.ThrowOrValue((a, _) =>
+            a.Select(x => x.ConvertTo<string[]>().MapToClass<SentinelResult>(rt.Encoding)).ToArray()));
+        public string GetMasterAddrByName(string masterName) => Call("SENTINEL".SubCommand("GET-MASTER-ADDR-BY-NAME").InputRaw(masterName), rt => rt.ThrowOrValue((a, _) => 
+            $"{a[0]}:{a[1]}"));
+        public IsMaterDownByAddrResult IsMasterDownByAddr(string ip, int port, long currentEpoch, string runid) => Call("SENTINEL".SubCommand("IS-MASTER-DOWN-BY-ADDR").Input(ip, port, currentEpoch, runid), rt => rt.ThrowOrValue((a, _) => 
+            new IsMaterDownByAddrResult { down_state = a[0].ConvertTo<bool>(), leader = a[1].ConvertTo<string>(), vote_epoch = a[1].ConvertTo<long>() }));
 
-        public long Reset(string pattern) => Call<long>("SENTINEL".SubCommand("RESET").InputRaw(pattern), rt => rt.ThrowOrValue());
-        public void Failover(string masterName) => Call<object>("SENTINEL".SubCommand("FAILOVER").InputRaw(masterName), rt => rt.ThrowOrValue());
+        public long Reset(string pattern) => Call("SENTINEL".SubCommand("RESET").InputRaw(pattern), rt => rt.ThrowOrValue<long>());
+        public void Failover(string masterName) => Call("SENTINEL".SubCommand("FAILOVER").InputRaw(masterName), rt => rt.ThrowOrNothing());
 
 
 
-        public object PendingScripts() => Call<object>("SENTINEL".SubCommand("PENDING-SCRIPTS"), rt => rt.ThrowOrValue());
-        public object Monitor(string name, string ip, int port, int quorum) => Call<object>("SENTINEL".SubCommand("MONITOR").Input(name, ip, port, quorum), rt => rt.ThrowOrValue());
+        public object PendingScripts() => Call("SENTINEL".SubCommand("PENDING-SCRIPTS"), rt => rt.ThrowOrValue());
+        public object Monitor(string name, string ip, int port, int quorum) => Call("SENTINEL".SubCommand("MONITOR").Input(name, ip, port, quorum), rt => rt.ThrowOrValue());
 
 
 
-        public void FlushConfig() => Call<object>("SENTINEL".SubCommand("FLUSHCONFIG"), rt => rt.ThrowOrValue());
-        public void Remove(string masterName) => Call<object>("SENTINEL".SubCommand("REMOVE").InputRaw(masterName), rt => rt.ThrowOrValue());
-        public string CkQuorum(string masterName) => Call<string>("SENTINEL".SubCommand("CKQUORUM").InputRaw(masterName), rt => rt.ThrowOrValue());
-        public void Set(string masterName, string option, string value) => Call<object>("SENTINEL".SubCommand("SET").Input(masterName, option, value), rt => rt.ThrowOrValue());
+        public void FlushConfig() => Call("SENTINEL".SubCommand("FLUSHCONFIG"), rt => rt.ThrowOrNothing());
+        public void Remove(string masterName) => Call("SENTINEL".SubCommand("REMOVE").InputRaw(masterName), rt => rt.ThrowOrNothing());
+        public string CkQuorum(string masterName) => Call("SENTINEL".SubCommand("CKQUORUM").InputRaw(masterName), rt => rt.ThrowOrValue<string>());
+        public void Set(string masterName, string option, string value) => Call("SENTINEL".SubCommand("SET").Input(masterName, option, value), rt => rt.ThrowOrNothing());
 
 
 
@@ -88,6 +73,6 @@ namespace FreeRedis
         public void SimulateFailure(bool crashAfterElection, bool crashAfterPromotion) => Call<object>("SENTINEL"
             .SubCommand("SIMULATE-FAILURE")
             .InputIf(crashAfterElection, "crash-after-election")
-            .InputIf(crashAfterPromotion, "crash-after-promotion"), rt => rt.ThrowOrValue());
+            .InputIf(crashAfterPromotion, "crash-after-promotion"), rt => rt.ThrowOrNothing());
     }
 }

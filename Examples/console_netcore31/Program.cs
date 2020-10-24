@@ -16,16 +16,17 @@ namespace console_netcore31
             //var r = new RedisClient("192.168.164.10:6379,database=1"); //redis 6.0
             r.Serialize = obj => JsonConvert.SerializeObject(obj);
             r.Deserialize = (json, type) => JsonConvert.DeserializeObject(json, type);
-            r.Notice += (s, e) => Trace.WriteLine(e.Log);
+            //r.Notice += (s, e) => Trace.WriteLine(e.Log);
             return r;
         });
         static RedisClient cli => _cliLazy.Value;
         static StackExchange.Redis.ConnectionMultiplexer seredis = StackExchange.Redis.ConnectionMultiplexer.Connect("127.0.0.1:6379");
+        static StackExchange.Redis.IDatabase sedb = seredis.GetDatabase(1);
 
         static void Main(string[] args)
        {
             //seredis.
-
+            #region PubSub
             //using (var local = cli.GetShareClient())
             //{
             //    var r1 = local.Call(new CommandPacket("Subscribe").Input("abc"));
@@ -34,74 +35,87 @@ namespace console_netcore31
             //    //var r4 = local.Call(new CommandPacket("punSubscribe").Input("*"));
             //}
 
-            using (cli.Subscribe("abc", ondata))
-            {
-                using (cli.Subscribe("abcc", ondata))
-                {
-                    using (cli.PSubscribe("*", ondata))
-                    {
-                        Console.ReadKey();
-                    }
-                    Console.ReadKey();
-                }
-                Console.ReadKey();
-            }
-            Console.WriteLine("one more time");
-            Console.ReadKey();
-            using (cli.Subscribe("abc", ondata))
-            {
-                using (cli.Subscribe("abcc", ondata))
-                {
-                    using (cli.PSubscribe("*", ondata))
-                    {
-                        Console.ReadKey();
-                    }
-                    Console.ReadKey();
-                }
-                Console.ReadKey();
-            }
-            void ondata(string channel, string data)
-            {
-                Console.WriteLine($"{channel} -> {data}");
-            }
-            return;
+            //using (cli.Subscribe("abc", ondata))
+            //{
+            //    using (cli.Subscribe("abcc", ondata))
+            //    {
+            //        using (cli.PSubscribe("*", ondata))
+            //        {
+            //            Console.ReadKey();
+            //        }
+            //        Console.ReadKey();
+            //    }
+            //    Console.ReadKey();
+            //}
+            //Console.WriteLine("one more time");
+            //Console.ReadKey();
+            //using (cli.Subscribe("abc", ondata))
+            //{
+            //    using (cli.Subscribe("abcc", ondata))
+            //    {
+            //        using (cli.PSubscribe("*", ondata))
+            //        {
+            //            Console.ReadKey();
+            //        }
+            //        Console.ReadKey();
+            //    }
+            //    Console.ReadKey();
+            //}
+            //void ondata(string channel, string data)
+            //{
+            //    Console.WriteLine($"{channel} -> {data}");
+            //}
+            //return;
+            #endregion
 
             RedisHelper.Initialization(new CSRedis.CSRedisClient("127.0.0.1:6379,database=2"));
-            cli.Set("TestMGet_null1", Class);
-            RedisHelper.Set("TestMGet_null1", Class);
+            cli.Set("TestMGet_null1", String);
+            RedisHelper.Set("TestMGet_null1", String);
+            sedb.StringSet("TestMGet_string1", String);
+
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            cli.Set("TestMGet_null1", Null);
             cli.Set("TestMGet_string1", String);
             cli.Set("TestMGet_bytes1", Bytes);
-            cli.Set("TestMGet_class1", Class);
-            cli.Set("TestMGet_null2", Null);
             cli.Set("TestMGet_string2", String);
             cli.Set("TestMGet_bytes2", Bytes);
-            cli.Set("TestMGet_class2", Class);
-            cli.Set("TestMGet_null3", Null);
             cli.Set("TestMGet_string3", String);
             cli.Set("TestMGet_bytes3", Bytes);
-            cli.Set("TestMGet_class3", Class);
             sw.Stop();
-            Console.WriteLine(sw.ElapsedMilliseconds + "ms");
+            Console.WriteLine("FreeRedis: " + sw.ElapsedMilliseconds + "ms");
 
             sw.Reset();
             sw.Start();
-            RedisHelper.Set("TestMGet_null1", Null);
+            cli.Set("TestMGet_string1", String);
+            cli.Set("TestMGet_bytes1", Bytes);
+            cli.Set("TestMGet_string2", String);
+            cli.Set("TestMGet_bytes2", Bytes);
+            cli.Set("TestMGet_string3", String);
+            cli.Set("TestMGet_bytes3", Bytes);
+            sw.Stop();
+            Console.WriteLine("FreeRedis: " + sw.ElapsedMilliseconds + "ms");
+
+            sw.Reset();
+            sw.Start();
             RedisHelper.Set("TestMGet_string1", String);
             RedisHelper.Set("TestMGet_bytes1", Bytes);
-            RedisHelper.Set("TestMGet_class1", Class);
-            RedisHelper.Set("TestMGet_null2", Null);
             RedisHelper.Set("TestMGet_string2", String);
             RedisHelper.Set("TestMGet_bytes2", Bytes);
-            RedisHelper.Set("TestMGet_class2", Class);
-            RedisHelper.Set("TestMGet_null3", Null);
             RedisHelper.Set("TestMGet_string3", String);
             RedisHelper.Set("TestMGet_bytes3", Bytes);
-            RedisHelper.Set("TestMGet_class3", Class);
             sw.Stop();
-            Console.WriteLine(sw.ElapsedMilliseconds + "ms");
+            Console.WriteLine("CSRedisCore: " + sw.ElapsedMilliseconds + "ms");
+
+            sw.Reset();
+            sw.Start();
+            sedb.StringSet("TestMGet_string1", String);
+            sedb.StringSet("TestMGet_bytes1", Bytes);
+            sedb.StringSet("TestMGet_string2", String);
+            sedb.StringSet("TestMGet_bytes2", Bytes);
+            sedb.StringSet("TestMGet_string3", String);
+            sedb.StringSet("TestMGet_bytes3", Bytes);
+            sw.Stop();
+            Console.WriteLine("StackExchange: " + sw.ElapsedMilliseconds + "ms");
 
         }
 

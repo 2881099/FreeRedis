@@ -47,7 +47,7 @@ namespace FreeRedis
                         if (!_is_single && (cmdset.Status & CommandSets.LocalStatus.check_single) == CommandSets.LocalStatus.check_single)
                             throw new RedisException($"RedisClient: Method cannot be used in {UseType} mode. You can set \"max pool size=1\", but it is not singleton mode.");
 
-                        if (_rw_splitting && 
+                        if (_rw_splitting &&
                             ((cmdset.Tag & CommandSets.ServerTag.read) == CommandSets.ServerTag.read ||
                             (cmdset.Flag & CommandSets.ServerFlag.@readonly) == CommandSets.ServerFlag.@readonly))
                         {
@@ -69,14 +69,14 @@ namespace FreeRedis
                 var rds = cli.Value.Adapter.GetRedisSocket(null);
                 return DefaultRedisSocket.CreateTempProxy(rds, () => pool.Return(cli));
             }
-            public override T2 AdapaterCall<T1, T2>(CommandPacket cmd, Func<RedisResult<T1>, T2> parse)
+            public override TValue AdapaterCall<TReadTextOrStream, TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
             {
                 return TopOwner.LogCall(cmd, () =>
                 {
                     using (var rds = GetRedisSocket(cmd))
                     {
                         rds.Write(cmd);
-                        var rt = cmd.Read<T1>();
+                        var rt = cmd.Read<TReadTextOrStream>();
                         rt.IsErrorThrow = TopOwner._isThrowRedisSimpleError;
                         return parse(rt);
                     }

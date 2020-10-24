@@ -7,51 +7,54 @@ namespace FreeRedis
 {
     partial class RedisClient
     {
-        public long GeoAdd(string key, params GeoMember[] members) => Call<long>("GEOADD"
-            .Input(key)
-            .InputIf(members?.Any() == true, members.Select(a => new object[] { a.longitude, a.latitude, a.member }).ToArray())
-            .FlagKey(key), rt => rt.ThrowOrValue());
-
-        public decimal? GeoDist(string key, string member1, string member2, GeoUnit unit = GeoUnit.m) => Call<decimal?>("GEODIST"
+        public long GeoAdd(string key, params GeoMember[] members)
+        {
+            var cmd = "GEOADD".Input(key);
+            foreach (var mem in members) cmd.InputRaw(mem.longitude).InputRaw(mem.latitude).InputRaw(mem.member);
+            return Call(cmd.FlagKey(key), rt => rt.ThrowOrValue<long>());
+        }
+        public decimal? GeoDist(string key, string member1, string member2, GeoUnit unit = GeoUnit.m) => Call("GEODIST"
             .Input(key, member1, member2)
             .InputIf(unit != GeoUnit.m, unit)
-            .FlagKey(key), rt => rt.ThrowOrValue());
+            .FlagKey(key), rt => rt.ThrowOrValue<decimal?>());
 
-        public string GeoHash(string key, string member) => GeoHash(key, new[] { member }).FirstOrDefault();
-        public string[] GeoHash(string key, string[] members) => Call<string[]>("GEOHASH".Input(key).Input(members).FlagKey(key), rt => rt.ThrowOrValue());
+        public string GeoHash(string key, string member) => Call("GEOHASH".Input(key).InputRaw(member).FlagKey(key), rt => rt.ThrowOrValue((a, _) => a.FirstOrDefault().ConvertTo<string>()));
+        public string[] GeoHash(string key, string[] members) => Call("GEOHASH".Input(key).Input(members).FlagKey(key), rt => rt.ThrowOrValue<string[]>());
 
-        public GeoMember GeoPos(string key, string member) => GeoPos(key, new[] { member }).FirstOrDefault();
-        public GeoMember[] GeoPos(string key, string[] members) => Call<object, GeoMember[]>("GEOPOS".Input(key).Input(members).FlagKey(key), rt => rt
-            .NewValue(a => (a as object[]).Select((z, y) =>
+        public GeoMember GeoPos(string key, string member) => GeoPos(key, new[] { member }, rt => rt.FirstOrDefault());
+        public GeoMember[] GeoPos(string key, string[] members) => GeoPos(key, members, rt => rt);
+        T GeoPos<T>(string key, string[] members, Func<GeoMember[], T> parse) => Call("GEOPOS".Input(key).Input(members).FlagKey(key), rt => rt
+            .ThrowOrValue((a, _) => parse(a.Select((z, y) =>
                 {
                     if (z == null) return null;
                     var zarr = z as object[];
                     return new GeoMember(zarr[0].ConvertTo<decimal>(), zarr[1].ConvertTo<decimal>(), members[y]);
-                }).ToArray()
-            ).ThrowOrValue());
+                }).ToArray())
+            ));
 
         public GeoRadiusResult[] GeoRadius(string key, decimal longitude, decimal latitude, decimal radius, GeoUnit unit = GeoUnit.m,
             bool withdoord = false, bool withdist = false, bool withhash = false,
             long? count = null, Collation? collation = null) => GeoRadius("GEORADIUS", key, null, longitude, latitude, radius, unit,
                 withdoord, withdist, withhash, count, collation);
+
         public long GeoRadiusStore(string key, decimal longitude, decimal latitude, decimal radius, GeoUnit unit = GeoUnit.m, 
             long? count = null, Collation? collation = null, 
             string storekey = null, string storedistkey = null)
         {
             if (string.IsNullOrWhiteSpace(storekey) && string.IsNullOrWhiteSpace(storedistkey)) throw new ArgumentNullException(nameof(storekey));
-            return Call<long>("GEORADIUS"
+            return Call("GEORADIUS"
                 .Input(key, longitude, latitude)
                 .Input(radius, unit)
                 .InputIf(count != null, "COUNT", count)
                 .InputIf(collation != null, collation)
                 .InputIf(!string.IsNullOrWhiteSpace(storekey), "STORE", storekey)
                 .InputIf(!string.IsNullOrWhiteSpace(storedistkey), "STOREDIST", storedistkey)
-                .FlagKey(key), rt => rt.ThrowOrValue());
+                .FlagKey(key), rt => rt.ThrowOrValue<long>());
         }
         
         GeoRadiusResult[] GeoRadius(string cmd, string key, string member, decimal? longitude, decimal? latitude, decimal radius, GeoUnit unit = GeoUnit.m,
             bool withdoord = false, bool withdist = false, bool withhash = false,
-            long? count = null, Collation? collation = null) => Call<object, GeoRadiusResult[]>(cmd
+            long? count = null, Collation? collation = null) => Call(cmd
             .Input(key)
             .InputIf(!string.IsNullOrEmpty(member), member)
             .InputIf(longitude != null && latitude != null, longitude, latitude)
@@ -62,12 +65,10 @@ namespace FreeRedis
             .InputIf(withhash, "WITHHASH")
             .InputIf(count != null, "COUNT", count)
             .InputIf(collation != null, collation)
-            .FlagKey(key), rt => rt.NewValue(a =>
+            .FlagKey(key), rt => rt.ThrowOrValue((a, _) =>
             {
                 if (withdoord || withdist || withhash)
-                {
-                    var objs = a as object[];
-                    return objs.Select(x =>
+                    return a.Select(x =>
                     {
                         var objs2 = x as object[];
                         var grr = new GeoRadiusResult { member = objs2[0].ConvertTo<string>() };
@@ -82,27 +83,27 @@ namespace FreeRedis
                         }
                         return grr;
                     }).ToArray();
-                }
-                return (a as object[]).Select(x => new GeoRadiusResult { member = x.ConvertTo<string>() }).ToArray();
-            }).ThrowOrValue());
+                return a.Select(x => new GeoRadiusResult { member = x.ConvertTo<string>() }).ToArray();
+            }));
 
         public GeoRadiusResult[] GeoRadiusByMember(string key, string member, decimal radius, GeoUnit unit = GeoUnit.m,
             bool withdoord = false, bool withdist = false, bool withhash = false,
             long? count = null, Collation? collation = null) => GeoRadius("GEORADIUSBYMEMBER", key, member, null, null, radius, unit,
                 withdoord, withdist, withhash, count, collation);
+
         public long GeoRadiusByMemberStore(string key, string member, decimal radius, GeoUnit unit = GeoUnit.m,
             long? count = null, Collation? collation = null,
             string storekey = null, string storedistkey = null)
         {
             if (string.IsNullOrWhiteSpace(storekey) && string.IsNullOrWhiteSpace(storedistkey)) throw new ArgumentNullException(nameof(storekey));
-            return Call<long>("GEORADIUSBYMEMBER"
+            return Call("GEORADIUSBYMEMBER"
                 .Input(key, member, radius)
                 .InputRaw(unit)
                 .InputIf(count != null, "COUNT", count)
                 .InputIf(collation != null, collation)
                 .InputIf(!string.IsNullOrWhiteSpace(storekey), "STORE", storekey)
                 .InputIf(!string.IsNullOrWhiteSpace(storedistkey), "STOREDIST", storedistkey)
-                .FlagKey(key), rt => rt.ThrowOrValue());
+                .FlagKey(key), rt => rt.ThrowOrValue<long>());
         }
     }
 }

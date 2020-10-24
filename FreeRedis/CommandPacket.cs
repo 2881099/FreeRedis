@@ -43,33 +43,20 @@ namespace FreeRedis
         public bool _writed => _redisSocket != null;
         public bool _readed { get; internal set; }
         public RedisResult ReadResult { get; protected set; }
-        public RedisResult<T> Read<T>() => Read<T>(_redisSocket?.Encoding);
-        public RedisResult<T> Read<T>(Encoding encoding)
+        public RedisResult Read<TReadTextOrStream>()
         {
             if (_redisSocket == null) throw new Exception("The command has not been sent");
-            if (_readed) return ReadResult as RedisResult<T>;
+            if (_readed) return ReadResult;
             _readed = true;
-            if (_redisSocket.ClientReply == ClientReplyType.on)
-            {
-                if (_redisSocket.IsConnected == false) _redisSocket.Connect();
-                var rt = RespHelper.Read<T>(_redisSocket.Stream, encoding);
-                rt.Encoding = _redisSocket.Encoding;
-                ReadResult = rt;
-                return rt;
-            }
-            ReadResult = new RedisResult<T>(default(T), null, true, RedisMessageType.SimpleString) { Encoding = _redisSocket.Encoding };
-            return ReadResult as RedisResult<T>;
+            ReadResult = _redisSocket.Read(typeof(TReadTextOrStream) == typeof(byte[]));
+            return ReadResult;
         }
         public void ReadChunk(Stream destination, int bufferSize = 1024)
         {
             if (_redisSocket == null) throw new Exception("The command has not been sent");
             if (_readed) return;
             _readed = true;
-            if (_redisSocket.ClientReply == ClientReplyType.on)
-            {
-                if (_redisSocket.IsConnected == false) _redisSocket.Connect();
-                RespHelper.ReadChunk(_redisSocket.Stream, destination, bufferSize);
-            }
+            _redisSocket.ReadChunk(destination, bufferSize);
         }
 
         public CommandPacket(string cmd, string subcmd = null) => this.Command(cmd, subcmd);
@@ -146,38 +133,28 @@ namespace FreeRedis
             return this;
         }
 
-        public CommandPacket InputKv(KeyValuePair<string, long>[] args)
+        public CommandPacket InputKv<T>(KeyValuePair<string, T>[] args)
         {
             _input.AddRange(args.Select(a => new object[] { a.Key, a.Value }).SelectMany(a => a).ToArray());
             return this;
         }
-        public CommandPacket InputKv(KeyValuePair<string, string>[] args)
-        {
-            _input.AddRange(args.Select(a => new object[] { a.Key, a.Value }).SelectMany(a => a).ToArray());
-            return this;
-        }
-        public CommandPacket InputKv(KeyValuePair<string, object>[] args, Func<object, object> serialize)
+        public CommandPacket InputKv<T>(KeyValuePair<string, T>[] args, Func<object, object> serialize)
         {
             _input.AddRange(args.Select(a => new object[] { a.Key, serialize(a.Value) }).SelectMany(a => a).ToArray());
             return this;
         }
-        public CommandPacket InputKv(List<KeyValuePair<string, object>> args, Func<object, object> serialize)
+        public CommandPacket InputKv<T>(List<KeyValuePair<string, T>> args, Func<object, object> serialize)
         {
             _input.AddRange(args.Select(a => new object[] { a.Key, serialize(a.Value) }).SelectMany(a => a).ToArray());
             return this;
         }
 
-        public CommandPacket InputKv(Dictionary<string, long> args)
+        public CommandPacket InputKv<T>(Dictionary<string, T> args)
         {
             _input.AddRange(args.Select(a => new object[] { a.Key, a.Value }).SelectMany(a => a).ToArray());
             return this;
         }
-        public CommandPacket InputKv(Dictionary<string, string> args)
-        {
-            _input.AddRange(args.Select(a => new object[] { a.Key, a.Value }).SelectMany(a => a).ToArray());
-            return this;
-        }
-        public CommandPacket InputKv(Dictionary<string, object> args, Func<object, object> serialize)
+        public CommandPacket InputKv<T>(Dictionary<string, T> args, Func<object, object> serialize)
         {
             _input.AddRange(args.Select(a => new object[] { a.Key, serialize(a.Value) }).SelectMany(a => a).ToArray());
             return this;

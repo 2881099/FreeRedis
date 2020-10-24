@@ -28,6 +28,8 @@ namespace FreeRedis.Internal
         Encoding Encoding { get; set; }
 
         void Write(CommandPacket cmd);
+        RedisResult Read(bool isbytes);
+        void ReadChunk(Stream destination, int bufferSize = 1024);
         ClientReplyType ClientReply { get; }
 
         void Connect();

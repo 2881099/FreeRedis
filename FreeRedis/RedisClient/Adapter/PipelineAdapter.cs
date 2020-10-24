@@ -36,20 +36,20 @@ namespace FreeRedis
             {
                 throw new Exception($"RedisClient: Method cannot be used in {UseType} mode.");
             }
-            public override T2 AdapaterCall<T1, T2>(CommandPacket cmd, Func<RedisResult<T1>, T2> parse)
+            public override TValue AdapaterCall<TReadTextOrStream, TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
             {
                 _commands.Add(new PipelineCommand
                 {
                     Command = cmd,
                     Parse = pc =>
                     {
-                        var rt = pc.Command.Read<T1>();
+                        var rt = pc.Command.Read<TReadTextOrStream>();
                         rt.IsErrorThrow = TopOwner._isThrowRedisSimpleError;
                         return parse(rt);
                     }
                 });
                 TopOwner.OnNotice(new NoticeEventArgs(NoticeType.Call, null, $"Pipeline > {cmd}", null));
-                return default(T2);
+                return default(TValue);
             }
 
             public object[] EndPipe()
@@ -96,8 +96,9 @@ namespace FreeRedis
 
                 try
                 {
+                    var respWriter = new RespHelper.Resp3Writer(ms, rds.Encoding, rds.Protocol);
                     foreach (var cmd in cmds)
-                        RespHelper.Write(ms, rds.Encoding, cmd.Command, rds.Protocol);
+                        respWriter.WriteCommand(cmd.Command);
 
                     if (rds.IsConnected == false) rds.Connect();
                     ms.Position = 0;

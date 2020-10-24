@@ -17,8 +17,8 @@ namespace FreeRedis.Internal
             ib.Notice += (_, e) =>
             {
                 var log = $"[{DateTime.Now.ToString("HH:mm:ss")}] 线程{Thread.CurrentThread.ManagedThreadId}：{e.Log}";
-            //Trace.WriteLine(log);
-            Console.WriteLine(log);
+                //Trace.WriteLine(log);
+                Console.WriteLine(log);
             };
 
             ib.Register("key1", () => new ManualResetEvent(false));

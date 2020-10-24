@@ -7,47 +7,43 @@ namespace FreeRedis.Model
 {
     static class RedisResultNewValueExtensions
     {
-        public static RedisResult<RoleResult> NewValueToRole(this RedisResult<object> rt) =>
-            rt.NewValue(a =>
+        public static RoleResult ThrowOrValueToRole(this RedisResult rt) =>
+            rt.ThrowOrValue((a, _) =>
             {
-                var objs = a as object[];
-                if (objs.Any())
+                if (a?.Any() != true) return null;
+                var role = new RoleResult { role = a[0].ConvertTo<RoleType>() };
+                switch (role.role)
                 {
-                    var role = new RoleResult { role = objs[0].ConvertTo<RoleType>() };
-                    switch (role.role)
-                    {
-                        case RoleType.Master:
-                            role.data = new RoleResult.MasterInfo
+                    case RoleType.Master:
+                        role.data = new RoleResult.MasterInfo
+                        {
+                            _replication_offset = a[1].ConvertTo<long>(),
+                            _slaves = (a[2] as object[])?.Select(x =>
                             {
-                                _replication_offset = objs[1].ConvertTo<long>(),
-                                _slaves = (objs[2] as object[])?.Select(x =>
+                                var xs = x as object[];
+                                return new RoleResult.MasterInfo.SlaveInfo
                                 {
-                                    var xs = x as object[];
-                                    return new RoleResult.MasterInfo.SlaveInfo
-                                    {
-                                        ip = xs[0].ConvertTo<string>(),
-                                        port = xs[1].ConvertTo<int>(),
-                                        slave_offset = xs[2].ConvertTo<long>()
-                                    };
-                                }).ToArray()
-                            };
-                            break;
-                        case RoleType.Slave:
-                            role.data = new RoleResult.SlaveInfo
-                            {
-                                master_ip = objs[1].ConvertTo<string>(),
-                                master_port = objs[2].ConvertTo<int>(),
-                                replication_state = objs[3].ConvertTo<string>(),
-                                data_received = objs[4].ConvertTo<long>()
-                            };
-                            break;
-                        case RoleType.Sentinel:
-                            role.data = objs[1].ConvertTo<string[]>();
-                            break;
-                    }
-                    return role;
+                                    ip = xs[0].ConvertTo<string>(),
+                                    port = xs[1].ConvertTo<int>(),
+                                    slave_offset = xs[2].ConvertTo<long>()
+                                };
+                            }).ToArray()
+                        };
+                        break;
+                    case RoleType.Slave:
+                        role.data = new RoleResult.SlaveInfo
+                        {
+                            master_ip = a[1].ConvertTo<string>(),
+                            master_port = a[2].ConvertTo<int>(),
+                            replication_state = a[3].ConvertTo<string>(),
+                            data_received = a[4].ConvertTo<long>()
+                        };
+                        break;
+                    case RoleType.Sentinel:
+                        role.data = a[1].ConvertTo<string[]>();
+                        break;
                 }
-                return null;
+                return role;
             });
     }
 

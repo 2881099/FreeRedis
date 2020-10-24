@@ -71,14 +71,14 @@ namespace FreeRedis
                 var rds = cli.Value.Adapter.GetRedisSocket(null);
                 return DefaultRedisSocket.CreateTempProxy(rds, () => pool.Return(cli));
             }
-            public override T2 AdapaterCall<T1, T2>(CommandPacket cmd, Func<RedisResult<T1>, T2> parse)
+            public override TValue AdapaterCall<TReadTextOrStream, TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
             {
                 return TopOwner.LogCall(cmd, () =>
                 {
                     using (var rds = GetRedisSocket(cmd))
                     {
                         rds.Write(cmd);
-                        var rt = cmd.Read<T1>();
+                        var rt = cmd.Read<TReadTextOrStream>();
                         rt.IsErrorThrow = TopOwner._isThrowRedisSimpleError;
                         return parse(rt);
                     }

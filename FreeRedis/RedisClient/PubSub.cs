@@ -122,10 +122,10 @@ namespace FreeRedis
                                 Call("PING"); } catch { } }, null, 10000, 10000);
                         while (_stoped == false)
                         {
-                            RedisResult<object> rt = null;
+                            RedisResult rt = null;
                             try
                             {
-                                rt = RespHelper.Read<object>(_redisSocket.Stream, _redisSocket.Encoding);
+                                rt = _redisSocket.Read(isbytes: false);
                             }
                             catch
                             {
@@ -201,10 +201,10 @@ namespace FreeRedis
             return _pubsub.Subscribe(true, pattern, (p, k, d) => handler(k, d));
         }
 
-        public long Publish(string channel, string message) => Call<long>("PUBLISH".Input(channel, message).FlagKey(channel), rt => rt.ThrowOrValue());
-        public string[] PubSubChannels(string pattern) => Call<string[]>("PUBSUB".SubCommand("CHANNELS").Input(pattern), rt => rt.ThrowOrValue());
-        public string[] PubSubNumSub(params string[] channels) => Call<string[]>("PUBSUB".SubCommand("NUMSUB").Input(channels).FlagKey(channels), rt => rt.ThrowOrValue());
-        public long PubSubNumPat() => Call<long>("PUBLISH".SubCommand("NUMPAT"), rt => rt.ThrowOrValue());
+        public long Publish(string channel, string message) => Call("PUBLISH".Input(channel, message).FlagKey(channel), rt => rt.ThrowOrValue<long>());
+        public string[] PubSubChannels(string pattern) => Call("PUBSUB".SubCommand("CHANNELS").Input(pattern), rt => rt.ThrowOrValue<string[]>());
+        public string[] PubSubNumSub(params string[] channels) => Call("PUBSUB".SubCommand("NUMSUB").Input(channels).FlagKey(channels), rt => rt.ThrowOrValue<string[]>());
+        public long PubSubNumPat() => Call("PUBLISH".SubCommand("NUMPAT"), rt => rt.ThrowOrValue<long>());
 
 
         public void PUnSubscribe(params string[] pattern) => _pubsub.UnSubscribe(true, pattern);

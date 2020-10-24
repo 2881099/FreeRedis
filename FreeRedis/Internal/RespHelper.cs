@@ -15,58 +15,59 @@ namespace FreeRedis
 {
     public static class RespHelper
     {
-        public static RedisResult<T> Read<T>(Stream stream, Encoding encoding) => new Resp3Reader(stream, typeof(T) == typeof(byte[]) ? null : encoding).ReadObject().ConvertTo<T>(encoding);
-        public static void ReadChunk(Stream stream, Stream destination, int bufferSize = 1024) => new Resp3Reader(stream, null).ReadBlobStringChunk(destination, bufferSize);
-        static RedisResult<T> ConvertTo<T>(this RedisResult<object> rt, Encoding encoding)
+        public static RedisResult Read(Stream stream, Encoding encoding) => new Resp3Reader(stream).ReadObject(encoding);
+        public static void ReadChunk(Stream stream, Stream destination, int bufferSize = 1024) => new Resp3Reader(stream).ReadBlobStringChunk(destination, bufferSize);
+        public static void Write(Stream stream, Encoding encoding, List<object> command, RedisProtocol protocol)
         {
-            var obj = rt.Value;
-            if (obj is T val) return rt.NewValue(a => val);
-            return rt.NewValue(a => (T)typeof(T).FromObject(a, encoding));
-        }
-        public static void Write(Stream stream, Encoding encoding, List<object> command, RedisProtocol protocol) => new Resp3Writer(stream, encoding, protocol).WriteCommand(command);
-
-        public static object DeserializeResptext(string resptext)
-        {
-            using (var ms = new MemoryStream())
+            using (var ms = new MemoryStream()) //Writing data directly to will be very slow
             {
-                try
-                {
-                    var bytes = Encoding.UTF8.GetBytes(resptext);
-                    ms.Write(bytes, 0, bytes.Length);
-                    ms.Position = 0;
-                    return Read<object>(ms, Encoding.UTF8).Value;
-                }
-                finally
-                {
-                    ms.Close();
-                }
-            }
-        }
-        public static string SerializeResptext(object data, RedisProtocol protocol)
-        {
-            using (var ms = new MemoryStream())
-            {
-                try
-                {
-                    new Resp3Writer(ms, Encoding.UTF8, protocol).WriteObject(data);
-                    return Encoding.UTF8.GetString(ms.ToArray());
-                }
-                finally
-                {
-                    ms.Close();
-                }
+                new Resp3Writer(ms, encoding, protocol).WriteCommand(command);
+                ms.Position = 0;
+                ms.CopyTo(stream);
+                ms.Close();
             }
         }
 
-        class Resp3Reader
-        {
-            Stream _stream;
-            Encoding _encoding;
+        //public static object DeserializeResptext(string resptext)
+        //{
+        //    using (var ms = new MemoryStream())
+        //    {
+        //        try
+        //        {
+        //            var bytes = Encoding.UTF8.GetBytes(resptext);
+        //            ms.Write(bytes, 0, bytes.Length);
+        //            ms.Position = 0;
+        //            return Read(ms, Encoding.UTF8).Value;
+        //        }
+        //        finally
+        //        {
+        //            ms.Close();
+        //        }
+        //    }
+        //}
+        //public static string SerializeResptext(object data, RedisProtocol protocol)
+        //{
+        //    using (var ms = new MemoryStream())
+        //    {
+        //        try
+        //        {
+        //            new Resp3Writer(ms, Encoding.UTF8, protocol).WriteObject(data);
+        //            return Encoding.UTF8.GetString(ms.ToArray());
+        //        }
+        //        finally
+        //        {
+        //            ms.Close();
+        //        }
+        //    }
+        //}
 
-            public Resp3Reader(Stream stream, Encoding encoding)
+        internal class Resp3Reader
+        {
+            internal Stream _stream;
+
+            public Resp3Reader(Stream stream)
             {
                 _stream = stream;
-                _encoding = encoding;
             }
 
             public void ReadBlobStringChunk(Stream destination, int bufferSize)
@@ -76,17 +77,17 @@ namespace FreeRedis
                 {
                     case '$':
                     case '=':
-                    case '!': ReadBlobString(c, destination, bufferSize); break;
+                    case '!': ReadBlobString(c, null, destination, bufferSize); break;
                     default: throw new ProtocolViolationException($"Expecting fail MessageType '{c}'");
                 }
             }
 
-            object ReadBlobString(char msgtype, Stream destination, int bufferSize)
+            object ReadBlobString(char msgtype, Encoding encoding, Stream destination, int bufferSize)
             {
                 var clob = ReadClob();
-                if (_encoding == null) return clob;
+                if (encoding == null) return clob;
                 if (clob == null) return null;
-                return _encoding.GetString(clob);
+                return encoding.GetString(clob);
 
                 byte[] ReadClob()
                 {
@@ -133,26 +134,25 @@ namespace FreeRedis
                     }
                 }
             }
-            object ReadSimpleString()
+            string ReadSimpleString()
             {
-                if (_encoding == null) return ReadClob();
-                return _encoding.GetString(ReadClob());
+                return ReadLine(null);
 
-                byte[] ReadClob()
-                {
-                    MemoryStream ms = null;
-                    try
-                    {
-                        ms = new MemoryStream();
-                        ReadLine(ms);
-                        return ms.ToArray();
-                    }
-                    finally
-                    {
-                        ms?.Close();
-                        ms?.Dispose();
-                    }
-                }
+                //byte[] ReadClob()
+                //{
+                //    MemoryStream ms = null;
+                //    try
+                //    {
+                //        ms = new MemoryStream();
+                //        ReadLine(ms);
+                //        return ms.ToArray();
+                //    }
+                //    finally
+                //    {
+                //        ms?.Close();
+                //        ms?.Dispose();
+                //    }
+                //}
             }
             long ReadNumber(char msgtype)
             {
@@ -188,7 +188,7 @@ namespace FreeRedis
                 throw new ProtocolViolationException($"Expecting fail Double '{msgtype}t', got '{msgtype}{boolstr}'");
             }
 
-            object[] ReadArray(char msgtype)
+            object[] ReadArray(char msgtype, Encoding encoding)
             {
                 var lenstr = ReadLine(null);
                 if (int.TryParse(lenstr, out var len))
@@ -196,7 +196,7 @@ namespace FreeRedis
                     if (len < 0) return null;
                     var arr = new object[len];
                     for (var a = 0; a < len; a++)
-                        arr[a] = ReadObject().Value;
+                        arr[a] = ReadObject(encoding).Value;
                     return arr;
                 }
                 if (lenstr == "?")
@@ -204,7 +204,7 @@ namespace FreeRedis
                     var arr = new List<object>();
                     while (true)
                     {
-                        var ro = ReadObject();
+                        var ro = ReadObject(encoding);
                         if (ro.IsEnd) break;
                         arr.Add(ro.Value);
                     }
@@ -212,7 +212,7 @@ namespace FreeRedis
                 }
                 throw new ProtocolViolationException($"Expecting fail Array '{msgtype}3', got '{msgtype}{lenstr}'");
             }
-            object[] ReadMap(char msgtype)
+            object[] ReadMap(char msgtype, Encoding encoding)
             {
                 var lenstr = ReadLine(null);
                 if (int.TryParse(lenstr, out var len))
@@ -221,8 +221,8 @@ namespace FreeRedis
                     var arr = new object[len * 2];
                     for (var a = 0; a < len; a++)
                     {
-                        arr[a * 2] = ReadObject().Value;
-                        arr[a * 2 + 1] = ReadObject().Value;
+                        arr[a * 2] = ReadObject(encoding).Value;
+                        arr[a * 2 + 1] = ReadObject(encoding).Value;
                     }
                     return arr;
                 }
@@ -231,8 +231,8 @@ namespace FreeRedis
                     var arr = new List<object>();
                     while (true)
                     {
-                        var rokey = ReadObject();
-                        var roval = ReadObject();
+                        var rokey = ReadObject(encoding);
+                        var roval = ReadObject(encoding);
                         if (roval.IsEnd) break;
                         arr.Add(rokey.Value);
                         arr.Add(roval.Value);
@@ -242,30 +242,30 @@ namespace FreeRedis
                 throw new ProtocolViolationException($"Expecting fail Map '{msgtype}3', got '{msgtype}{lenstr}'");
             }
 
-            public RedisResult<object> ReadObject()
+            public RedisResult ReadObject(Encoding encoding)
             {
                 while (true)
                 {
-                    char c = (char)_stream.ReadByte();
+                    var c = (char)_stream.ReadByte();
                     switch (c)
                     {
-                        case '$': return new RedisResult<object>(ReadBlobString(c, null, 1024), false, RedisMessageType.BlobString);
-                        case '+': return new RedisResult<object>(ReadSimpleString(), false, RedisMessageType.SimpleString);
-                        case '=': return new RedisResult<object>(ReadBlobString(c, null, 1024), false, RedisMessageType.VerbatimString);
-                        case '-': return new RedisResult<object>(ReadSimpleString(), false, RedisMessageType.SimpleError);
-                        case '!': return new RedisResult<object>(ReadBlobString(c, null, 1024), false, RedisMessageType.BlobError);
-                        case ':': return new RedisResult<object>(ReadNumber(c), false, RedisMessageType.Number);
-                        case '(': return new RedisResult<object>(ReadBigNumber(c), false, RedisMessageType.BigNumber);
-                        case '_': ReadLine(null); return new RedisResult<object>(null, false, RedisMessageType.Null);
-                        case ',': return new RedisResult<object>(ReadDouble(c), false, RedisMessageType.Double);
-                        case '#': return new RedisResult<object>(ReadBoolean(c), false, RedisMessageType.Boolean);
+                        case '$': return new RedisResult(ReadBlobString(c, encoding, null, 1024), false, RedisMessageType.BlobString);
+                        case '+': return new RedisResult(ReadSimpleString(), false, RedisMessageType.SimpleString);
+                        case '=': return new RedisResult(ReadBlobString(c, encoding, null, 1024), false, RedisMessageType.VerbatimString);
+                        case '-': return new RedisResult(ReadSimpleString(), false, RedisMessageType.SimpleError);
+                        case '!': return new RedisResult(ReadBlobString(c, encoding, null, 1024), false, RedisMessageType.BlobError);
+                        case ':': return new RedisResult(ReadNumber(c), false, RedisMessageType.Number);
+                        case '(': return new RedisResult(ReadBigNumber(c), false, RedisMessageType.BigNumber);
+                        case '_': ReadLine(null); return new RedisResult(null, false, RedisMessageType.Null);
+                        case ',': return new RedisResult(ReadDouble(c), false, RedisMessageType.Double);
+                        case '#': return new RedisResult(ReadBoolean(c), false, RedisMessageType.Boolean);
 
-                        case '*': return new RedisResult<object>(ReadArray(c), false, RedisMessageType.Array);
-                        case '~': return new RedisResult<object>(ReadArray(c), false, RedisMessageType.Set);
-                        case '>': return new RedisResult<object>(ReadArray(c), false, RedisMessageType.Push);
-                        case '%': return new RedisResult<object>(ReadMap(c), false, RedisMessageType.Map);
-                        case '|': return new RedisResult<object>(ReadMap(c), false, RedisMessageType.Attribute);
-                        case '.': ReadLine(null); return new RedisResult<object>(null, true, RedisMessageType.SimpleString); //无类型
+                        case '*': return new RedisResult(ReadArray(c, encoding), false, RedisMessageType.Array);
+                        case '~': return new RedisResult(ReadArray(c, encoding), false, RedisMessageType.Set);
+                        case '>': return new RedisResult(ReadArray(c, encoding), false, RedisMessageType.Push);
+                        case '%': return new RedisResult(ReadMap(c, encoding), false, RedisMessageType.Map);
+                        case '|': return new RedisResult(ReadMap(c, encoding), false, RedisMessageType.Attribute);
+                        case '.': ReadLine(null); return new RedisResult(null, true, RedisMessageType.SimpleString); //无类型
                         case ' ': continue;
                         default: throw new ProtocolViolationException($"Expecting fail MessageType '{c}'");
                     }
@@ -311,11 +311,11 @@ namespace FreeRedis
             }
         }
 
-        class Resp3Writer
+        internal class Resp3Writer
         {
-            Stream _stream;
-            Encoding _encoding;
-            RedisProtocol _protocol;
+            internal Stream _stream;
+            internal Encoding _encoding;
+            internal RedisProtocol _protocol;
 
             public Resp3Writer(Stream stream, Encoding encoding, RedisProtocol protocol)
             {
@@ -735,7 +735,7 @@ namespace FreeRedis
                 if (dic.ContainsKey(key)) continue;
                 var val = list[a + 1];
                 if (val == null) dic.Add(key, default(T));
-                else dic.Add(key, val is T conval ? conval : (T)typeof(T).FromObject(list[a + 1], encoding));
+                else dic.Add(key, val is T conval ? conval : (T)typeof(T).FromObject(val, encoding));
             }
             return dic;
         }
@@ -749,7 +749,7 @@ namespace FreeRedis
                 var key = list[a].ToInvariantCultureToString();
                 var val = list[a + 1];
                 if (val == null) ret.Add(new KeyValuePair<string, T>(key, default(T)));
-                else ret.Add(new KeyValuePair<string, T>(key, val is T conval ? conval : (T)typeof(T).FromObject(list[a + 1], encoding)));
+                else ret.Add(new KeyValuePair<string, T>(key, val is T conval ? conval : (T)typeof(T).FromObject(val, encoding)));
             }
             return ret;
         }
@@ -802,22 +802,22 @@ namespace FreeRedis
             }
             else if (targetType.IsArray)
             {
-                if (value is IList valueList)
-                {
-                    var sourceArrLen = valueList.Count;
-                    var targetElementType = targetType.GetElementType();
-                    var target = Array.CreateInstance(targetElementType, sourceArrLen);
-                    for (var a = 0; a < sourceArrLen; a++) target.SetValue(targetElementType.FromObject(valueList[a], encoding), a);
-                    return target;
-                }
                 if (value is Array valueArr)
                 {
-                    var sourceArrLen = valueArr.Length;
                     var targetElementType = targetType.GetElementType();
+                    var sourceArrLen = valueArr.Length;
                     var target = Array.CreateInstance(targetElementType, sourceArrLen);
                     for (var a = 0; a < sourceArrLen; a++) target.SetValue(targetElementType.FromObject(valueArr.GetValue(a), encoding), a);
                     return target;
                 }
+                //if (value is IList valueList)
+                //{
+                //    var targetElementType = targetType.GetElementType();
+                //    var sourceArrLen = valueList.Count;
+                //    var target = Array.CreateInstance(targetElementType, sourceArrLen);
+                //    for (var a = 0; a < sourceArrLen; a++) target.SetValue(targetElementType.FromObject(valueList[a], encoding), a);
+                //    return target;
+                //}
             }
             var func = _dicFromObject.GetOrAdd(targetType, tt =>
             {
@@ -910,44 +910,53 @@ namespace FreeRedis
     {
         public RedisException(string message) : base(message) { }
     }
-    public abstract class RedisResult
+    public class RedisResult
     {
-        public abstract object GetValue();
+        public object Value { get; internal set; }
         protected internal bool IsEnd { get; protected set; }
         public RedisMessageType MessageType { get; protected set; }
         public bool IsError => this.MessageType == RedisMessageType.SimpleError || this.MessageType == RedisMessageType.BlobError;
         public bool IsErrorThrow { get; internal set; } = true;
         public string SimpleError { get; protected set; }
         public Encoding Encoding { get; internal set; }
-    }
-    public class RedisResult<T> : RedisResult
-    {
-        public T Value { get; }
-        public override object GetValue() => this.Value;
-        internal RedisResult(T value, bool isend, RedisMessageType msgtype)
+
+        internal RedisResult(object value, bool isend, RedisMessageType msgtype)
         {
-            base.IsEnd = isend;
-            base.MessageType = msgtype;
-            if (IsError) base.SimpleError = value?.ConvertTo<string>();
+            this.IsEnd = isend;
+            this.MessageType = msgtype;
+            if (IsError) this.SimpleError = value?.ConvertTo<string>();
             else this.Value = value;
         }
-        internal RedisResult(T value, string simpleError, bool isend, RedisMessageType msgtype)
+        public RedisResult ThrowOrNothing()
         {
-            this.Value = value;
-            base.SimpleError = simpleError;
-            base.IsEnd = isend;
-            base.MessageType = msgtype;
+            if (IsError && IsErrorThrow) throw new RedisException(this.SimpleError);
+            return this;
         }
-        public RedisResult<T2> NewValue<T2>(Func<T, T2> value)
+        public TValue ThrowOrValue<TValue>(Func<object, TValue> value)
         {
-            if (typeof(T) == typeof(T2)) return this as RedisResult<T2>;
-            if (this.Value == null) return new RedisResult<T2>(default(T2), this.SimpleError, true, this.MessageType);
-            return new RedisResult<T2>(value(this.Value), this.SimpleError, true, this.MessageType);
+            if (IsError && IsErrorThrow) throw new RedisException(this.SimpleError);
+            var newval = value(this.Value);
+            this.Value = newval;
+            return newval;
         }
-        public T ThrowOrValue()
+        public TValue ThrowOrValue<TValue>(Func<object[], bool, TValue> value)
+        {
+            if (IsError && IsErrorThrow) throw new RedisException(this.SimpleError);
+            var newval = value(this.Value as object[], false);
+            this.Value = newval;
+            return newval;
+        }
+        public object ThrowOrValue()
         {
             if (IsError && IsErrorThrow) throw new RedisException(this.SimpleError);
             return this.Value;
+        }
+        public TValue ThrowOrValue<TValue>()
+        {
+            if (IsError && IsErrorThrow) throw new RedisException(this.SimpleError);
+            var newval = this.Value.ConvertTo<TValue>();
+            this.Value = newval;
+            return newval;
         }
     }
 

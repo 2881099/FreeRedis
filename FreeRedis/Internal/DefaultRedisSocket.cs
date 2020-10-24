@@ -51,6 +51,8 @@ namespace FreeRedis.Internal
             public void ResetHost(string host) => _owner.ResetHost(host);
             public void ReleaseSocket() => _owner.ReleaseSocket();
             public void Write(CommandPacket cmd) => _owner.Write(cmd);
+            public RedisResult Read(bool isbytes) => _owner.Read(isbytes);
+            public void ReadChunk(Stream destination, int bufferSize = 1024) => _owner.ReadChunk(destination, bufferSize);
             public ClientReplyType ClientReply => _owner.ClientReply;
         }
 
@@ -87,6 +89,9 @@ namespace FreeRedis.Internal
         public bool IsConnected => _socket?.Connected == true && _stream != null;
         public event EventHandler<EventArgs> Connected;
 
+        RespHelper.Resp3Reader _reader;
+        RespHelper.Resp3Reader Reader => _reader ?? (_reader = new RespHelper.Resp3Reader(Stream));
+
         public RedisProtocol Protocol { get; set; } = RedisProtocol.RESP2;
         public Encoding Encoding { get; set; } = Encoding.UTF8;
 
@@ -103,11 +108,31 @@ namespace FreeRedis.Internal
             if (string.Compare(cmd._command, "CLIENT", true) == 0 &&
                 string.Compare(cmd._subcommand, "REPLY", true) == 0)
             {
-                var type = cmd._input.FirstOrDefault().ConvertTo<ClientReplyType>();
+                var type = cmd._input.LastOrDefault().ConvertTo<ClientReplyType>();
                 if (type != ClientReply) ClientReply = type;
             }
             cmd._redisSocket = this;
         }
+        public RedisResult Read(bool isbytes)
+        {
+            if (ClientReply == ClientReplyType.on)
+            {
+                if (IsConnected == false) Connect();
+                var rt = Reader.ReadObject(isbytes ? null : Encoding);
+                rt.Encoding = Encoding;
+                return rt;
+            }
+            return new RedisResult(null, true, RedisMessageType.SimpleString) { Encoding = Encoding };
+        }
+        public void ReadChunk(Stream destination, int bufferSize = 1024)
+        {
+            if (ClientReply == ClientReplyType.on)
+            {
+                if (IsConnected == false) Connect();
+                Reader.ReadBlobStringChunk(destination, bufferSize);
+            }
+        }
+
         public ClientReplyType ClientReply { get; protected set; }
 
         public void Connect()
@@ -228,6 +253,7 @@ namespace FreeRedis.Internal
                 try { _stream.Dispose(); } catch { }
                 _stream = null;
             }
+            _reader = null;
         }
 
         ~DefaultRedisSocket() => this.Dispose();
@@ -235,14 +261,7 @@ namespace FreeRedis.Internal
         public void Dispose()
         {
             if (Interlocked.Increment(ref _disposeCounter) != 1) return;
-            try
-            {
-                ReleaseSocket();
-            }
-            finally
-            {
-                GC.SuppressFinalize(this);
-            }
+            ReleaseSocket();
         }
     }
 }

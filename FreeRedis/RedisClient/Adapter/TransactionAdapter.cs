@@ -38,20 +38,20 @@ namespace FreeRedis
                 TryMulti();
                 return DefaultRedisSocket.CreateTempProxy(_redisSocket, null);
             }
-            public override T2 AdapaterCall<T1, T2>(CommandPacket cmd, Func<RedisResult<T1>, T2> parse)
+            public override TValue AdapaterCall<TReadTextOrStream, TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
             {
                 TryMulti();
                 return TopOwner.LogCall(cmd, () =>
                 {
                     _redisSocket.Write(cmd);
-                    cmd.Read<T1>().ThrowOrValue();
+                    cmd.Read<TReadTextOrStream>().ThrowOrValue<TValue>();
                     cmd._readed = false; //exec 还需要再读一次
                     _commands.Add(new TransactionCommand
                     {
                         Command = cmd,
-                        Parse = obj => parse(new RedisResult<T1>(obj.ConvertTo<T1>(), null, true, RedisMessageType.SimpleString) { Encoding = _redisSocket.Encoding })
+                        Parse = obj => parse(new RedisResult(obj, true, RedisMessageType.SimpleString) { Encoding = _redisSocket.Encoding })
                     });
-                    return default(T2);
+                    return default(TValue);
                 });
             }
 
@@ -60,7 +60,7 @@ namespace FreeRedis
                 return TopOwner.LogCall(cmd, () =>
                 {
                     _redisSocket.Write(cmd);
-                    return cmd.Read<object>().ThrowOrValue();
+                    return cmd.Read<string>().ThrowOrValue();
                 });
             }
             public void TryMulti()

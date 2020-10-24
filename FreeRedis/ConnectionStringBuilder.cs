@@ -82,6 +82,7 @@ namespace FreeRedis
                     case "receivetimeout": if (kv.Length > 1 && long.TryParse(kv[1].Trim(), out var receiveTimeout) && receiveTimeout > 0) ret.ReceiveTimeout = TimeSpan.FromMilliseconds(receiveTimeout); break;
                     case "sendtimeout": if (kv.Length > 1 && long.TryParse(kv[1].Trim(), out var sendTimeout) && sendTimeout > 0) ret.SendTimeout = TimeSpan.FromMilliseconds(sendTimeout); break;
 
+                    case "poolsize":
                     case "maxpoolsize": if (kv.Length > 1 && int.TryParse(kv[1].Trim(), out var maxPoolSize) && maxPoolSize > 0) ret.MaxPoolSize = maxPoolSize; break;
                     case "minpoolsize": if (kv.Length > 1 && int.TryParse(kv[1].Trim(), out var minPoolSize) && minPoolSize > 0) ret.MinPoolSize = minPoolSize; break;
                 }

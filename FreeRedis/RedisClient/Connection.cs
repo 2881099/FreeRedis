@@ -8,36 +8,36 @@ namespace FreeRedis
 {
     partial class RedisClient
     {
-        public void Auth(string password) => Call<string>("AUTH".Input(password), rt => rt.ThrowOrValue());
-        public void Auth(string username, string password) => Call<string>("AUTH".SubCommand(null)
+        public void Auth(string password) => Call("AUTH".Input(password), rt => rt.ThrowOrValue<string>());
+        public void Auth(string username, string password) => Call("AUTH".SubCommand(null)
             .InputIf(!string.IsNullOrWhiteSpace(username), username)
-            .InputRaw(password), rt => rt.ThrowOrValue());
+            .InputRaw(password), rt => rt.ThrowOrValue<string>());
 
-        public void ClientCaching(Confirm confirm) => Call<string>("CLIENT".SubCommand("CACHING").InputRaw(confirm), rt => rt.ThrowOrValue());
-        public string ClientGetName() => Call<string>("CLIENT".SubCommand("GETNAME"), rt => rt.ThrowOrValue());
-        public long ClientGetRedir() => Call<long>("CLIENT".SubCommand("GETREDIR"), rt => rt.ThrowOrValue());
-        public long ClientId() => Call<long>("CLIENT".SubCommand("ID"), rt => rt.ThrowOrValue());
+        public void ClientCaching(Confirm confirm) => Call("CLIENT".SubCommand("CACHING").InputRaw(confirm), rt => rt.ThrowOrValue<string>());
+        public string ClientGetName() => Call("CLIENT".SubCommand("GETNAME"), rt => rt.ThrowOrValue<string>());
+        public long ClientGetRedir() => Call("CLIENT".SubCommand("GETREDIR"), rt => rt.ThrowOrValue<long>());
+        public long ClientId() => Call("CLIENT".SubCommand("ID"), rt => rt.ThrowOrValue<long>());
 
-        public void ClientKill(string ipport) => Call<long>("CLIENT"
+        public void ClientKill(string ipport) => Call("CLIENT"
             .SubCommand("KILL")
-            .InputIf(!string.IsNullOrWhiteSpace(ipport), ipport), rt => rt.ThrowOrValue());
-        public long ClientKill(string ipport, long? clientid, ClientType? type, string username, string addr, Confirm? skipme) => Call<long>("CLIENT"
+            .InputIf(!string.IsNullOrWhiteSpace(ipport), ipport), rt => rt.ThrowOrValue<long>());
+        public long ClientKill(string ipport, long? clientid, ClientType? type, string username, string addr, Confirm? skipme) => Call("CLIENT"
             .SubCommand("KILL")
             .InputIf(!string.IsNullOrWhiteSpace(ipport), ipport)
             .InputIf(clientid != null, "ID", clientid)
             .InputIf(type != null, "TYPE", type)
             .InputIf(!string.IsNullOrWhiteSpace(username), "USER", username)
             .InputIf(!string.IsNullOrWhiteSpace(addr), "ADDR", addr)
-            .InputIf(skipme != null, "SKIPME", skipme), rt => rt.ThrowOrValue());
-        public string ClientList(ClientType? type = null) => Call<string>("CLIENT".SubCommand("LIST")
-            .InputIf(type != null, "TYPE", type), rt => rt.ThrowOrValue());
+            .InputIf(skipme != null, "SKIPME", skipme), rt => rt.ThrowOrValue<long>());
 
-        public void ClientPause(long timeoutMilliseconds) => Call<string>("CLIENT".SubCommand("PAUSE").InputRaw(timeoutMilliseconds), rt => rt.ThrowOrValue());
+        public string ClientList(ClientType? type = null) => Call("CLIENT".SubCommand("LIST")
+            .InputIf(type != null, "TYPE", type), rt => rt.ThrowOrValue<string>());
+        public void ClientPause(long timeoutMilliseconds) => Call("CLIENT".SubCommand("PAUSE").InputRaw(timeoutMilliseconds), rt => rt.ThrowOrValue<string>());
 
         public void ClientReply(ClientReplyType type)
         {
             var cmd = "CLIENT".SubCommand("REPLY").InputRaw(type);
-            LogCall(cmd, () =>
+            Adapter.TopOwner.LogCall(cmd, () =>
             {
                 using (var rds = Adapter.GetRedisSocket(null))
                 {
@@ -47,7 +47,7 @@ namespace FreeRedis
                         case ClientReplyType.off:
                             break;
                         case ClientReplyType.on:
-                            cmd.Read<string>().ThrowOrValue();
+                            cmd.Read<string>().ThrowOrNothing();
                             break;
                         case ClientReplyType.skip:
                             break;
@@ -56,8 +56,8 @@ namespace FreeRedis
                 return default(string);
             });
         }
-        public void ClientSetName(string connectionName) => Call<string>("CLIENT".SubCommand("SETNAME").InputRaw(connectionName), rt => rt.ThrowOrValue());
-        public void ClientTracking(bool on_off, long? redirect, string[] prefix, bool bcast, bool optin, bool optout, bool noloop) => Call<string>("CLIENT"
+        public void ClientSetName(string connectionName) => Call("CLIENT".SubCommand("SETNAME").InputRaw(connectionName), rt => rt.ThrowOrNothing());
+        public void ClientTracking(bool on_off, long? redirect, string[] prefix, bool bcast, bool optin, bool optout, bool noloop) => Call("CLIENT"
             .SubCommand("TRACKING")
             .InputIf(on_off, "ON")
             .InputIf(!on_off, "OFF")
@@ -66,20 +66,20 @@ namespace FreeRedis
             .InputIf(bcast, "BCAST")
             .InputIf(optin, "OPTIN")
             .InputIf(optout, "OPTOUT")
-            .InputIf(noloop, "NOLOOP"), rt => rt.ThrowOrValue());
-        public bool ClientUnBlock(long clientid, ClientUnBlockType? type = null) => Call<bool>("CLIENT"
+            .InputIf(noloop, "NOLOOP"), rt => rt.ThrowOrNothing());
+        public bool ClientUnBlock(long clientid, ClientUnBlockType? type = null) => Call("CLIENT"
             .SubCommand("UNBLOCK")
             .InputRaw(clientid)
-            .InputIf(type != null, type), rt => rt.ThrowOrValue());
+            .InputIf(type != null, type), rt => rt.ThrowOrValue<bool>());
 
-        public string Echo(string message) => Call<string>("ECHO".SubCommand(null)
-            .InputIf(!string.IsNullOrEmpty(message), message), rt => rt.ThrowOrValue());
+        public string Echo(string message) => Call("ECHO".SubCommand(null)
+            .InputIf(!string.IsNullOrEmpty(message), message), rt => rt.ThrowOrValue<string>());
 
-        public Dictionary<string, object> Hello(string protover, string username = null, string password = null, string clientname = null) => Call<object[], Dictionary<string, object>>("HELLO"
+        public Dictionary<string, object> Hello(string protover, string username = null, string password = null, string clientname = null) => Call("HELLO"
             .Input(protover)
             .InputIf(!string.IsNullOrWhiteSpace(username) && !string.IsNullOrWhiteSpace(password), "AUTH", username, password)
             .InputIf(!string.IsNullOrWhiteSpace(clientname), "SETNAME", clientname), rt => rt
-            .NewValue(a => a.MapToHash<object>(rt.Encoding)).ThrowOrValue());
+            .ThrowOrValue((a, _) => a.MapToHash<object>(rt.Encoding)));
 
         public string Ping(string message = null)
         {
@@ -91,8 +91,8 @@ namespace FreeRedis
                 return message ?? "PONG";
             }
 
-            return Call<object, string>("PING".SubCommand(null)
-                .InputIf(!string.IsNullOrEmpty(message), message), rt => rt.NewValue(a =>
+            return Call("PING".SubCommand(null)
+                .InputIf(!string.IsNullOrEmpty(message), message), rt => rt.ThrowOrValue<string>(a =>
                {
                    if (a is string str) return str;
                    if (a is object[] objs)
@@ -105,10 +105,10 @@ namespace FreeRedis
                        return objs[0].ConvertTo<string>();
                    }
                    return a.ConvertTo<string>();
-               }).ThrowOrValue());
+               }));
         }
 
-        public void Quit() => Call<string>("QUIT", rt => rt.ThrowOrValue());
-        public void Select(int index) => Call<string>("SELECT".Input(index), rt => rt.ThrowOrValue());
+        public void Quit() => Call("QUIT", rt => rt.ThrowOrValue<string>());
+        public void Select(int index) => Call("SELECT".Input(index), rt => rt.ThrowOrValue<string>());
     }
 }

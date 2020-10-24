@@ -7,19 +7,19 @@ namespace FreeRedis
 {
     partial class RedisClient
     {
-        public bool PfAdd(string key, params object[] elements) => Call<bool>("PFADD"
+        public bool PfAdd<T>(string key, params T[] elements) => Call("PFADD"
             .Input(key)
             .Input(elements.Select(a => SerializeRedisValue(a)).ToArray())
-            .FlagKey(key), rt => rt.ThrowOrValue());
+            .FlagKey(key), rt => rt.ThrowOrValue<bool>());
 
-        public long PfCount(params string[] keys) => Call<long>("PFCOUNT".SubCommand(null)
+        public long PfCount(params string[] keys) => Call("PFCOUNT".SubCommand(null)
             .InputIf(keys?.Any() == true, keys)
-            .FlagKey(keys), rt => rt.ThrowOrValue());
+            .FlagKey(keys), rt => rt.ThrowOrValue<long>());
 
-        public void PfMerge(string destkey, params string[] sourcekeys) => Call<string>("PFMERGE"
+        public void PfMerge(string destkey, params string[] sourcekeys) => Call("PFMERGE"
             .Input(destkey)
             .InputIf(sourcekeys?.Any() == true, sourcekeys)
             .FlagKey(destkey)
-            .FlagKey(sourcekeys), rt => rt.ThrowOrValue());
+            .FlagKey(sourcekeys), rt => rt.ThrowOrValue<string>());
     }
 }

@@ -4,7 +4,7 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
-
+  
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="StackExchange.Redis" Version="2.1.58" />
@@ -14,5 +14,5 @@
     <ProjectReference Include="..\..\..\csredis\src\CSRedisCore\CSRedisCore.csproj" />
     <ProjectReference Include="..\..\FreeRedis\FreeRedis.csproj" />
   </ItemGroup>
-
+  
 </Project>

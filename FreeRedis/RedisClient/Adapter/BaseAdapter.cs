@@ -28,7 +28,7 @@ namespace FreeRedis
             public abstract IRedisSocket GetRedisSocket(CommandPacket cmd);
             public abstract void Dispose();
 
-            public abstract T2 AdapaterCall<T1, T2>(CommandPacket cmd, Func<RedisResult<T1>, T2> parse);
+            public abstract TValue AdapaterCall<TReadTextOrStream, TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse);
         }
     }
 }

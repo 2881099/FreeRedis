@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FreeRedis.Internal;
+using System;
 using System.Collections.Generic;
 
 namespace FreeRedis
@@ -61,5 +62,7 @@ namespace FreeRedis
                 (Adapter as SingleTempAdapter).Dispose();
             }
         }
+
+        public IRedisSocket GetTestRedisSocket() => Adapter.GetRedisSocket(null);
     }
 }

@@ -59,14 +59,7 @@ namespace FreeRedis
         public void Dispose()
         {
             if (Interlocked.Increment(ref _disposeCounter) != 1) return;
-            try
-            {
-                Adapter.Dispose();
-            }
-            finally
-            {
-                GC.SuppressFinalize(this);
-            }
+            Adapter.Dispose();
         }
 
         protected void CheckUseTypeOrThrow(params UseType[] useTypes)
@@ -88,9 +81,9 @@ namespace FreeRedis
             });
         }
 
-        public object Call(CommandPacket cmd) => Adapter.AdapaterCall<object, object>(cmd, rt => rt.ThrowOrValue());
-        protected T2 Call<T2>(CommandPacket cmd, Func<RedisResult<T2>, T2> parse) => Adapter.AdapaterCall(cmd, parse);
-        protected T2 Call<T1, T2>(CommandPacket cmd, Func<RedisResult<T1>, T2> parse) => Adapter.AdapaterCall(cmd, parse);
+        public object Call(CommandPacket cmd) => Adapter.AdapaterCall<string, object>(cmd, rt => rt.ThrowOrValue());
+        protected TValue Call<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse) => Adapter.AdapaterCall<string, TValue>(cmd, parse);
+        protected TValue Call<TReadTextOrStream, TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse) => Adapter.AdapaterCall<TReadTextOrStream, TValue>(cmd, parse);
 
         internal T LogCall<T>(CommandPacket cmd, Func<T> func)
         {
@@ -115,13 +108,13 @@ namespace FreeRedis
                 if (exception == null && _isThrowRedisSimpleError) exception = this.RedisSimpleError;
                 string log;
                 if (exception != null) log = $" > {exception.Message}";
-                else if (cmd.ReadResult != null) log = $"\r\n{cmd.ReadResult.GetValue().ToInvariantCultureToString()}";
+                else if (cmd.ReadResult != null) log = $"\r\n{cmd.ReadResult.Value.ToInvariantCultureToString()}";
                 else log = $"\r\n{ret.ToInvariantCultureToString()}";
                 this.OnNotice(new NoticeEventArgs(
                     NoticeType.Call,
                     exception ?? this.RedisSimpleError,
                     $"{(cmd._redisSocket?.Host ?? "Not connected")} ({sw.ElapsedMilliseconds}ms) > {cmd} {log}",
-                    cmd.ReadResult?.GetValue() ?? ret));
+                    cmd.ReadResult?.Value ?? ret));
             }
         }
         public class NoticeEventArgs : EventArgs
@@ -145,8 +138,7 @@ namespace FreeRedis
         }
         void OnNotice(NoticeEventArgs e)
         {
-            if (this.Notice != null) this.Notice(this, e);
-            else Trace.WriteLine($"[{DateTime.Now.ToString("HH:mm:ss")}] 线程{Thread.CurrentThread.ManagedThreadId}：{e.Log}");
+            this.Notice?.Invoke(this, e);
         }
 
         #region 序列化写入，反序列化

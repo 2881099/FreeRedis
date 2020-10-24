@@ -32,12 +32,12 @@ namespace FreeRedis
             {
                 return DefaultRedisSocket.CreateTempProxy(_redisSocket, null);
             }
-            public override T2 AdapaterCall<T1, T2>(CommandPacket cmd, Func<RedisResult<T1>, T2> parse)
+            public override TValue AdapaterCall<TReadTextOrStream, TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
             {
                 return TopOwner.LogCall(cmd, () =>
                 {
                     _redisSocket.Write(cmd);
-                    var rt = cmd.Read<T1>();
+                    var rt = cmd.Read<TReadTextOrStream>();
                     rt.IsErrorThrow = TopOwner._isThrowRedisSimpleError;
                     return parse(rt);
                 });
