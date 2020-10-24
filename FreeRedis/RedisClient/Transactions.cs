@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace FreeRedis
 {
     partial class RedisClient
-	{
+    {
         public TransactionHook Multi()
         {
             CheckUseTypeOrThrow(UseType.Pooling, UseType.Cluster, UseType.Sentinel, UseType.SingleInside, UseType.SingleTemp);

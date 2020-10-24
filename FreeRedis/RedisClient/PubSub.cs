@@ -8,7 +8,7 @@ using System.Threading;
 namespace FreeRedis
 {
     partial class RedisClient
-	{
+    {
         PubSub _pubsubPriv;
         object _pubsubPrivLock = new object();
         PubSub _pubsub //Sharing top RedisClient PubSub

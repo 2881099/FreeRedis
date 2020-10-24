@@ -375,17 +375,17 @@ namespace FreeRedis.Internal.ObjectPool
                 //if (timeout == null) timeout = Policy.SyncGetTimeout;
 
                 //if (tcs.Task.Wait(timeout.Value))
-                //	obj = tcs.Task.Result;
+                //    obj = tcs.Task.Result;
 
                 //if (obj == null) {
 
-                //	tcs.TrySetCanceled();
-                //	Policy.GetTimeout();
+                //    tcs.TrySetCanceled();
+                //    Policy.GetTimeout();
 
-                //	if (Policy.IsThrowGetTimeoutException)
-                //		throw new Exception($"SafeObjectPool.GetAsync 获取超时（{timeout.Value.TotalSeconds}秒）。");
+                //    if (Policy.IsThrowGetTimeoutException)
+                //        throw new Exception($"SafeObjectPool.GetAsync 获取超时（{timeout.Value.TotalSeconds}秒）。");
 
-                //	return null;
+                //    return null;
                 //}
             }
 

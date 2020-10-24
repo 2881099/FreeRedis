@@ -11,7 +11,7 @@ using System.Diagnostics;
 
 namespace FreeRedis
 {
-	public partial class RedisClient : IDisposable
+    public partial class RedisClient : IDisposable
     {
         internal BaseAdapter Adapter { get; }
         public event EventHandler<NoticeEventArgs> Notice;
@@ -285,16 +285,16 @@ namespace FreeRedis
     }
 
     public enum ClusterSetSlotType { importing, migrating, stable, node }
-	public enum ClusterResetType { hard, soft }
-	public enum ClusterFailOverType { force, takeover }
-	public enum ClientUnBlockType { timeout, error }
-	public enum ClientReplyType { on, off, skip }
-	public enum ClientType { normal, master, slave, pubsub }
-	public enum Confirm { yes, no }
-	public enum GeoUnit { m, km, mi, ft }
-	public enum Collation { asc, desc }
-	public enum InsertDirection { before, after }
-	public enum BitOpOperation { and, or, xor, not }
+    public enum ClusterResetType { hard, soft }
+    public enum ClusterFailOverType { force, takeover }
+    public enum ClientUnBlockType { timeout, error }
+    public enum ClientReplyType { on, off, skip }
+    public enum ClientType { normal, master, slave, pubsub }
+    public enum Confirm { yes, no }
+    public enum GeoUnit { m, km, mi, ft }
+    public enum Collation { asc, desc }
+    public enum InsertDirection { before, after }
+    public enum BitOpOperation { and, or, xor, not }
     public enum KeyType { none, @string, list, set, zset, hash, stream }
 
     public class GeoMember
