@@ -8,10 +8,10 @@
   <ItemGroup>
     <PackageReference Include="BenchmarkDotNet" Version="0.12.1" />
     <PackageReference Include="StackExchange.Redis" Version="2.1.58" />
+    <PackageReference Include="CSRedisCore" Version="3.6.5" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\csredis\src\CSRedisCore\CSRedisCore.csproj" />
     <ProjectReference Include="..\..\FreeRedis\FreeRedis.csproj" />
   </ItemGroup>
 
