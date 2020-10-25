@@ -44,7 +44,7 @@ namespace FreeRedis
                 return TopOwner.LogCall(cmd, () =>
                 {
                     _redisSocket.Write(cmd);
-                    cmd.Read<TReadTextOrStream>().ThrowOrValue<TValue>();
+                    cmd.Read<TReadTextOrStream>().ThrowOrValue<TValue>(useDefaultValue: true);
                     cmd._readed = false; //exec 还需要再读一次
                     _commands.Add(new TransactionCommand
                     {

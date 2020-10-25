@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Diagnostics;
+using System.Collections;
 
 namespace FreeRedis
 {
@@ -108,7 +109,23 @@ namespace FreeRedis
                 if (exception == null && _isThrowRedisSimpleError) exception = this.RedisSimpleError;
                 string log;
                 if (exception != null) log = $" > {exception.Message}";
-                else if (cmd.ReadResult != null) log = $"\r\n{cmd.ReadResult.Value.ToInvariantCultureToString()}";
+                else if (cmd.ReadResult != null)
+                {
+                    if (cmd.ReadResult.Value is Array array)
+                    {
+                        var sb = new StringBuilder().Append("\r\n[");
+                        var itemindex = 0;
+                        foreach (var item in array)
+                        {
+                            if (itemindex++ > 0) sb.Append(", ");
+                            sb.Append(item.ToInvariantCultureToString());
+                        }
+                        log = sb.Append("]").ToString();
+                        sb.Clear();
+                    }
+                    else
+                        log = $"\r\n{cmd.ReadResult.Value.ToInvariantCultureToString()}";
+                }
                 else log = $"\r\n{ret.ToInvariantCultureToString()}";
                 this.OnNotice(new NoticeEventArgs(
                     NoticeType.Call,

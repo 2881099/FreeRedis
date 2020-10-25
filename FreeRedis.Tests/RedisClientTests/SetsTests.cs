@@ -15,8 +15,10 @@ namespace FreeRedis.Tests.RedisClientTests
         public void SAdd()
         {
             cli.Del("TestSAdd1");
+            Assert.Equal(1, cli.SAdd("TestSAdd1", String));
+            Assert.Equal(String, cli.SPop("TestSAdd1"));
             Assert.Equal(4, cli.SAdd("TestSAdd1", Null, Class, String, Bytes));
-            Assert.Equal(Class.ToString(), cli.SPop<TestClass>("TestSAdd1")?.ToString());
+            cli.SPop("TestSAdd1");
             Assert.Equal(3, cli.SCard("TestSAdd1"));
         }
 
@@ -35,8 +37,6 @@ namespace FreeRedis.Tests.RedisClientTests
             Assert.Equal(2, cli.SAdd("TestSDiff1", String, Class));
             Assert.Equal(2, cli.SAdd("TestSDiff2", Null, Bytes));
             Assert.Equal(2, cli.SDiff("TestSDiff1", "TestSDiff2").Length);
-            Assert.Equal(String, cli.SDiff("TestSDiff1", "TestSDiff2")[0]);
-            Assert.Equal(Class.ToString(), cli.SDiff("TestSDiff1", "TestSDiff2")[1]);
         }
 
         [Fact]
@@ -47,8 +47,6 @@ namespace FreeRedis.Tests.RedisClientTests
             Assert.Equal(2, cli.SAdd("TestSDiffStore2", Null, Bytes));
             Assert.Equal(2, cli.SDiffStore("TestSDiffStore3", "TestSDiffStore1", "TestSDiffStore2"));
             Assert.Equal(2, cli.SCard("TestSDiffStore3"));
-            Assert.Null(cli.SPop("TestSDiffStore3"));
-            Assert.Equal(String, cli.SPop("TestSDiffStore3"));
         }
 
         [Fact]
@@ -56,10 +54,8 @@ namespace FreeRedis.Tests.RedisClientTests
         {
             cli.Del("TestSInter1", "TestSInter2");
             Assert.Equal(4, cli.SAdd("TestSInter1", Null, Class, String, Bytes));
-            Assert.Equal(4, cli.SAdd("TestSInter2", Null, Null, String, String));
+            Assert.Equal(2, cli.SAdd("TestSInter2", Null, Null, String, String));
             Assert.Equal(2, cli.SInter("TestSInter1", "TestSInter2").Length);
-            Assert.Equal(String, cli.SInter("TestSInter1", "TestSInter2")[0]);
-            Assert.Null(cli.SInter("TestSInter1", "TestSInter2")[1]);
         }
 
         [Fact]
@@ -67,11 +63,9 @@ namespace FreeRedis.Tests.RedisClientTests
         {
             cli.Del("TestSInterStore1", "TestSInterStore2", "TestSInterStore3");
             Assert.Equal(4, cli.SAdd("TestSInterStore1", Null, Class, String, Bytes));
-            Assert.Equal(4, cli.SAdd("TestSInterStore2", Null, Null, String, String));
+            Assert.Equal(2, cli.SAdd("TestSInterStore2", Null, Null, String, String));
             Assert.Equal(2, cli.SInterStore("TestSInterStore3", "TestSInterStore1", "TestSInterStore2"));
             Assert.Equal(2, cli.SCard("TestSInterStore3"));
-            Assert.Null(cli.SPop("TestSInterStore3"));
-            Assert.Equal(String, cli.SPop("TestSInterStore3"));
         }
 
         [Fact]
@@ -91,14 +85,7 @@ namespace FreeRedis.Tests.RedisClientTests
         {
             cli.Del("TestSMeMembers1");
             Assert.Equal(4, cli.SAdd("TestSMeMembers1", Null, Class, String, Bytes));
-            Assert.Null(cli.SMeMembers("TestSMeMembers1")[0]);
-            Assert.Null(cli.SMeMembers("TestSMeMembers1")[1]);
-            Assert.Equal(String, cli.SMeMembers("TestSMeMembers1")[2]);
-            Assert.Equal(String, cli.SMeMembers("TestSMeMembers1")[3]);
-            Assert.Equal(Encoding.UTF8.GetString(Bytes), cli.SMeMembers("TestSMeMembers1")[4]);
-            Assert.Equal(Encoding.UTF8.GetString(Bytes), cli.SMeMembers("TestSMeMembers1")[5]);
-            Assert.Equal(Class.ToString(), JsonConvert.DeserializeObject<TestClass>(cli.SMeMembers("TestSMeMembers1")[6]).ToString());
-            Assert.Equal(Class.ToString(), JsonConvert.DeserializeObject<TestClass>(cli.SMeMembers("TestSMeMembers1")[7]).ToString());
+            Assert.Equal(4, cli.SMeMembers("TestSMeMembers1").Length);
         }
 
         [Fact]
@@ -116,14 +103,20 @@ namespace FreeRedis.Tests.RedisClientTests
         public void SPop()
         {
             cli.Del("TestSPop1");
-            Assert.Equal(4, cli.SAdd("TestSPop1", Null, Class, String, Bytes));
-            Assert.Equal(Class.ToString(), cli.SPop<TestClass>("TestSPop1")?.ToString());
-            Assert.Equal(Class.ToString(), cli.SPop<TestClass>("TestSPop1")?.ToString());
-            Assert.Equal(Encoding.UTF8.GetString(Bytes), Encoding.UTF8.GetString(cli.SPop<byte[]>("TestSPop1")));
-            Assert.Equal(Encoding.UTF8.GetString(Bytes), Encoding.UTF8.GetString(cli.SPop<byte[]>("TestSPop1")));
-            Assert.Equal(String, cli.SPop("TestSPop1"));
-            Assert.Equal(String, cli.SPop("TestSPop1"));
+
             Assert.Null(cli.SPop("TestSPop1"));
+
+            Assert.Equal(4, cli.SAdd("TestSPop1", Null, Null, String, String, Class, Class, Bytes, Bytes));
+            cli.SPop("TestSPop1");
+            cli.SPop<byte[]>("TestSPop1");
+            cli.SPop<byte[]>("TestSPop1");
+            cli.SPop<byte[]>("TestSPop1");
+            cli.SPop<byte[]>("TestSPop1");
+            cli.SPop<byte[]>("TestSPop1");
+            cli.SPop<byte[]>("TestSPop1");
+            cli.SPop<byte[]>("TestSPop1");
+            cli.SPop<byte[]>("TestSPop1");
+            cli.SPop<byte[]>("TestSPop1");
             Assert.Null(cli.SPop("TestSPop1"));
         }
 
@@ -162,14 +155,6 @@ namespace FreeRedis.Tests.RedisClientTests
             Assert.Equal(2, cli.SAdd("TestSUnion1", Bytes, Bytes, Class, Class));
             Assert.Equal(2, cli.SAdd("TestSUnion2", Null, Null, String, String));
             Assert.Equal(4, cli.SUnion("TestSUnion1", "TestSUnion2").Length);
-            Assert.Equal(Encoding.UTF8.GetString(Bytes), cli.SUnion("TestSUnion1", "TestSUnion2")[0]);
-            Assert.Equal(Encoding.UTF8.GetString(Bytes), cli.SUnion("TestSUnion1", "TestSUnion2")[1]);
-            Assert.Equal(Class.ToString(), cli.SUnion("TestSUnion1", "TestSUnion2")[2]);
-            Assert.Equal(Class.ToString(), cli.SUnion("TestSUnion1", "TestSUnion2")[3]);
-            Assert.Null(cli.SUnion("TestSUnion1", "TestSUnion2")[4]);
-            Assert.Null(cli.SUnion("TestSUnion1", "TestSUnion2")[5]);
-            Assert.Equal(String, cli.SUnion("TestSUnion1", "TestSUnion2")[6]);
-            Assert.Equal(String, cli.SUnion("TestSUnion1", "TestSUnion2")[7]);
         }
 
         [Fact]
@@ -180,14 +165,6 @@ namespace FreeRedis.Tests.RedisClientTests
             Assert.Equal(2, cli.SAdd("TestSUnionStore2", Null, Null, String, String));
             Assert.Equal(4, cli.SUnionStore("TestSUnionStore3", "TestSUnionStore1", "TestSUnionStore2"));
             Assert.Equal(4, cli.SCard("TestSUnionStore3"));
-            Assert.Equal(String, cli.SPop("TestSUnionStore3"));
-            Assert.Equal(String, cli.SPop("TestSUnionStore3"));
-            Assert.Null(cli.SPop("TestSUnionStore3"));
-            Assert.Null(cli.SPop("TestSUnionStore3"));
-            Assert.Equal(Class.ToString(), cli.SPop("TestSUnionStore3"));
-            Assert.Equal(Class.ToString(), cli.SPop("TestSUnionStore3"));
-            Assert.Equal(Encoding.UTF8.GetString(Bytes), cli.SPop("TestSUnionStore3"));
-            Assert.Equal(Encoding.UTF8.GetString(Bytes), cli.SPop("TestSUnionStore3"));
         }
 
     }

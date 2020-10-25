@@ -5,7 +5,7 @@ using System.Text;
 
 namespace FreeRedis.Model
 {
-    static class RedisResultNewValueExtensions
+    static partial class RedisResultThrowOrValueExtensions
     {
         public static RoleResult ThrowOrValueToRole(this RedisResult rt) =>
             rt.ThrowOrValue((a, _) =>
@@ -71,11 +71,15 @@ namespace FreeRedis.Model
             public long _replication_offset;
             public SlaveInfo[] _slaves;
 
+            public override string ToString() => $"{_replication_offset} {string.Join("], [", _slaves.Select(a => a?.ToString()))}";
+
             public class SlaveInfo
             {
                 public string ip;
                 public int port;
                 public long slave_offset;
+
+                public override string ToString() => $"{ip}:{port} {slave_offset}";
             }
         }
         public class SlaveInfo
@@ -84,7 +88,11 @@ namespace FreeRedis.Model
             public int master_port;
             public string replication_state;
             public long data_received;
+
+            public override string ToString() => $"{master_ip}:{master_port} {replication_state} {data_received}";
         }
+
+        public override string ToString() => $"{role}, {data}";
     }
     public enum RoleType { Master, Slave, Sentinel }
 

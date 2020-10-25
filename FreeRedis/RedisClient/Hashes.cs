@@ -30,7 +30,7 @@ namespace FreeRedis
         public string[] HMGet(string key, params string[] fields) => Call("HMGET".Input(key).Input(fields).FlagKey(key), rt => rt.ThrowOrValue<string[]>());
         public T[] HMGet<T>(string key, params string[] fields) => HReadArray<T>("HMGET".Input(key).Input(fields).FlagKey(key));
         public void HMSet<T>(string key, string field, T value, params object[] fieldValues) => HSet(false, key, field, value, fieldValues);
-        public void HMSet(string key, Dictionary<string, string> keyValues) => Call("HMSET".Input(key).InputKv(keyValues).FlagKey(key), rt => rt.ThrowOrValue<string>());
+        public void HMSet<T>(string key, Dictionary<string, T> keyValues) => Call("HMSET".Input(key).InputKv(keyValues, SerializeRedisValue).FlagKey(key), rt => rt.ThrowOrValue<string>());
 
         public ScanResult<string> HScan(string key, long cursor, string pattern, long count) => Call("HSCAN"
             .Input(key, cursor)
@@ -40,15 +40,14 @@ namespace FreeRedis
             .ThrowOrValue((a, _) => new ScanResult<string>(a[0].ConvertTo<long>(), a[1].ConvertTo<string[]>())));
 
         public long HSet<T>(string key, string field, T value, params object[] fieldValues) => HSet(false, key, field, value, fieldValues);
-        public long HSet(string key, Dictionary<string, string> keyValues) => Call("HSET".Input(key).InputKv(keyValues).FlagKey(key), rt => rt.ThrowOrValue<long>());
+        public long HSet<T>(string key, Dictionary<string, T> keyValues) => Call("HSET".Input(key).InputKv(keyValues, SerializeRedisValue).FlagKey(key), rt => rt.ThrowOrValue<long>());
         long HSet<T>(bool hmset, string key, string field, T value, params object[] fieldValues)
         {
             if (fieldValues?.Any() == true)
-            {
-                var kvs = fieldValues.MapToKvList<object>(Encoding.UTF8);
-                kvs.Insert(0, new KeyValuePair<string, object>(field, SerializeRedisValue(value)));
-                return Call((hmset ? "HMSET" : "HSET").SubCommand(null).InputRaw(key).InputKv(kvs, SerializeRedisValue).FlagKey(kvs.Select(a => a.Key).ToArray()), rt => rt.ThrowOrValue<long>());
-            }
+                return Call((hmset ? "HMSET" : "HSET").SubCommand(null).InputRaw(key)
+                    .InputRaw(field).InputRaw(SerializeRedisValue(value))
+                    .InputKv(fieldValues, SerializeRedisValue)
+                    .FlagKey(key), rt => rt.ThrowOrValue<long>());
             return Call((hmset ? "HMSET" : "HSET").SubCommand(null).Input(key, field).InputRaw(SerializeRedisValue(value)).FlagKey(key), rt => rt.ThrowOrValue<long>());
         }
 

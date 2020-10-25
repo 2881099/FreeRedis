@@ -133,30 +133,16 @@ namespace FreeRedis
             return this;
         }
 
-        public CommandPacket InputKv<T>(KeyValuePair<string, T>[] args)
+        public CommandPacket InputKv(object[] keyValues, Func<object, object> serialize)
         {
-            _input.AddRange(args.Select(a => new object[] { a.Key, a.Value }).SelectMany(a => a).ToArray());
-            return this;
-        }
-        public CommandPacket InputKv<T>(KeyValuePair<string, T>[] args, Func<object, object> serialize)
-        {
-            _input.AddRange(args.Select(a => new object[] { a.Key, serialize(a.Value) }).SelectMany(a => a).ToArray());
-            return this;
-        }
-        public CommandPacket InputKv<T>(List<KeyValuePair<string, T>> args, Func<object, object> serialize)
-        {
-            _input.AddRange(args.Select(a => new object[] { a.Key, serialize(a.Value) }).SelectMany(a => a).ToArray());
-            return this;
-        }
-
-        public CommandPacket InputKv<T>(Dictionary<string, T> args)
-        {
-            _input.AddRange(args.Select(a => new object[] { a.Key, a.Value }).SelectMany(a => a).ToArray());
+            if (keyValues == null | keyValues.Length == 0) return this;
+            if (keyValues.Length % 2 != 0) throw new ArgumentException($"Array {nameof(keyValues)} length is not even");
+            _input.AddRange(keyValues.Select((a, b) => b % 2 == 0 ? a : (serialize?.Invoke(a) ?? a)));
             return this;
         }
         public CommandPacket InputKv<T>(Dictionary<string, T> args, Func<object, object> serialize)
         {
-            _input.AddRange(args.Select(a => new object[] { a.Key, serialize(a.Value) }).SelectMany(a => a).ToArray());
+            _input.AddRange(args.Select(a => new object[] { a.Key, serialize?.Invoke(a.Value) ?? a.Value }).SelectMany(a => a).ToArray());
             return this;
         }
     }

@@ -22,7 +22,7 @@ namespace FreeRedis
         public TimeSpan ReceiveTimeout { get; set; } = TimeSpan.FromSeconds(10);
         public TimeSpan SendTimeout { get; set; } = TimeSpan.FromSeconds(10);
         public int MaxPoolSize { get; set; } = 100;
-        public int MinPoolSize { get; set; } = 5;
+        public int MinPoolSize { get; set; } = 1;
 
         public static implicit operator ConnectionStringBuilder(string connectionString) => ConnectionStringBuilder.Parse(connectionString);
         public static implicit operator string(ConnectionStringBuilder connectionString) => connectionString.ToString();
@@ -46,7 +46,7 @@ namespace FreeRedis
             if (ReceiveTimeout != TimeSpan.FromSeconds(10)) sb.Append(",receive timeout=").Append((long)ReceiveTimeout.TotalMilliseconds);
             if (SendTimeout != TimeSpan.FromSeconds(10)) sb.Append(",send timeout=").Append((long)SendTimeout.TotalMilliseconds);
             if (MaxPoolSize != 100) sb.Append(",max pool size=").Append(MaxPoolSize);
-            if (MinPoolSize != 5) sb.Append(",min pool size=").Append(MinPoolSize);
+            if (MinPoolSize != 1) sb.Append(",min pool size=").Append(MinPoolSize);
             return sb.ToString();
         }
 

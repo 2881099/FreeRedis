@@ -154,7 +154,7 @@ namespace FreeRedis.Tests.RedisClientTests
         [Fact]
         public void Select()
         {
-            cli.Select(0);
+            cli.Select(1);
             cli.SetGetTest();
             Assert.Equal("PONG", cli.Ping());
 

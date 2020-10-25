@@ -56,11 +56,11 @@ namespace FreeRedis
         T MSet<T>(bool nx, string key, object value, params object[] keyValues)
         {
             if (keyValues?.Any() == true)
-            {
-                var kvs = keyValues.MapToKvList<object>(Encoding.UTF8);
-                kvs.Insert(0, new KeyValuePair<string, object>(key, value));
-                return Call((nx ? "MSETNX" : "MSET").SubCommand(null).InputKv(kvs, SerializeRedisValue).FlagKey(kvs.Select(a => a.Key).ToArray()), rt => rt.ThrowOrValue<T>());
-            }
+                return Call((nx ? "MSETNX" : "MSET").SubCommand(null)
+                    .InputRaw(key).InputRaw(SerializeRedisValue(value))
+                    .InputKv(keyValues, SerializeRedisValue)
+                    .FlagKey(key)
+                    .FlagKey(keyValues.Where((a, b) => b % 2 == 0).Select(a => a?.ConvertTo<string>()).ToArray()), rt => rt.ThrowOrValue<T>());
             return Call((nx ? "MSETNX" : "MSET").SubCommand(null).InputRaw(key).InputRaw(SerializeRedisValue(value)).FlagKey(key), rt => rt.ThrowOrValue<T>());
         }
 

@@ -50,6 +50,6 @@ namespace FreeRedis
         public long SUnionStore(string destination, params string[] keys) => Call("SUNIONSTORE".Input(destination).Input(keys).FlagKey(destination).FlagKey(keys), rt => rt.ThrowOrValue<long>());
 
         T[] SReadArray<T>(CommandPacket cb) => Call<byte[], T[]>(cb, rt => rt
-            .ThrowOrValue((a, _) => a.Select(b => DeserializeRedisValue<T>(b.ConvertTo<byte[]>(), rt.Encoding)).ToArray()));
+            .ThrowOrValue((a, _) => a == null || a.Length == 0 ? new T[0] : a.Select(b => DeserializeRedisValue<T>(b.ConvertTo<byte[]>(), rt.Encoding)).ToArray()));
     }
 }

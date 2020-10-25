@@ -197,6 +197,7 @@ namespace FreeRedis
                     var arr = new object[len];
                     for (var a = 0; a < len; a++)
                         arr[a] = ReadObject(encoding).Value;
+                    if (len == 1 && arr[0] == null) return new object[0];
                     return arr;
                 }
                 if (lenstr == "?")
@@ -640,12 +641,13 @@ namespace FreeRedis
             sb.Append("(").Append(string.Join(", ", method.GetParameters().Select(a => $"{a.ParameterType.DisplayCsharp()} {a.Name}"))).Append(")");
             return sb.ToString();
         }
-        static object CreateInstanceGetDefaultValue(this Type that)
+        internal static object CreateInstanceGetDefaultValue(this Type that)
         {
             if (that == null) return null;
             if (that == typeof(string)) return default(string);
             if (that == typeof(Guid)) return default(Guid);
-            if (that.IsArray) return Array.CreateInstance(that, 0);
+            if (that == typeof(byte[])) return default(byte[]);
+            if (that.IsArray) return Array.CreateInstance(that.GetElementType(), 0);
             if (that.IsInterface || that.IsAbstract) return null;
             var ctorParms = that.InternalGetTypeConstructor0OrFirst(false)?.GetParameters();
             if (ctorParms == null || ctorParms.Any() == false) return Activator.CreateInstance(that, true);
@@ -936,6 +938,7 @@ namespace FreeRedis
         {
             if (IsError && IsErrorThrow) throw new RedisException(this.SimpleError);
             var newval = value(this.Value);
+            if (newval == null && typeof(TValue).IsArray) newval = (TValue)typeof(TValue).CreateInstanceGetDefaultValue();
             this.Value = newval;
             return newval;
         }
@@ -943,6 +946,7 @@ namespace FreeRedis
         {
             if (IsError && IsErrorThrow) throw new RedisException(this.SimpleError);
             var newval = value(this.Value as object[], false);
+            if (newval == null && typeof(TValue).IsArray) newval = (TValue)typeof(TValue).CreateInstanceGetDefaultValue();
             this.Value = newval;
             return newval;
         }
@@ -951,12 +955,20 @@ namespace FreeRedis
             if (IsError && IsErrorThrow) throw new RedisException(this.SimpleError);
             return this.Value;
         }
-        public TValue ThrowOrValue<TValue>()
+        public TValue ThrowOrValue<TValue>(bool useDefaultValue = false)
         {
             if (IsError && IsErrorThrow) throw new RedisException(this.SimpleError);
-            var newval = this.Value.ConvertTo<TValue>();
-            this.Value = newval;
-            return newval;
+            if (useDefaultValue == false)
+            {
+                var newval = this.Value.ConvertTo<TValue>();
+                if (newval == null && typeof(TValue).IsArray) newval = (TValue)typeof(TValue).CreateInstanceGetDefaultValue();
+                this.Value = newval;
+                return newval;
+            }
+            var defval = default(TValue);
+            if (typeof(TValue).IsArray) defval = (TValue)typeof(TValue).CreateInstanceGetDefaultValue();
+            this.Value = defval;
+            return defval;
         }
     }
 
