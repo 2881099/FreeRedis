@@ -8,7 +8,7 @@ namespace FreeRedis
 {
     partial class RedisClient
     {
-        public long SAdd<T>(string key, params T[] members) => Call("SADD".Input(key).Input(members.Select(a => SerializeRedisValue(a)).ToArray()).FlagKey(key), rt => rt.ThrowOrValue<long>());
+        public long SAdd(string key, params object[] members) => Call("SADD".Input(key).Input(members.Select(a => SerializeRedisValue(a)).ToArray()).FlagKey(key), rt => rt.ThrowOrValue<long>());
         public long SCard(string key) => Call("SCARD".Input(key).FlagKey(key), rt => rt.ThrowOrValue<long>());
 
         public string[] SDiff(params string[] keys) => Call("SDIFF".Input(keys).FlagKey(keys), rt => rt.ThrowOrValue<string[]>());
@@ -38,7 +38,7 @@ namespace FreeRedis
         public string[] SRandMember(string key, int count) => Call("SRANDMEMBER".Input(key, count).FlagKey(key), rt => rt.ThrowOrValue<string[]>());
         public T[] SRandMember<T>(string key, int count) => SReadArray<T>("SRANDMEMBER".Input(key, count).FlagKey(key));
 
-        public long SRem<T>(string key, params T[] members) => Call("SREM".Input(key).Input(members.Select(a => SerializeRedisValue(a)).ToArray()).FlagKey(key), rt => rt.ThrowOrValue<long>());
+        public long SRem(string key, params object[] members) => Call("SREM".Input(key).Input(members.Select(a => SerializeRedisValue(a)).ToArray()).FlagKey(key), rt => rt.ThrowOrValue<long>());
         public ScanResult<string> SScan(string key, long cursor, string pattern, long count) => Call("SSCAN"
             .Input(key, cursor)
             .InputIf(!string.IsNullOrWhiteSpace(pattern), "MATCH", pattern)

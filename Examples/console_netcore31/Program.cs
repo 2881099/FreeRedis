@@ -119,10 +119,8 @@ namespace console_netcore31
 
         }
 
-        static readonly object Null = null;
         static readonly string String = "我是中国人";
         static readonly byte[] Bytes = Encoding.UTF8.GetBytes("这是一个byte字节");
-        static readonly TestClass Class = new TestClass { Id = 1, Name = "Class名称", CreateTime = DateTime.Now, TagId = new[] { 1, 3, 3, 3, 3 } };
     }
 
     public class TestClass
@@ -135,7 +133,7 @@ namespace console_netcore31
 
         public override string ToString()
         {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this);
+            return JsonConvert.SerializeObject(this);
         }
     }
 }

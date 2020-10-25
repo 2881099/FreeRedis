@@ -15,7 +15,7 @@ namespace FreeRedis.Tests.RedisClientTests
         {
             var key = "TestAppend_null";
             cli.Set(key, String);
-            cli.Append(key, null);
+            cli.Append(key, Null);
             Assert.Equal(cli.Get(key), String);
 
             key = "TestAppend_string";

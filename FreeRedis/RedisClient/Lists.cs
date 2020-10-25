@@ -36,7 +36,7 @@ namespace FreeRedis
         public string LIndex(string key, long index) => Call("LINDEX".Input(key, index).FlagKey(key), rt => rt.ThrowOrValue<string>());
         public T LIndex<T>(string key, long index) => Call<byte[], T>("LINDEX".Input(key, index).FlagKey(key), rt => rt.ThrowOrValue(a => DeserializeRedisValue<T>(a.ConvertTo<byte[]>(), rt.Encoding)));
 
-        public long LInsert<T>(string key, InsertDirection direction, T pivot, T element) => Call("LINSERT"
+        public long LInsert(string key, InsertDirection direction, object pivot, object element) => Call("LINSERT"
             .Input(key)
             .InputRaw(direction)
             .InputRaw(SerializeRedisValue(pivot))
@@ -59,8 +59,8 @@ namespace FreeRedis
             .InputIf(maxLen != 0, "MAXLEN ", maxLen)
             .FlagKey(key), rt => rt.ThrowOrValue<long[]>());
 
-        public long LPush<T>(string key, params T[] elements) => Call("LPUSH".Input(key).Input(elements.Select(a => SerializeRedisValue(a)).ToArray()).FlagKey(key), rt => rt.ThrowOrValue<long>());
-        public long LPushX<T>(string key, params T[] elements) => Call("LPUSHX".Input(key).Input(elements.Select(a => SerializeRedisValue(a)).ToArray()).FlagKey(key), rt => rt.ThrowOrValue<long>());
+        public long LPush(string key, params object[] elements) => Call("LPUSH".Input(key).Input(elements.Select(a => SerializeRedisValue(a)).ToArray()).FlagKey(key), rt => rt.ThrowOrValue<long>());
+        public long LPushX(string key, params object[] elements) => Call("LPUSHX".Input(key).Input(elements.Select(a => SerializeRedisValue(a)).ToArray()).FlagKey(key), rt => rt.ThrowOrValue<long>());
         public string[] LRange(string key, long start, long stop) => Call("LRANGE".Input(key, start, stop).FlagKey(key), rt => rt.ThrowOrValue<string[]>());
         public T[] LRange<T>(string key, long start, long stop) => Call<byte[], T[]>("LRANGE".Input(key, start, stop).FlagKey(key), rt => rt.ThrowOrValue((a, _) => a.Select(b => DeserializeRedisValue<T>(b.ConvertTo<byte[]>(), rt.Encoding)).ToArray()));
 
@@ -73,7 +73,7 @@ namespace FreeRedis
         public string RPopLPush(string source, string destination) => Call("RPOPLPUSH".Input(source, destination).FlagKey(source, destination), rt => rt.ThrowOrValue<string>());
         public T RPopLPush<T>(string source, string destination) => Call<byte[], T>("RPOPLPUSH".Input(source, destination).FlagKey(source, destination), rt => rt.ThrowOrValue(a => DeserializeRedisValue<T>(a.ConvertTo<byte[]>(), rt.Encoding)));
 
-        public long RPush<T>(string key, params T[] elements) => Call("RPUSH".Input(key).Input(elements.Select(a => SerializeRedisValue(a)).ToArray()).FlagKey(key), rt => rt.ThrowOrValue<long>());
-        public long RPushX<T>(string key, params T[] elements) => Call("RPUSHX".Input(key).Input(elements.Select(a => SerializeRedisValue(a)).ToArray()).FlagKey(key), rt => rt.ThrowOrValue<long>());
+        public long RPush(string key, params object[] elements) => Call("RPUSH".Input(key).Input(elements.Select(a => SerializeRedisValue(a)).ToArray()).FlagKey(key), rt => rt.ThrowOrValue<long>());
+        public long RPushX(string key, params object[] elements) => Call("RPUSHX".Input(key).Input(elements.Select(a => SerializeRedisValue(a)).ToArray()).FlagKey(key), rt => rt.ThrowOrValue<long>());
     }
 }

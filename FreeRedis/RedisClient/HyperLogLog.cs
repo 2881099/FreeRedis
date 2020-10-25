@@ -7,7 +7,7 @@ namespace FreeRedis
 {
     partial class RedisClient
     {
-        public bool PfAdd<T>(string key, params T[] elements) => Call("PFADD"
+        public bool PfAdd(string key, params object[] elements) => Call("PFADD"
             .Input(key)
             .Input(elements.Select(a => SerializeRedisValue(a)).ToArray())
             .FlagKey(key), rt => rt.ThrowOrValue<bool>());

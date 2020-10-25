@@ -21,12 +21,13 @@ namespace console_netcore31_benchmark
             return r;
         });
         static RedisClient cli => _cliLazy.Value;
+        static CSRedis.CSRedisClient csredis = new CSRedis.CSRedisClient("127.0.0.1:6379,database=2,poolsize=100");
         static StackExchange.Redis.ConnectionMultiplexer seredis = StackExchange.Redis.ConnectionMultiplexer.Connect("127.0.0.1:6379");
         static StackExchange.Redis.IDatabase sedb = seredis.GetDatabase(1);
 
         public static void Main(string[] args)
         {
-            RedisHelper.Initialization(new CSRedis.CSRedisClient("127.0.0.1:6379,database=2,poolsize=100"));
+            RedisHelper.Initialization(csredis);
             cli.Set("TestMGet_string1", String);
             RedisHelper.Set("TestMGet_string1", String);
             sedb.StringSet("TestMGet_string1", String);
@@ -46,7 +47,7 @@ namespace console_netcore31_benchmark
             [Benchmark]
             public void CSRedisCore()
             {
-                RedisHelper.Set("TestMGet_string1", String);
+                csredis.Set("TestMGet_string1", String);
             }
 
             [Benchmark]
@@ -56,10 +57,7 @@ namespace console_netcore31_benchmark
             }
         }
 
-        static readonly object Null = null;
         static readonly string String = "我是中国人";
-        static readonly byte[] Bytes = Encoding.UTF8.GetBytes("这是一个byte字节");
-        static readonly TestClass Class = new TestClass { Id = 1, Name = "Class名称", CreateTime = DateTime.Now, TagId = new[] { 1, 3, 3, 3, 3 } };
     }
 
     public class TestClass
