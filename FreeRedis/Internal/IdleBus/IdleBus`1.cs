@@ -210,8 +210,7 @@ namespace FreeRedis.Internal
 
         void OnNotice(NoticeEventArgs e)
         {
-            if (this.Notice != null) this.Notice(this, e);
-            else Trace.WriteLine($"[{DateTime.Now.ToString("HH:mm:ss")}] 线程{Thread.CurrentThread.ManagedThreadId}：{e.Log}");
+            this.Notice?.Invoke(this, e);
         }
 
         #region Dispose

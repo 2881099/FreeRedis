@@ -40,6 +40,8 @@ namespace FreeRedis
                 ReadResult = null;
             }
         }
+        internal bool _clusterMovedAsking;
+        internal int _clusterMovedTryCount;
         public bool _writed => _redisSocket != null;
         public bool _readed { get; internal set; }
         public RedisResult ReadResult { get; protected set; }

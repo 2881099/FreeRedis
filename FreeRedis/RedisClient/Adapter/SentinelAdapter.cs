@@ -29,7 +29,6 @@ namespace FreeRedis
                 if (_sentinels.Any() == false) throw new ArgumentNullException(nameof(sentinels));
 
                 _ib = new IdleBus<RedisClientPool>(TimeSpan.FromMinutes(10));
-                _ib.Notice += new EventHandler<IdleBus<string, RedisClientPool>.NoticeEventArgs>((_, e) => { });
                 ResetSentinel();
             }
 

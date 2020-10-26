@@ -186,57 +186,9 @@ namespace FreeRedis.Internal
         public void ResetHost(string host)
         {
             ReleaseSocket();
-            if (string.IsNullOrWhiteSpace(host?.Trim()))
-            {
-                _ip = "127.0.0.1";
-                _port = 6379;
-                return;
-            }
-            host = host.Trim();
-            var ipv6 = Regex.Match(host, @"^\[([^\]]+)\]\s*(:\s*(\d+))?$");
-            if (ipv6.Success) //ipv6+port 格式： [fe80::b164:55b3:4b4f:7ce6%15]:6379
-            {
-                _ip = ipv6.Groups[1].Value.Trim();
-                _port = int.TryParse(ipv6.Groups[3].Value, out var tryint) && tryint > 0 ? tryint : 6379;
-                return;
-            }
-            var spt = (host ?? "").Split(':');
-            if (spt.Length == 1) //ipv4 or domain
-            {
-                _ip = string.IsNullOrWhiteSpace(spt[0].Trim()) == false ? spt[0].Trim() : "127.0.0.1";
-                _port = 6379;
-                return;
-            }
-            if (spt.Length == 2) //ipv4:port or domain:port
-            {
-                if (int.TryParse(spt.Last().Trim(), out var testPort2))
-                {
-                    _ip = string.IsNullOrWhiteSpace(spt[0].Trim()) == false ? spt[0].Trim() : "127.0.0.1";
-                    _port = testPort2;
-                    return;
-                }
-                _ip = host;
-                _port = 6379;
-                return;
-            }
-            if (IPAddress.TryParse(host, out var tryip) && tryip.AddressFamily == AddressFamily.InterNetworkV6) //test ipv6
-            {
-                _ip = host;
-                _port = 6379;
-                return;
-            }
-            if (int.TryParse(spt.Last().Trim(), out var testPort)) //test ipv6:port
-            {
-                var testHost = string.Join(":", spt.Where((a, b) => b < spt.Length - 1));
-                if (IPAddress.TryParse(testHost, out tryip) && tryip.AddressFamily == AddressFamily.InterNetworkV6)
-                {
-                    _ip = testHost;
-                    _port = 6379;
-                    return;
-                }
-            }
-            _ip = host;
-            _port = 6379;
+            var sh = SplitHost(host);
+            _ip = sh.Key;
+            _port = sh.Value;
         }
 
         public void ReleaseSocket()
@@ -263,6 +215,42 @@ namespace FreeRedis.Internal
         {
             if (Interlocked.Increment(ref _disposeCounter) != 1) return;
             ReleaseSocket();
+        }
+
+        public static KeyValuePair<string, int> SplitHost(string host)
+        {
+            if (string.IsNullOrWhiteSpace(host?.Trim()))
+                return new KeyValuePair<string, int>("127.0.0.1", 6379);
+
+            host = host.Trim();
+            var ipv6 = Regex.Match(host, @"^\[([^\]]+)\]\s*(:\s*(\d+))?$");
+            if (ipv6.Success) //ipv6+port 格式： [fe80::b164:55b3:4b4f:7ce6%15]:6379
+                return new KeyValuePair<string, int>(ipv6.Groups[1].Value.Trim(), 
+                    int.TryParse(ipv6.Groups[3].Value, out var tryint) && tryint > 0 ? tryint : 6379);
+
+            var spt = (host ?? "").Split(':');
+            if (spt.Length == 1) //ipv4 or domain
+                return new KeyValuePair<string, int>(string.IsNullOrWhiteSpace(spt[0].Trim()) == false ? spt[0].Trim() : "127.0.0.1", 6379);
+
+            if (spt.Length == 2) //ipv4:port or domain:port
+            {
+                if (int.TryParse(spt.Last().Trim(), out var testPort2))
+                    return new KeyValuePair<string, int>(string.IsNullOrWhiteSpace(spt[0].Trim()) == false ? spt[0].Trim() : "127.0.0.1", testPort2);
+
+                return new KeyValuePair<string, int>(host, 6379);
+            }
+
+            if (IPAddress.TryParse(host, out var tryip) && tryip.AddressFamily == AddressFamily.InterNetworkV6) //test ipv6
+                return new KeyValuePair<string, int>(host, 6379);
+
+            if (int.TryParse(spt.Last().Trim(), out var testPort)) //test ipv6:port
+            {
+                var testHost = string.Join(":", spt.Where((a, b) => b < spt.Length - 1));
+                if (IPAddress.TryParse(testHost, out tryip) && tryip.AddressFamily == AddressFamily.InterNetworkV6)
+                    return new KeyValuePair<string, int>(testHost, 6379);
+            }
+
+            return new KeyValuePair<string, int>(host, 6379);
         }
     }
 }
