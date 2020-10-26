@@ -52,7 +52,7 @@ public static cli = new RedisClient(
 var value = cli.Get("key1");
 ```
 
-> 写入连接 127.0.0.1:6379，读取随机连接 6380 6381
+> 写入时连接 127.0.0.1:6379，读取时随机连接 6380 6381
 
 #### Redis Sentinel (哨兵高可用)
 
@@ -67,6 +67,30 @@ public static cli = new RedisClient(
 #### Redis Cluster (集群)
 
 待完成...
+
+#### Quick start
+
+```csharp
+cli.Set("key1", "value1");
+cli.MSet("key1", "value1", "key2", "value2");
+
+string value1 = cli.Get("key1");
+string[] vals = cli.MGet("key1", "key2");
+```
+
+It supports data structures such as strings, hashes, lists, sets, sorted sets with range queries, bitmaps, hyperloglogs, geospatial indexes with radius queries and streams.
+
+#### Scripting (脚本)
+
+```csharp
+var r1 = cli.Eval("return {KEYS[1],KEYS[2],ARGV[1],ARGV[2]}", 
+    new[] { "key1", "key2" }, "first", "second") as object[];
+
+var r2 = cli.Eval("return {1,2,{3,'Hello World!'}}") as object[];
+
+cli.Eval("return redis.call('set',KEYS[1],'bar')", 
+    new[] { Guid.NewGuid().ToString() })
+```
 
 #### Pipeline (管道)
 
