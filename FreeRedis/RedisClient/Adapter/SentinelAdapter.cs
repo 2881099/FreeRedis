@@ -111,7 +111,7 @@ namespace FreeRedis
                         using (var sentinelcli = new RedisSentinelClient(_sentinels.First.Value))
                         {
                             var masterhost = sentinelcli.GetMasterAddrByName(_connectionString.Host);
-                            var masterConnectionString = localTestHost(masterhost, Model.RoleType.Master);
+                            var masterConnectionString = localTestHost(masterhost, RoleType.Master);
                             if (masterConnectionString == null) continue;
                             masterhostEnd = masterhost;
 
@@ -119,7 +119,7 @@ namespace FreeRedis
                             {
                                 foreach (var slave in sentinelcli.Salves(_connectionString.Host))
                                 {
-                                    ConnectionStringBuilder slaveConnectionString = localTestHost($"{slave.ip}:{slave.port}", Model.RoleType.Slave);
+                                    ConnectionStringBuilder slaveConnectionString = localTestHost($"{slave.ip}:{slave.port}", RoleType.Slave);
                                     if (slaveConnectionString == null) continue;
                                 }
                             }
@@ -140,7 +140,7 @@ namespace FreeRedis
                 Interlocked.Exchange(ref _masterHost, masterhostEnd);
                 Interlocked.Decrement(ref _ResetSentinelFlag);
 
-                ConnectionStringBuilder localTestHost(string host, Model.RoleType role)
+                ConnectionStringBuilder localTestHost(string host, RoleType role)
                 {
                     ConnectionStringBuilder connectionString = _connectionString.ToString();
                     connectionString.Host = host;
@@ -151,7 +151,7 @@ namespace FreeRedis
                         if (cli.Role().role != role)
                             return null;
 
-                        if (role == Model.RoleType.Master)
+                        if (role == RoleType.Master)
                         {
                             //test set/get
                         }

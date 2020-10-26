@@ -145,4 +145,11 @@ namespace FreeRedis
         public decimal ZScore(string key, string member) => Call("ZSCORE".Input(key, member).FlagKey(key), rt => rt.ThrowOrValue<decimal>());
         //ZUNIONSTORE destination numkeys key [key ...] [WEIGHTS weight [weight ...]] [AGGREGATE SUM|MIN|MAX]
     }
+
+    public class ZMember
+    {
+        public readonly string member;
+        public readonly decimal score;
+        public ZMember(string member, decimal score) { this.member = member; this.score = score; }
+    }
 }

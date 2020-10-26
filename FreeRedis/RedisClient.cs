@@ -293,40 +293,35 @@ namespace FreeRedis
         #endregion
     }
 
+    public enum ZAddThan { gt, lt }
+    public enum BitOpOperation { and, or, xor, not }
     public enum ClusterSetSlotType { importing, migrating, stable, node }
     public enum ClusterResetType { hard, soft }
     public enum ClusterFailOverType { force, takeover }
     public enum ClientUnBlockType { timeout, error }
     public enum ClientReplyType { on, off, skip }
     public enum ClientType { normal, master, slave, pubsub }
+    public enum Collation { asc, desc }
     public enum Confirm { yes, no }
     public enum GeoUnit { m, km, mi, ft }
-    public enum Collation { asc, desc }
     public enum InsertDirection { before, after }
-    public enum BitOpOperation { and, or, xor, not }
     public enum KeyType { none, @string, list, set, zset, hash, stream }
+    public enum RoleType { Master, Slave, Sentinel }
 
-    public class GeoMember
-    {
-        public readonly decimal longitude;
-        public readonly decimal latitude;
-        public readonly string member;
-        public GeoMember(decimal longitude, decimal latitude, string member) { this.longitude = longitude; this.latitude = latitude; this.member = member; }
-    }
-    public class ZMember
-    {
-        public readonly string member;
-        public readonly decimal score;
-        public ZMember(string member, decimal score) { this.member = member; this.score = score; }
-    }
     /// <summary>
     /// redis version >=6.2: Added the GT and LT options.
     /// </summary>
-    public enum ZAddThan { gt, lt }
     public class KeyValue<T>
     {
         public readonly string key;
         public readonly T value;
         public KeyValue(string key, T value) { this.key = key; this.value = value; }
+    }
+    public class ScanResult<T>
+    {
+        public readonly long cursor;
+        public readonly T[] items;
+        public readonly long length;
+        public ScanResult(long cursor, T[] items) { this.cursor = cursor; this.items = items; this.length = items.LongLength; }
     }
 }
