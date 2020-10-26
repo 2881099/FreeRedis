@@ -98,12 +98,12 @@ namespace FreeRedis.Internal.ObjectPool
                     {
 
                         var conn = getFree(false);
-                        if (conn == null) throw new Exception($"CheckAvailable 无法获得资源，{this.Statistics}");
+                        if (conn == null) throw new Exception($"CheckAvailable: Failed to get resource {this.Statistics}");
 
                         try
                         {
 
-                            if (Policy.OnCheckAvailable(conn) == false) throw new Exception("CheckAvailable 应抛出异常，代表仍然不可用。");
+                            if (Policy.OnCheckAvailable(conn) == false) throw new Exception("CheckAvailable: An exception needs to be thrown");
                             break;
 
                         }
@@ -120,7 +120,7 @@ namespace FreeRedis.Internal.ObjectPool
                         var forecolor = Console.ForegroundColor;
                         Console.BackgroundColor = ConsoleColor.DarkYellow;
                         Console.ForegroundColor = ConsoleColor.White;
-                        Console.Write($"【{Policy.Name}】仍然不可用，下一次恢复检查时间：{DateTime.Now.AddSeconds(interval)}，错误：({ex.Message})");
+                        Console.Write($"【{Policy.Name}】Next recovery time: {DateTime.Now.AddSeconds(interval)} ({ex.Message})");
                         Console.BackgroundColor = bgcolor;
                         Console.ForegroundColor = forecolor;
                         Console.WriteLine();
@@ -164,7 +164,7 @@ namespace FreeRedis.Internal.ObjectPool
                 var forecolor = Console.ForegroundColor;
                 Console.BackgroundColor = ConsoleColor.DarkGreen;
                 Console.ForegroundColor = ConsoleColor.White;
-                Console.Write($"【{Policy.Name}】已恢复工作");
+                Console.Write($"【{Policy.Name}】Recovered");
                 Console.BackgroundColor = bgcolor;
                 Console.ForegroundColor = forecolor;
                 Console.WriteLine();
@@ -178,12 +178,12 @@ namespace FreeRedis.Internal.ObjectPool
             {
 
                 var conn = getFree(false);
-                if (conn == null) throw new Exception($"LiveCheckAvailable 无法获得资源，{this.Statistics}");
+                if (conn == null) throw new Exception($"LiveCheckAvailable: Failed to get resource {this.Statistics}");
 
                 try
                 {
 
-                    if (Policy.OnCheckAvailable(conn) == false) throw new Exception("LiveCheckAvailable 应抛出异常，代表仍然不可用。");
+                    if (Policy.OnCheckAvailable(conn) == false) throw new Exception("LiveCheckAvailable: An exception needs to be thrown");
 
                 }
                 finally
@@ -264,10 +264,10 @@ namespace FreeRedis.Internal.ObjectPool
         {
 
             if (running == false)
-                throw new ObjectDisposedException($"【{Policy.Name}】对象池已释放，无法访问。");
+                throw new ObjectDisposedException($"【{Policy.Name}】The ObjectPool has been disposed");
 
             if (checkAvailable && UnavailableException != null)
-                throw new Exception($"【{Policy.Name}】状态不可用，等待后台检查程序恢复方可使用。{UnavailableException?.Message}", UnavailableException);
+                throw new Exception($"【{Policy.Name}】{UnavailableException?.Message}", UnavailableException);
 
             if ((_freeObjects.TryPop(out var obj) == false || obj == null) && _allObjects.Count < Policy.PoolSize)
             {
@@ -329,7 +329,7 @@ namespace FreeRedis.Internal.ObjectPool
                     Policy.OnGetTimeout();
 
                     if (Policy.IsThrowGetTimeoutException)
-                        throw new TimeoutException($"SafeObjectPool.Get 获取超时（{timeout.Value.TotalSeconds}秒）。");
+                        throw new TimeoutException($"ObjectPool.Get() timeout {timeout.Value.TotalSeconds} seconds");
 
                     return null;
                 }
@@ -363,7 +363,7 @@ namespace FreeRedis.Internal.ObjectPool
             {
 
                 if (Policy.AsyncGetCapacity > 0 && _getAsyncQueue.Count >= Policy.AsyncGetCapacity - 1)
-                    throw new OutOfMemoryException($"SafeObjectPool.GetAsync 无可用资源且队列过长，Policy.AsyncGetCapacity = {Policy.AsyncGetCapacity}。");
+                    throw new OutOfMemoryException($"ObjectPool.GetAsync() The queue is too long. Policy.AsyncGetCapacity = {Policy.AsyncGetCapacity}");
 
                 var tcs = new TaskCompletionSource<Object<T>>();
 
@@ -383,7 +383,7 @@ namespace FreeRedis.Internal.ObjectPool
                 //    Policy.GetTimeout();
 
                 //    if (Policy.IsThrowGetTimeoutException)
-                //        throw new Exception($"SafeObjectPool.GetAsync 获取超时（{timeout.Value.TotalSeconds}秒）。");
+                //        throw new Exception($"ObjectPool.GetAsync() timeout {timeout.Value.TotalSeconds} seconds");
 
                 //    return null;
                 //}

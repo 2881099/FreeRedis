@@ -59,39 +59,57 @@ namespace FreeRedis
                                 var rndpool = _ib.Get(rndkey);
                                 var rndcli = rndpool.Get();
                                 var rndrds = rndcli.Value.Adapter.GetRedisSocket(null);
-                                return DefaultRedisSocket.CreateTempProxy(rndrds, () => rndpool.Return(rndcli));
+                                var rndrdsproxy = DefaultRedisSocket.CreateTempProxy(rndrds, () => rndpool.Return(rndcli));
+                                rndrdsproxy._pool = rndpool;
+                                return rndrdsproxy;
                             }
                         }
                     }
                 }
                 var poolkey = _masterHost;
-                if (string.IsNullOrWhiteSpace(poolkey)) throw new Exception("RedisClient.GetRedisSocket() Redis Sentinel Master is switching");
+                if (string.IsNullOrWhiteSpace(poolkey)) throw new Exception($"【{_connectionString.Host}】Redis Sentinel is switching");
                 var pool = _ib.Get(poolkey);
                 var cli = pool.Get();
                 var rds = cli.Value.Adapter.GetRedisSocket(null);
-                return DefaultRedisSocket.CreateTempProxy(rds, () => pool.Return(cli));
+                var rdsproxy = DefaultRedisSocket.CreateTempProxy(rds, () => pool.Return(cli));
+                rdsproxy._pool = pool;
+                return rdsproxy;
             }
             public override TValue AdapaterCall<TReadTextOrStream, TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
             {
                 return TopOwner.LogCall(cmd, () =>
                 {
+                    RedisResult rt = null;
                     using (var rds = GetRedisSocket(cmd))
                     {
-                        rds.Write(cmd);
-                        var rt = cmd.Read<TReadTextOrStream>();
-                        rt.IsErrorThrow = TopOwner._isThrowRedisSimpleError;
-                        return parse(rt);
+                        try
+                        {
+                            rds.Write(cmd);
+                            rt = cmd.Read<TReadTextOrStream>();
+                        }
+                        catch (Exception ex)
+                        {
+                            var pool = (rds as DefaultRedisSocket.TempProxyRedisSocket)._pool;
+                            if (pool?.SetUnavailable(ex) == true)
+                            {
+                                Interlocked.Exchange(ref _masterHost, null);
+                                RecoverySentinel();
+                            }
+                            throw ex;
+                        }
                     }
+                    rt.IsErrorThrow = TopOwner._isThrowRedisSimpleError;
+                    return parse(rt);
                 });
             }
 
-            int _ResetSentinelFlag = 0;
+            int ResetSentinelFlag = 0;
             internal void ResetSentinel()
             {
-                if (_ResetSentinelFlag != 0) return;
-                if (Interlocked.Increment(ref _ResetSentinelFlag) != 1)
+                if (ResetSentinelFlag != 0) return;
+                if (Interlocked.Increment(ref ResetSentinelFlag) != 1)
                 {
-                    Interlocked.Decrement(ref _ResetSentinelFlag);
+                    Interlocked.Decrement(ref ResetSentinelFlag);
                     return;
                 }
                 string masterhostEnd = _masterHost;
@@ -136,9 +154,9 @@ namespace FreeRedis
                     catch { }
                 }
 
-                foreach (var spkey in allkeys) _ib.TryRemove(spkey);
+                foreach (var spkey in allkeys) _ib.TryRemove(spkey, true);
                 Interlocked.Exchange(ref _masterHost, masterhostEnd);
-                Interlocked.Decrement(ref _ResetSentinelFlag);
+                Interlocked.Decrement(ref ResetSentinelFlag);
 
                 ConnectionStringBuilder localTestHost(string host, RoleType role)
                 {
@@ -165,19 +183,17 @@ namespace FreeRedis
                     return connectionString;
                 }
             }
-            bool SentinelBackgroundGetMasterHostIng = false;
-            object SentinelBackgroundGetMasterHostIngLock = new object();
-            bool SentinelBackgroundGetMasterHost(IRedisSocket rds)
-            {
-                if (rds == null) return false;
-                //if (rds._host != _masterHost) return false;
 
+            bool RecoverySentineling = false;
+            object RecoverySentinelingLock = new object();
+            bool RecoverySentinel()
+            {
                 var ing = false;
-                if (SentinelBackgroundGetMasterHostIng == false)
-                    lock (SentinelBackgroundGetMasterHostIngLock)
+                if (RecoverySentineling == false)
+                    lock (RecoverySentinelingLock)
                     {
-                        if (SentinelBackgroundGetMasterHostIng == false)
-                            SentinelBackgroundGetMasterHostIng = ing = true;
+                        if (RecoverySentineling == false)
+                            RecoverySentineling = ing = true;
                     }
 
                 if (ing)
@@ -197,18 +213,18 @@ namespace FreeRedis
                                     var forecolor = Console.ForegroundColor;
                                     Console.BackgroundColor = ConsoleColor.DarkGreen;
                                     Console.ForegroundColor = ConsoleColor.White;
-                                    Console.Write($"Redis Sentinel Pool 已切换至 {_masterHost}");
+                                    Console.Write($"【{_connectionString.Host}】Redis Sentinel switch to {_masterHost}");
                                     Console.BackgroundColor = bgcolor;
                                     Console.ForegroundColor = forecolor;
                                     Console.WriteLine();
 
-                                    SentinelBackgroundGetMasterHostIng = false;
+                                    RecoverySentineling = false;
                                     return;
                                 }
                             }
                             catch (Exception ex21)
                             {
-                                Console.WriteLine($"Redis Sentinel: {ex21.Message}");
+                                Console.WriteLine($"【{_connectionString.Host}】Redis Sentinel: {ex21.Message}");
                             }
                         }
                     }).Start();

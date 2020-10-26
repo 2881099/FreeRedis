@@ -58,7 +58,9 @@ namespace FreeRedis
                                 var rndpool = _ib.Get(rndkey);
                                 var rndcli = rndpool.Get();
                                 var rndrds = rndcli.Value.Adapter.GetRedisSocket(null);
-                                return DefaultRedisSocket.CreateTempProxy(rndrds, () => rndpool.Return(rndcli));
+                                var rndrdsproxy = DefaultRedisSocket.CreateTempProxy(rndrds, () => rndpool.Return(rndcli));
+                                rndrdsproxy._pool = rndpool;
+                                return rndrdsproxy;
                             }
                         }
                     }
@@ -67,19 +69,34 @@ namespace FreeRedis
                 var pool = _ib.Get(poolkey);
                 var cli = pool.Get();
                 var rds = cli.Value.Adapter.GetRedisSocket(null);
-                return DefaultRedisSocket.CreateTempProxy(rds, () => pool.Return(cli));
+                var rdsproxy = DefaultRedisSocket.CreateTempProxy(rds, () => pool.Return(cli));
+                rdsproxy._pool = pool;
+                return rdsproxy;
             }
             public override TValue AdapaterCall<TReadTextOrStream, TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
             {
                 return TopOwner.LogCall(cmd, () =>
                 {
+                    RedisResult rt = null;
                     using (var rds = GetRedisSocket(cmd))
                     {
-                        rds.Write(cmd);
-                        var rt = cmd.Read<TReadTextOrStream>();
-                        rt.IsErrorThrow = TopOwner._isThrowRedisSimpleError;
-                        return parse(rt);
+                        try
+                        {
+                            rds.Write(cmd);
+                            rt = cmd.Read<TReadTextOrStream>();
+                        }
+                        catch (Exception ex)
+                        {
+                            var pool = (rds as DefaultRedisSocket.TempProxyRedisSocket)._pool;
+                            if (pool?.SetUnavailable(ex) == true)
+                            {
+
+                            }
+                            throw ex;
+                        }
                     }
+                    rt.IsErrorThrow = TopOwner._isThrowRedisSimpleError;
+                    return parse(rt);
                 });
             }
         }

@@ -13,14 +13,15 @@ namespace FreeRedis.Internal
 {
     class DefaultRedisSocket : IRedisSocket
     {
-        public static IRedisSocket CreateTempProxy(IRedisSocket rds, Action dispose)
+        internal static TempProxyRedisSocket CreateTempProxy(IRedisSocket rds, Action dispose)
         {
             if (rds is TempProxyRedisSocket proxy) 
                 return new TempProxyRedisSocket(proxy._owner, dispose);
             return new TempProxyRedisSocket(rds, dispose);
         }
-        class TempProxyRedisSocket : IRedisSocket
+        internal class TempProxyRedisSocket : IRedisSocket
         {
+            internal RedisClientPool _pool; //flag pooling
             internal IRedisSocket _owner;
             Action _dispose;
             public TempProxyRedisSocket(IRedisSocket owner, Action dispose)

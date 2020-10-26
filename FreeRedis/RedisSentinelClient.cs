@@ -24,6 +24,7 @@ namespace FreeRedis
             _redisSocket.Dispose();
         }
 
+        public object Call(CommandPacket cmd) => Call(cmd, rt => rt.ThrowOrValue());
         protected TValue Call<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
         {
             _redisSocket.Write(cmd);

@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System;
 using System.Diagnostics;
 using System.Text;
+using System.Threading;
 
 namespace console_netcore31
 {
@@ -11,7 +12,7 @@ namespace console_netcore31
         static Lazy<RedisClient> _cliLazy = new Lazy<RedisClient>(() =>
         {
             //var r = new RedisClient("127.0.0.1:6379", false); //redis 3.2 Single test
-            var r = new RedisClient("127.0.0.1:6379,database=1"); //redis 3.2
+            var r = new RedisClient("127.0.0.1:6379,database=10"); //redis 3.2
             //var r = new RedisClient("127.0.0.1:6379,database=1", "127.0.0.1:6379,database=1");
             //var r = new RedisClient("192.168.164.10:6379,database=1"); //redis 6.0
             r.Serialize = obj => JsonConvert.SerializeObject(obj);
@@ -24,50 +25,7 @@ namespace console_netcore31
         static StackExchange.Redis.IDatabase sedb = seredis.GetDatabase(1);
 
         static void Main(string[] args)
-       {
-            //seredis.
-            #region PubSub
-            //using (var local = cli.GetShareClient())
-            //{
-            //    var r1 = local.Call(new CommandPacket("Subscribe").Input("abc"));
-            //    var r2 = local.Ping();
-            //    var r3 = local.Ping("testping123");
-            //    //var r4 = local.Call(new CommandPacket("punSubscribe").Input("*"));
-            //}
-
-            //using (cli.Subscribe("abc", ondata))
-            //{
-            //    using (cli.Subscribe("abcc", ondata))
-            //    {
-            //        using (cli.PSubscribe("*", ondata))
-            //        {
-            //            Console.ReadKey();
-            //        }
-            //        Console.ReadKey();
-            //    }
-            //    Console.ReadKey();
-            //}
-            //Console.WriteLine("one more time");
-            //Console.ReadKey();
-            //using (cli.Subscribe("abc", ondata))
-            //{
-            //    using (cli.Subscribe("abcc", ondata))
-            //    {
-            //        using (cli.PSubscribe("*", ondata))
-            //        {
-            //            Console.ReadKey();
-            //        }
-            //        Console.ReadKey();
-            //    }
-            //    Console.ReadKey();
-            //}
-            //void ondata(string channel, string data)
-            //{
-            //    Console.WriteLine($"{channel} -> {data}");
-            //}
-            //return;
-            #endregion
-
+        {
             RedisHelper.Initialization(new CSRedis.CSRedisClient("127.0.0.1:6379,database=2"));
             cli.Set("TestMGet_null1", String);
             RedisHelper.Set("TestMGet_null1", String);

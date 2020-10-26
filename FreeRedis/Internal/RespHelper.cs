@@ -494,7 +494,7 @@ namespace FreeRedis
                     field.SetValue(entity, value);
                     return;
                 }
-                throw new Exception($"{entityType.DisplayCsharp()} 未找到属性名 {propertyName}");
+                throw new Exception($"The property({propertyName}) was not found in the type({entityType.DisplayCsharp()})");
             }
 
             Action<object, string, object> func = null;
@@ -662,7 +662,7 @@ namespace FreeRedis
             var ret = _dicInternalGetTypeConstructor0OrFirst.GetOrAdd(that, tp =>
                 tp.GetConstructor(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic, null, new Type[0], null) ??
                 tp.GetConstructors(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).FirstOrDefault());
-            if (ret == null && isThrow) throw new ArgumentException($"{that.FullName} 类型无方法访问构造函数");
+            if (ret == null && isThrow) throw new ArgumentException($"{that.FullName} has no method to access constructor");
             return ret;
         }
 

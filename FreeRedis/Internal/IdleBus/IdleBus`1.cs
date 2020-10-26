@@ -109,7 +109,7 @@ namespace FreeRedis.Internal
         public bool TryRegister(TKey key, Func<TValue> create) => InternalRegister(key, create, null, false);
         public bool TryRegister(TKey key, Func<TValue> create, TimeSpan idle) => InternalRegister(key, create, idle, false);
 
-        public bool TryRemove(TKey key) => InternalRemove(key, false);
+        public bool TryRemove(TKey key, bool now = false) => InternalRemove(key, now, false);
 
         /// <summary>
         /// 已创建【实例】数量
@@ -159,7 +159,7 @@ namespace FreeRedis.Internal
             this.OnNotice(new NoticeEventArgs(NoticeType.Register, key, null, $"{key} 注册成功，{_usageQuantity}/{Quantity}"));
             return true;
         }
-        bool InternalRemove(TKey key, bool isThrow)
+        bool InternalRemove(TKey key, bool isNow, bool isThrow)
         {
             if (isdisposed) throw new Exception($"{key} 删除失败 ，{nameof(IdleBus<TValue>)} 对象已释放");
             if (_dic.TryRemove(key, out var item) == false)
@@ -171,6 +171,13 @@ namespace FreeRedis.Internal
             }
 
             Interlocked.Exchange(ref item.releaseErrorCounter, 0);
+            if (isNow)
+            {
+                item.Release(() => true);
+                this.OnNotice(new NoticeEventArgs(NoticeType.Remove, item.key, null, $"{key} 删除成功，{_usageQuantity}/{Quantity}"));
+                return true;
+            }
+
             item.lastActiveTime = DateTime.Now;
             if (item.value == null) item.lastActiveTime = DateTime.Now.Subtract(item.idle).AddSeconds(-60); //延时删除
             _removePending.TryAdd(Guid.NewGuid().ToString(), item);

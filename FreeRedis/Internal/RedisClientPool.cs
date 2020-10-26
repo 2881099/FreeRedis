@@ -72,37 +72,6 @@ namespace FreeRedis.Internal
             _policy.ConnectionString = connectionString;
         }
 
-        public void Return(Object<RedisClient> obj, Exception exception, bool isRecreate = false)
-        {
-            if (exception != null)
-            {
-                try
-                {
-                    try
-                    {
-                        obj.Value.Ping();
-
-                        var fcolor = Console.ForegroundColor;
-                        Console.WriteLine($"");
-                        Console.ForegroundColor = ConsoleColor.DarkYellow;
-                        Console.WriteLine($"FreeRedis 错误【{Policy.Name}】：{exception.Message} {exception.StackTrace}");
-                        Console.ForegroundColor = fcolor;
-                        Console.WriteLine($"");
-                    }
-                    catch
-                    {
-                        obj.ResetValue();
-                        obj.Value.Ping();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    base.SetUnavailable(ex);
-                }
-            }
-            base.Return(obj, isRecreate);
-        }
-
         internal bool CheckAvailable() => base.LiveCheckAvailable();
 
         internal RedisClientPoolPolicy _policy;
@@ -118,7 +87,7 @@ namespace FreeRedis.Internal
         internal string Key => $"{_connectionStringBuilder.Host}/{_connectionStringBuilder.Database}";
         public event EventHandler Connected;
 
-        public string Name { get => Key; set { throw new Exception("RedisClientPoolPolicy 不提供设置 Name 属性值。"); } }
+        public string Name { get => Key; set => throw new NotSupportedException(); }
         public int PoolSize { get => _connectionStringBuilder.MaxPoolSize; set => _connectionStringBuilder.MaxPoolSize = value; }
         public TimeSpan IdleTimeout { get => _connectionStringBuilder.IdleTimeout; set => _connectionStringBuilder.IdleTimeout = value; }
         public TimeSpan SyncGetTimeout { get; set; } = TimeSpan.FromSeconds(10);
