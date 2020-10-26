@@ -12,7 +12,7 @@ namespace FreeRedis
         public bool Exists(string key) => Call("EXISTS".Input(key).FlagKey(key), rt => rt.ThrowOrValue<bool>());
         public long Exists(string[] keys) => Call("EXISTS".Input(keys).FlagKey(keys), rt => rt.ThrowOrValue<long>());
         public bool Expire(string key, int seconds) => Call("EXPIRE".Input(key, seconds).FlagKey(key), rt => rt.ThrowOrValue<bool>());
-        public bool ExpireAt(string key, DateTime timestamp) => Call("EXPIREAT".Input(key, (long)timestamp.Subtract(new DateTime(1970, 1, 1)).TotalSeconds).FlagKey(key), rt => rt.ThrowOrValue<bool>());
+        public bool ExpireAt(string key, DateTime timestamp) => Call("EXPIREAT".Input(key, (long)timestamp.ToUniversalTime().Subtract(_epoch).TotalSeconds).FlagKey(key), rt => rt.ThrowOrValue<bool>());
 
         public string[] Keys(string pattern) => Call("KEYS".Input(pattern), rt => rt.ThrowOrValue<string[]>());
         public void Migrate(string host, int port, string key, int destinationDb, long timeoutMilliseconds, bool copy, bool replace, string authPassword, string auth2Username, string auth2Password, string[] keys) => Call("MIGRATE"
@@ -29,13 +29,12 @@ namespace FreeRedis
 
         public long? ObjectRefCount(string key) => Call("OBJECT".SubCommand( "REFCOUNT").Input(key).FlagKey(key), rt => rt.ThrowOrValue<long?>());
         public long ObjectIdleTime(string key) => Call("OBJECT".SubCommand("IDLETIME").Input(key).FlagKey(key), rt => rt.ThrowOrValue<long>());
-        public object ObjectEncoding(string key) => Call("OBJECT".SubCommand("ENCODING").Input(key).FlagKey(key), rt => rt.ThrowOrValue<object>());
-        public object ObjectFreq(string key) => Call("OBJECT".SubCommand("FREQ").Input(key).FlagKey(key), rt => rt.ThrowOrValue());
-        public object ObjectHelp(string key) => Call("OBJECT".SubCommand("HELP").Input(key).FlagKey(key), rt => rt.ThrowOrValue());
+        public string ObjectEncoding(string key) => Call("OBJECT".SubCommand("ENCODING").Input(key).FlagKey(key), rt => rt.ThrowOrValue<string>());
+        public long? ObjectFreq(string key) => Call("OBJECT".SubCommand("FREQ").Input(key).FlagKey(key), rt => rt.ThrowOrValue<long?>());
 
         public bool Persist(string key) => Call("PERSIST".Input(key).FlagKey(key), rt => rt.ThrowOrValue<bool>());
         public bool PExpire(string key, int milliseconds) => Call("PEXPIRE".Input(key, milliseconds).FlagKey(key), rt => rt.ThrowOrValue<bool>());
-        public bool PExpireAt(string key, DateTime timestamp) => Call("PEXPIREAT".Input(key, (long)timestamp.Subtract(new DateTime(1970, 1, 1)).TotalMilliseconds).FlagKey(key), rt => rt.ThrowOrValue<bool>());
+        public bool PExpireAt(string key, DateTime timestamp) => Call("PEXPIREAT".Input(key, (long)timestamp.ToUniversalTime().Subtract(_epoch).TotalMilliseconds).FlagKey(key), rt => rt.ThrowOrValue<bool>());
         public long PTtl(string key) => Call("PTTL".Input(key).FlagKey(key), rt => rt.ThrowOrValue<long>());
 
         public string RandomKey() => Call("RANDOMKEY", rt => rt.ThrowOrValue<string>());
@@ -58,7 +57,15 @@ namespace FreeRedis
             .InputIf(!string.IsNullOrWhiteSpace(type), "TYPE", type), rt => rt
             .ThrowOrValue((a, _) => new ScanResult<string>(a[0].ConvertTo<long>(), a[1].ConvertTo<string[]>())));
 
-        public object Sort(string key, string byPattern, long offset, long count, string[] getPatterns, Collation? collation, bool alpha, string storeDestination) => Call("SORT"
+        public string[] Sort(string key, string byPattern = null, long offset = 0, long count = 0, string[] getPatterns = null, Collation? collation = null, bool alpha = false) => Call("SORT"
+            .Input(key)
+            .InputIf(!string.IsNullOrWhiteSpace(byPattern), "BY", byPattern)
+            .InputIf(offset != 0 || count != 0, "LIMIT", offset, count)
+            .InputIf(getPatterns?.Any() == true, getPatterns.Select(a => new[] { "GET", a }).SelectMany(a => a).ToArray())
+            .InputIf(collation != null, collation)
+            .InputIf(alpha, "ALPHA")
+            .FlagKey(key), rt => rt.ThrowOrValue<string[]>());
+        public long SortStore(string storeDestination, string key, string byPattern = null, long offset = 0, long count = 0, string[] getPatterns = null, Collation? collation = null, bool alpha = false) => Call("SORT"
             .Input(key)
             .InputIf(!string.IsNullOrWhiteSpace(byPattern), "BY", byPattern)
             .InputIf(offset != 0 || count != 0, "LIMIT", offset, count)
@@ -66,7 +73,7 @@ namespace FreeRedis
             .InputIf(collation != null, collation)
             .InputIf(alpha, "ALPHA")
             .InputIf(!string.IsNullOrWhiteSpace(storeDestination), "STORE", storeDestination)
-            .FlagKey(key, storeDestination), rt => rt.ThrowOrValue());
+            .FlagKey(key, storeDestination), rt => rt.ThrowOrValue<long>());
 
         public long Touch(params string[] keys) => Call("TOUCH".Input(keys).FlagKey(keys), rt => rt.ThrowOrValue<long>());
         public long Ttl(string key) => Call("TTL".Input(key).FlagKey(key), rt => rt.ThrowOrValue<long>());

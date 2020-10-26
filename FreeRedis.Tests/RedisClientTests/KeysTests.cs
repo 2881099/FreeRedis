@@ -133,26 +133,29 @@ namespace FreeRedis.Tests.RedisClientTests
         [Fact]
         public void ObjectIdleTime()
         {
+            var key1 = "ObjectIdleTime1";
+            cli.LPush(key1, "hello world");
 
+            Assert.Equal(0, cli.ObjectIdleTime(key1));
         }
 
         [Fact]
         public void ObjectEncoding()
         {
-            cli.MSet("TestObjectEncoding_null1", base.Null, "TestObjectEncoding_string1", base.String, "TestObjectEncoding_bytes1", base.Bytes, "TestObjectEncoding_class1", base.Class);
-            cli.ObjectEncoding("TestObjectEncoding_string1");
+            var key1 = "ObjectEncoding1";
+            cli.LPush(key1, "ObjectEncoding1_val1");
+            Assert.Equal("quicklist", cli.ObjectEncoding(key1));
         }
 
         [Fact]
         public void ObjectFreq()
         {
+            var key1 = "ObjectFreq1";
+            cli.Set(key1, "test1");
+            cli.Get(key1);
 
-        }
-
-        [Fact]
-        public void ObjectHelp()
-        {
-
+            //Assert.True(cli.ObjectFreq(key1) > 0);
+            Assert.Null(cli.ObjectFreq(key1 + "_no_such_key"));
         }
 
         [Fact]
@@ -273,7 +276,17 @@ namespace FreeRedis.Tests.RedisClientTests
         [Fact]
         public void Sort()
         {
+            var key1 = "Sort1";
+            cli.LPush(key1, 1, 2, 10);
+            cli.Set("bar1", "bar1");
+            cli.Set("bar2", "bar2");
+            cli.Set("bar10", "bar10");
+            cli.Set("car1", "car1");
+            cli.Set("car2", "car2");
+            cli.Set("car10", "car10");
 
+            var r1 = cli.Sort(key1, getPatterns: new[] { "car*", "bar*" }, collation: Collation.desc, alpha: true);
+            var r2 = cli.Sort(key1, getPatterns: new[] { "car*", "bar*" }, offset: 1, count:5, collation: Collation.desc, alpha: true);
         }
 
         [Fact]

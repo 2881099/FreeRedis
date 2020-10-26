@@ -91,7 +91,9 @@ namespace FreeRedis
         public object SlowLog(string subcommand, params string[] argument) => Call("SLOWLOG".SubCommand(subcommand).Input(argument), rt => rt.ThrowOrValue());
         public string SwapDb(int index1, int index2) => Call("SWAPDB".Input(index1, index2), rt => rt.ThrowOrValue<string>());
         //public void Sync(Action<string> onData) => SendCommandListen(onData, "SYNC");
-        public DateTime Time() => Call("TIME", rt => rt.ThrowOrValue((a, _) => new DateTime(1970, 0, 0).AddSeconds(a[0].ConvertTo<long>()).AddTicks(a[1].ConvertTo<long>() * 10)));
+        public DateTime Time() => Call("TIME", rt => rt.ThrowOrValue((a, _) => _epoch.AddSeconds(a[0].ConvertTo<long>()).AddTicks(a[1].ConvertTo<long>() * 10))).ToLocalTime();
+
+        static readonly DateTime _epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
     }
 
     #region Model

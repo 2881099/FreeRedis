@@ -32,7 +32,7 @@ namespace FreeRedis
         }
 
         public string Ping() => Call("PING", rt => rt.ThrowOrValue<string>());
-        public SentinelInfoResult Info() => Call("INFO", rt => rt.ThrowOrValue(a => new SentinelInfoResult(a.ConvertTo<string>())));
+        public string Info() => Call("INFO", rt => rt.ThrowOrValue<string>());
         public SentinelRoleResult Role() => Call("ROLE", rt => rt.ThrowOrValueToRole());
 
         public SentinelMasterResult[] Masters() => Call("SENTINEL".SubCommand("MASTERS"), rt => rt.ThrowOrValue((a, _) =>
@@ -80,74 +80,6 @@ namespace FreeRedis
 
         public RoleType role;
         public string[] masters;
-    }
-
-    //# Server
-    //redis_version:3.2.100
-    //redis_git_sha1:00000000
-    //redis_git_dirty:0
-    //redis_build_id:dd26f1f93c5130ee
-    //redis_mode:sentinel
-    //os:Windows  
-    //arch_bits:64
-    //multiplexing_api:WinSock_IOCP
-    //process_id:30752
-    //run_id:edea67f47ce8089d551b296b8e9cfd7ba6d0b955
-    //tcp_port:21479
-    //uptime_in_seconds:1305
-    //uptime_in_days:0
-    //hz:19
-    //lru_clock:9191517
-    //executable:C:\Users\28810\Desktop\Redis-x64-3.2.100\6384\redis-server.exe
-    //config_file:C:\Users\28810\Desktop\Redis-x64-3.2.100\6384\sentinel21479.conf
-
-    //# Clients
-    //connected_clients:5
-    //client_longest_output_list:0
-    //client_biggest_input_buf:0
-    //blocked_clients:0
-
-    //# CPU
-    //used_cpu_sys:0.19
-    //used_cpu_user:0.22
-    //used_cpu_sys_children:0.00
-    //used_cpu_user_children:0.00
-
-    //# Stats
-    //total_connections_received:7
-    //total_commands_processed:5671
-    //instantaneous_ops_per_sec:2
-    //total_net_input_bytes:312817
-    //total_net_output_bytes:36918
-    //instantaneous_input_kbps:0.12
-    //instantaneous_output_kbps:0.02
-    //rejected_connections:0
-    //sync_full:0
-    //sync_partial_ok:0
-    //sync_partial_err:0
-    //expired_keys:0
-    //evicted_keys:0
-    //keyspace_hits:0
-    //keyspace_misses:0
-    //pubsub_channels:0
-    //pubsub_patterns:0
-    //latest_fork_usec:0
-    //migrate_cached_sockets:0
-
-    //# Sentinel
-    //sentinel_masters:1
-    //sentinel_tilt:0
-    //sentinel_running_scripts:0
-    //sentinel_scripts_queue_length:0
-    //sentinel_simulate_failure_flags:0
-    //master0:name=mymaster,status=ok,address=127.0.0.1:6381,slaves=2,sentinels=4
-    public class SentinelInfoResult
-    {
-        public string text;
-        public SentinelInfoResult(string text)
-        {
-            this.text = text;
-        }
     }
 
     // 1) "name"
