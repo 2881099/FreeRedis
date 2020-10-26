@@ -203,7 +203,8 @@ namespace FreeRedis
 
         public long Publish(string channel, string message) => Call("PUBLISH".Input(channel, message).FlagKey(channel), rt => rt.ThrowOrValue<long>());
         public string[] PubSubChannels(string pattern) => Call("PUBSUB".SubCommand("CHANNELS").Input(pattern), rt => rt.ThrowOrValue<string[]>());
-        public string[] PubSubNumSub(params string[] channels) => Call("PUBSUB".SubCommand("NUMSUB").Input(channels).FlagKey(channels), rt => rt.ThrowOrValue<string[]>());
+        public long PubSubNumSub(string channel) => Call("PUBSUB".SubCommand("NUMSUB").Input(channel).FlagKey(channel), rt => rt.ThrowOrValue((a, _) => a.MapToList((x, y) => y.ConvertTo<long>()).FirstOrDefault()));
+        public long[] PubSubNumSub(string[] channels) => Call("PUBSUB".SubCommand("NUMSUB").Input(channels).FlagKey(channels), rt => rt.ThrowOrValue((a, _) => a.MapToList((x, y) => y.ConvertTo<long>()).ToArray()));
         public long PubSubNumPat() => Call("PUBLISH".SubCommand("NUMPAT"), rt => rt.ThrowOrValue<long>());
 
 
