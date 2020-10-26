@@ -19,8 +19,14 @@ QQ群：4336577(已满)、8578575(在线)、52508226(在线)
 ```csharp
 public static RedisClient cli = new RedisClient("127.0.0.1:6379,password=123,defaultDatabase=13");
 
-var value = cli.Get("key1");
+cli.Set("key1", "value1");
+cli.MSet("key1", "value1", "key2", "value2");
+
+string value1 = cli.Get("key1");
+string[] vals = cli.MGet("key1", "key2");
 ```
+
+> Supports strings, hashes, lists, sets, sorted sets, bitmaps, hyperloglogs, geo, streams And BloomFilter.
 
 | Parameter         | Default   | Explain |
 | :---------------- | --------: | :------------------- |
@@ -67,18 +73,6 @@ public static cli = new RedisClient(
 #### Redis Cluster (集群)
 
 待完成...
-
-#### Quick start
-
-```csharp
-cli.Set("key1", "value1");
-cli.MSet("key1", "value1", "key2", "value2");
-
-string value1 = cli.Get("key1");
-string[] vals = cli.MGet("key1", "key2");
-```
-
-It supports data structures such as strings, hashes, lists, sets, sorted sets with range queries, bitmaps, hyperloglogs, geospatial indexes with radius queries and streams.
 
 #### Scripting (脚本)
 
