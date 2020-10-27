@@ -2,16 +2,17 @@
 using Newtonsoft.Json;
 using System;
 using System.Diagnostics;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading;
 
-namespace console_netcore31_sentinel
+namespace console_netcore31_cluster
 {
     class Program
     {
         static Lazy<RedisClient> _cliLazy = new Lazy<RedisClient>(() =>
         {
-            var r = new RedisClient(new ConnectionStringBuilder[] { "127.0.0.1:6379", "127.0.0.1:6380" });
+            var r = new RedisClient(new ConnectionStringBuilder[] { "180.102.130.181:7001", "180.102.130.184:7001", "180.102.130.181:7002" });
             r.Serialize = obj => JsonConvert.SerializeObject(obj);
             r.Deserialize = (json, type) => JsonConvert.DeserializeObject(json, type);
             r.Notice += (s, e) => Trace.WriteLine(e.Log);
@@ -21,7 +22,6 @@ namespace console_netcore31_sentinel
 
         static void Main(string[] args)
         {
-
             for (var k = 0; k < 1; k++)
             {
                 new Thread(() =>
@@ -40,6 +40,8 @@ namespace console_netcore31_sentinel
                     }
                 }).Start();
             }
+
+            new StackExchangeRedis().Start();
 
             Console.ReadKey();
             return;
