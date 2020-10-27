@@ -30,7 +30,7 @@ string[] vals = cli.MGet("key1", "key2");
 
 | Parameter         | Default   | Explain |
 | :---------------- | --------: | :------------------- |
-| protocol          | RESP2     | If you use RESP3, you need redis 6.0 environment | 
+| protocol          | RESP2     | If you use RESP3, you need redis 6.0 environment |
 | user              | \<empty\> | Redis server username, requires redis-server 6.0 |
 | password          | \<empty\> | Redis server password |
 | defaultDatabase   | 0         | Redis server database |
@@ -63,7 +63,7 @@ var value = cli.Get("key1");
 #### Redis Sentinel (哨兵高可用)
 
 ```csharp
-public static cli = new RedisClient(
+public static RedisClient cli = new RedisClient(
     "mymaster,password=123", 
     new [] { "192.169.1.10:26379", "192.169.1.11:26379", "192.169.1.12:26379" },
     true //是否读写分离
@@ -72,7 +72,13 @@ public static cli = new RedisClient(
 
 #### Redis Cluster (集群)
 
-待完成...
+假如你有一个 Redis Cluster 集群，其中有三个主节点(7001-7003)、三个从节点(7004-7006)，则连接此集群的代码：
+
+```csharp
+var r = new RedisClient(new ConnectionStringBuilder[] { "192.168.0.2:7001", "192.168.0.2:7001", "192.168.0.2:7003" });
+```
+
+
 
 #### Scripting (脚本)
 
