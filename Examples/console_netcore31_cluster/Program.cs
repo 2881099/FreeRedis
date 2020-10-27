@@ -1,5 +1,6 @@
 ﻿using FreeRedis;
 using Newtonsoft.Json;
+using StackExchange.Redis;
 using System;
 using System.Diagnostics;
 using System.Linq.Expressions;
@@ -18,50 +19,58 @@ namespace console_netcore31_cluster
             r.Notice += (s, e) => Trace.WriteLine(e.Log);
             return r;
         });
+
         static RedisClient cli => _cliLazy.Value;
+
+        static CSRedis.CSRedisClient csredis = new CSRedis.CSRedisClient(null,
+            new string[] {
+            "180.102.130.181:7001,poolsize=100",
+            "180.102.130.184:7001,poolsize=100",
+            "180.102.130.181:7002,poolsize=100"});
+
+        static ConnectionMultiplexer seredis = ConnectionMultiplexer.Connect("180.102.130.181:7001,180.102.130.184:7001,180.102.130.181:7002");
+        static IDatabase sedb => seredis.GetDatabase();
 
         static void Main(string[] args)
         {
-            for (var k = 0; k < 1; k++)
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            for (int i = 0; i < 100; i++)
             {
-                new Thread(() =>
-                {
-                    for (var a = 0; a < 10000; a++)
-                    {
-                        try
-                        {
-                            cli.Get(Guid.NewGuid().ToString());
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine(ex.Message);
-                        }
-                        Thread.CurrentThread.Join(100);
-                    }
-                }).Start();
+                var tmp = Guid.NewGuid().ToString();
+                cli.Set(tmp, "我也不知道为什么刚刚好十五个字");
+                _ = cli.Get(tmp);
             }
 
-            new StackExchangeRedis().Start();
+            stopwatch.Stop();
+            Console.WriteLine("FreeRedis:"+stopwatch.ElapsedMilliseconds);
 
-            Console.ReadKey();
+            //stopwatch.Restart();
+            // csredis 会出现连接不能打开的情况
+            //for (int i = 0; i < 100; i++)
+            //{
+            //    var tmp = Guid.NewGuid().ToString();
+            //    csredis.Set(tmp, "我也不知道为什么刚刚好十五个字");
+            //    _ = csredis.Get(tmp);
+            //}
+
+            //stopwatch.Stop();
+            //Console.WriteLine("csredis:" + stopwatch.ElapsedMilliseconds);
+
+            stopwatch.Restart();
+
+            for (int i = 0; i < 100; i++)
+            {
+                var tmp = Guid.NewGuid().ToString();
+                sedb.StringSet(tmp, "我也不知道为什么刚刚好十五个字");
+                _ = sedb.StringGet(tmp);
+            }
+
+            stopwatch.Stop();
+            Console.WriteLine("Seredis:" + stopwatch.ElapsedMilliseconds);
+
             return;
-        }
-
-        static readonly string String = "我是中国人";
-        static readonly byte[] Bytes = Encoding.UTF8.GetBytes("这是一个byte字节");
-    }
-
-    public class TestClass
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public DateTime CreateTime { get; set; }
-
-        public int[] TagId { get; set; }
-
-        public override string ToString()
-        {
-            return JsonConvert.SerializeObject(this);
         }
     }
 }
