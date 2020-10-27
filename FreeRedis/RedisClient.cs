@@ -35,8 +35,7 @@ namespace FreeRedis
         /// </summary>
         public RedisClient(ConnectionStringBuilder[] clusterConnectionStrings)
         {
-            throw new NotImplementedException();
-            //_adapter = new ClusterAdapter(clusterConnectionStrings);
+            Adapter = new ClusterAdapter(this, clusterConnectionStrings);
         }
 
         /// <summary>
@@ -151,11 +150,12 @@ namespace FreeRedis
         }
         public enum NoticeType
         {
-            Call, 
+            Call, Info
         }
-        void OnNotice(NoticeEventArgs e)
+        internal bool OnNotice(NoticeEventArgs e)
         {
             this.Notice?.Invoke(this, e);
+            return this.Notice != null;
         }
 
         #region 序列化写入，反序列化

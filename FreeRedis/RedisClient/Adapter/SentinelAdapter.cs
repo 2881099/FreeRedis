@@ -208,14 +208,17 @@ namespace FreeRedis
 
                                 if (_ib.Get(_masterHost).CheckAvailable())
                                 {
-                                    var bgcolor = Console.BackgroundColor;
-                                    var forecolor = Console.ForegroundColor;
-                                    Console.BackgroundColor = ConsoleColor.DarkGreen;
-                                    Console.ForegroundColor = ConsoleColor.White;
-                                    Console.Write($"【{_connectionString.Host}】Redis Sentinel switch to {_masterHost}");
-                                    Console.BackgroundColor = bgcolor;
-                                    Console.ForegroundColor = forecolor;
-                                    Console.WriteLine();
+                                    if (!TopOwner.OnNotice(new NoticeEventArgs(NoticeType.Info, null, $"【{_connectionString.Host}】Redis Sentinel switch to {_masterHost}", null)))
+                                    {
+                                        var bgcolor = Console.BackgroundColor;
+                                        var forecolor = Console.ForegroundColor;
+                                        Console.BackgroundColor = ConsoleColor.DarkGreen;
+                                        Console.ForegroundColor = ConsoleColor.White;
+                                        Console.Write($"【{_connectionString.Host}】Redis Sentinel switch to {_masterHost}");
+                                        Console.BackgroundColor = bgcolor;
+                                        Console.ForegroundColor = forecolor;
+                                        Console.WriteLine();
+                                    }
 
                                     RecoverySentineling = false;
                                     return;
@@ -223,7 +226,10 @@ namespace FreeRedis
                             }
                             catch (Exception ex21)
                             {
-                                Console.WriteLine($"【{_connectionString.Host}】Redis Sentinel: {ex21.Message}");
+                                if (!TopOwner.OnNotice(new NoticeEventArgs(NoticeType.Info, null, $"【{_connectionString.Host}】Redis Sentinel switch to {_masterHost}", null)))
+                                {
+                                    Console.WriteLine($"【{_connectionString.Host}】Redis Sentinel: {ex21.Message}");
+                                }
                             }
                         }
                     }).Start();

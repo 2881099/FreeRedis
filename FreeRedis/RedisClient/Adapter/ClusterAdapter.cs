@@ -12,7 +12,7 @@ namespace FreeRedis
         class ClusterAdapter : BaseAdapter
         {
             readonly IdleBus<RedisClientPool> _ib;
-            readonly ConnectionStringBuilder _firstConnectionString;
+            readonly ConnectionStringBuilder[] _clusterConnectionStrings;
 
             public ClusterAdapter(RedisClient topOwner, ConnectionStringBuilder[] clusterConnectionStrings)
             {
@@ -22,50 +22,9 @@ namespace FreeRedis
                 if (clusterConnectionStrings.Any() != true)
                     throw new ArgumentNullException(nameof(clusterConnectionStrings));
 
+                _clusterConnectionStrings = clusterConnectionStrings.ToArray();
                 _ib = new IdleBus<RedisClientPool>(TimeSpan.FromMinutes(10));
-                foreach (var connectionString in clusterConnectionStrings)
-                    RegisterClusterNode(connectionString);
-
-                _firstConnectionString = clusterConnectionStrings.First();
-
-                //尝试求出其他节点，并缓存slot
-                try
-                {
-                    var firstPool = _ib.Get(_firstConnectionString.Host);
-                    var cnodes = AdapaterCall<string, string>("CLUSTER NODES", rt => rt.ThrowOrValue<string>()).Split('\n');
-                    foreach (var cnode in cnodes)
-                    {
-                        if (string.IsNullOrEmpty(cnode)) continue;
-                        var dt = cnode.Trim().Split(' ');
-                        if (dt.Length < 9) continue;
-                        if (!dt[2].StartsWith("master") && !dt[2].EndsWith("master")) continue;
-                        if (dt[7] != "connected") continue;
-
-                        var endpoint = dt[1];
-                        var at40 = endpoint.IndexOf('@');
-                        if (at40 != -1) endpoint = endpoint.Remove(at40);
-
-                        if (endpoint.StartsWith("127.0.0.1"))
-                            endpoint = $"{DefaultRedisSocket.SplitHost(firstPool._policy._connectionStringBuilder.Host).Key}:{endpoint.Substring(10)}";
-                        else if (endpoint.StartsWith("localhost", StringComparison.CurrentCultureIgnoreCase))
-                            endpoint = $"{DefaultRedisSocket.SplitHost(firstPool._policy._connectionStringBuilder.Host).Key}:{endpoint.Substring(10)}";
-                        ConnectionStringBuilder connectionString = firstPool._policy._connectionStringBuilder.ToString();
-                        connectionString.Host = endpoint;
-                        RegisterClusterNode(connectionString);
-
-                        for (var slotIndex = 8; slotIndex < dt.Length; slotIndex++)
-                        {
-                            var slots = dt[slotIndex].Split('-');
-                            if (ushort.TryParse(slots[0], out var tryslotStart) &&
-                                ushort.TryParse(slots[1], out var tryslotEnd))
-                            {
-                                for (var slot = tryslotStart; slot <= tryslotEnd; slot++)
-                                    _slotCache.AddOrUpdate(slot, connectionString.Host, (k1, v1) => connectionString.Host);
-                            }
-                        }
-                    }
-                }
-                catch { }
+                RefershClusterNodes();
             }
 
             public override void Dispose()
@@ -78,9 +37,15 @@ namespace FreeRedis
                 var slots = cmd._flagKey.Select(a => GetClusterSlot(a)).Distinct().ToArray();
                 var poolkeys = slots.Select(a => _slotCache.TryGetValue(a, out var trykey) ? trykey : null).Distinct().Where(a => a != null).ToArray();
                 if (poolkeys.Length > 1) throw new ArgumentException($"Multiple key slot values not equal: {cmd}");
-                var poolkey = poolkeys.FirstOrDefault() ?? _firstConnectionString.Host;
+                var poolkey = poolkeys.FirstOrDefault() ?? _clusterConnectionStrings.First().Host;
 
                 var pool = _ib.Get(poolkey);
+                if (pool.IsAvailable == false)
+                {
+                    poolkey = _ib.GetKeys(a => a.IsAvailable).FirstOrDefault();
+                    if (string.IsNullOrEmpty(poolkey)) throw new Exception($"All nodes of the cluster failed to connect");
+                    pool = _ib.Get(poolkey);
+                }
                 var cli = pool.Get();
                 var rds = cli.Value.Adapter.GetRedisSocket(null);
                 var rdsproxy = DefaultRedisSocket.CreateTempProxy(rds, () => pool.Return(cli));
@@ -111,7 +76,6 @@ namespace FreeRedis
                         {
                             if (pool?.SetUnavailable(ex) == true)
                             {
-
                             }
                             throw ex;
                         }
@@ -137,6 +101,8 @@ namespace FreeRedis
 
                             if (moved.isask)
                                 cmd._clusterMovedAsking = true;
+
+                            TopOwner.OnNotice(new NoticeEventArgs(NoticeType.Info, null, $"{(cmd._redisSocket?.Host ?? "Not connected")} > {rt.SimpleError} {cmd} ", null));
                             return AdapaterCall<TReadTextOrStream, TValue>(cmd, parse);
                         }
                     }
@@ -145,10 +111,61 @@ namespace FreeRedis
                 });
             }
             
+            void RefershClusterNodes()
+            {
+                foreach (var testConnection in _clusterConnectionStrings)
+                {
+                    RegisterClusterNode(testConnection);
+                    //尝试求出其他节点，并缓存slot
+                    try
+                    {
+                        var cnodes = AdapaterCall<string, string>("CLUSTER".SubCommand("NODES"), rt => rt.ThrowOrValue<string>()).Split('\n');
+                        foreach (var cnode in cnodes)
+                        {
+                            if (string.IsNullOrEmpty(cnode)) continue;
+                            var dt = cnode.Trim().Split(' ');
+                            if (dt.Length < 9) continue;
+                            if (!dt[2].StartsWith("master") && !dt[2].EndsWith("master")) continue;
+                            if (dt[7] != "connected") continue;
+
+                            var endpoint = dt[1];
+                            var at40 = endpoint.IndexOf('@');
+                            if (at40 != -1) endpoint = endpoint.Remove(at40);
+
+                            if (endpoint.StartsWith("127.0.0.1"))
+                                endpoint = $"{DefaultRedisSocket.SplitHost(testConnection.Host).Key}:{endpoint.Substring(10)}";
+                            else if (endpoint.StartsWith("localhost", StringComparison.CurrentCultureIgnoreCase))
+                                endpoint = $"{DefaultRedisSocket.SplitHost(testConnection.Host).Key}:{endpoint.Substring(10)}";
+                            ConnectionStringBuilder connectionString = testConnection.ToString();
+                            connectionString.Host = endpoint;
+                            RegisterClusterNode(connectionString);
+
+                            for (var slotIndex = 8; slotIndex < dt.Length; slotIndex++)
+                            {
+                                var slots = dt[slotIndex].Split('-');
+                                if (ushort.TryParse(slots[0], out var tryslotStart) &&
+                                    ushort.TryParse(slots[1], out var tryslotEnd))
+                                {
+                                    for (var slot = tryslotStart; slot <= tryslotEnd; slot++)
+                                        _slotCache.AddOrUpdate(slot, connectionString.Host, (k1, v1) => connectionString.Host);
+                                }
+                            }
+                        }
+                        break;
+                    }
+                    catch
+                    {
+                        _ib.TryRemove(testConnection.Host, true);
+                    }
+                }
+
+                if (_ib.GetKeys().Length == 0)
+                    throw new Exception($"All \"clusterConnectionStrings\" failed to connect");
+            }
             //closure connectionString
             void RegisterClusterNode(ConnectionStringBuilder connectionString)
             {
-                _ib.Register(connectionString.Host, () => new RedisClientPool(connectionString, null, TopOwner));
+                _ib.TryRegister(connectionString.Host, () => new RedisClientPool(connectionString, null, TopOwner));
             }
 
             ConcurrentDictionary<ushort, string> _slotCache = new ConcurrentDictionary<ushort, string>();

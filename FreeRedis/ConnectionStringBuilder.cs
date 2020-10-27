@@ -1,6 +1,7 @@
 ﻿using FreeRedis.Internal;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -24,7 +25,7 @@ namespace FreeRedis
         public int MaxPoolSize { get; set; } = 100;
         public int MinPoolSize { get; set; } = 1;
 
-        public static implicit operator ConnectionStringBuilder(string connectionString) => ConnectionStringBuilder.Parse(connectionString);
+        public static implicit operator ConnectionStringBuilder(string connectionString) => Parse(connectionString);
         public static implicit operator string(ConnectionStringBuilder connectionString) => connectionString.ToString();
 
         public override string ToString()
