@@ -14,21 +14,25 @@ namespace FreeRedis
 
         public long AclDelUser(params string[] username) => Call("ACL".SubCommand("DELUSER").Input(username), rt => rt.ThrowOrValue<long>());
         public string AclGenPass(int bits = 0) => Call("ACL"
-            .SubCommand( "GENPASS")
+            .SubCommand("GENPASS")
             .InputIf(bits > 0, bits), rt => rt.ThrowOrValue<string>());
 
-        public object AclGetUser(string username = "default") => Call("ACL".SubCommand("GETUSER").InputRaw(username), rt => rt.ThrowOrValue());
-        public object AclHelp() => Call("ACL".SubCommand("HELP"), rt => rt.ThrowOrValue());
+        public AclGetUserResult AclGetUser(string username = "default") => Call("ACL".SubCommand("GETUSER").InputRaw(username), rt => rt.ThrowOrValue((a, _) =>
+        {
+            a[1] = a[1]?.ConvertTo<string[]>();
+            a[3] = a[3]?.ConvertTo<string[]>();
+            a[7] = a[7]?.ConvertTo<string[]>();
+            return a.MapToClass<AclGetUserResult>(rt.Encoding);
+        }));
         public string[] AclList() => Call("ACL".SubCommand("LIST"), rt => rt.ThrowOrValue<string[]>());
         public string AclLoad() => Call("ACL".SubCommand("LOAD"), rt => rt.ThrowOrValue<string>());
-        public LogInfo[] AclLog(long count = 0) => Call("ACL"
+        public LogResult[] AclLog(long count = 0) => Call("ACL"
             .SubCommand("LOG")
             .InputIf(count > 0, count), rt => rt
-            .ThrowOrValue((a, _) => a.Select(x => x.ConvertTo<object[]>().MapToClass<LogInfo>(rt.Encoding)).ToArray()));
-        public class LogInfo { public long Count { get; } public string Reason { get; } public string Context { get; } public string Object { get; } public string Username { get; } public decimal AgeSeconds { get; } public string ClientInfo { get; } }
+            .ThrowOrValue((a, _) => a.Select(x => x.ConvertTo<object[]>().MapToClass<LogResult>(rt.Encoding)).ToArray()));
 
         public string AclSave() => Call("ACL".SubCommand("SAVE"), rt => rt.ThrowOrValue<string>());
-        public string AclSetUser(params string[] rule) => Call("ACL".SubCommand("SETUSER").Input(rule), rt => rt.ThrowOrValue<string>());
+        public void AclSetUser(string username, params string[] rule) => Call("ACL".SubCommand("SETUSER").InputRaw(username).Input(rule), rt => rt.ThrowOrValue());
         public string[] AclUsers() => Call("ACL".SubCommand("USERS"), rt => rt.ThrowOrValue<string[]>());
         public string AclWhoami() => Call("ACL".SubCommand("WHOAMI"), rt => rt.ThrowOrValue<string>());
 
@@ -66,13 +70,13 @@ namespace FreeRedis
         public string MemoryPurge() => Call("MEMORY".SubCommand("PURGE"), rt => rt.ThrowOrValue<string>());
         public Dictionary<string, string> MemoryStats() => Call("MEMORY".SubCommand("STATS"), rt => rt.ThrowOrValue((a, _) => a.MapToHash<string>(rt.Encoding)));
         public long MemoryUsage(string key, long count = 0) => Call("MEMORY"
-            .SubCommand( "USAGE")
+            .SubCommand("USAGE")
             .InputRaw(key)
             .InputIf(count > 0, "SAMPLES", count)
             .FlagKey(key), rt => rt.ThrowOrValue<long>());
 
         public string[][] ModuleList() => Call("MODULE".SubCommand("LIST"), rt => rt.ThrowOrValue<string[][]>());
-        public string ModuleLoad(string path, params string[] args) => Call("MODULE".SubCommand( "LOAD").InputRaw(path).InputIf(args?.Any() == true, args), rt => rt.ThrowOrValue<string>());
+        public string ModuleLoad(string path, params string[] args) => Call("MODULE".SubCommand("LOAD").InputRaw(path).InputIf(args?.Any() == true, args), rt => rt.ThrowOrValue<string>());
         public string ModuleUnload(string name) => Call("MODULE".SubCommand("UNLOAD").InputRaw(name), rt => rt.ThrowOrValue<string>());
 
         //public RedisClient Monitor(Action<object> onData)
@@ -185,6 +189,24 @@ namespace FreeRedis
         }
 
         public override string ToString() => $"{role}, {data}";
+    }
+
+    public class AclGetUserResult
+    {
+        public string[] flags;
+        public string[] passwords;
+        public string commands;
+        public string[] keys;
+    }
+    public class LogResult
+    {
+        public long count;
+        public string reason;
+        public string context;
+        public string @object;
+        public string username;
+        public decimal age_seconds;
+        public string clientinfo;
     }
     #endregion
 }

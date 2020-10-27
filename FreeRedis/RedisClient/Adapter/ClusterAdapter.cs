@@ -42,7 +42,7 @@ namespace FreeRedis
                 var pool = _ib.Get(poolkey);
                 if (pool.IsAvailable == false)
                 {
-                    poolkey = _ib.GetKeys(a => a.IsAvailable).FirstOrDefault();
+                    poolkey = _ib.GetKeys(a => a != null && a.IsAvailable).FirstOrDefault();
                     if (string.IsNullOrEmpty(poolkey)) throw new Exception($"All nodes of the cluster failed to connect");
                     pool = _ib.Get(poolkey);
                 }
