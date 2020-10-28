@@ -45,8 +45,6 @@ namespace console_netcore31_sentinel
             return;
         }
 
-        static readonly string String = "我是中国人";
-        static readonly byte[] Bytes = Encoding.UTF8.GetBytes("这是一个byte字节");
     }
 
     public class TestClass
