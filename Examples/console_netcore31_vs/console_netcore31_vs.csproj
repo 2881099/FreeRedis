@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\FreeRedis\FreeRedis.csproj" />
+    <ProjectReference Include="..\..\src\FreeRedis\FreeRedis.csproj" />
   </ItemGroup>
   
 </Project>
