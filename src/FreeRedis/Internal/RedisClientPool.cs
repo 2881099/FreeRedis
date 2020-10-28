@@ -14,7 +14,7 @@ using System.IO;
 
 namespace FreeRedis.Internal
 {
-    public class RedisClientPool : ObjectPool<RedisClient>
+    public class RedisClientPool : ObjectPool<RedisClient>, IDisposable
     {
         public RedisClientPool(string connectionString, Action<RedisClient> connected, RedisClient topOwner) : base(null)
         {
@@ -70,6 +70,12 @@ namespace FreeRedis.Internal
             this.Policy = _policy;
             this.TopOwner = topOwner;
             _policy.ConnectionString = connectionString;
+
+#if net40
+#else
+            if (_policy._connectionStringBuilder.MaxPoolSize > 1)
+                AsyncSocket = new AsyncRedisSocket(Get().Value.Adapter.GetRedisSocket(null));
+#endif
         }
 
         internal bool CheckAvailable() => base.LiveCheckAvailable();
@@ -78,6 +84,19 @@ namespace FreeRedis.Internal
         public string Key => _policy.Key;
         public string Prefix => _policy._connectionStringBuilder.Prefix;
         internal RedisClient TopOwner;
+#if net40
+#else
+        /// <summary>
+        /// Single socket not support Async Multiplexing
+        /// </summary>
+        internal AsyncRedisSocket AsyncSocket;
+
+        void IDisposable.Dispose()
+        {
+            AsyncSocket.Dispose();
+            base.Dispose();
+        }
+#endif
     }
 
     public class RedisClientPoolPolicy : IPolicy<RedisClient>
@@ -150,23 +169,10 @@ namespace FreeRedis.Internal
         }
 #if net40
 #else
-        async public Task OnGetAsync(Object<RedisClient> obj)
+        public Task OnGetAsync(Object<RedisClient> obj)
         {
-            if (_pool.IsAvailable)
-            {
-                if (DateTime.Now.Subtract(obj.LastReturnTime).TotalSeconds > 60 || obj.Value.Adapter.GetRedisSocket(null).IsConnected == false)
-                {
-                    try
-                    {
-                        //await obj.Value.PingAsync();
-                        await Task.FromResult(obj.Value.Ping()); //todo: async
-                    }
-                    catch
-                    {
-                        obj.ResetValue();
-                    }
-                }
-            }
+            OnGet(obj); //todo
+            return Task.FromResult(false);
         }
 #endif
 

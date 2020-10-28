@@ -33,7 +33,17 @@ namespace FreeRedis
         internal bool _clusterMovedAsking;
         internal int _clusterMovedTryCount;
         public string WriteHost { get; internal set; }
-        public RedisResult ReadResult { get; internal set; }
+        public bool _flagReadbytes;
+        /// <summary>
+        /// read byte[]
+        /// </summary>
+        /// <param name="isReadbytes"></param>
+        /// <returns></returns>
+        public CommandPacket FlagReadbytes(bool isReadbytes)
+        {
+            _flagReadbytes = isReadbytes;
+            return this;
+        }
 
         public CommandPacket(string cmd, string subcmd = null) => this.Command(cmd, subcmd);
         public CommandPacket Command(string cmd, string subcmd = null)

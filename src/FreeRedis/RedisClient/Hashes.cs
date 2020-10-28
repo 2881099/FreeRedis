@@ -11,10 +11,10 @@ namespace FreeRedis
         public long HDel(string key, params string[] fields) => Call("HDEL".Input(key).Input(fields).FlagKey(key), rt => rt.ThrowOrValue<long>());
         public bool HExists(string key, string field) => Call("HEXISTS".Input(key, field).FlagKey(key), rt => rt.ThrowOrValue<bool>());
         public string HGet(string key, string field) => Call("HGET".Input(key, field).FlagKey(key), rt => rt.ThrowOrValue<string>());
-        public T HGet<T>(string key, string field) => Call<byte[], T>("HGET".Input(key, field).FlagKey(key), rt => rt.ThrowOrValue(a => DeserializeRedisValue<T>(a.ConvertTo<byte[]>(), rt.Encoding)));
+        public T HGet<T>(string key, string field) => Call("HGET".Input(key, field).FlagKey(key).FlagReadbytes(true), rt => rt.ThrowOrValue(a => DeserializeRedisValue<T>(a.ConvertTo<byte[]>(), rt.Encoding)));
 
         public Dictionary<string, string> HGetAll(string key) => Call("HGETALL".Input(key).FlagKey(key), rt => rt.ThrowOrValue((a, _) => a.MapToHash<string>(rt.Encoding)));
-        public Dictionary<string, T> HGetAll<T>(string key) => Call<byte[], Dictionary<string, T>>("HGETALL".Input(key).FlagKey(key), rt => rt
+        public Dictionary<string, T> HGetAll<T>(string key) => Call("HGETALL".Input(key).FlagKey(key).FlagReadbytes(true), rt => rt
             .ThrowOrValue((a, _) =>
             {
                 for (var x = 0; x < a.Length; x += 2) a[x + 1] = DeserializeRedisValue<T>(a[x + 1].ConvertTo<byte[]>(), rt.Encoding);
@@ -56,7 +56,7 @@ namespace FreeRedis
         public string[] HVals(string key) => Call("HVALS".Input(key).FlagKey(key), rt => rt.ThrowOrValue<string[]>());
         public T[] HVals<T>(string key) => HReadArray<T>("HVALS".Input(key).FlagKey(key));
 
-        T[] HReadArray<T>(CommandPacket cb) => Call<byte[], T[]>(cb, rt => rt
+        T[] HReadArray<T>(CommandPacket cb) => Call(cb.FlagReadbytes(true), rt => rt
             .ThrowOrValue((a, _) => a.Select(b => DeserializeRedisValue<T>(b.ConvertTo<byte[]>(), rt.Encoding)).ToArray()));
     }
 }

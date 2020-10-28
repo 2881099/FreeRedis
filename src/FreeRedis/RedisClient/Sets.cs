@@ -28,12 +28,12 @@ namespace FreeRedis
             .FlagKey(new[] { source, destination }), rt => rt.ThrowOrValue<bool>());
 
         public string SPop(string key) => Call("SPOP".Input(key).FlagKey(key), rt => rt.ThrowOrValue<string>());
-        public T SPop<T>(string key) => Call<byte[], T>("SPOP".Input(key).FlagKey(key), rt => rt.ThrowOrValue(a => DeserializeRedisValue<T>(a.ConvertTo<byte[]>(), rt.Encoding)));
+        public T SPop<T>(string key) => Call("SPOP".Input(key).FlagKey(key).FlagReadbytes(true), rt => rt.ThrowOrValue(a => DeserializeRedisValue<T>(a.ConvertTo<byte[]>(), rt.Encoding)));
         public string[] SPop(string key, int count) => Call("SPOP".Input(key, count).FlagKey(key), rt => rt.ThrowOrValue<string[]>());
         public T[] SPop<T>(string key, int count) => SReadArray<T>("SPOP".Input(key, count).FlagKey(key));
 
         public string SRandMember(string key) => Call("SRANDMEMBER".Input(key).FlagKey(key), rt => rt.ThrowOrValue<string>());
-        public T SRandMember<T>(string key) => Call<byte[], T>("SRANDMEMBER".Input(key).FlagKey(key), rt => rt.ThrowOrValue(a => DeserializeRedisValue<T>(a.ConvertTo<byte[]>(), rt.Encoding)));
+        public T SRandMember<T>(string key) => Call("SRANDMEMBER".Input(key).FlagKey(key).FlagReadbytes(true), rt => rt.ThrowOrValue(a => DeserializeRedisValue<T>(a.ConvertTo<byte[]>(), rt.Encoding)));
         public string[] SRandMember(string key, int count) => Call("SRANDMEMBER".Input(key, count).FlagKey(key), rt => rt.ThrowOrValue<string[]>());
         public T[] SRandMember<T>(string key, int count) => SReadArray<T>("SRANDMEMBER".Input(key, count).FlagKey(key));
 
@@ -48,7 +48,7 @@ namespace FreeRedis
         public T[] SUnion<T>(params string[] keys) => SReadArray<T>("SUNION".Input(keys).FlagKey(keys));
         public long SUnionStore(string destination, params string[] keys) => Call("SUNIONSTORE".Input(destination).Input(keys).FlagKey(destination).FlagKey(keys), rt => rt.ThrowOrValue<long>());
 
-        T[] SReadArray<T>(CommandPacket cb) => Call<byte[], T[]>(cb, rt => rt
+        T[] SReadArray<T>(CommandPacket cb) => Call(cb.FlagReadbytes(true), rt => rt
             .ThrowOrValue((a, _) => a == null || a.Length == 0 ? new T[0] : a.Select(b => DeserializeRedisValue<T>(b.ConvertTo<byte[]>(), rt.Encoding)).ToArray()));
     }
 }

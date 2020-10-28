@@ -33,10 +33,6 @@ namespace FreeRedis.Internal
         ClientReplyType ClientReply { get; }
 
         void Connect();
-#if net40
-#else
-        Task ConnectAsync();
-#endif
 
         void ResetHost(string host);
         void ReleaseSocket();

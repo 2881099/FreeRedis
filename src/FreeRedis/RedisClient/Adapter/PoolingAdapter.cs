@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace FreeRedis
 {
@@ -38,6 +39,79 @@ namespace FreeRedis
 
             public override IRedisSocket GetRedisSocket(CommandPacket cmd)
             {
+                var poolkey = GetIdleBusKey(cmd);
+                var pool = _ib.Get(poolkey);
+                var cli = pool.Get();
+                var rds = cli.Value.Adapter.GetRedisSocket(null);
+                var rdsproxy = DefaultRedisSocket.CreateTempProxy(rds, () => pool.Return(cli));
+                rdsproxy._pool = pool;
+                return rdsproxy;
+            }
+            public override TValue AdapaterCall<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
+            {
+                return TopOwner.LogCall(cmd, () =>
+                {
+                    RedisResult rt = null;
+                    RedisClientPool pool = null;
+                    Exception ioex = null;
+                    using (var rds = GetRedisSocket(cmd))
+                    {
+                        pool = (rds as DefaultRedisSocket.TempProxyRedisSocket)._pool;
+                        try
+                        {
+                            rds.Write(cmd);
+                            rt = rds.Read(cmd._flagReadbytes);
+                        }
+                        catch (Exception ex)
+                        {
+                            ioex = ex;
+                        }
+                    }
+                    if (ioex != null)
+                    {
+                        if (pool?.SetUnavailable(ioex) == true)
+                        {
+                        }
+                        throw ioex;
+                    }
+                    rt.IsErrorThrow = TopOwner._isThrowRedisSimpleError;
+                    return parse(rt);
+                });
+            }
+#if net40
+#else
+            async public override Task<TValue> AdapaterCallAsync<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
+            {
+                var poolkey = GetIdleBusKey(cmd);
+                var pool = _ib.Get(poolkey);
+                if (pool.AsyncSocket == null) return AdapaterCall(cmd, parse);
+                return await TopOwner.LogCallAsync(cmd, async () =>
+                {
+                    RedisResult rt = null;
+                    Exception ioex = null;
+                    try
+                    {
+                        rt = await pool.AsyncSocket.WriteAsync(cmd);
+                    }
+                    catch (Exception ex)
+                    {
+                        ioex = ex;
+                    }
+                    if (ioex != null)
+                    {
+                        if (pool?.SetUnavailable(ioex) == true)
+                        {
+                        }
+                        throw ioex;
+                    }
+                    rt.IsErrorThrow = TopOwner._isThrowRedisSimpleError;
+                    return parse(rt);
+                });
+            }
+#endif
+
+            string GetIdleBusKey(CommandPacket cmd)
+            {
                 if (cmd != null && (_rw_splitting || !_is_single))
                 {
                     var cmdset = CommandSets.Get(cmd._command);
@@ -54,55 +128,13 @@ namespace FreeRedis
                             if (rndkeys.Any())
                             {
                                 var rndkey = rndkeys[_rnd.Value.Next(0, rndkeys.Length)];
-                                var rndpool = _ib.Get(rndkey);
-                                var rndcli = rndpool.Get();
-                                var rndrds = rndcli.Value.Adapter.GetRedisSocket(null);
-                                var rndrdsproxy = DefaultRedisSocket.CreateTempProxy(rndrds, () => rndpool.Return(rndcli));
-                                rndrdsproxy._pool = rndpool;
-                                return rndrdsproxy;
+                                return rndkey;
+
                             }
                         }
                     }
                 }
-                var poolkey = _masterHost;
-                var pool = _ib.Get(poolkey);
-                var cli = pool.Get();
-                var rds = cli.Value.Adapter.GetRedisSocket(null);
-                var rdsproxy = DefaultRedisSocket.CreateTempProxy(rds, () => pool.Return(cli));
-                rdsproxy._pool = pool;
-                return rdsproxy;
-            }
-            public override TValue AdapaterCall<TReadTextOrStream, TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
-            {
-                return TopOwner.LogCall(cmd, () =>
-                {
-                    RedisResult rt = null;
-                    RedisClientPool pool = null;
-                    Exception ioex = null;
-                    using (var rds = GetRedisSocket(cmd))
-                    {
-                        pool = (rds as DefaultRedisSocket.TempProxyRedisSocket)._pool;
-                        try
-                        {
-                            rds.Write(cmd);
-                            rt = rds.Read(typeof(TReadTextOrStream) == typeof(byte[]));
-                        }
-                        catch (Exception ex)
-                        {
-                            ioex = ex;
-                        }
-                    }
-                    if (ioex != null)
-                    {
-                        if (pool?.SetUnavailable(ioex) == true)
-                        {
-
-                        }
-                        throw ioex;
-                    }
-                    rt.IsErrorThrow = TopOwner._isThrowRedisSimpleError;
-                    return parse(rt);
-                });
+                return _masterHost;
             }
         }
     }

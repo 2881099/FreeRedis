@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace FreeRedis
 {
@@ -18,7 +19,10 @@ namespace FreeRedis
             {
                 public CommandPacket Command { get; set; }
                 public Func<object, object> Parse { get; set; }
-                public object Result { get; set; }
+#if net40
+#else
+                public TaskCompletionSource<object> TaskCompletionSource { get; set; }
+#endif
             }
 
             public TransactionAdapter(RedisClient topOwner)
@@ -38,13 +42,13 @@ namespace FreeRedis
                 TryMulti();
                 return DefaultRedisSocket.CreateTempProxy(_redisSocket, null);
             }
-            public override TValue AdapaterCall<TReadTextOrStream, TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
+            public override TValue AdapaterCall<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
             {
                 TryMulti();
                 return TopOwner.LogCall(cmd, () =>
                 {
                     _redisSocket.Write(cmd);
-                    _redisSocket.Read(typeof(TReadTextOrStream) == typeof(byte[])).ThrowOrValue<TValue>(useDefaultValue: true);
+                    _redisSocket.Read(cmd._flagReadbytes).ThrowOrValue<TValue>(useDefaultValue: true);
                     _commands.Add(new TransactionCommand
                     {
                         Command = cmd,
@@ -53,6 +57,28 @@ namespace FreeRedis
                     return default(TValue);
                 });
             }
+#if net40
+#else
+            async public override Task<TValue> AdapaterCallAsync<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
+            {
+                var tsc = new TaskCompletionSource<object>();
+                TryMulti();
+                TopOwner.LogCall(cmd, () =>
+                {
+                    _redisSocket.Write(cmd);
+                    _redisSocket.Read(cmd._flagReadbytes).ThrowOrValue<TValue>(useDefaultValue: true);
+                    _commands.Add(new TransactionCommand
+                    {
+                        Command = cmd,
+                        Parse = obj => parse(new RedisResult(obj, true, RedisMessageType.SimpleString) { Encoding = _redisSocket.Encoding }),
+                        TaskCompletionSource = tsc
+                    });
+                    return default(TValue);
+                });
+                var ret = await tsc.Task;
+                return (TValue)ret;
+            }
+#endif
 
             object SelfCall(CommandPacket cmd)
             {
@@ -70,13 +96,23 @@ namespace FreeRedis
                     SelfCall("MULTI");
                 }
             }
+            void TryReset()
+            {
+                if (_redisSocket == null) return;
+#if net40
+#else
+                for (var a = 0; a < _commands.Count; a++)
+                    _commands[a]?.TaskCompletionSource.TrySetCanceled();
+#endif
+                _commands.Clear();
+                _redisSocket?.Dispose();
+                _redisSocket = null;
+            }
             public void Discard()
             {
                 if (_redisSocket == null) return;
                 SelfCall("DISCARD");
-                _commands.Clear();
-                _redisSocket?.Dispose();
-                _redisSocket = null;
+                TryReset();
             }
             public object[] Exec()
             {
@@ -85,15 +121,20 @@ namespace FreeRedis
                 {
                     var ret = SelfCall("EXEC") as object[];
 
+                    var retparsed = new object[ret.Length];
                     for (var a = 0; a < ret.Length; a++)
-                        _commands[a].Result = _commands[a].Parse(ret[a]);
-                    return _commands.Select(a => a.Result).ToArray();
+                    {
+                        retparsed[a] = _commands[a].Parse(ret[a]);
+#if net40
+#else
+                        _commands[a]?.TaskCompletionSource.TrySetResult(retparsed[a]); //tryset Async
+#endif
+                    }
+                    return retparsed;
                 }
                 finally
                 {
-                    _commands.Clear();
-                    _redisSocket?.Dispose();
-                    _redisSocket = null;
+                    TryReset();
                 }
             }
             public void UnWatch()

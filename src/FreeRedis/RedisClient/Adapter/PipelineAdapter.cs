@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace FreeRedis
 {
@@ -18,7 +19,12 @@ namespace FreeRedis
                 public CommandPacket Command { get; set; }
                 public Func<RedisResult, object> Parse { get; set; }
                 public bool IsBytes { get; set; }
+                public RedisResult RedisResult { get; set; }
                 public object Result { get; set; }
+#if net40
+#else
+                public TaskCompletionSource<object> TaskCompletionSource { get; set; }
+#endif
             }
 
             public PipelineAdapter(RedisClient topOwner)
@@ -30,6 +36,11 @@ namespace FreeRedis
 
             public override void Dispose()
             {
+#if net40
+#else
+                for (var a = 0; a < _commands.Count; a++)
+                    _commands[a]?.TaskCompletionSource.TrySetCanceled();
+#endif
                 _commands.Clear();
             }
 
@@ -37,17 +48,34 @@ namespace FreeRedis
             {
                 throw new Exception($"RedisClient: Method cannot be used in {UseType} mode.");
             }
-            public override TValue AdapaterCall<TReadTextOrStream, TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
+            public override TValue AdapaterCall<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
             {
                 _commands.Add(new PipelineCommand
                 {
                     Command = cmd,
                     Parse = rt => parse(rt),
-                    IsBytes = typeof(TReadTextOrStream) == typeof(byte[])
+                    IsBytes = cmd._flagReadbytes
                 });
                 TopOwner.OnNotice(new NoticeEventArgs(NoticeType.Call, null, $"Pipeline > {cmd}", null));
                 return default(TValue);
             }
+#if net40
+#else
+            async public override Task<TValue> AdapaterCallAsync<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
+            {
+                var tsc = new TaskCompletionSource<object>();
+                _commands.Add(new PipelineCommand
+                {
+                    Command = cmd,
+                    Parse = rt => parse(rt),
+                    IsBytes = cmd._flagReadbytes,
+                    TaskCompletionSource = tsc
+                });
+                TopOwner.OnNotice(new NoticeEventArgs(NoticeType.Call, null, $"Pipeline > {cmd}", null));
+                var ret = await tsc.Task;
+                return (TValue)ret;
+            }
+#endif
 
             public object[] EndPipe()
             {
@@ -102,9 +130,17 @@ namespace FreeRedis
                     
                     foreach (var pc in cmds)
                     {
-                        var rt = rds.Read(pc.IsBytes);
-                        pc.Result = pc.Parse(rt);
-                        if (pc.Command.ReadResult.IsError) err.Add(pc);
+                        pc.RedisResult = rds.Read(pc.IsBytes);
+                        pc.Result = pc.Parse(pc.RedisResult);
+#if net40
+#else
+                        if (pc.TaskCompletionSource != null)
+                        {
+                            if (pc.RedisResult.IsError) pc.TaskCompletionSource.TrySetException(new RedisException(pc.RedisResult.SimpleError));
+                            else pc.TaskCompletionSource.TrySetResult(pc.Result);
+                        }
+#endif
+                        if (pc.RedisResult.IsError) err.Add(pc);
                     }
                 }
                 finally
@@ -120,7 +156,7 @@ namespace FreeRedis
                     {
                         var cmd = err[a].Command;
                         if (a > 0) sb.Append("\r\n");
-                        sb.Append(cmd.ReadResult.SimpleError).Append(" {").Append(cmd.ToString()).Append("}");
+                        sb.Append(err[a].RedisResult.SimpleError).Append(" {").Append(cmd.ToString()).Append("}");
                     }
                     throw new RedisException(sb.ToString());
                 }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace FreeRedis
 {
@@ -74,7 +75,7 @@ namespace FreeRedis
                 rdsproxy._pool = pool;
                 return rdsproxy;
             }
-            public override TValue AdapaterCall<TReadTextOrStream, TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
+            public override TValue AdapaterCall<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
             {
                 return TopOwner.LogCall(cmd, () =>
                 {
@@ -84,7 +85,7 @@ namespace FreeRedis
                         try
                         {
                             rds.Write(cmd);
-                            rt = rds.Read(typeof(TReadTextOrStream) == typeof(byte[]));
+                            rt = rds.Read(cmd._flagReadbytes);
                         }
                         catch (Exception ex)
                         {
@@ -101,6 +102,14 @@ namespace FreeRedis
                     return parse(rt);
                 });
             }
+#if net40
+#else
+            public override Task<TValue> AdapaterCallAsync<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
+            {
+                //Single socket not support Async Multiplexing
+                return Task.FromResult(AdapaterCall(cmd, parse));
+            }
+#endif
 
             int ResetSentinelFlag = 0;
             internal void ResetSentinel()

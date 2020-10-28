@@ -8,7 +8,7 @@ namespace FreeRedis
     partial class RedisClient
     {
         public long Del(params string[] keys) => Call("DEL".Input(keys).FlagKey(keys), rt => rt.ThrowOrValue<long>());
-        public byte[] Dump(string key) => Call<byte[], byte[]>("DUMP".Input(key).FlagKey(key), rt => rt.ThrowOrValue<byte[]>());
+        public byte[] Dump(string key) => Call("DUMP".Input(key).FlagKey(key).FlagReadbytes(true), rt => rt.ThrowOrValue<byte[]>());
         public bool Exists(string key) => Call("EXISTS".Input(key).FlagKey(key), rt => rt.ThrowOrValue<bool>());
         public long Exists(string[] keys) => Call("EXISTS".Input(keys).FlagKey(keys), rt => rt.ThrowOrValue<long>());
         public bool Expire(string key, int seconds) => Call("EXPIRE".Input(key, seconds).FlagKey(key), rt => rt.ThrowOrValue<bool>());

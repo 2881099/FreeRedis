@@ -81,9 +81,8 @@ namespace FreeRedis
             });
         }
 
-        public object Call(CommandPacket cmd) => Adapter.AdapaterCall<string, object>(cmd, rt => rt.ThrowOrValue());
-        protected TValue Call<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse) => Adapter.AdapaterCall<string, TValue>(cmd, parse);
-        protected TValue Call<TReadTextOrStream, TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse) => Adapter.AdapaterCall<TReadTextOrStream, TValue>(cmd, parse);
+        public object Call(CommandPacket cmd) => Adapter.AdapaterCall(cmd, rt => rt.ThrowOrValue());
+        protected TValue Call<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse) => Adapter.AdapaterCall(cmd, parse);
 
         internal T LogCall<T>(CommandPacket cmd, Func<T> func)
         {
@@ -105,33 +104,33 @@ namespace FreeRedis
             finally
             {
                 sw.Stop();
-                if (exception == null && _isThrowRedisSimpleError) exception = this.RedisSimpleError;
-                string log;
-                if (exception != null) log = $"{exception.Message}";
-                else if (cmd.ReadResult != null)
-                {
-                    if (cmd.ReadResult.Value is Array array)
-                    {
-                        var sb = new StringBuilder().Append("[");
-                        var itemindex = 0;
-                        foreach (var item in array)
-                        {
-                            if (itemindex++ > 0) sb.Append(", ");
-                            sb.Append(item.ToInvariantCultureToString());
-                        }
-                        log = sb.Append("]").ToString();
-                        sb.Clear();
-                    }
-                    else
-                        log = $"{cmd.ReadResult.Value.ToInvariantCultureToString()}";
-                }
-                else log = $"{ret.ToInvariantCultureToString()}";
-                this.OnNotice(new NoticeEventArgs(
-                    NoticeType.Call,
-                    exception ?? this.RedisSimpleError,
-                    $"{(cmd.WriteHost ?? "Not connected")} ({sw.ElapsedMilliseconds}ms) > {cmd}\r\n{log}",
-                    cmd.ReadResult?.Value ?? ret));
+                LogCallFinally(cmd, ret, sw, exception);
             }
+        }
+        void LogCallFinally<T>(CommandPacket cmd, T result, Stopwatch sw, Exception exception)
+        {
+            if (exception == null && _isThrowRedisSimpleError) exception = this.RedisSimpleError;
+            string log;
+            if (exception != null) log = $"{exception.Message}";
+            else if (result is Array array)
+            {
+                var sb = new StringBuilder().Append("[");
+                var itemindex = 0;
+                foreach (var item in array)
+                {
+                    if (itemindex++ > 0) sb.Append(", ");
+                    sb.Append(item.ToInvariantCultureToString());
+                }
+                log = sb.Append("]").ToString();
+                sb.Clear();
+            }
+            else
+                log = $"{result.ToInvariantCultureToString()}";
+            this.OnNotice(new NoticeEventArgs(
+                NoticeType.Call,
+                exception ?? this.RedisSimpleError,
+                $"{(cmd.WriteHost ?? "Not connected")} ({sw.ElapsedMilliseconds}ms) > {cmd}\r\n{log}",
+                result));
         }
         public class NoticeEventArgs : EventArgs
         {

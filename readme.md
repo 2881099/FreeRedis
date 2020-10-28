@@ -100,6 +100,13 @@ using (var pipe = cli.StartPipe())
     pipe.IncrBy("key1", 10);
     pipe.Set("key2", Null);
     pipe.Get("key1");
+
+    long t1 = 0;
+    tran.IncrByAsync("key1", 10).ContinueWith(t => t1 = t.Result); //callback
+
+    string t2 = null;
+    tran.GetAsync("key1").ContinueWith(t => t2 = t.Result); //callback
+
     object[] ret = pipe.EndPipe();
 }
 ```
@@ -112,6 +119,13 @@ using (var tran = cli.Multi())
     tran.IncrBy("key1", 10);
     tran.Set("key2", Null);
     tran.Get("key1");
+
+    long t1 = 0;
+    tran.IncrByAsync("key1", 10).ContinueWith(t => t1 = t.Result); //callback
+
+    string t2 = null;
+    tran.GetAsync("key1").ContinueWith(t => t2 = t.Result); //callback
+
     object[] ret = tran.Exec();
 }
 ```

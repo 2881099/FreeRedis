@@ -56,5 +56,68 @@ namespace FreeRedis.Tests.RedisClientTests.Other
                 Assert.Equal(Class.ToString(), ret[8].ToString());
             }
         }
+
+        [Fact]
+        public void StartPipeAsync()
+        {
+            var key = Guid.NewGuid().ToString();
+            using (var pipe = cli.StartPipe())
+            {
+                long t1 = 0;
+                pipe.IncrByAsync(key, 10).ContinueWith(t => t1 = t.Result);
+
+                pipe.SetAsync("TestSet_null", Null);
+                string t3 = "";
+                pipe.GetAsync("TestSet_null").ContinueWith(t => t3 = t.Result);
+
+                pipe.SetAsync("TestSet_string", String);
+                string t4 = null;
+                pipe.GetAsync("TestSet_string").ContinueWith(t => t4 = t.Result);
+
+                pipe.SetAsync("TestSet_bytes", Bytes);
+                byte[] t6 = null;
+                pipe.GetAsync<byte[]>("TestSet_bytes").ContinueWith(t => t6 = t.Result);
+
+                pipe.SetAsync("TestSet_class", Class);
+                TestClass t8 = null;
+                pipe.GetAsync<TestClass>("TestSet_class").ContinueWith(t => t8 = t.Result);
+            }
+
+            using (var pipe = cli.StartPipe())
+            {
+                long t1 = 0;
+                pipe.IncrByAsync(key, 10).ContinueWith(t => t1 = t.Result);
+
+                pipe.SetAsync("TestSet_null", Null);
+                string t3 = "";
+                pipe.GetAsync("TestSet_null").ContinueWith(t => t3 = t.Result);
+
+                pipe.SetAsync("TestSet_string", String);
+                string t4 = null;
+                pipe.GetAsync("TestSet_string").ContinueWith(t => t4 = t.Result);
+
+                pipe.SetAsync("TestSet_bytes", Bytes);
+                byte[] t6 = null;
+                pipe.GetAsync<byte[]>("TestSet_bytes").ContinueWith(t => t6 = t.Result);
+
+                pipe.SetAsync("TestSet_class", Class);
+                TestClass t8 = null;
+                pipe.GetAsync<TestClass>("TestSet_class").ContinueWith(t => t8 = t.Result);
+
+                var ret = pipe.EndPipe();
+
+                Assert.Equal(10L, ret[0]);
+                Assert.Equal("", ret[2].ToString());
+                Assert.Equal(String, ret[4].ToString());
+                Assert.Equal(Bytes, ret[6]);
+                Assert.Equal(Class.ToString(), ret[8].ToString());
+
+                Assert.Equal(10L, t1);
+                Assert.Equal("", t3);
+                Assert.Equal(String, t4);
+                Assert.Equal(Bytes, t6);
+                Assert.Equal(Class.ToString(), t8.ToString());
+            }
+        }
     }
 }

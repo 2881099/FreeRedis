@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace FreeRedis
 {
@@ -30,17 +31,26 @@ namespace FreeRedis
             {
                 return DefaultRedisSocket.CreateTempProxy(_redisSocket, null);
             }
-            public override TValue AdapaterCall<TReadTextOrStream, TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
+            public override TValue AdapaterCall<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
             {
                 return TopOwner.LogCall(cmd, () =>
                 {
                     _redisSocket.Write(cmd);
-                    var rt = _redisSocket.Read(typeof(TReadTextOrStream) == typeof(byte[]));
+                    var rt = _redisSocket.Read(cmd._flagReadbytes);
                     if (cmd._command == "QUIT") _redisSocket.ReleaseSocket();
                     rt.IsErrorThrow = TopOwner._isThrowRedisSimpleError;
                     return parse(rt);
                 });
             }
+#if net40
+#else
+            public override Task<TValue> AdapaterCallAsync<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
+            {
+                //Single socket not support Async Multiplexing
+                return Task.FromResult(AdapaterCall(cmd, parse));
+            }
+#endif
+
         }
     }
 }

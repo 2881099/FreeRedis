@@ -3,23 +3,24 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace FreeRedis
 {
     partial class RedisClient
     {
-
-        protected internal enum UseType {
+        protected internal enum UseType
+        {
             Pooling,
             Cluster,
             Sentinel,
-            SingleInside, 
-            SingleTemp, 
-            Pipeline, 
+            SingleInside,
+            SingleTemp,
+            Pipeline,
             Transaction,
         }
 
-        protected internal abstract class BaseAdapter
+        protected internal abstract partial class BaseAdapter
         {
             public static ThreadLocal<Random> _rnd = new ThreadLocal<Random>(() => new Random());
             public UseType UseType { get; protected set; }
@@ -28,7 +29,13 @@ namespace FreeRedis
             public abstract IRedisSocket GetRedisSocket(CommandPacket cmd);
             public abstract void Dispose();
 
-            public abstract TValue AdapaterCall<TReadTextOrStream, TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse);
+            public abstract TValue AdapaterCall<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse);
+
+#if net40
+#else
+            public abstract Task<TValue> AdapaterCallAsync<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse);
+#endif
+
         }
     }
 }

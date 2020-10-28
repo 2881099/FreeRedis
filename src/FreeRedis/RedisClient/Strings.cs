@@ -22,7 +22,7 @@ namespace FreeRedis
         public long Decr(string key) => Call("DECR".Input(key).FlagKey(key), rt => rt.ThrowOrValue<long>());
         public long DecrBy(string key, long decrement) => Call("DECRBY".Input(key, decrement).FlagKey(key), rt => rt.ThrowOrValue<long>());
         public string Get(string key) => Call("GET".Input(key).FlagKey(key), rt => rt.ThrowOrValue<string>());
-        public T Get<T>(string key) => Call<byte[], T>("GET".Input(key).FlagKey(key), rt => rt.ThrowOrValue(a => DeserializeRedisValue<T>(a.ConvertTo<byte[]>(), rt.Encoding)));
+        public T Get<T>(string key) => Call("GET".Input(key).FlagKey(key).FlagReadbytes(true), rt => rt.ThrowOrValue(a => DeserializeRedisValue<T>(a.ConvertTo<byte[]>(), rt.Encoding)));
         public void Get(string key, Stream destination, int bufferSize = 1024)
         {
             var cmd = "GET".Input(key).FlagKey(key);
@@ -38,7 +38,7 @@ namespace FreeRedis
         }
         public bool GetBit(string key, long offset) => Call("GETBIT".Input(key, offset).FlagKey(key), rt => rt.ThrowOrValue<bool>());
         public string GetRange(string key, long start, long end) => Call("GETRANGE".Input(key, start, end).FlagKey(key), rt => rt.ThrowOrValue<string>());
-        public T GetRange<T>(string key, long start, long end) => Call<byte[], T>("GETRANGE".Input(key, start, end).FlagKey(key), rt => rt.ThrowOrValue(a => DeserializeRedisValue<T>(a.ConvertTo<byte[]>(), rt.Encoding)));
+        public T GetRange<T>(string key, long start, long end) => Call("GETRANGE".Input(key, start, end).FlagKey(key).FlagReadbytes(true), rt => rt.ThrowOrValue(a => DeserializeRedisValue<T>(a.ConvertTo<byte[]>(), rt.Encoding)));
 
         public string GetSet<T>(string key, T value) => Call("GETSET".Input(key).InputRaw(SerializeRedisValue(value)).FlagKey(key), rt => rt.ThrowOrValue<string>());
         public long Incr(string key) => Call("INCR".Input(key).FlagKey(key), rt => rt.ThrowOrValue<long>());
@@ -46,7 +46,7 @@ namespace FreeRedis
         public decimal IncrByFloat(string key, decimal increment) => Call("INCRBYFLOAT".Input(key, increment).FlagKey(key), rt => rt.ThrowOrValue<decimal>());
 
         public string[] MGet(params string[] keys) => Call("MGET".Input(keys).FlagKey(keys), rt => rt.ThrowOrValue<string[]>());
-        public T[] MGet<T>(params string[] keys) => Call<object, T[]>("MGET".Input(keys).FlagKey(keys), rt => rt
+        public T[] MGet<T>(params string[] keys) => Call("MGET".Input(keys).FlagKey(keys).FlagReadbytes(true), rt => rt
             .ThrowOrValue((a, _) => a.Select(b => DeserializeRedisValue<T>(b.ConvertTo<byte[]>(), rt.Encoding)).ToArray()));
 
         public void MSet(string key, object value, params object[] keyValues) => MSet<bool>(false, key, value, keyValues);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -43,18 +44,14 @@ namespace FreeRedis.Internal
             public RedisProtocol Protocol { get => _owner.Protocol; set => _owner.Protocol = value; }
             public Encoding Encoding { get => _owner.Encoding; set => _owner.Encoding = value; }
             public event EventHandler<EventArgs> Connected { add { _owner.Connected += value; } remove { _owner.Connected -= value; } }
+            public ClientReplyType ClientReply => _owner.ClientReply;
 
             public void Connect() => _owner.Connect();
-#if net40
-#else
-            public Task ConnectAsync() => _owner.ConnectAsync();
-#endif
             public void ResetHost(string host) => _owner.ResetHost(host);
             public void ReleaseSocket() => _owner.ReleaseSocket();
             public void Write(CommandPacket cmd) => _owner.Write(cmd);
             public RedisResult Read(bool isbytes) => _owner.Read(isbytes);
             public void ReadChunk(Stream destination, int bufferSize = 1024) => _owner.ReadChunk(destination, bufferSize);
-            public ClientReplyType ClientReply => _owner.ClientReply;
         }
 
         public string Host { get; private set; }
@@ -89,6 +86,7 @@ namespace FreeRedis.Internal
         public Stream Stream => _stream ?? throw new Exception("Redis socket connection was not opened");
         public bool IsConnected => _socket?.Connected == true && _stream != null;
         public event EventHandler<EventArgs> Connected;
+        public ClientReplyType ClientReply { get; protected set; }
 
         RespHelper.Resp3Reader _reader;
         RespHelper.Resp3Reader Reader => _reader ?? (_reader = new RespHelper.Resp3Reader(Stream));
@@ -134,8 +132,6 @@ namespace FreeRedis.Internal
             }
         }
 
-        public ClientReplyType ClientReply { get; protected set; }
-
         public void Connect()
         {
             ResetHost(Host);
@@ -151,37 +147,6 @@ namespace FreeRedis.Internal
             _socket.SendTimeout = (int)SendTimeout.TotalMilliseconds;
             Connected?.Invoke(this, new EventArgs());
         }
-#if net40
-#else
-        TaskCompletionSource<bool> connectAsyncTcs;
-        async public Task ConnectAsync()
-        {
-            ResetHost(Host);
-            var endpoint = new IPEndPoint(IPAddress.Parse(_ip), _port);
-            var localSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-
-            connectAsyncTcs?.TrySetCanceled();
-            connectAsyncTcs = new TaskCompletionSource<bool>();
-            localSocket.BeginConnect(endpoint, asyncResult =>
-            {
-                try
-                {
-                    localSocket.EndConnect(asyncResult);
-                    connectAsyncTcs.TrySetResult(true);
-                }
-                catch (Exception ex)
-                {
-                    connectAsyncTcs.TrySetException(ex);
-                }
-            }, null);
-            await connectAsyncTcs.Task.TimeoutAfter(ConnectTimeout, "Connect to redis-server timeout");
-            _socket = localSocket;
-            _stream = new NetworkStream(Socket, true);
-            _socket.ReceiveTimeout = (int)ReceiveTimeout.TotalMilliseconds;
-            _socket.SendTimeout = (int)SendTimeout.TotalMilliseconds;
-            Connected?.Invoke(this, new EventArgs());
-        }
-#endif
 
         public void ResetHost(string host)
         {
