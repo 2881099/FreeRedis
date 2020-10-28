@@ -8,12 +8,12 @@ namespace FreeRedis
 {
     partial class RedisClient
     {
-        public void Auth(string password) => Call("AUTH".Input(password), rt => rt.ThrowOrValue<string>());
+        public void Auth(string password) => Call("AUTH".Input(password), rt => rt.ThrowOrValue());
         public void Auth(string username, string password) => Call("AUTH".SubCommand(null)
             .InputIf(!string.IsNullOrWhiteSpace(username), username)
-            .InputRaw(password), rt => rt.ThrowOrValue<string>());
+            .InputRaw(password), rt => rt.ThrowOrValue());
 
-        public void ClientCaching(Confirm confirm) => Call("CLIENT".SubCommand("CACHING").InputRaw(confirm), rt => rt.ThrowOrValue<string>());
+        public void ClientCaching(Confirm confirm) => Call("CLIENT".SubCommand("CACHING").InputRaw(confirm), rt => rt.ThrowOrValue());
         public string ClientGetName() => Call("CLIENT".SubCommand("GETNAME"), rt => rt.ThrowOrValue<string>());
         public long ClientGetRedir() => Call("CLIENT".SubCommand("GETREDIR"), rt => rt.ThrowOrValue<long>());
         public long ClientId() => Call("CLIENT".SubCommand("ID"), rt => rt.ThrowOrValue<long>());
@@ -32,7 +32,7 @@ namespace FreeRedis
 
         public string ClientList(ClientType? type = null) => Call("CLIENT".SubCommand("LIST")
             .InputIf(type != null, "TYPE", type), rt => rt.ThrowOrValue<string>());
-        public void ClientPause(long timeoutMilliseconds) => Call("CLIENT".SubCommand("PAUSE").InputRaw(timeoutMilliseconds), rt => rt.ThrowOrValue<string>());
+        public void ClientPause(long timeoutMilliseconds) => Call("CLIENT".SubCommand("PAUSE").InputRaw(timeoutMilliseconds), rt => rt.ThrowOrValue());
 
         public void ClientReply(ClientReplyType type)
         {
@@ -47,7 +47,7 @@ namespace FreeRedis
                         case ClientReplyType.off:
                             break;
                         case ClientReplyType.on:
-                            cmd.Read<string>().ThrowOrNothing();
+                            rds.Read(false).ThrowOrNothing();
                             break;
                         case ClientReplyType.skip:
                             break;
@@ -92,7 +92,7 @@ namespace FreeRedis
             }
 
             return Call("PING".SubCommand(null)
-                .InputIf(!string.IsNullOrEmpty(message), message), rt => rt.ThrowOrValue<string>(a =>
+                .InputIf(!string.IsNullOrEmpty(message), message), rt => rt.ThrowOrValue(a =>
                {
                    if (a is string str) return str;
                    if (a is object[] objs)
@@ -108,7 +108,7 @@ namespace FreeRedis
                }));
         }
 
-        public void Quit() => Call("QUIT", rt => rt.ThrowOrValue<string>());
-        public void Select(int index) => Call("SELECT".Input(index), rt => rt.ThrowOrValue<string>());
+        public void Quit() => Call("QUIT", rt => rt.ThrowOrValue());
+        public void Select(int index) => Call("SELECT".Input(index), rt => rt.ThrowOrValue());
     }
 }

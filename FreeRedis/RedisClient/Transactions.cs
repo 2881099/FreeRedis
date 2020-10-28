@@ -49,18 +49,13 @@ namespace FreeRedis
         // GetShareClient
         public ShareClientHook GetShareClient()
         {
-            CheckUseTypeOrThrow(UseType.Pooling, UseType.Sentinel, UseType.SingleInside);
+            CheckUseTypeOrThrow(UseType.Pooling, UseType.Sentinel);
             var rds = Adapter.GetRedisSocket(null);
             return new ShareClientHook(new SingleTempAdapter(Adapter.TopOwner, rds, () => rds.Dispose()));
         }
         public class ShareClientHook: RedisClient
         {
             internal ShareClientHook(BaseAdapter adapter) : base(adapter) { }
-
-            ~ShareClientHook()
-            {
-                (Adapter as SingleTempAdapter).Dispose();
-            }
         }
 
         public IRedisSocket GetTestRedisSocket() => Adapter.GetRedisSocket(null);

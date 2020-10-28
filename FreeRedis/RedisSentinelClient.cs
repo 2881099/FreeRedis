@@ -16,11 +16,8 @@ namespace FreeRedis
             _redisSocket = new DefaultRedisSocket(host, ssl);
         }
 
-        ~RedisSentinelClient() => this.Dispose();
-        int _disposeCounter;
         public void Dispose()
         {
-            if (Interlocked.Increment(ref _disposeCounter) != 1) return;
             _redisSocket.Dispose();
         }
 
@@ -28,8 +25,8 @@ namespace FreeRedis
         protected TValue Call<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
         {
             _redisSocket.Write(cmd);
-            var result = cmd.Read<string>();
-            return parse(result);
+            var rt = _redisSocket.Read(false);
+            return parse(rt);
         }
 
         public string Ping() => Call("PING", rt => rt.ThrowOrValue<string>());
@@ -249,6 +246,7 @@ namespace FreeRedis
         public int port;
         public string runid;
         public string flags;
+        public long pending_commands;
         public long link_pending_commands;
         public long link_refcount;
         public long last_ping_sent;

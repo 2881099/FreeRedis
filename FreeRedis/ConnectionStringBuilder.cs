@@ -20,8 +20,8 @@ namespace FreeRedis
         public Encoding Encoding { get; set; } = Encoding.UTF8;
         public TimeSpan IdleTimeout { get; set; } = TimeSpan.FromSeconds(20);
         public TimeSpan ConnectTimeout { get; set; } = TimeSpan.FromSeconds(10);
-        public TimeSpan ReceiveTimeout { get; set; } = TimeSpan.FromSeconds(10);
-        public TimeSpan SendTimeout { get; set; } = TimeSpan.FromSeconds(10);
+        public TimeSpan ReceiveTimeout { get; set; } = TimeSpan.FromSeconds(20);
+        public TimeSpan SendTimeout { get; set; } = TimeSpan.FromSeconds(20);
         public int MaxPoolSize { get; set; } = 100;
         public int MinPoolSize { get; set; } = 1;
 

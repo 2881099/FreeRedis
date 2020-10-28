@@ -61,8 +61,8 @@ namespace FreeRedis.Internal
         public bool Ssl { get; private set; }
         string _ip;
         int _port;
-        TimeSpan _receiveTimeout = TimeSpan.FromSeconds(10);
-        TimeSpan _sendTimeout = TimeSpan.FromSeconds(10);
+        TimeSpan _receiveTimeout = TimeSpan.FromSeconds(20);
+        TimeSpan _sendTimeout = TimeSpan.FromSeconds(20);
         public TimeSpan ConnectTimeout { get; set; } = TimeSpan.FromSeconds(10);
         public TimeSpan ReceiveTimeout
         {
@@ -112,7 +112,7 @@ namespace FreeRedis.Internal
                 var type = cmd._input.LastOrDefault().ConvertTo<ClientReplyType>();
                 if (type != ClientReply) ClientReply = type;
             }
-            cmd._redisSocket = this;
+            cmd.WriteHost = this.Host;
         }
         public RedisResult Read(bool isbytes)
         {
@@ -185,6 +185,7 @@ namespace FreeRedis.Internal
 
         public void ResetHost(string host)
         {
+            this.Host = host;
             ReleaseSocket();
             var sh = SplitHost(host);
             _ip = sh.Key;
@@ -209,11 +210,8 @@ namespace FreeRedis.Internal
             _reader = null;
         }
 
-        ~DefaultRedisSocket() => this.Dispose();
-        int _disposeCounter;
         public void Dispose()
         {
-            if (Interlocked.Increment(ref _disposeCounter) != 1) return;
             ReleaseSocket();
         }
 

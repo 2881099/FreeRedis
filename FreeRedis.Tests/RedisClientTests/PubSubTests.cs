@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading;
 using Xunit;
 
-namespace FreeRedis.Tests.RedisClientTests
+namespace FreeRedis.Tests.RedisClientTests.Other
 {
     public class PubSubTests : TestBase
     {
@@ -64,7 +64,7 @@ namespace FreeRedis.Tests.RedisClientTests
         [Fact]
         public void PubSubNumPat()
         {
-            cli.PubSubNumPat();
+            cli.PubSubNumPat("123");
         }
 
         [Fact]

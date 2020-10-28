@@ -14,21 +14,21 @@ namespace FreeRedis.Tests.RedisClientTests
         [Fact]
         public void Eval()
         {
-            using (var cli = TestBase.cli.GetShareClient())
+            using (var sh = cli.GetShareClient())
             {
-                var r1 = cli.Eval("return {KEYS[1],KEYS[2],ARGV[1],ARGV[2]}", new[] { "key1", "key2" }, "first", "second") as object[];
+                var r1 = sh.Eval("return {KEYS[1],KEYS[2],ARGV[1],ARGV[2]}", new[] { "key1", "key2" }, "first", "second") as object[];
                 Assert.NotNull(r1);
                 Assert.True(r1.Length == 4);
                 Assert.Equal("key1", r1[0]);
                 Assert.Equal("key2", r1[1]);
                 Assert.Equal("first", r1[2]);
                 Assert.Equal("second", r1[3]);
-                Assert.Equal("OK", cli.Eval($"return redis.call('set','{Guid.NewGuid()}','bar')"));
-                Assert.Equal("OK", cli.Eval("return redis.call('set',KEYS[1],'bar')", new[] { Guid.NewGuid().ToString() }));
+                Assert.Equal("OK", sh.Eval($"return redis.call('set','{Guid.NewGuid()}','bar')"));
+                Assert.Equal("OK", sh.Eval("return redis.call('set',KEYS[1],'bar')", new[] { Guid.NewGuid().ToString() }));
 
                 //RESP3
-                Assert.Equal(10L, cli.Eval("return 10"));
-                var r2 = cli.Eval("return {1,2,{3,'Hello World!'}}") as object[];
+                Assert.Equal(10L, sh.Eval("return 10"));
+                var r2 = sh.Eval("return {1,2,{3,'Hello World!'}}") as object[];
                 Assert.NotNull(r2);
                 Assert.True(r2.Length == 3);
                 Assert.Equal(1L, r2[0]);
@@ -37,7 +37,7 @@ namespace FreeRedis.Tests.RedisClientTests
                 Assert.Equal(3L, r3[0]);
                 Assert.Equal("Hello World!", r3[1]);
 
-                var r4 = cli.Eval("return {1,2,3.3333,somekey='somevalue','foo',nil,'bar'}") as object[];
+                var r4 = sh.Eval("return {1,2,3.3333,somekey='somevalue','foo',nil,'bar'}") as object[];
                 //As you can see 3.333 is converted into 3, somekey is excluded, and the bar string is never returned as there is a nil before.
                 Assert.NotNull(r4);
                 Assert.True(r4.Length == 4);
@@ -46,12 +46,12 @@ namespace FreeRedis.Tests.RedisClientTests
                 Assert.Equal(3L, r4[2]);
                 Assert.Equal("foo", r4[3]);
 
-                Assert.Equal("My Error", Assert.Throws<RedisException>(() => cli.Eval("return {err=\"My Error\"}"))?.Message);
-                Assert.Equal("My Error222", Assert.Throws<RedisException>(() => cli.Eval("return redis.error_reply(\"My Error222\")"))?.Message);
+                Assert.Equal("My Error", Assert.Throws<RedisException>(() => sh.Eval("return {err=\"My Error\"}"))?.Message);
+                Assert.Equal("My Error222", Assert.Throws<RedisException>(() => sh.Eval("return redis.error_reply(\"My Error222\")"))?.Message);
 
                 var key1 = Guid.NewGuid().ToString();
-                Assert.Equal(1, cli.LPush(key1, "a"));
-                Assert.True(Assert.Throws<RedisException>(() => cli.Eval($"return redis.call('get','{key1}')"))?.Message.Contains("ERR Error running script (call to ") == true);
+                Assert.Equal(1, sh.LPush(key1, "a"));
+                Assert.True(Assert.Throws<RedisException>(() => sh.Eval($"return redis.call('get','{key1}')"))?.Message.Contains("ERR Error running script (call to ") == true);
                 //(error) ERR Error running script (call to f_6b1bf486c81ceb7edf3c093f4c48582e38c0e791): ERR Operation against a key holding the wrong kind of value
             }
         }

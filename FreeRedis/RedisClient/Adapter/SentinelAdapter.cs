@@ -84,7 +84,7 @@ namespace FreeRedis
                         try
                         {
                             rds.Write(cmd);
-                            rt = cmd.Read<TReadTextOrStream>();
+                            rt = rds.Read(typeof(TReadTextOrStream) == typeof(byte[]));
                         }
                         catch (Exception ex)
                         {

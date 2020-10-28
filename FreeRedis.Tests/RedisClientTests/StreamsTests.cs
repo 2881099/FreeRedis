@@ -198,17 +198,17 @@ namespace FreeRedis.Tests.RedisClientTests
             Assert.True(cli.XGroupDestroy(key1, "XGroupDestroy-group1"));
         }
 
-        [Fact]
-        public void XGroupCreateConsumer()
-        {
-            var key1 = "XGroupCreateConsumer1";
-            cli.Del(key1);
+        //[Fact]
+        //public void XGroupCreateConsumer()
+        //{
+        //    var key1 = "XGroupCreateConsumer1";
+        //    cli.Del(key1);
 
-            cli.XGroupCreate(key1, "XGroupCreateConsumer-group1", "0", true);
-            cli.XGroupCreateConsumer(key1, "XGroupCreateConsumer-group1", "XGroupCreateConsumer-consumer1");
+        //    cli.XGroupCreate(key1, "XGroupCreateConsumer-group1", "0", true);
+        //    cli.XGroupCreateConsumer(key1, "XGroupCreateConsumer-group1", "XGroupCreateConsumer-consumer1");
 
-            Assert.True(cli.XGroupDestroy(key1, "XGroupCreateConsumer-group1"));
-        }
+        //    Assert.True(cli.XGroupDestroy(key1, "XGroupCreateConsumer-group1"));
+        //}
 
         [Fact]
         public void XGroupDelConsumer()

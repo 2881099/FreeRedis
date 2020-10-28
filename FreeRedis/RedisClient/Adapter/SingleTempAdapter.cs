@@ -32,10 +32,14 @@ namespace FreeRedis
             }
             public override TValue AdapaterCall<TReadTextOrStream, TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
             {
-                _redisSocket.Write(cmd);
-                var rt = cmd.Read<TReadTextOrStream>();
-                rt.IsErrorThrow = TopOwner._isThrowRedisSimpleError;
-                return parse(rt);
+                return TopOwner.LogCall(cmd, () =>
+                {
+                    _redisSocket.Write(cmd);
+                    var rt = _redisSocket.Read(typeof(TReadTextOrStream) == typeof(byte[]));
+                    if (cmd._command == "QUIT") _redisSocket.ReleaseSocket();
+                    rt.IsErrorThrow = TopOwner._isThrowRedisSimpleError;
+                    return parse(rt);
+                });
             }
         }
     }

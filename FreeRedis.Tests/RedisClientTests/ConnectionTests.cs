@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Xunit;
 
-namespace FreeRedis.Tests.RedisClientTests
+namespace FreeRedis.Tests.RedisClientTests.Other
 {
     public class ConnectionTests : TestBase
     {
@@ -141,14 +141,6 @@ namespace FreeRedis.Tests.RedisClientTests
             Assert.Equal("PONG", cli.Ping());
             var txt = Guid.NewGuid().ToString();
             Assert.Equal(txt, cli.Ping(txt));
-        }
-
-        [Fact]
-        public void Quit()
-        {
-            Assert.Equal("PONG", cli.Ping());
-            cli.Quit();
-            Assert.Throws<Exception>(() => cli.Ping());
         }
 
         [Fact]

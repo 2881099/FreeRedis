@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using Xunit;
 
-namespace FreeRedis.Tests.RedisClientTests
+namespace FreeRedis.Tests.RedisClientTests.Other
 {
     public class TransactionTests : TestBase
     {

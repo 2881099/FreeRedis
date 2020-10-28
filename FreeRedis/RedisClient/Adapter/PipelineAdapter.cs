@@ -16,7 +16,8 @@ namespace FreeRedis
             internal class PipelineCommand
             {
                 public CommandPacket Command { get; set; }
-                public Func<PipelineCommand, object> Parse { get; set; }
+                public Func<RedisResult, object> Parse { get; set; }
+                public bool IsBytes { get; set; }
                 public object Result { get; set; }
             }
 
@@ -41,12 +42,8 @@ namespace FreeRedis
                 _commands.Add(new PipelineCommand
                 {
                     Command = cmd,
-                    Parse = pc =>
-                    {
-                        var rt = pc.Command.Read<TReadTextOrStream>();
-                        rt.IsErrorThrow = TopOwner._isThrowRedisSimpleError;
-                        return parse(rt);
-                    }
+                    Parse = rt => parse(rt),
+                    IsBytes = typeof(TReadTextOrStream) == typeof(byte[])
                 });
                 TopOwner.OnNotice(new NoticeEventArgs(NoticeType.Call, null, $"Pipeline > {cmd}", null));
                 return default(TValue);
@@ -72,7 +69,6 @@ namespace FreeRedis
                     {
                         using (var rds = TopOwner.Adapter.GetRedisSocket(null))
                         {
-                            epcmd._redisSocket = rds;
                             EndPipe(rds, _commands);
                         }
                         return _commands.Select(a => a.Result).ToArray();
@@ -103,11 +99,11 @@ namespace FreeRedis
                     if (rds.IsConnected == false) rds.Connect();
                     ms.Position = 0;
                     ms.CopyTo(rds.Stream);
-
+                    
                     foreach (var pc in cmds)
                     {
-                        pc.Command._redisSocket = rds;
-                        pc.Result = pc.Parse(pc);
+                        var rt = rds.Read(pc.IsBytes);
+                        pc.Result = pc.Parse(rt);
                         if (pc.Command.ReadResult.IsError) err.Add(pc);
                     }
                 }
@@ -115,7 +111,6 @@ namespace FreeRedis
                 {
                     ms.Close();
                     ms.Dispose();
-                    rds?.Dispose();
                 }
 
                 if (err.Any())

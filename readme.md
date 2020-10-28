@@ -37,7 +37,7 @@ string[] vals = cli.MGet("key1", "key2");
 | max poolsize      | 100       | Connection max pool size |
 | min poolsize      | 5         | Connection min pool size |
 | idleTimeout       | 20000     | Idle time of elements in the connection pool (MS), suitable for connecting to remote redis server |
-| connectTimeout    | 5000      | Connection timeout (MS) |
+| connectTimeout    | 10000     | Connection timeout (MS) |
 | receiveTimeout    | 10000     | Receive timeout (MS) |
 | sendTimeout       | 10000     | Send timeout (MS) |
 | encoding          | utf-8     | string charset |

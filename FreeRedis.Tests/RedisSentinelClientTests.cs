@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using Xunit;
 
-namespace FreeRedis.Tests.RedisClientTests
+namespace FreeRedis.Tests.RedisSentinelClientTests
 {
     public class SentinelTests
     {
-        public static RedisSentinelClient GetClient() => new RedisSentinelClient("127.0.0.1:21479");
+        public static RedisSentinelClient GetClient() => new RedisSentinelClient("127.0.0.1:26479");
 
         [Fact]
         public void Ping()

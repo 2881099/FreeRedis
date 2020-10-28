@@ -2,15 +2,15 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>GetRedis</AssemblyName>
-    <PackageId>GetRedis</PackageId>
-    <RootNamespace>GetRedis</RootNamespace>
+    <AssemblyName>AutoRedis</AssemblyName>
+    <PackageId>AutoRedis</PackageId>
+    <RootNamespace>AutoRedis</RootNamespace>
     <Version>0.0.1</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageProjectUrl>https://github.com/2881099/csredis</PackageProjectUrl>
-    <Description>GetRedis 是 redis.io 官方推荐库，支持 redis-trib集群、哨兵、私有分区与连接池管理技术。</Description>
+    <Description>AutoRedis 是 redis.io 官方推荐库，支持 redis-trib集群、哨兵、私有分区与连接池管理技术。</Description>
     <RepositoryUrl>https://github.com/2881099/csredis</RepositoryUrl>
-    <PackageTags>GetRedis redis-trib cluster redis c# 缓存壳 集群 哨兵 分区 负载</PackageTags>
+    <PackageTags>AutoRedis redis-trib cluster redis c# 缓存壳 集群 哨兵 分区 负载</PackageTags>
     <RepositoryType>git</RepositoryType>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Title>$(AssemblyName)</Title>
@@ -22,7 +22,7 @@
     <DelaySign>false</DelaySign>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>bin\Debug\netstandard2.0\GetRedis.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\netstandard2.0\AutoRedis.xml</DocumentationFile>
   </PropertyGroup>
 
 </Project>

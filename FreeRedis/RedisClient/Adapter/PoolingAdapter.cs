@@ -77,22 +77,28 @@ namespace FreeRedis
                 return TopOwner.LogCall(cmd, () =>
                 {
                     RedisResult rt = null;
+                    RedisClientPool pool = null;
+                    Exception ioex = null;
                     using (var rds = GetRedisSocket(cmd))
                     {
+                        pool = (rds as DefaultRedisSocket.TempProxyRedisSocket)._pool;
                         try
                         {
                             rds.Write(cmd);
-                            rt = cmd.Read<TReadTextOrStream>();
+                            rt = rds.Read(typeof(TReadTextOrStream) == typeof(byte[]));
                         }
                         catch (Exception ex)
                         {
-                            var pool = (rds as DefaultRedisSocket.TempProxyRedisSocket)._pool;
-                            if (pool?.SetUnavailable(ex) == true)
-                            {
-
-                            }
-                            throw ex;
+                            ioex = ex;
                         }
+                    }
+                    if (ioex != null)
+                    {
+                        if (pool?.SetUnavailable(ioex) == true)
+                        {
+
+                        }
+                        throw ioex;
                     }
                     rt.IsErrorThrow = TopOwner._isThrowRedisSimpleError;
                     return parse(rt);

@@ -97,7 +97,7 @@ namespace FreeRedis.Internal.ObjectPool
                     try
                     {
 
-                        var conn = getFree(false);
+                        var conn = GetFree(false);
                         if (conn == null) throw new Exception($"CheckAvailable: Failed to get resource {this.Statistics}");
 
                         try
@@ -177,7 +177,7 @@ namespace FreeRedis.Internal.ObjectPool
             try
             {
 
-                var conn = getFree(false);
+                var conn = GetFree(false);
                 if (conn == null) throw new Exception($"LiveCheckAvailable: Failed to get resource {this.Statistics}");
 
                 try
@@ -260,7 +260,7 @@ namespace FreeRedis.Internal.ObjectPool
         /// 获取可用资源，或创建资源
         /// </summary>
         /// <returns></returns>
-        private Object<T> getFree(bool checkAvailable)
+        private Object<T> GetFree(bool checkAvailable)
         {
 
             if (running == false)
@@ -300,7 +300,7 @@ namespace FreeRedis.Internal.ObjectPool
         public Object<T> Get(TimeSpan? timeout = null)
         {
 
-            var obj = getFree(true);
+            var obj = GetFree(true);
 
             if (obj == null)
             {
@@ -357,7 +357,7 @@ namespace FreeRedis.Internal.ObjectPool
         async public Task<Object<T>> GetAsync()
         {
 
-            var obj = getFree(true);
+            var obj = GetFree(true);
 
             if (obj == null)
             {

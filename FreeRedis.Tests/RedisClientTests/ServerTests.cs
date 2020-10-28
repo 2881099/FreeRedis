@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using Xunit;
 
-namespace FreeRedis.Tests.RedisClientTests
+namespace FreeRedis.Tests.RedisClientTests.Other
 {
     public class ServerTests : TestBase
     {
@@ -55,7 +55,6 @@ namespace FreeRedis.Tests.RedisClientTests
             Assert.NotEmpty(r1.flags);
             Assert.True(!string.IsNullOrWhiteSpace(r1.commands));
             Assert.NotEmpty(r1.keys);
-            Assert.Equal("keys", r1.keys[0]);
 
             cli.AclDelUser(key1);
             cli.AclSetUser(key1);
@@ -77,34 +76,30 @@ namespace FreeRedis.Tests.RedisClientTests
         }
 
         [Fact]
-        public void AclList()
-        {
-            var key1 = "AclList1";
-            Assert.True(cli.AclList().Length > 0);
-        }
-
-        [Fact]
-        public void AclLoad()
-        {
-            var key1 = "AclLoad1";
-        }
-
-        [Fact]
-        public void AclLog()
-        {
-            var key1 = "AclLog1";
-        }
-
-        [Fact]
-        public void AclSave()
-        {
-            var key1 = "AclSave1";
-        }
-
-        [Fact]
         public void AclSetUser()
         {
             var key1 = "AclSetUser1";
+            cli.AclDelUser(key1);
+            cli.AclSetUser(key1, ">123456");
+
+            using (var sh = cli.GetShareClient())
+            {
+                Assert.Equal("WRONGPASS invalid username-password pair", Assert.Throws<RedisException>(() => sh.Auth(key1, "123456"))?.Message);
+            }
+
+            cli.AclSetUser(key1, "on", "+acl");
+
+            using (var sh = cli.GetShareClient())
+            {
+                sh.Auth(key1, "123456");
+                var r1 = sh.AclWhoami();
+                Assert.Equal(key1, r1);
+
+                sh.Quit();
+            }
+
+            cli.AclSetUser(key1, "<123456");
+            cli.AclDelUser(key1);
         }
 
         [Fact]
@@ -113,14 +108,12 @@ namespace FreeRedis.Tests.RedisClientTests
             var key1 = "AclUsers1";
             var r1 = cli.AclUsers();
             Assert.True(r1.Length > 0);
-            Assert.Equal("default", r1[0]);
 
             cli.AclSetUser(key1);
             Assert.Equal(2, cli.AclUsers().Length);
             var r2 = cli.AclUsers();
 
-            Assert.Equal("default", r2[0]);
-            Assert.Equal(key1, r2[1]);
+            Assert.Contains(r2, a => a == key1);
 
             Assert.Equal(1, cli.AclDelUser(key1));
         }
@@ -128,9 +121,192 @@ namespace FreeRedis.Tests.RedisClientTests
         [Fact]
         public void AclWhoami()
         {
-            var key1 = "AclWhoami1";
             Assert.Equal("default", cli.AclWhoami());
         }
 
+
+        [Fact]
+        public void BgRewriteAof()
+        {
+            var r1 = cli.BgRewriteAof();
+        }
+
+        [Fact]
+        public void BgSave()
+        {
+            //var r1 = cli.BgSave();
+        }
+
+        [Fact]
+        public void Command()
+        {
+            var r1 = cli.Command();
+        }
+
+        [Fact]
+        public void CommandCount()
+        {
+            var r1 = cli.CommandCount();
+            Assert.True(r1 > 0);
+        }
+
+        [Fact]
+        public void CommandGetKeys()
+        {
+            var r1 = cli.CommandGetKeys("set", "key1", "val1");
+            Assert.Single(r1);
+            Assert.Equal("key1", r1[0]);
+        }
+
+        [Fact]
+        public void CommandInfo()
+        {
+            var r1 = cli.CommandInfo("get", "set", "hset");
+            Assert.Equal(3, r1.Length);
+        }
+
+        [Fact]
+        public void ConfigGet()
+        {
+            var r1 = cli.ConfigGet("*max-*-entries*");
+            Assert.NotEmpty(r1);
+        }
+
+        [Fact]
+        public void ConfigResetStat()
+        {
+            cli.ConfigResetStat();
+        }
+
+        [Fact]
+        public void ConfigRewrite()
+        {
+            //cli.ConfigRewrite();
+        }
+
+        [Fact]
+        public void ConfigSet()
+        {
+            //cli.ConfigSet("hash-max-zipmap-entries", 512);
+        }
+
+        [Fact]
+        public void DbSize()
+        {
+            var key1 = "DbSize1";
+            cli.Set(key1, Guid.NewGuid());
+
+            Assert.True(cli.DbSize() > 0);
+        }
+
+        [Fact]
+        public void DebugObject()
+        {
+            var key1 = "DebugObject1";
+            cli.Set(key1, Guid.NewGuid());
+
+            Assert.NotNull(cli.DebugObject(key1));
+        }
+
+        [Fact]
+        public void DebugSegfault()
+        {
+            //using (var sh = cli.GetShareClient())
+            //{
+            //    cli.DebugSegfault();
+            //    var r1 = sh.AclWhoami();
+            //}
+        }
+
+        [Fact]
+        public void FlushAll()
+        {
+            using (var sh = cli.GetShareClient())
+            {
+                sh.Select(7);
+                cli.FlushAll(true);
+                cli.FlushAll(false);
+                sh.Select(1);
+            }
+        }
+
+        [Fact]
+        public void FlushDb()
+        {
+            //using (var sh = cli.GetShareClient())
+            //{
+            //    sh.Select(7);
+            //    cli.FlushDb(true);
+            //    cli.FlushDb(false);
+            //    sh.Select(1);
+            //}
+        }
+
+        [Fact]
+        public void Info()
+        {
+            var r1 = cli.Info();
+            var r2 = cli.Info("server");
+            Assert.NotNull(r1);
+            Assert.NotNull(r2);
+        }
+
+        [Fact]
+        public void LastSave()
+        {
+            cli.Save();
+            var r1 = cli.LastSave();
+        }
+
+        [Fact]
+        public void LatencyDoctor()
+        {
+            var r1 = cli.LatencyDoctor();
+            Assert.NotNull(r1);
+        }
+
+        [Fact]
+        public void MemoryDoctor()
+        {
+            var r1 = cli.LatencyDoctor();
+            Assert.NotNull(r1);
+        }
+
+        [Fact]
+        public void MemoryMallocStats()
+        {
+            var r1 = cli.LatencyDoctor();
+            Assert.NotNull(r1);
+        }
+
+        [Fact]
+        public void MemoryPurge()
+        {
+            cli.MemoryPurge();
+        }
+
+        [Fact]
+        public void MemoryStats()
+        {
+            var r1 = cli.MemoryStats();
+            Assert.NotEmpty(r1);
+        }
+
+        [Fact]
+        public void MemoryUsage()
+        {
+            var key1 = "MemoryUsage1";
+            cli.Set(key1, "123");
+            var r1 = cli.MemoryUsage(key1);
+            Assert.True(r1 > 0);
+        }
+
+        [Fact]
+        public void Role()
+        {
+            var r1 = cli.Role();
+            Assert.NotNull(r1);
+            //Assert.Equal(RoleType.Master, r1.role);
+        }
     }
 }

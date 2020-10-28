@@ -37,7 +37,8 @@ namespace FreeRedis
                 return TopOwner.LogCall(cmd, () =>
                 {
                     _redisSocket.Write(cmd);
-                    var rt = cmd.Read<TReadTextOrStream>();
+                    var rt = _redisSocket.Read(typeof(TReadTextOrStream) == typeof(byte[]));
+                    if (cmd._command == "QUIT") _redisSocket.ReleaseSocket();
                     rt.IsErrorThrow = TopOwner._isThrowRedisSimpleError;
                     return parse(rt);
                 });

@@ -30,36 +30,10 @@ namespace FreeRedis
             return sb.ToString();
         }
 
-        IRedisSocket _redisSocketPriv;
-        internal IRedisSocket _redisSocket { 
-            get => _redisSocketPriv;
-            set
-            {
-                _redisSocketPriv = value;
-                _readed = false;
-                ReadResult = null;
-            }
-        }
         internal bool _clusterMovedAsking;
         internal int _clusterMovedTryCount;
-        public bool _writed => _redisSocket != null;
-        public bool _readed { get; internal set; }
-        public RedisResult ReadResult { get; protected set; }
-        public RedisResult Read<TReadTextOrStream>()
-        {
-            if (_redisSocket == null) throw new Exception("The command has not been sent");
-            if (_readed) return ReadResult;
-            _readed = true;
-            ReadResult = _redisSocket.Read(typeof(TReadTextOrStream) == typeof(byte[]));
-            return ReadResult;
-        }
-        public void ReadChunk(Stream destination, int bufferSize = 1024)
-        {
-            if (_redisSocket == null) throw new Exception("The command has not been sent");
-            if (_readed) return;
-            _readed = true;
-            _redisSocket.ReadChunk(destination, bufferSize);
-        }
+        public string WriteHost { get; internal set; }
+        public RedisResult ReadResult { get; internal set; }
 
         public CommandPacket(string cmd, string subcmd = null) => this.Command(cmd, subcmd);
         public CommandPacket Command(string cmd, string subcmd = null)

@@ -7,6 +7,8 @@ using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Net;
+using System.Net.Security;
+using System.Net.Sockets;
 using System.Numerics;
 using System.Reflection;
 using System.Text;
@@ -247,7 +249,8 @@ namespace FreeRedis
             {
                 while (true)
                 {
-                    var c = (char)_stream.ReadByte();
+                    var cb = _stream.ReadByte();
+                    var c = (char)cb;
                     switch (c)
                     {
                         case '$': return new RedisResult(ReadBlobString(c, encoding, null, 1024), false, RedisMessageType.BlobString);
@@ -268,8 +271,57 @@ namespace FreeRedis
                         case '|': return new RedisResult(ReadMap(c, encoding), false, RedisMessageType.Attribute);
                         case '.': ReadLine(null); return new RedisResult(null, true, RedisMessageType.SimpleString); //无类型
                         case ' ': continue;
-                        default: throw new ProtocolViolationException($"Expecting fail MessageType '{c}'");
+                        default:
+                            //if (cb == -1) return new RedisResult(null, true, RedisMessageType.Null);
+                            var allBytes = ReadAll();
+                            var allText = Encoding.UTF8.GetString(allBytes);
+                            throw new ProtocolViolationException($"Expecting fail MessageType '{c}'");
                     }
+                }
+
+                Byte[] ReadAll()
+                {
+                    var ns = _stream as NetworkStream;
+                    if (ns != null)
+                    {
+                        using (var ms = new MemoryStream())
+                        {
+                            try
+                            {
+                                var data = new byte[1024];
+                                while (ns.DataAvailable && ns.CanRead)
+                                {
+                                    int numBytesRead = numBytesRead = ns.Read(data, 0, data.Length);
+                                    if (numBytesRead <= 0) break;
+                                    ms.Write(data, 0, numBytesRead);
+                                    if (numBytesRead < data.Length) break;
+                                }
+                            }
+                            catch { }
+                            return ms.ToArray();
+                        }
+                    }
+                    var ss = _stream as SslStream;
+                    if (ss != null)
+                    {
+                        using (var ms = new MemoryStream())
+                        {
+                            try
+                            {
+                                var data = new byte[1024];
+                                while (ss.CanRead)
+                                {
+                                    int numBytesRead = numBytesRead = ss.Read(data, 0, data.Length);
+                                    if (numBytesRead <= 0) break;
+                                    ms.Write(data, 0, numBytesRead);
+                                    if (numBytesRead < data.Length) break;
+                                }
+                            }
+                            catch { }
+                            return ms.ToArray();
+                        }
+                    }
+                    return new byte[0];
                 }
             }
 

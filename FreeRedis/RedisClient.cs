@@ -107,12 +107,12 @@ namespace FreeRedis
                 sw.Stop();
                 if (exception == null && _isThrowRedisSimpleError) exception = this.RedisSimpleError;
                 string log;
-                if (exception != null) log = $" > {exception.Message}";
+                if (exception != null) log = $"{exception.Message}";
                 else if (cmd.ReadResult != null)
                 {
                     if (cmd.ReadResult.Value is Array array)
                     {
-                        var sb = new StringBuilder().Append("\r\n[");
+                        var sb = new StringBuilder().Append("[");
                         var itemindex = 0;
                         foreach (var item in array)
                         {
@@ -123,13 +123,13 @@ namespace FreeRedis
                         sb.Clear();
                     }
                     else
-                        log = $"\r\n{cmd.ReadResult.Value.ToInvariantCultureToString()}";
+                        log = $"{cmd.ReadResult.Value.ToInvariantCultureToString()}";
                 }
-                else log = $"\r\n{ret.ToInvariantCultureToString()}";
+                else log = $"{ret.ToInvariantCultureToString()}";
                 this.OnNotice(new NoticeEventArgs(
                     NoticeType.Call,
                     exception ?? this.RedisSimpleError,
-                    $"{(cmd._redisSocket?.Host ?? "Not connected")} ({sw.ElapsedMilliseconds}ms) > {cmd} {log}",
+                    $"{(cmd.WriteHost ?? "Not connected")} ({sw.ElapsedMilliseconds}ms) > {cmd}\r\n{log}",
                     cmd.ReadResult?.Value ?? ret));
             }
         }

@@ -67,10 +67,10 @@ namespace FreeRedis
                             {
                                 cmd._clusterMovedAsking = false;
                                 rds.Write("ASKING");
-                                cmd.Read<string>();
+                                rds.Read(false);
                             }
                             rds.Write(cmd);
-                            rt = cmd.Read<TReadTextOrStream>();
+                            rt = rds.Read(typeof(TReadTextOrStream) == typeof(byte[]));
                         }
                         catch (Exception ex)
                         {
@@ -102,7 +102,7 @@ namespace FreeRedis
                             if (moved.isask)
                                 cmd._clusterMovedAsking = true;
 
-                            TopOwner.OnNotice(new NoticeEventArgs(NoticeType.Info, null, $"{(cmd._redisSocket?.Host ?? "Not connected")} > {rt.SimpleError} {cmd} ", null));
+                            TopOwner.OnNotice(new NoticeEventArgs(NoticeType.Info, null, $"{(cmd.WriteHost ?? "Not connected")} > {cmd}\r\n{rt.SimpleError} ", null));
                             return AdapaterCall<TReadTextOrStream, TValue>(cmd, parse);
                         }
                     }
