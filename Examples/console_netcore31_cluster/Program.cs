@@ -1,4 +1,4 @@
-﻿using FreeRedis;
+﻿using hiredis;
 using Newtonsoft.Json;
 using StackExchange.Redis;
 using System;
@@ -45,7 +45,7 @@ namespace console_netcore31_cluster
             }
 
             stopwatch.Stop();
-            Console.WriteLine("FreeRedis:"+stopwatch.ElapsedMilliseconds);
+            Console.WriteLine("hiredis:"+stopwatch.ElapsedMilliseconds);
 
             //stopwatch.Restart();
             // csredis 会出现连接不能打开的情况

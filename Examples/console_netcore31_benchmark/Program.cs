@@ -1,6 +1,6 @@
 ﻿using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Running;
-using FreeRedis;
+using hiredis;
 using Newtonsoft.Json;
 using System;
 using System.Text;
@@ -38,7 +38,7 @@ namespace console_netcore31_benchmark
         public class SetVs
         {
             [Benchmark]
-            public void FreeRedis()
+            public void hiredis()
             {
                 //cli.Set("TestMGet_string1", String);
                 cli.Call(new CommandPacket("SET").Input("TestMGet_string1").InputRaw(String));

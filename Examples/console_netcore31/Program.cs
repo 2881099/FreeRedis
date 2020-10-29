@@ -1,4 +1,4 @@
-﻿using FreeRedis;
+﻿using hiredis;
 using Newtonsoft.Json;
 using System;
 using System.Diagnostics;
@@ -40,7 +40,7 @@ namespace console_netcore31
             cli.Set("TestMGet_string3", String);
             cli.Set("TestMGet_bytes3", Bytes);
             sw.Stop();
-            Console.WriteLine("FreeRedis: " + sw.ElapsedMilliseconds + "ms");
+            Console.WriteLine("hiredis: " + sw.ElapsedMilliseconds + "ms");
 
             sw.Reset();
             sw.Start();
@@ -51,7 +51,7 @@ namespace console_netcore31
             cli.Set("TestMGet_string3", String);
             cli.Set("TestMGet_bytes3", Bytes);
             sw.Stop();
-            Console.WriteLine("FreeRedis: " + sw.ElapsedMilliseconds + "ms");
+            Console.WriteLine("hiredis: " + sw.ElapsedMilliseconds + "ms");
 
             sw.Reset();
             sw.Start();

@@ -1,8 +1,8 @@
-## 🦄 　FreeRedis
+## 🦄 　hiredis
 
 [![nuget](https://img.shields.io/nuget/v/FreeSql.svg?style=flat-square)](https://www.nuget.org/packages/FreeSql) [![stats](https://img.shields.io/nuget/dt/FreeSql.svg?style=flat-square)](https://www.nuget.org/stats/packages/FreeSql?groupby=Version) [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/2881099/FreeSql/master/LICENSE.txt)
 
-FreeRedis 是功能强大的 redis 客户端组件，支持 .NETCore 2.1+ 或 .NETFramework 4.0+ 或 Xamarin。
+hiredis 是功能强大的 redis 客户端组件，支持 .NETCore 2.1+ 或 .NETFramework 4.0+ 或 Xamarin。
 
 - RedisClient Keep all method names consistent with redis-cli
 - Support geo type commands (redis-server 3.2 or above is required)
