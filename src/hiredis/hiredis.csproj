@@ -7,9 +7,9 @@
     <RootNamespace>hiredis</RootNamespace>
     <Version>0.0.2</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageProjectUrl>https://github.com/2881099/hiredis</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/2881099/hiredis-dotnet</PackageProjectUrl>
     <Description>hiredis is .NET redis client, supports cluster, sentinel, master-slave, pipeline, transaction and connection pool.</Description>
-    <RepositoryUrl>https://github.com/2881099/hiredis</RepositoryUrl>
+    <RepositoryUrl>https://github.com/2881099/hiredis-dotnet</RepositoryUrl>
     <PackageTags>hiredis redis-trib cluster rediscluster sentinel</PackageTags>
     <RepositoryType>git</RepositoryType>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
