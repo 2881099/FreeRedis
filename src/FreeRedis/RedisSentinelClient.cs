@@ -11,15 +11,30 @@ namespace FreeRedis
     {
         readonly IRedisSocket _redisSocket;
 
-        public RedisSentinelClient(string host, bool ssl = false)
+        public RedisSentinelClient(ConnectionStringBuilder connectionString)
         {
-            _redisSocket = new DefaultRedisSocket(host, ssl);
+            _redisSocket = new DefaultRedisSocket(connectionString.Host, connectionString.Ssl);
+            _redisSocket.ReceiveTimeout = connectionString.ReceiveTimeout;
+            _redisSocket.SendTimeout = connectionString.SendTimeout;
+            _redisSocket.Encoding = connectionString.Encoding;
+            _redisSocket.Connected += (_, __) =>
+            {
+                if (!string.IsNullOrEmpty(connectionString.User) && !string.IsNullOrEmpty(connectionString.Password))
+                    this.Auth(connectionString.User, connectionString.Password);
+                else if (!string.IsNullOrEmpty(connectionString.Password))
+                    this.Auth(connectionString.Password);
+            };
         }
 
         public void Dispose()
         {
             _redisSocket.Dispose();
         }
+
+        public void Auth(string password) => Call("AUTH".Input(password), rt => rt.ThrowOrValue());
+        public void Auth(string username, string password) => Call("AUTH".SubCommand(null)
+            .InputIf(!string.IsNullOrWhiteSpace(username), username)
+            .InputRaw(password), rt => rt.ThrowOrValue());
 
         public object Call(CommandPacket cmd) => Call(cmd, rt => rt.ThrowOrValue());
         protected TValue Call<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)

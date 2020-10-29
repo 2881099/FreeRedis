@@ -17,7 +17,7 @@ namespace FreeRedis
 {
     partial class RedisClient
     {
-        public Task<object> CallAsync(CommandPacket cmd) => Adapter.AdapterCallAsync(cmd, rt => rt.ThrowOrValue());
+        //public Task<object> CallAsync(CommandPacket cmd) => Adapter.AdapterCallAsync(cmd, rt => rt.ThrowOrValue());
         protected Task<TValue> CallAsync<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse) => Adapter.AdapterCallAsync(cmd, parse);
 
         async internal Task<T> LogCallAsync<T>(CommandPacket cmd, Func<Task<T>> func)
@@ -44,14 +44,14 @@ namespace FreeRedis
             }
         }
 
-        public Task<long> IncrByAsync(string key, long increment) => CallAsync("INCRBY".Input(key, increment).FlagKey(key), rt => rt.ThrowOrValue<long>());
-        public Task SetAsync<T>(string key, T value, int timeoutSeconds = 0) => CallAsync("SET"
-            .Input(key)
-            .InputRaw(SerializeRedisValue(value))
-            .InputIf(timeoutSeconds >= 1, "EX", (long)timeoutSeconds)
-            .FlagKey(key), rt => rt.ThrowOrValue<string>());
-        public Task<string> GetAsync(string key) => CallAsync("GET".Input(key).FlagKey(key), rt => rt.ThrowOrValue<string>());
-        public Task<T> GetAsync<T>(string key) => CallAsync("GET".Input(key).FlagKey(key).FlagReadbytes(true), rt => rt.ThrowOrValue(a => DeserializeRedisValue<T>(a.ConvertTo<byte[]>(), rt.Encoding)));
+        //public Task<long> IncrByAsync(string key, long increment) => CallAsync("INCRBY".Input(key, increment).FlagKey(key), rt => rt.ThrowOrValue<long>());
+        //public Task SetAsync<T>(string key, T value, int timeoutSeconds = 0) => CallAsync("SET"
+        //    .Input(key)
+        //    .InputRaw(SerializeRedisValue(value))
+        //    .InputIf(timeoutSeconds >= 1, "EX", (long)timeoutSeconds)
+        //    .FlagKey(key), rt => rt.ThrowOrValue<string>());
+        //public Task<string> GetAsync(string key) => CallAsync("GET".Input(key).FlagKey(key), rt => rt.ThrowOrValue<string>());
+        //public Task<T> GetAsync<T>(string key) => CallAsync("GET".Input(key).FlagKey(key).FlagReadbytes(true), rt => rt.ThrowOrValue(a => DeserializeRedisValue<T>(a.ConvertTo<byte[]>(), rt.Encoding)));
     }
 }
 #endif
