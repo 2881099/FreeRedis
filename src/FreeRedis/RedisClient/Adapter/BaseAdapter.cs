@@ -16,6 +16,7 @@ namespace FreeRedis
             Sentinel,
             SingleInside,
             SingleTemp,
+
             Pipeline,
             Transaction,
         }
@@ -29,11 +30,11 @@ namespace FreeRedis
             public abstract IRedisSocket GetRedisSocket(CommandPacket cmd);
             public abstract void Dispose();
 
-            public abstract TValue AdapaterCall<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse);
+            public abstract TValue AdapterCall<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse);
 
 #if net40
 #else
-            public abstract Task<TValue> AdapaterCallAsync<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse);
+            public abstract Task<TValue> AdapterCallAsync<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse);
 #endif
 
         }

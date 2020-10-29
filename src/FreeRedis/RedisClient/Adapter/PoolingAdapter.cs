@@ -47,7 +47,7 @@ namespace FreeRedis
                 rdsproxy._pool = pool;
                 return rdsproxy;
             }
-            public override TValue AdapaterCall<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
+            public override TValue AdapterCall<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
             {
                 return TopOwner.LogCall(cmd, () =>
                 {
@@ -80,11 +80,11 @@ namespace FreeRedis
             }
 #if net40
 #else
-            async public override Task<TValue> AdapaterCallAsync<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
+            async public override Task<TValue> AdapterCallAsync<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
             {
                 var poolkey = GetIdleBusKey(cmd);
                 var pool = _ib.Get(poolkey);
-                if (pool.AsyncSocket == null) return AdapaterCall(cmd, parse);
+                if (pool.AsyncSocket == null) return AdapterCall(cmd, parse);
                 return await TopOwner.LogCallAsync(cmd, async () =>
                 {
                     RedisResult rt = null;

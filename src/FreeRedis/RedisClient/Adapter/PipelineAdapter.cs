@@ -10,7 +10,24 @@ namespace FreeRedis
 {
     partial class RedisClient
     {
-        internal class PipelineAdapter : BaseAdapter
+        // Pipeline
+        public PipelineHook StartPipe()
+        {
+            CheckUseTypeOrThrow(UseType.Pooling, UseType.Cluster, UseType.Sentinel, UseType.SingleInside, UseType.SingleTemp);
+            return new PipelineHook(new PipelineAdapter(Adapter.TopOwner));
+        }
+        public class PipelineHook : RedisClient
+        {
+            internal PipelineHook(BaseAdapter adapter) : base(adapter) { }
+            public object[] EndPipe() => (Adapter as PipelineAdapter).EndPipe();
+
+            ~PipelineHook()
+            {
+                (Adapter as PipelineAdapter).Dispose();
+            }
+        }
+
+        class PipelineAdapter : BaseAdapter
         {
             readonly List<PipelineCommand> _commands;
 
@@ -27,16 +44,18 @@ namespace FreeRedis
                 bool TaskCompletionSourceIsTrySeted { get; set; }
                 public void TrySetResult(object result, Exception exception)
                 {
+                    if (TaskCompletionSource == null) return;
                     if (TaskCompletionSourceIsTrySeted) return;
                     TaskCompletionSourceIsTrySeted = true;
-                    if (exception != null) TaskCompletionSource?.TrySetException(exception);
-                    else TaskCompletionSource?.TrySetResult(result);
+                    if (exception != null) TaskCompletionSource.TrySetException(exception);
+                    else TaskCompletionSource.TrySetResult(result);
                 }
                 public void TrySetCanceled()
                 {
+                    if (TaskCompletionSource == null) return;
                     if (TaskCompletionSourceIsTrySeted) return;
                     TaskCompletionSourceIsTrySeted = true;
-                    TaskCompletionSource?.TrySetCanceled();
+                    TaskCompletionSource.TrySetCanceled();
                 }
 #endif
             }
@@ -62,7 +81,7 @@ namespace FreeRedis
             {
                 throw new RedisClientException($"RedisClient: Method cannot be used in {UseType} mode.");
             }
-            public override TValue AdapaterCall<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
+            public override TValue AdapterCall<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
             {
                 _commands.Add(new PipelineCommand
                 {
@@ -75,7 +94,7 @@ namespace FreeRedis
             }
 #if net40
 #else
-            async public override Task<TValue> AdapaterCallAsync<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
+            async public override Task<TValue> AdapterCallAsync<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
             {
                 var tsc = new TaskCompletionSource<object>();
                 _commands.Add(new PipelineCommand
@@ -141,16 +160,16 @@ namespace FreeRedis
                     if (rds.IsConnected == false) rds.Connect();
                     ms.Position = 0;
                     ms.CopyTo(rds.Stream);
-                    
+
                     foreach (var pc in cmds)
                     {
                         pc.RedisResult = rds.Read(pc.IsBytes);
                         pc.Result = pc.Parse(pc.RedisResult);
+                        if (pc.RedisResult.IsError) err.Add(pc);
 #if net40
 #else
                         pc.TrySetResult(pc.Result, pc.RedisResult.IsError ? new RedisServerException(pc.RedisResult.SimpleError) : null);
 #endif
-                        if (pc.RedisResult.IsError) err.Add(pc);
                     }
                 }
                 finally

@@ -1,16 +1,33 @@
 ﻿using FreeRedis.Internal;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace FreeRedis
 {
     partial class RedisClient
     {
-        internal class TransactionAdapter : BaseAdapter
+        public TransactionHook Multi()
+        {
+            CheckUseTypeOrThrow(UseType.Pooling, UseType.Cluster, UseType.Sentinel, UseType.SingleInside, UseType.SingleTemp);
+            return new TransactionHook(new TransactionAdapter(Adapter.TopOwner));
+        }
+        public class TransactionHook : RedisClient
+        {
+            internal TransactionHook(BaseAdapter adapter) : base(adapter) { }
+            public void Discard() => (Adapter as TransactionAdapter).Discard();
+            public object[] Exec() => (Adapter as TransactionAdapter).Exec();
+            public void UnWatch() => (Adapter as TransactionAdapter).UnWatch();
+            public void Watch(params string[] keys) => (Adapter as TransactionAdapter).Watch(keys);
+
+            ~TransactionHook()
+            {
+                (Adapter as TransactionAdapter).Dispose();
+            }
+        }
+
+        class TransactionAdapter : BaseAdapter
         {
             IRedisSocket _redisSocket;
             readonly List<TransactionCommand> _commands;
@@ -25,16 +42,18 @@ namespace FreeRedis
                 bool TaskCompletionSourceIsTrySeted { get; set; }
                 public void TrySetResult(object result, Exception exception)
                 {
+                    if (TaskCompletionSource == null) return;
                     if (TaskCompletionSourceIsTrySeted) return;
                     TaskCompletionSourceIsTrySeted = true;
-                    if (exception != null) TaskCompletionSource?.TrySetException(exception);
-                    else TaskCompletionSource?.TrySetResult(result);
+                    if (exception != null) TaskCompletionSource.TrySetException(exception);
+                    else TaskCompletionSource.TrySetResult(result);
                 }
                 public void TrySetCanceled()
                 {
+                    if (TaskCompletionSource == null) return;
                     if (TaskCompletionSourceIsTrySeted) return;
                     TaskCompletionSourceIsTrySeted = true;
-                    TaskCompletionSource?.TrySetCanceled();
+                    TaskCompletionSource.TrySetCanceled();
                 }
 #endif
             }
@@ -56,7 +75,7 @@ namespace FreeRedis
                 TryMulti();
                 return DefaultRedisSocket.CreateTempProxy(_redisSocket, null);
             }
-            public override TValue AdapaterCall<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
+            public override TValue AdapterCall<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
             {
                 TryMulti();
                 return TopOwner.LogCall(cmd, () =>
@@ -73,7 +92,7 @@ namespace FreeRedis
             }
 #if net40
 #else
-            async public override Task<TValue> AdapaterCallAsync<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
+            async public override Task<TValue> AdapterCallAsync<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
             {
                 //Read with non byte[], Object deserialization is not supported
                 //The value returned by the callback is null :

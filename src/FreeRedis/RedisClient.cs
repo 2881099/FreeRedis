@@ -81,8 +81,8 @@ namespace FreeRedis
             });
         }
 
-        public object Call(CommandPacket cmd) => Adapter.AdapaterCall(cmd, rt => rt.ThrowOrValue());
-        protected TValue Call<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse) => Adapter.AdapaterCall(cmd, parse);
+        public object Call(CommandPacket cmd) => Adapter.AdapterCall(cmd, rt => rt.ThrowOrValue());
+        protected TValue Call<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse) => Adapter.AdapterCall(cmd, parse);
 
         internal T LogCall<T>(CommandPacket cmd, Func<T> func)
         {

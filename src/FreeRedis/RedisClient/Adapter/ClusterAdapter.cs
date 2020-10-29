@@ -53,7 +53,7 @@ namespace FreeRedis
                 rdsproxy._pool = pool;
                 return rdsproxy;
             }
-            public override TValue AdapaterCall<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
+            public override TValue AdapterCall<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
             {
                 return TopOwner.LogCall(cmd, () =>
                 {
@@ -104,7 +104,7 @@ namespace FreeRedis
                                 cmd._clusterMovedAsking = true;
 
                             TopOwner.OnNotice(new NoticeEventArgs(NoticeType.Info, null, $"{(cmd.WriteHost ?? "Not connected")} > {cmd}\r\n{rt.SimpleError} ", null));
-                            return AdapaterCall(cmd, parse);
+                            return AdapterCall(cmd, parse);
                         }
                     }
                     rt.IsErrorThrow = TopOwner._isThrowRedisSimpleError;
@@ -113,10 +113,10 @@ namespace FreeRedis
             }
 #if net40
 #else
-            public override Task<TValue> AdapaterCallAsync<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
+            public override Task<TValue> AdapterCallAsync<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
             {
                 //Single socket not support Async Multiplexing
-                return Task.FromResult(AdapaterCall<TValue>(cmd, parse));
+                return Task.FromResult(AdapterCall<TValue>(cmd, parse));
             }
 #endif
 
@@ -128,7 +128,7 @@ namespace FreeRedis
                     //尝试求出其他节点，并缓存slot
                     try
                     {
-                        var cnodes = AdapaterCall<string>("CLUSTER".SubCommand("NODES"), rt => rt.ThrowOrValue<string>()).Split('\n');
+                        var cnodes = AdapterCall<string>("CLUSTER".SubCommand("NODES"), rt => rt.ThrowOrValue<string>()).Split('\n');
                         foreach (var cnode in cnodes)
                         {
                             if (string.IsNullOrEmpty(cnode)) continue;

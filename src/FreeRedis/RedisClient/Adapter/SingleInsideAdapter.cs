@@ -33,7 +33,7 @@ namespace FreeRedis
             {
                 return DefaultRedisSocket.CreateTempProxy(_redisSocket, null);
             }
-            public override TValue AdapaterCall<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
+            public override TValue AdapterCall<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
             {
                 return TopOwner.LogCall(cmd, () =>
                 {
@@ -46,10 +46,10 @@ namespace FreeRedis
             }
 #if net40
 #else
-            public override Task<TValue> AdapaterCallAsync<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
+            public override Task<TValue> AdapterCallAsync<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
             {
                 //Single socket not support Async Multiplexing
-                return Task.FromResult(AdapaterCall(cmd, parse));
+                return Task.FromResult(AdapterCall(cmd, parse));
             }
 #endif
 
