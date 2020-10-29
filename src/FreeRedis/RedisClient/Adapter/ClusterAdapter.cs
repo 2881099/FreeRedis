@@ -37,14 +37,14 @@ namespace FreeRedis
             {
                 var slots = cmd._flagKey.Select(a => GetClusterSlot(a)).Distinct().ToArray();
                 var poolkeys = slots.Select(a => _slotCache.TryGetValue(a, out var trykey) ? trykey : null).Distinct().Where(a => a != null).ToArray();
-                if (poolkeys.Length > 1) throw new ArgumentException($"Multiple key slot values not equal: {cmd}");
+                if (poolkeys.Length > 1) throw new RedisClientException($"Multiple key slot values not equal: {cmd}");
                 var poolkey = poolkeys.FirstOrDefault() ?? _clusterConnectionStrings.First().Host;
 
                 var pool = _ib.Get(poolkey);
                 if (pool.IsAvailable == false)
                 {
                     poolkey = _ib.GetKeys(a => a != null && a.IsAvailable).FirstOrDefault();
-                    if (string.IsNullOrEmpty(poolkey)) throw new Exception($"All nodes of the cluster failed to connect");
+                    if (string.IsNullOrEmpty(poolkey)) throw new RedisClientException($"All nodes of the cluster failed to connect");
                     pool = _ib.Get(poolkey);
                 }
                 var cli = pool.Get();
@@ -169,7 +169,7 @@ namespace FreeRedis
                 }
 
                 if (_ib.GetKeys().Length == 0)
-                    throw new Exception($"All \"clusterConnectionStrings\" failed to connect");
+                    throw new RedisClientException($"All \"clusterConnectionStrings\" failed to connect");
             }
             //closure connectionString
             void RegisterClusterNode(ConnectionStringBuilder connectionString)

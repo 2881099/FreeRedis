@@ -81,9 +81,9 @@ namespace FreeRedis.Internal
         }
 
         Socket _socket;
-        public Socket Socket => _socket ?? throw new Exception("Redis socket connection was not opened");
+        public Socket Socket => _socket ?? throw new RedisClientException("Redis socket connection was not opened");
         NetworkStream _stream;
-        public Stream Stream => _stream ?? throw new Exception("Redis socket connection was not opened");
+        public Stream Stream => _stream ?? throw new RedisClientException("Redis socket connection was not opened");
         public bool IsConnected => _socket?.Connected == true && _stream != null;
         public event EventHandler<EventArgs> Connected;
         public ClientReplyType ClientReply { get; protected set; }

@@ -24,17 +24,17 @@ namespace FreeRedis.Tests.RedisClientTests.Other
             {
                 tran.IncrBy(key, 10);
                 
-                tran.Set("TestSet_null", Null);
-                tran.Get("TestSet_null");
+                tran.Set("MultiTestSet_null", Null);
+                tran.Get("MultiTestSet_null");
                 
-                tran.Set("TestSet_string", String);
-                tran.Get("TestSet_string");
+                tran.Set("MultiTestSet_string", String);
+                tran.Get("MultiTestSet_string");
                 
-                tran.Set("TestSet_bytes", Bytes);
-                tran.Get<byte[]>("TestSet_bytes");
+                tran.Set("MultiTestSet_bytes", Bytes);
+                tran.Get<byte[]>("MultiTestSet_bytes");
                 
-                tran.Set("TestSet_class", Class);
-                tran.Get<TestClass>("TestSet_class");
+                tran.Set("MultiTestSet_class", Class);
+                tran.Get<TestClass>("MultiTestSet_class");
 
                 tran.Discard();
             }
@@ -43,17 +43,17 @@ namespace FreeRedis.Tests.RedisClientTests.Other
             {
                 tran.IncrBy(key, 10);
                 
-                tran.Set("TestSet_null", Null);
-                tran.Get("TestSet_null");
+                tran.Set("MultiTestSet_null", Null);
+                tran.Get("MultiTestSet_null");
                 
-                tran.Set("TestSet_string", String);
-                tran.Get("TestSet_string");
+                tran.Set("MultiTestSet_string", String);
+                tran.Get("MultiTestSet_string");
                 
-                tran.Set("TestSet_bytes", Bytes);
-                tran.Get<byte[]>("TestSet_bytes");
+                tran.Set("MultiTestSet_bytes", Bytes);
+                tran.Get<byte[]>("MultiTestSet_bytes");
                 
-                tran.Set("TestSet_class", Class);
-                tran.Get<TestClass>("TestSet_class");
+                tran.Set("MultiTestSet_class", Class);
+                tran.Get<TestClass>("MultiTestSet_class");
 
                 var ret = tran.Exec();
 
@@ -77,49 +77,52 @@ namespace FreeRedis.Tests.RedisClientTests.Other
             using (var tran = cli.Multi())
             {
                 long t1 = 0;
-                tran.IncrByAsync(key, 10).ContinueWith(t => t1 = t.Result);
+                tran.IncrByAsync(key, 10);
 
-                tran.SetAsync("TestSet_null", Null);
+                tran.SetAsync("MultiAsyncTestSet_null", Null);
                 string t3 = "";
-                tran.GetAsync("TestSet_null").ContinueWith(t => t3 = t.Result);
+                tran.GetAsync("MultiAsyncTestSet_null");
 
-                tran.SetAsync("TestSet_string", String);
+                tran.SetAsync("MultiAsyncTestSet_string", String);
                 string t4 = null;
-                tran.GetAsync("TestSet_string").ContinueWith(t => t4 = t.Result);
+                tran.GetAsync("MultiAsyncTestSet_string");
 
-                tran.SetAsync("TestSet_bytes", Bytes);
+                tran.SetAsync("MultiAsyncTestSet_bytes", Bytes);
                 byte[] t6 = null;
-                tran.GetAsync<byte[]>("TestSet_bytes").ContinueWith(t => t6 = t.Result);
+                tran.GetAsync<byte[]>("TestSet_bytes");
 
-                tran.SetAsync("TestSet_class", Class);
+                tran.SetAsync("MultiAsyncTestSet_class", Class);
                 TestClass t8 = null;
-                tran.GetAsync<TestClass>("TestSet_class").ContinueWith(t => t8 = t.Result);
+                tran.GetAsync<TestClass>("MultiAsyncTestSet_class");
 
                 tran.Discard();
             }
 
             using (var tran = cli.Multi())
             {
+                var tasks = new List<Task>();
                 long t1 = 0;
-                tran.IncrByAsync(key, 10).ContinueWith(t => t1 = t.Result);
+                tasks.Add(tran.IncrByAsync(key, 10).ContinueWith(t => 
+                t1 = t.Result));
 
-                tran.SetAsync("TestSet_null", Null);
+                tran.SetAsync("MultiAsyncTestSet_null", Null);
                 string t3 = "";
-                tran.GetAsync("TestSet_null").ContinueWith(t => t3 = t.Result);
+                tasks.Add(tran.GetAsync("MultiAsyncTestSet_null").ContinueWith(t => t3 = t.Result));
 
-                tran.SetAsync("TestSet_string", String);
+                tran.SetAsync("MultiAsyncTestSet_string", String);
                 string t4 = null;
-                tran.GetAsync("TestSet_string").ContinueWith(t => t4 = t.Result);
+                tasks.Add(tran.GetAsync("MultiAsyncTestSet_string").ContinueWith(t =>  t4 = t.Result));
 
-                tran.SetAsync("TestSet_bytes", Bytes);
+                tran.SetAsync("MultiAsyncTestSet_bytes", Bytes);
                 byte[] t6 = null;
-                tran.GetAsync<byte[]>("TestSet_bytes").ContinueWith(t => t6 = t.Result);
+                tasks.Add(tran.GetAsync<byte[]>("MultiAsyncTestSet_bytes").ContinueWith(t => t6 = t.Result));
 
-                tran.SetAsync("TestSet_class", Class);
+                tran.SetAsync("MultiAsyncTestSet_class", Class);
                 TestClass t8 = null;
-                tran.GetAsync<TestClass>("TestSet_class").ContinueWith(t => t8 = t.Result);
+                tasks.Add(tran.GetAsync<TestClass>("MultiAsyncTestSet_class").ContinueWith(t => t8 = t.Result));
 
                 var ret = tran.Exec();
+                Task.WaitAll(tasks.ToArray());
 
                 Assert.Equal(10L, ret[0]);
                 Assert.Equal("", ret[2].ToString());

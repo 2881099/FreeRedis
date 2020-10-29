@@ -49,7 +49,7 @@ namespace FreeRedis
             .Input(key)
             .InputRaw(SerializeRedisValue(value))
             .InputIf(timeoutSeconds >= 1, "EX", (long)timeoutSeconds)
-            .FlagKey(key), rt => rt.ThrowOrValue<string>()); 
+            .FlagKey(key), rt => rt.ThrowOrValue<string>());
         public Task<string> GetAsync(string key) => CallAsync("GET".Input(key).FlagKey(key), rt => rt.ThrowOrValue<string>());
         public Task<T> GetAsync<T>(string key) => CallAsync("GET".Input(key).FlagKey(key).FlagReadbytes(true), rt => rt.ThrowOrValue(a => DeserializeRedisValue<T>(a.ConvertTo<byte[]>(), rt.Encoding)));
     }

@@ -40,7 +40,7 @@ namespace FreeRedis.Tests.RedisClientTests
             var key3 = "XAdd3";
 
             cli.Del(key1, key2, key3);
-            Assert.Equal("ERR wrong number of arguments for 'xadd' command", Assert.Throws<RedisException>(() => cli.XAdd(key1, new Dictionary<string, object>()))?.Message);
+            Assert.Equal("ERR wrong number of arguments for 'xadd' command", Assert.Throws<RedisServerException>(() => cli.XAdd(key1, new Dictionary<string, object>()))?.Message);
             Assert.NotNull(cli.XAdd(key1, new Dictionary<string, object> { ["f1"] = "v1" }));
             Assert.NotNull(cli.XAdd(key1, new Dictionary<string, object> { ["f1"] = "v1", ["f2"] = "v2" }));
             Assert.NotNull(cli.XAdd(key2, 1000, "123321", new Dictionary<string, object> { ["f11"] = "v11" }));

@@ -61,7 +61,7 @@ namespace FreeRedis
                     if (_cancels.TryRemove(id, out var oldkeys))
                         foreach (var oldkey in oldkeys)
                         {
-                            if (_registers.TryGetValue(oldkey, out var oldrecvs) && 
+                            if (_registers.TryGetValue(oldkey, out var oldrecvs) &&
                                 oldrecvs.TryRemove(id, out var oldrecv) &&
                                 oldrecvs.Any() == false)
                                 readyUnsubInterKeys.Add(oldkey);
@@ -72,10 +72,10 @@ namespace FreeRedis
                 if (unsub.Any()) Call("UNSUBSCRIBE".Input(unsub));
                 if (punsub.Any()) Call("PUNSUBSCRIBE".Input(punsub));
 
-                if (_cancels.Any() == false)
+                if (!_cancels.Any())
                     lock (_lock)
-                        if (_cancels.Any() == false)
-                            _redisSocket.ReleaseSocket();
+                        if (!_cancels.Any())
+                                _redisSocket.ReleaseSocket();
             }
             internal void UnSubscribe(bool punsub, string[] channels)
             {
@@ -99,13 +99,14 @@ namespace FreeRedis
                     lock (_lock) dict = _registers.GetOrAdd(regkeys[0], k1 => new ConcurrentDictionary<Guid, RegisterInfo>());
                     dict.TryAdd(id, new RegisterInfo(id, handler, time));
                 }
-                _cancels.TryAdd(id, regkeys);
+                lock (_lock)
+                    _cancels.TryAdd(id, regkeys);
                 var isnew = false;
-                if (_redisSocket == null)
+                if (IsSubscribed == false)
                 {
                     lock (_lock)
                     {
-                        if (_redisSocket == null)
+                        if (IsSubscribed == false)
                         {
                             _redisSocket = _topOwner.Adapter.GetRedisSocket(null);
                             IsSubscribed = isnew = true;
@@ -128,6 +129,8 @@ namespace FreeRedis
                             }
                             catch
                             {
+                                Thread.CurrentThread.Join(100);
+                                if (_cancels.Any()) continue;
                                 break;
                             }
                             var val = rt.Value as object[];
@@ -152,13 +155,11 @@ namespace FreeRedis
                         timer.Dispose();
                         lock (_lock)
                         {
-                            if (_redisSocket != null)
-                            {
-                                _redisSocket.ReceiveTimeout = _redisSocketReceiveTimeoutOld;
-                                _redisSocket.ReleaseSocket();
-                                _redisSocket.Dispose();
-                                _redisSocket = null;
-                            }
+                            IsSubscribed = false;
+                            _redisSocket.ReceiveTimeout = _redisSocketReceiveTimeoutOld;
+                            _redisSocket.ReleaseSocket();
+                            _redisSocket.Dispose();
+                            _redisSocket = null;
                         }
                     }).Start();
                 }
@@ -177,11 +178,10 @@ namespace FreeRedis
             {
                 _topOwner.LogCall<object>(cmd, () =>
                 {
-                    if (_redisSocket != null)
-                        lock (_lock)
-                            if (_redisSocket != null)
-                                _redisSocket.Write(cmd);
-                    if (_redisSocket == null) throw new Exception($"Subscription not opened, unable to execute");
+                    if (IsSubscribed == false)
+                        throw new Exception($"RedisClient: Subscription not opened, unable to execute");
+                    lock (_lock)
+                        _redisSocket.Write(cmd);
                     return null;
                 });
             }

@@ -63,7 +63,7 @@ namespace FreeRedis.Internal
                     if (_writeQueue.TryDequeue(out var witem))
                         witem.TaskCompletionSource.TrySetResult(rt);
                     else
-                        ClearAndTrySetExpcetion(new Exception($"AsyncRedisSocket: Message sequence error"));
+                        ClearAndTrySetExpcetion(new RedisClientException($"AsyncRedisSocket: Message sequence error"));
                 }
                 timer.Dispose();
             }).Start();

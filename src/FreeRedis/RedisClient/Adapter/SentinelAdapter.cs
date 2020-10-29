@@ -46,7 +46,7 @@ namespace FreeRedis
                     if (cmdset != null)
                     {
                         if (!_is_single && (cmdset.Status & CommandSets.LocalStatus.check_single) == CommandSets.LocalStatus.check_single)
-                            throw new RedisException($"RedisClient: Method cannot be used in {UseType} mode. You can set \"max pool size=1\", but it is not singleton mode.");
+                            throw new RedisServerException($"RedisClient: Method cannot be used in {UseType} mode. You can set \"max pool size=1\", but it is not singleton mode.");
 
                         if (_rw_splitting &&
                             ((cmdset.Tag & CommandSets.ServerTag.read) == CommandSets.ServerTag.read ||
@@ -67,7 +67,7 @@ namespace FreeRedis
                     }
                 }
                 var poolkey = _masterHost;
-                if (string.IsNullOrWhiteSpace(poolkey)) throw new Exception($"【{_connectionString.Host}】Redis Sentinel is switching");
+                if (string.IsNullOrWhiteSpace(poolkey)) throw new RedisClientException($"【{_connectionString.Host}】Redis Sentinel is switching");
                 var pool = _ib.Get(poolkey);
                 var cli = pool.Get();
                 var rds = cli.Value.Adapter.GetRedisSocket(null);

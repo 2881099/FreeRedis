@@ -53,7 +53,7 @@ namespace FreeRedis.Tests.RedisClientTests.Other
                 cli.ClientKill("localhost", 1, ClientType.pubsub, "default", "127.0.0.1:50618", Confirm.yes);
                 cli.ClientKill("localhost", 1, ClientType.slave, "default", "127.0.0.1:50618", Confirm.yes);
             }
-            catch (RedisException ex)
+            catch (RedisServerException ex)
             {
                 Assert.Equal("ERR No such client", ex.Message);
             }

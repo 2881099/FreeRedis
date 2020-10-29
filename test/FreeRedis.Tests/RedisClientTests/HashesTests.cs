@@ -63,8 +63,8 @@ namespace FreeRedis.Tests.RedisClientTests
             cli.Del("TestHIncrBy");
             cli.HMSet("TestHIncrBy", "null1", base.Null, "string1", base.String, "bytes1", base.Bytes, "class1", base.Class, "class1array", new[] { base.Class, base.Class });
             Assert.Equal(1, cli.HIncrBy("TestHIncrBy", "null112", 1));
-            Assert.Throws<RedisException>(() => cli.HIncrBy("TestHIncrBy", "string1", 1));
-            Assert.Throws<RedisException>(() => cli.HIncrBy("TestHIncrBy", "bytes1", 1));
+            Assert.Throws<RedisServerException>(() => cli.HIncrBy("TestHIncrBy", "string1", 1));
+            Assert.Throws<RedisServerException>(() => cli.HIncrBy("TestHIncrBy", "bytes1", 1));
 
             Assert.Equal(2, cli.HIncrBy("TestHIncrBy", "null112", 1));
             Assert.Equal(12, cli.HIncrBy("TestHIncrBy", "null112", 10));
@@ -76,8 +76,8 @@ namespace FreeRedis.Tests.RedisClientTests
             cli.Del("TestHIncrByFloat");
             cli.HMSet("TestHIncrByFloat", "null1", base.Null, "string1", base.String, "bytes1", base.Bytes, "class1", base.Class, "class1array", new[] { base.Class, base.Class });
             Assert.Equal(0.5m, cli.HIncrByFloat("TestHIncrByFloat", "null112", 0.5m));
-            Assert.Throws<RedisException>(() => cli.HIncrByFloat("TestHIncrByFloat", "string1", 1.5m));
-            Assert.Throws<RedisException>(() => cli.HIncrByFloat("TestHIncrByFloat", "bytes1", 5));
+            Assert.Throws<RedisServerException>(() => cli.HIncrByFloat("TestHIncrByFloat", "string1", 1.5m));
+            Assert.Throws<RedisServerException>(() => cli.HIncrByFloat("TestHIncrByFloat", "bytes1", 5));
 
             Assert.Equal(3.8m, cli.HIncrByFloat("TestHIncrByFloat", "null112", 3.3m));
             Assert.Equal(14.0m, cli.HIncrByFloat("TestHIncrByFloat", "null112", 10.2m));

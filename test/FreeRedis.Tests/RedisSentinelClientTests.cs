@@ -61,7 +61,7 @@ namespace FreeRedis.Tests.RedisSentinelClientTests
                 Assert.Equal("mymaster", rt.name);
 
                 Assert.Equal("ERR No such master with that name",
-                    Assert.Throws<RedisException>(() => cli.Master("mymaster222")).Message);
+                    Assert.Throws<RedisServerException>(() => cli.Master("mymaster222")).Message);
             }
         }
 
@@ -130,7 +130,7 @@ namespace FreeRedis.Tests.RedisSentinelClientTests
                 cli.Failover("mymaster");
 
                 Assert.Equal("ERR No such master with that name",
-                    Assert.Throws<RedisException>(() => cli.Failover("mymaster222")).Message);
+                    Assert.Throws<RedisServerException>(() => cli.Failover("mymaster222")).Message);
             }
         }
 
@@ -160,7 +160,7 @@ namespace FreeRedis.Tests.RedisSentinelClientTests
                 //cli.Remove("mymaster");
 
                 Assert.Equal("ERR No such master with that name",
-                    Assert.Throws<RedisException>(() => cli.Remove("mymaster222")).Message);
+                    Assert.Throws<RedisServerException>(() => cli.Remove("mymaster222")).Message);
             }
         }
 
@@ -172,7 +172,7 @@ namespace FreeRedis.Tests.RedisSentinelClientTests
                 var rt = cli.CkQuorum("mymaster");
 
                 Assert.Equal("ERR No such master with that name",
-                    Assert.Throws<RedisException>(() => cli.CkQuorum("mymaster222")).Message);
+                    Assert.Throws<RedisServerException>(() => cli.CkQuorum("mymaster222")).Message);
             }
         }
 

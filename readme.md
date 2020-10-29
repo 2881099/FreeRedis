@@ -101,13 +101,26 @@ using (var pipe = cli.StartPipe())
     pipe.Set("key2", Null);
     pipe.Get("key1");
 
-    long t1 = 0;
-    tran.IncrByAsync("key1", 10).ContinueWith(t => t1 = t.Result); //callback
+    object[] ret = pipe.EndPipe();
+    Console.WriteLine(ret[0] + ", " + ret[2]);
+}
+
+// or Async Callback
+
+using (var pipe = cli.StartPipe())
+{
+    var tasks = new List<Task>();
+    long t0 = 0;
+    task.Add(pipe.IncrByAsync("key1", 10).ContinueWith(t => t0 = t.Result)); //callback
+
+    pipe.SetAsync("key2", Null);
 
     string t2 = null;
-    tran.GetAsync("key1").ContinueWith(t => t2 = t.Result); //callback
+    task.Add(pipe.GetAsync("key1").ContinueWith(t => t2 = t.Result)); //callback
 
-    object[] ret = pipe.EndPipe();
+    pipe.EndPipe();
+    Task.WaitAll(tasks.ToArray()); //wait all callback
+    Console.WriteLine(t0 + ", " + t2);
 }
 ```
 
@@ -120,13 +133,26 @@ using (var tran = cli.Multi())
     tran.Set("key2", Null);
     tran.Get("key1");
 
-    long t1 = 0;
-    tran.IncrByAsync("key1", 10).ContinueWith(t => t1 = t.Result); //callback
+    object[] ret = tran.Exec();
+    Console.WriteLine(ret[0] + ", " + ret[2]);
+}
+
+// or Async Callback
+
+using (var tran = cli.Multi())
+{
+    var tasks = new List<Task>();
+    long t0 = 0;
+    task.Add(tran.IncrByAsync("key1", 10).ContinueWith(t => t0 = t.Result)); //callback
+
+    tran.SetAsync("key2", Null);
 
     string t2 = null;
-    tran.GetAsync("key1").ContinueWith(t => t2 = t.Result); //callback
+    task.Add(tran.GetAsync("key1").ContinueWith(t => t2 = t.Result)); //callback
 
-    object[] ret = tran.Exec();
+    tran.Exec();
+    Task.WaitAll(tasks.ToArray()); //wait all callback
+    Console.WriteLine(t0 + ", " + t2);
 }
 ```
 

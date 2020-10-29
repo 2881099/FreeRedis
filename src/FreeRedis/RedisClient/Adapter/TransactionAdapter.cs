@@ -22,6 +22,20 @@ namespace FreeRedis
 #if net40
 #else
                 public TaskCompletionSource<object> TaskCompletionSource { get; set; }
+                bool TaskCompletionSourceIsTrySeted { get; set; }
+                public void TrySetResult(object result, Exception exception)
+                {
+                    if (TaskCompletionSourceIsTrySeted) return;
+                    TaskCompletionSourceIsTrySeted = true;
+                    if (exception != null) TaskCompletionSource?.TrySetException(exception);
+                    else TaskCompletionSource?.TrySetResult(result);
+                }
+                public void TrySetCanceled()
+                {
+                    if (TaskCompletionSourceIsTrySeted) return;
+                    TaskCompletionSourceIsTrySeted = true;
+                    TaskCompletionSource?.TrySetCanceled();
+                }
 #endif
             }
 
@@ -61,6 +75,9 @@ namespace FreeRedis
 #else
             async public override Task<TValue> AdapaterCallAsync<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
             {
+                //Read with non byte[], Object deserialization is not supported
+                //The value returned by the callback is null :
+                //  tran.Get<Book>("key1").ContinueWith(t => t3 = t.Result)
                 var tsc = new TaskCompletionSource<object>();
                 TryMulti();
                 TopOwner.LogCall(cmd, () =>
@@ -102,7 +119,7 @@ namespace FreeRedis
 #if net40
 #else
                 for (var a = 0; a < _commands.Count; a++)
-                    _commands[a]?.TaskCompletionSource.TrySetCanceled();
+                    _commands[a].TrySetCanceled();
 #endif
                 _commands.Clear();
                 _redisSocket?.Dispose();
@@ -127,7 +144,7 @@ namespace FreeRedis
                         retparsed[a] = _commands[a].Parse(ret[a]);
 #if net40
 #else
-                        _commands[a]?.TaskCompletionSource.TrySetResult(retparsed[a]); //tryset Async
+                        _commands[a].TrySetResult(retparsed[a], null); //tryset Async
 #endif
                     }
                     return retparsed;

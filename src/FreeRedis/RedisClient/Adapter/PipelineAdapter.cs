@@ -24,6 +24,20 @@ namespace FreeRedis
 #if net40
 #else
                 public TaskCompletionSource<object> TaskCompletionSource { get; set; }
+                bool TaskCompletionSourceIsTrySeted { get; set; }
+                public void TrySetResult(object result, Exception exception)
+                {
+                    if (TaskCompletionSourceIsTrySeted) return;
+                    TaskCompletionSourceIsTrySeted = true;
+                    if (exception != null) TaskCompletionSource?.TrySetException(exception);
+                    else TaskCompletionSource?.TrySetResult(result);
+                }
+                public void TrySetCanceled()
+                {
+                    if (TaskCompletionSourceIsTrySeted) return;
+                    TaskCompletionSourceIsTrySeted = true;
+                    TaskCompletionSource?.TrySetCanceled();
+                }
 #endif
             }
 
@@ -39,14 +53,14 @@ namespace FreeRedis
 #if net40
 #else
                 for (var a = 0; a < _commands.Count; a++)
-                    _commands[a]?.TaskCompletionSource.TrySetCanceled();
+                    _commands[a].TrySetCanceled();
 #endif
                 _commands.Clear();
             }
 
             public override IRedisSocket GetRedisSocket(CommandPacket cmd)
             {
-                throw new Exception($"RedisClient: Method cannot be used in {UseType} mode.");
+                throw new RedisClientException($"RedisClient: Method cannot be used in {UseType} mode.");
             }
             public override TValue AdapaterCall<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
             {
@@ -104,7 +118,7 @@ namespace FreeRedis
                 }
                 finally
                 {
-                    _commands.Clear();
+                    Dispose();
                 }
 
                 object[] ClusterEndPipe()
@@ -134,11 +148,7 @@ namespace FreeRedis
                         pc.Result = pc.Parse(pc.RedisResult);
 #if net40
 #else
-                        if (pc.TaskCompletionSource != null)
-                        {
-                            if (pc.RedisResult.IsError) pc.TaskCompletionSource.TrySetException(new RedisException(pc.RedisResult.SimpleError));
-                            else pc.TaskCompletionSource.TrySetResult(pc.Result);
-                        }
+                        pc.TrySetResult(pc.Result, pc.RedisResult.IsError ? new RedisServerException(pc.RedisResult.SimpleError) : null);
 #endif
                         if (pc.RedisResult.IsError) err.Add(pc);
                     }
@@ -158,7 +168,7 @@ namespace FreeRedis
                         if (a > 0) sb.Append("\r\n");
                         sb.Append(err[a].RedisResult.SimpleError).Append(" {").Append(cmd.ToString()).Append("}");
                     }
-                    throw new RedisException(sb.ToString());
+                    throw new RedisServerException(sb.ToString());
                 }
             }
         }

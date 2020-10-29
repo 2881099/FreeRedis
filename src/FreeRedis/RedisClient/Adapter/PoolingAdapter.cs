@@ -118,7 +118,7 @@ namespace FreeRedis
                     if (cmdset != null)
                     {
                         if (!_is_single && (cmdset.Status & CommandSets.LocalStatus.check_single) == CommandSets.LocalStatus.check_single)
-                            throw new RedisException($"RedisClient: Method cannot be used in {UseType} mode. You can set \"max pool size=1\", but it is not singleton mode.");
+                            throw new RedisServerException($"RedisClient: Method cannot be used in {UseType} mode. You can set \"max pool size=1\", but it is not singleton mode.");
 
                         if (_rw_splitting &&
                             ((cmdset.Tag & CommandSets.ServerTag.read) == CommandSets.ServerTag.read ||

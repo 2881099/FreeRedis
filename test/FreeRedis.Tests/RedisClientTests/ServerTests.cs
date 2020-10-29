@@ -18,7 +18,7 @@ namespace FreeRedis.Tests.RedisClientTests.Other
 
             var r2 = cli.AclCat("scripting");
             Assert.NotEmpty(r2);
-            Assert.Equal("ERR Unknown category 'testcategory'", Assert.Throws<RedisException>(() => cli.AclCat("testcategory"))?.Message);
+            Assert.Equal("ERR Unknown category 'testcategory'", Assert.Throws<RedisServerException>(() => cli.AclCat("testcategory"))?.Message);
         }
 
         [Fact]
@@ -84,7 +84,7 @@ namespace FreeRedis.Tests.RedisClientTests.Other
 
             using (var sh = cli.GetShareClient())
             {
-                Assert.Equal("WRONGPASS invalid username-password pair", Assert.Throws<RedisException>(() => sh.Auth(key1, "123456"))?.Message);
+                Assert.Equal("WRONGPASS invalid username-password pair", Assert.Throws<RedisServerException>(() => sh.Auth(key1, "123456"))?.Message);
             }
 
             cli.AclSetUser(key1, "on", "+acl");

@@ -65,11 +65,11 @@ namespace FreeRedis
         protected void CheckUseTypeOrThrow(params UseType[] useTypes)
         {
             if (useTypes?.Contains(Adapter.UseType) == true) return;
-            throw new RedisException($"RedisClient: Method cannot be used in {Adapter.UseType} mode.");
+            throw new RedisServerException($"RedisClient: Method cannot be used in {Adapter.UseType} mode.");
         }
 
         internal bool _isThrowRedisSimpleError { get; set; } = true;
-        protected internal RedisException RedisSimpleError { get; private set; }
+        protected internal RedisServerException RedisSimpleError { get; private set; }
         protected internal IDisposable NoneRedisSimpleError()
         {
             var old_isThrowRedisSimpleError = _isThrowRedisSimpleError;
@@ -290,6 +290,11 @@ namespace FreeRedis
             return valueStr.ConvertTo<T>();
         }
         #endregion
+    }
+
+    public class RedisClientException : Exception
+    {
+        public RedisClientException(string message) : base(message) { }
     }
 
     public enum ZAddThan { gt, lt }

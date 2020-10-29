@@ -46,12 +46,12 @@ namespace FreeRedis.Tests.RedisClientTests
                 Assert.Equal(3L, r4[2]);
                 Assert.Equal("foo", r4[3]);
 
-                Assert.Equal("My Error", Assert.Throws<RedisException>(() => sh.Eval("return {err=\"My Error\"}"))?.Message);
-                Assert.Equal("My Error222", Assert.Throws<RedisException>(() => sh.Eval("return redis.error_reply(\"My Error222\")"))?.Message);
+                Assert.Equal("My Error", Assert.Throws<RedisServerException>(() => sh.Eval("return {err=\"My Error\"}"))?.Message);
+                Assert.Equal("My Error222", Assert.Throws<RedisServerException>(() => sh.Eval("return redis.error_reply(\"My Error222\")"))?.Message);
 
                 var key1 = Guid.NewGuid().ToString();
                 Assert.Equal(1, sh.LPush(key1, "a"));
-                Assert.True(Assert.Throws<RedisException>(() => sh.Eval($"return redis.call('get','{key1}')"))?.Message.Contains("ERR Error running script (call to ") == true);
+                Assert.True(Assert.Throws<RedisServerException>(() => sh.Eval($"return redis.call('get','{key1}')"))?.Message.Contains("ERR Error running script (call to ") == true);
                 //(error) ERR Error running script (call to f_6b1bf486c81ceb7edf3c093f4c48582e38c0e791): ERR Operation against a key holding the wrong kind of value
             }
         }
@@ -110,7 +110,7 @@ namespace FreeRedis.Tests.RedisClientTests
         [Fact]
         public void ScriptKill()
         {
-            Assert.Equal("NOTBUSY No scripts in execution right now.", Assert.Throws<RedisException>(() => cli.ScriptKill())?.Message);
+            Assert.Equal("NOTBUSY No scripts in execution right now.", Assert.Throws<RedisServerException>(() => cli.ScriptKill())?.Message);
         }
 
         [Fact]
