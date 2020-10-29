@@ -14,7 +14,7 @@ namespace FreeRedis
         {
             readonly IdleBus<RedisClientPool> _ib;
             readonly ConnectionStringBuilder _connectionString;
-            readonly LinkedList<string> _sentinels;
+            readonly LinkedList<ConnectionStringBuilder> _sentinels;
             string _masterHost;
             readonly bool _rw_splitting;
             readonly bool _is_single;
@@ -24,8 +24,14 @@ namespace FreeRedis
                 UseType = UseType.Sentinel;
                 TopOwner = topOwner;
                 _connectionString = sentinelConnectionString;
-                _sentinels = new LinkedList<string>(sentinels?.Select(a => a.ToLower()).Distinct() ?? new string[0]);
+                _sentinels = new LinkedList<ConnectionStringBuilder>(sentinels?.Select(a =>
+                {
+                    var csb = ConnectionStringBuilder.Parse(a);
+                    csb.Host = csb.Host.ToLower();
+                    return csb;
+                }).GroupBy(a => a.Host, a => a).Select(a => a.First()) ?? new ConnectionStringBuilder[0]);
                 _rw_splitting = rw_splitting;
+
                 _is_single = !_rw_splitting && sentinelConnectionString.MaxPoolSize == 1;
                 if (_sentinels.Any() == false) throw new ArgumentNullException(nameof(sentinels));
 
