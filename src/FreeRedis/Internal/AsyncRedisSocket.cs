@@ -21,7 +21,7 @@ namespace FreeRedis.Internal
         {
             _rds = rds;
             _oldReceiveTimeout = _rds.ReceiveTimeout;
-            _rds.ReceiveTimeout = TimeSpan.Zero; ;
+            _rds.ReceiveTimeout = TimeSpan.Zero;
             if (rds.IsConnected == false) rds.Connect();
             StartRead();
         }
