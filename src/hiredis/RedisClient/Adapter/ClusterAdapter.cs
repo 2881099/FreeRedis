@@ -111,8 +111,7 @@ namespace hiredis
                     return parse(rt);
                 });
             }
-#if net40
-#else
+#if pipeio
             public override Task<TValue> AdapterCallAsync<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
             {
                 //Single socket not support Async Multiplexing

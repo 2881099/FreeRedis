@@ -30,39 +30,6 @@ namespace hiredis
             }
         }
 
-        //public static object DeserializeResptext(string resptext)
-        //{
-        //    using (var ms = new MemoryStream())
-        //    {
-        //        try
-        //        {
-        //            var bytes = Encoding.UTF8.GetBytes(resptext);
-        //            ms.Write(bytes, 0, bytes.Length);
-        //            ms.Position = 0;
-        //            return Read(ms, Encoding.UTF8).Value;
-        //        }
-        //        finally
-        //        {
-        //            ms.Close();
-        //        }
-        //    }
-        //}
-        //public static string SerializeResptext(object data, RedisProtocol protocol)
-        //{
-        //    using (var ms = new MemoryStream())
-        //    {
-        //        try
-        //        {
-        //            new Resp3Writer(ms, Encoding.UTF8, protocol).WriteObject(data);
-        //            return Encoding.UTF8.GetString(ms.ToArray());
-        //        }
-        //        finally
-        //        {
-        //            ms.Close();
-        //        }
-        //    }
-        //}
-
         internal class Resp3Reader
         {
             internal Stream _stream;
@@ -166,7 +133,7 @@ namespace hiredis
             {
                 var numstr = ReadLine(null);
                 if (BigInteger.TryParse(numstr, NumberStyles.Any, null, out var num)) return num;
-                throw new ProtocolViolationException($"Expecting fail Number '{msgtype}0', got '{msgtype}{numstr}'");
+                throw new ProtocolViolationException($"Expecting fail BigNumber '{msgtype}0', got '{msgtype}{numstr}'");
             }
             double ReadDouble(char msgtype)
             {
@@ -187,7 +154,7 @@ namespace hiredis
                     case "t": return true;
                     case "f": return false;
                 }
-                throw new ProtocolViolationException($"Expecting fail Double '{msgtype}t', got '{msgtype}{boolstr}'");
+                throw new ProtocolViolationException($"Expecting fail Boolean '{msgtype}t', got '{msgtype}{boolstr}'");
             }
 
             object[] ReadArray(char msgtype, Encoding encoding)
@@ -235,8 +202,8 @@ namespace hiredis
                     while (true)
                     {
                         var rokey = ReadObject(encoding);
+                        if (rokey.IsEnd) break;
                         var roval = ReadObject(encoding);
-                        if (roval.IsEnd) break;
                         arr.Add(rokey.Value);
                         arr.Add(roval.Value);
                     }
@@ -271,57 +238,8 @@ namespace hiredis
                         case '|': return new RedisResult(ReadMap(c, encoding), false, RedisMessageType.Attribute);
                         case '.': ReadLine(null); return new RedisResult(null, true, RedisMessageType.SimpleString); //无类型
                         case ' ': continue;
-                        default:
-                            //if (cb == -1) return new RedisResult(null, true, RedisMessageType.Null);
-                            var allBytes = ReadAll();
-                            var allText = Encoding.UTF8.GetString(allBytes);
-                            throw new ProtocolViolationException($"Expecting fail MessageType '{c}'");
+                        default: throw new ProtocolViolationException($"Expecting fail MessageType '{c}'");
                     }
-                }
-
-                Byte[] ReadAll()
-                {
-                    var ns = _stream as NetworkStream;
-                    if (ns != null)
-                    {
-                        using (var ms = new MemoryStream())
-                        {
-                            try
-                            {
-                                var data = new byte[1024];
-                                while (ns.DataAvailable && ns.CanRead)
-                                {
-                                    int numBytesRead = numBytesRead = ns.Read(data, 0, data.Length);
-                                    if (numBytesRead <= 0) break;
-                                    ms.Write(data, 0, numBytesRead);
-                                    if (numBytesRead < data.Length) break;
-                                }
-                            }
-                            catch { }
-                            return ms.ToArray();
-                        }
-                    }
-                    var ss = _stream as SslStream;
-                    if (ss != null)
-                    {
-                        using (var ms = new MemoryStream())
-                        {
-                            try
-                            {
-                                var data = new byte[1024];
-                                while (ss.CanRead)
-                                {
-                                    int numBytesRead = numBytesRead = ss.Read(data, 0, data.Length);
-                                    if (numBytesRead <= 0) break;
-                                    ms.Write(data, 0, numBytesRead);
-                                    if (numBytesRead < data.Length) break;
-                                }
-                            }
-                            catch { }
-                            return ms.ToArray();
-                        }
-                    }
-                    return new byte[0];
                 }
             }
 
@@ -733,7 +651,7 @@ namespace hiredis
                 dict.Add(prop.Name, prop);
             }
             return dict;
-        }); 
+        });
         static ConcurrentDictionary<Type, Dictionary<string, FieldInfo>> _dicGetFieldsDictIgnoreCase = new ConcurrentDictionary<Type, Dictionary<string, FieldInfo>>();
         public static Dictionary<string, FieldInfo> GetFieldsDictIgnoreCase(this Type that) => that == null ? null : _dicGetFieldsDictIgnoreCase.GetOrAdd(that, tp =>
         {

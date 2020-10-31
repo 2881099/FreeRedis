@@ -1,5 +1,4 @@
-﻿#if net40
-#else
+﻿#if pipeio
 using hiredis.Internal;
 using hiredis.Internal.ObjectPool;
 using System;
@@ -44,14 +43,14 @@ namespace hiredis
             }
         }
 
-        //public Task<long> IncrByAsync(string key, long increment) => CallAsync("INCRBY".Input(key, increment).FlagKey(key), rt => rt.ThrowOrValue<long>());
-        //public Task SetAsync<T>(string key, T value, int timeoutSeconds = 0) => CallAsync("SET"
-        //    .Input(key)
-        //    .InputRaw(SerializeRedisValue(value))
-        //    .InputIf(timeoutSeconds >= 1, "EX", (long)timeoutSeconds)
-        //    .FlagKey(key), rt => rt.ThrowOrValue<string>());
-        //public Task<string> GetAsync(string key) => CallAsync("GET".Input(key).FlagKey(key), rt => rt.ThrowOrValue<string>());
-        //public Task<T> GetAsync<T>(string key) => CallAsync("GET".Input(key).FlagKey(key).FlagReadbytes(true), rt => rt.ThrowOrValue(a => DeserializeRedisValue<T>(a.ConvertTo<byte[]>(), rt.Encoding)));
+        public Task<long> IncrByAsync(string key, long increment) => CallAsync("INCRBY".Input(key, increment).FlagKey(key), rt => rt.ThrowOrValue<long>());
+        public Task SetAsync<T>(string key, T value, int timeoutSeconds = 0) => CallAsync("SET"
+            .Input(key)
+            .InputRaw(SerializeRedisValue(value))
+            .InputIf(timeoutSeconds >= 1, "EX", (long)timeoutSeconds)
+            .FlagKey(key), rt => rt.ThrowOrValue<string>());
+        public Task<string> GetAsync(string key) => CallAsync("GET".Input(key).FlagKey(key), rt => rt.ThrowOrValue<string>());
+        public Task<T> GetAsync<T>(string key) => CallAsync("GET".Input(key).FlagKey(key).FlagReadbytes(true), rt => rt.ThrowOrValue(a => DeserializeRedisValue<T>(a.ConvertTo<byte[]>(), rt.Encoding)));
     }
 }
 #endif

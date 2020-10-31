@@ -34,54 +34,55 @@ namespace console_netcore31_vs
             sedb.StringSet("TestMGet_string1", String);
             ThreadPool.SetMinThreads(1000, 1000);
             Stopwatch sw = new Stopwatch();
+            var tasks = new List<Task>();
 
             cli.FlushAll();
 
 
-            sw.Reset();
-            sw.Start();
-            for (var a = 0; a < 10000; a++)
-            {
-                var tmp = Guid.NewGuid().ToString();
-                sedb.StringSet(tmp, String);
-                var val = sedb.StringGet(tmp);
-                if (val != String) throw new Exception("not equal");
-            }
-            sw.Stop();
-            Console.WriteLine("StackExchange(0-10000): " + sw.ElapsedMilliseconds + "ms");
+            //sw.Reset();
+            //sw.Start();
+            //for (var a = 0; a < 10000; a++)
+            //{
+            //    var tmp = Guid.NewGuid().ToString();
+            //    sedb.StringSet(tmp, String);
+            //    var val = sedb.StringGet(tmp);
+            //    if (val != String) throw new Exception("not equal");
+            //}
+            //sw.Stop();
+            //Console.WriteLine("StackExchange(0-10000): " + sw.ElapsedMilliseconds + "ms");
 
-            sw.Reset();
-            sw.Start();
-            var tasks = new List<Task>();
-            for (var a = 0; a < 10000; a++)
-            {
-                tasks.Add(Task.Run(() =>
-                {
-                    var tmp = Guid.NewGuid().ToString();
-                    sedb.StringSet(tmp, String);
-                    var val = sedb.StringGet(tmp);
-                    if (val != String) throw new Exception("not equal");
-                }));
-            }
-            Task.WaitAll(tasks.ToArray());
-            sw.Stop();
-            Console.WriteLine("StackExchange(Task.WaitAll 10000): " + sw.ElapsedMilliseconds + "ms");
-            tasks.Clear();
+            //sw.Reset();
+            //sw.Start();
+            //var tasks = new List<Task>();
+            //for (var a = 0; a < 10000; a++)
+            //{
+            //    tasks.Add(Task.Run(() =>
+            //    {
+            //        var tmp = Guid.NewGuid().ToString();
+            //        sedb.StringSet(tmp, String);
+            //        var val = sedb.StringGet(tmp);
+            //        if (val != String) throw new Exception("not equal");
+            //    }));
+            //}
+            //Task.WaitAll(tasks.ToArray());
+            //sw.Stop();
+            //Console.WriteLine("StackExchange(Task.WaitAll 10000): " + sw.ElapsedMilliseconds + "ms");
+            //tasks.Clear();
 
-            sw.Reset();
-            sw.Start();
-            Task.Run(async () =>
-            {
-                for (var a = 0; a < 10000; a++)
-                {
-                    var tmp = Guid.NewGuid().ToString();
-                    await sedb.StringSetAsync(tmp, String);
-                    var val = await sedb.StringGetAsync(tmp);
-                    if (val != String) throw new Exception("not equal");
-                }
-            }).Wait();
-            sw.Stop();
-            Console.WriteLine("StackExchangeAsync(0-10000): " + sw.ElapsedMilliseconds + "ms");
+            //sw.Reset();
+            //sw.Start();
+            //Task.Run(async () =>
+            //{
+            //    for (var a = 0; a < 10000; a++)
+            //    {
+            //        var tmp = Guid.NewGuid().ToString();
+            //        await sedb.StringSetAsync(tmp, String);
+            //        var val = await sedb.StringGetAsync(tmp);
+            //        if (val != String) throw new Exception("not equal");
+            //    }
+            //}).Wait();
+            //sw.Stop();
+            //Console.WriteLine("StackExchangeAsync(0-10000): " + sw.ElapsedMilliseconds + "ms");
 
             sw.Reset();
             sw.Start();
@@ -101,58 +102,6 @@ namespace console_netcore31_vs
             Console.WriteLine("StackExchangeAsync(Task.WaitAll 10000): " + sw.ElapsedMilliseconds + "ms\r\n");
             tasks.Clear();
 
-
-            //sw.Reset();
-            //sw.Start();
-            //using (var local = cli.GetShareClient())
-            //{
-            //    local.ClientReply(ClientReplyType.off);
-            //    for (var a = 0; a < 10000; a++)
-            //        local.Set("TestMGet_string1", String);
-            //    local.ClientReply(ClientReplyType.on);
-            //}
-            //sw.Stop();
-            //Console.WriteLine("hiredis0: " + sw.ElapsedMilliseconds + "ms");
-
-            //var sw2 = new Stopwatch();
-            //sw.Reset();
-            //sw.Start();
-            //using (var rds = cli.GetTestRedisSocket())
-            //{
-            //    var strea = rds.Stream;
-            //    for (var a = 0; a < 10000; a++)
-            //    {
-            //        rds.Write(new CommandPacket("SET").Input("TestMGet_string1").InputRaw(String));
-            //    }
-
-            //    sw2.Reset();
-            //    sw2.Start();
-            //    for (var a = 0; a < 10000; a++)
-            //    {
-
-            //        strea.ReadByte();
-
-            //        var sb = new StringBuilder();
-            //        char c;
-            //        bool should_break = false;
-            //        while (true)
-            //        {
-            //            c = (char)strea.ReadByte();
-            //            if (c == '\r') // TODO: remove hardcoded
-            //                should_break = true;
-            //            else if (c == '\n' && should_break)
-            //                break;
-            //            else
-            //            {
-            //                sb.Append(c);
-            //                should_break = false;
-            //            }
-            //        }
-            //    }
-            //    sw2.Stop();
-            //}
-            //sw.Stop();
-            //Console.WriteLine("hiredis1: " + sw.ElapsedMilliseconds + "ms, " + sw2.ElapsedMilliseconds + "ms");
 
             sw.Reset();
             sw.Start();
@@ -199,23 +148,23 @@ namespace console_netcore31_vs
             //sw.Stop();
             //Console.WriteLine("hiredisAsync(0-10000): " + sw.ElapsedMilliseconds + "ms");
 
-            //sw.Reset();
-            //sw.Start();
-            //tasks = new List<Task>();
-            //for (var a = 0; a < 10000; a++)
-            //{
-            //    tasks.Add(Task.Run(async () =>
-            //    {
-            //        var tmp = Guid.NewGuid().ToString();
-            //        await cli.SetAsync(tmp, String);
-            //        var val = await cli.GetAsync(tmp);
-            //        if (val != String) throw new Exception("not equal");
-            //    }));
-            //}
-            //Task.WaitAll(tasks.ToArray());
-            //sw.Stop();
-            //Console.WriteLine("hiredisAsync(Task.WaitAll 10000): " + sw.ElapsedMilliseconds + "ms");
-            //tasks.Clear();
+            sw.Reset();
+            sw.Start();
+            tasks = new List<Task>();
+            for (var a = 0; a < 10000; a++)
+            {
+                tasks.Add(Task.Run(async () =>
+                {
+                    var tmp = Guid.NewGuid().ToString();
+                    await cli.SetAsync(tmp, String);
+                    var val = await cli.GetAsync(tmp);
+                    if (val != String) throw new Exception("not equal");
+                }));
+            }
+            Task.WaitAll(tasks.ToArray());
+            sw.Stop();
+            Console.WriteLine("hiredisAsync(Task.WaitAll 10000): " + sw.ElapsedMilliseconds + "ms");
+            tasks.Clear();
 
             sw.Reset();
             sw.Start();
@@ -228,7 +177,7 @@ namespace console_netcore31_vs
                     var val = pipe.Get(tmp);
                 }
                 var vals = pipe.EndPipe();
-                for(var a = 1; a < 10000; a+= 2)
+                for (var a = 1; a < 10000; a += 2)
                 {
                     if (vals[a].ToString() != String) throw new Exception("not equal");
                 }

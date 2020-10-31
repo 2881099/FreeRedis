@@ -1,5 +1,4 @@
-﻿#if net40
-#else
+﻿#if pipeio
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;

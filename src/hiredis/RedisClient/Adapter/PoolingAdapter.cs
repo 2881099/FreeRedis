@@ -78,8 +78,7 @@ namespace hiredis
                     return parse(rt);
                 });
             }
-#if net40
-#else
+#if pipeio
             async public override Task<TValue> AdapterCallAsync<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
             {
                 var poolkey = GetIdleBusKey(cmd);

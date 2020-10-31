@@ -38,8 +38,7 @@ namespace hiredis
                 public bool IsBytes { get; set; }
                 public RedisResult RedisResult { get; set; }
                 public object Result { get; set; }
-#if net40
-#else
+#if pipeio
                 public TaskCompletionSource<object> TaskCompletionSource { get; set; }
                 bool TaskCompletionSourceIsTrySeted { get; set; }
                 public void TrySetResult(object result, Exception exception)
@@ -69,8 +68,7 @@ namespace hiredis
 
             public override void Dispose()
             {
-#if net40
-#else
+#if pipeio
                 for (var a = 0; a < _commands.Count; a++)
                     _commands[a].TrySetCanceled();
 #endif
@@ -92,8 +90,7 @@ namespace hiredis
                 TopOwner.OnNotice(new NoticeEventArgs(NoticeType.Call, null, $"Pipeline > {cmd}", null));
                 return default(TValue);
             }
-#if net40
-#else
+#if pipeio
             async public override Task<TValue> AdapterCallAsync<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
             {
                 var tsc = new TaskCompletionSource<object>();
@@ -166,8 +163,7 @@ namespace hiredis
                         pc.RedisResult = rds.Read(pc.IsBytes);
                         pc.Result = pc.Parse(pc.RedisResult);
                         if (pc.RedisResult.IsError) err.Add(pc);
-#if net40
-#else
+#if pipeio
                         pc.TrySetResult(pc.Result, pc.RedisResult.IsError ? new RedisServerException(pc.RedisResult.SimpleError) : null);
 #endif
                     }

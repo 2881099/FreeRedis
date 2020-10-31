@@ -32,8 +32,7 @@ namespace hiredis
 
             public abstract TValue AdapterCall<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse);
 
-#if net40
-#else
+#if pipeio
             public abstract Task<TValue> AdapterCallAsync<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse);
 #endif
 
