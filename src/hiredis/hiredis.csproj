@@ -29,12 +29,8 @@
   <PropertyGroup Condition="'$(TargetFramework)' == 'net40'">
     <DefineConstants>net40</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <DefineConstants>pipeio</DefineConstants>
-  </PropertyGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <PackageReference Include="System.IO.Pipelines" Version="5.0.0-rc.2.20475.5" />
-  </ItemGroup>
+  <!--<PropertyGroup Condition="'$(TargetFramework)' != 'net40'">
+    <DefineConstants>isasync</DefineConstants>
+  </PropertyGroup>-->
   
 </Project>

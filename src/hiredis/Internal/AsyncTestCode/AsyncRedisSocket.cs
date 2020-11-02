@@ -1,4 +1,4 @@
-﻿#if pipeio
+﻿#if isasync
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;

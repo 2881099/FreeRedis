@@ -103,17 +103,17 @@ namespace console_netcore31_vs
             tasks.Clear();
 
 
-            sw.Reset();
-            sw.Start();
-            for (var a = 0; a < 10000; a++)
-            {
-                var tmp = Guid.NewGuid().ToString();
-                cli.Set(tmp, String);
-                var val = cli.Get(tmp);
-                if (val != String) throw new Exception("not equal");
-            }
-            sw.Stop();
-            Console.WriteLine("hiredis(0-10000): " + sw.ElapsedMilliseconds + "ms");
+            //sw.Reset();
+            //sw.Start();
+            //for (var a = 0; a < 10000; a++)
+            //{
+            //    var tmp = Guid.NewGuid().ToString();
+            //    cli.Set(tmp, String);
+            //    var val = cli.Get(tmp);
+            //    if (val != String) throw new Exception("not equal");
+            //}
+            //sw.Stop();
+            //Console.WriteLine("hiredis(0-10000): " + sw.ElapsedMilliseconds + "ms");
 
             sw.Reset();
             sw.Start();

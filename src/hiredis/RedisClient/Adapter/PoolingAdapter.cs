@@ -78,34 +78,10 @@ namespace hiredis
                     return parse(rt);
                 });
             }
-#if pipeio
-            async public override Task<TValue> AdapterCallAsync<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
+#if isasync
+            public override Task<TValue> AdapterCallAsync<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
             {
-                var poolkey = GetIdleBusKey(cmd);
-                var pool = _ib.Get(poolkey);
-                if (pool.AsyncSocket == null) return AdapterCall(cmd, parse);
-                return await TopOwner.LogCallAsync(cmd, async () =>
-                {
-                    RedisResult rt = null;
-                    Exception ioex = null;
-                    try
-                    {
-                        rt = await pool.AsyncSocket.WriteAsync(cmd);
-                    }
-                    catch (Exception ex)
-                    {
-                        ioex = ex;
-                    }
-                    if (ioex != null)
-                    {
-                        if (pool?.SetUnavailable(ioex) == true)
-                        {
-                        }
-                        throw ioex;
-                    }
-                    rt.IsErrorThrow = TopOwner._isThrowRedisSimpleError;
-                    return parse(rt);
-                });
+                return Task.FromResult(AdapterCall(cmd, parse)); //todo..
             }
 #endif
 

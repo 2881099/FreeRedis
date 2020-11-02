@@ -56,7 +56,7 @@ namespace hiredis
                     return parse(rt);
                 });
             }
-#if pipeio
+#if isasync
             public override Task<TValue> AdapterCallAsync<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
             {
                 //Single socket not support Async Multiplexing

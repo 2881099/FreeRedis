@@ -70,11 +70,6 @@ namespace hiredis.Internal
             this.Policy = _policy;
             this.TopOwner = topOwner;
             _policy.ConnectionString = connectionString;
-
-#if pipeio
-            if (_policy._connectionStringBuilder.MaxPoolSize > 1)
-                AsyncSocket = new AsyncPipelineRedisSocket(Get().Value.Adapter.GetRedisSocket(null));
-#endif
         }
 
         internal bool CheckAvailable() => base.LiveCheckAvailable();
@@ -83,18 +78,6 @@ namespace hiredis.Internal
         public string Key => _policy.Key;
         public string Prefix => _policy._connectionStringBuilder.Prefix;
         internal RedisClient TopOwner;
-#if pipeio
-        /// <summary>
-        /// Single socket not support Async Multiplexing
-        /// </summary>
-        internal AsyncPipelineRedisSocket AsyncSocket;
-
-        void IDisposable.Dispose()
-        {
-            AsyncSocket.Dispose();
-            base.Dispose();
-        }
-#endif
     }
 
     public class RedisClientPoolPolicy : IPolicy<RedisClient>

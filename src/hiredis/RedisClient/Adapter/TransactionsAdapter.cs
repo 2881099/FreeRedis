@@ -36,7 +36,7 @@ namespace hiredis
             {
                 public CommandPacket Command { get; set; }
                 public Func<object, object> Parse { get; set; }
-#if pipeio
+#if isasync
                 public TaskCompletionSource<object> TaskCompletionSource { get; set; }
                 bool TaskCompletionSourceIsTrySeted { get; set; }
                 public void TrySetResult(object result, Exception exception)
@@ -89,7 +89,7 @@ namespace hiredis
                     return default(TValue);
                 });
             }
-#if pipeio
+#if isasync
             async public override Task<TValue> AdapterCallAsync<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
             {
                 //Read with non byte[], Object deserialization is not supported
@@ -133,7 +133,7 @@ namespace hiredis
             void TryReset()
             {
                 if (_redisSocket == null) return;
-#if pipeio
+#if isasync
                 for (var a = 0; a < _commands.Count; a++)
                     _commands[a].TrySetCanceled();
 #endif
@@ -158,7 +158,7 @@ namespace hiredis
                     for (var a = 0; a < ret.Length; a++)
                     {
                         retparsed[a] = _commands[a].Parse(ret[a]);
-#if pipeio
+#if isasync
                         _commands[a].TrySetResult(retparsed[a], null); //tryset Async
 #endif
                     }
