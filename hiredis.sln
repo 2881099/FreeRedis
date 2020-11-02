@@ -34,7 +34,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{ECEC9840-4
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Benchmark", "Benchmark", "{A75FEF18-38D5-48A6-B412-E08E648104BC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConcurrentWriteBytes", "ConcurrentWriteBytes\ConcurrentWriteBytes.csproj", "{735C68EB-D4BC-4452-BD69-151E31D283AD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConcurrentWriteBytes", "test\Benchmark\ConcurrentWriteBytes\ConcurrentWriteBytes.csproj", "{735C68EB-D4BC-4452-BD69-151E31D283AD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
