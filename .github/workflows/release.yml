@@ -1,0 +1,31 @@
+name: Release
+
+env:
+  NUGET_API_KEY: ${{secrets.NUGET_API_KEY}}
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  release-and-publish-package:
+    runs-on: ubuntu-latest
+    if: github.repository_owner == '2881099'
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.300
+
+      - name: Package and publish to Nuget📦
+        run: |
+          VERSION=`git describe --tags`
+          echo "Publishing Version: ${VERSION}"
+          echo "::set-env name=VERSION::${VERSION}"
+          dotnet build
+          dotnet pack src/hiredis/hiredis.csproj /p:PackageVersion=$VERSION -c Release -o publish
+          dotnet nuget push publish/*.nupkg -s https://api.nuget.org/v3/index.json -k $NUGET_API_KEY --skip-duplicate   
