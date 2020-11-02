@@ -148,23 +148,23 @@ namespace console_netcore31_vs
             //sw.Stop();
             //Console.WriteLine("hiredisAsync(0-10000): " + sw.ElapsedMilliseconds + "ms");
 
-            sw.Reset();
-            sw.Start();
-            tasks = new List<Task>();
-            for (var a = 0; a < 10000; a++)
-            {
-                tasks.Add(Task.Run(async () =>
-                {
-                    var tmp = Guid.NewGuid().ToString();
-                    await cli.SetAsync(tmp, String);
-                    var val = await cli.GetAsync(tmp);
-                    if (val != String) throw new Exception("not equal");
-                }));
-            }
-            Task.WaitAll(tasks.ToArray());
-            sw.Stop();
-            Console.WriteLine("hiredisAsync(Task.WaitAll 10000): " + sw.ElapsedMilliseconds + "ms");
-            tasks.Clear();
+            //sw.Reset();
+            //sw.Start();
+            //tasks = new List<Task>();
+            //for (var a = 0; a < 10000; a++)
+            //{
+            //    tasks.Add(Task.Run(async () =>
+            //    {
+            //        var tmp = Guid.NewGuid().ToString();
+            //        await cli.SetAsync(tmp, String);
+            //        var val = await cli.GetAsync(tmp);
+            //        if (val != String) throw new Exception("not equal");
+            //    }));
+            //}
+            //Task.WaitAll(tasks.ToArray());
+            //sw.Stop();
+            //Console.WriteLine("hiredisAsync(Task.WaitAll 10000): " + sw.ElapsedMilliseconds + "ms");
+            //tasks.Clear();
 
             sw.Reset();
             sw.Start();
