@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace hiredis.Tests.RedisClientTests.Other
+namespace FreeRedis.Tests.RedisClientTests.Other
 {
     public class PipelineTests : TestBase
     {

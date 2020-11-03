@@ -1,4 +1,4 @@
-﻿using hiredis;
+﻿using FreeRedis;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -113,7 +113,7 @@ namespace console_netcore31_vs
             //    if (val != String) throw new Exception("not equal");
             //}
             //sw.Stop();
-            //Console.WriteLine("hiredis(0-10000): " + sw.ElapsedMilliseconds + "ms");
+            //Console.WriteLine("FreeRedis(0-10000): " + sw.ElapsedMilliseconds + "ms");
 
             sw.Reset();
             sw.Start();
@@ -130,7 +130,7 @@ namespace console_netcore31_vs
             }
             Task.WaitAll(tasks.ToArray());
             sw.Stop();
-            Console.WriteLine("hiredis(Task.WaitAll 10000): " + sw.ElapsedMilliseconds + "ms");
+            Console.WriteLine("FreeRedis(Task.WaitAll 10000): " + sw.ElapsedMilliseconds + "ms");
             tasks.Clear();
 
             //sw.Reset();
@@ -146,7 +146,7 @@ namespace console_netcore31_vs
             //    }
             //}).Wait();
             //sw.Stop();
-            //Console.WriteLine("hiredisAsync(0-10000): " + sw.ElapsedMilliseconds + "ms");
+            //Console.WriteLine("FreeRedisAsync(0-10000): " + sw.ElapsedMilliseconds + "ms");
 
             //sw.Reset();
             //sw.Start();
@@ -163,7 +163,7 @@ namespace console_netcore31_vs
             //}
             //Task.WaitAll(tasks.ToArray());
             //sw.Stop();
-            //Console.WriteLine("hiredisAsync(Task.WaitAll 10000): " + sw.ElapsedMilliseconds + "ms");
+            //Console.WriteLine("FreeRedisAsync(Task.WaitAll 10000): " + sw.ElapsedMilliseconds + "ms");
             //tasks.Clear();
 
             sw.Reset();
@@ -183,14 +183,14 @@ namespace console_netcore31_vs
                 }
             }
             sw.Stop();
-            Console.WriteLine("hiredisPipeline(0-10000): " + sw.ElapsedMilliseconds + "ms\r\n");
+            Console.WriteLine("FreeRedisPipeline(0-10000): " + sw.ElapsedMilliseconds + "ms\r\n");
 
             //sw.Reset();
             //sw.Start();
             //for (var a = 0; a < 10000; a++)
             //    cli.Call(new CommandPacket("SET").Input("TestMGet_string1").InputRaw(String));
             //sw.Stop();
-            //Console.WriteLine("hiredis2: " + sw.ElapsedMilliseconds + "ms");
+            //Console.WriteLine("FreeRedis2: " + sw.ElapsedMilliseconds + "ms");
 
             //sw.Reset();
             //sw.Start();
@@ -204,7 +204,7 @@ namespace console_netcore31_vs
             //    }
             //}
             //sw.Stop();
-            //Console.WriteLine("hiredis4: " + sw.ElapsedMilliseconds + "ms");
+            //Console.WriteLine("FreeRedis4: " + sw.ElapsedMilliseconds + "ms");
 
 
 

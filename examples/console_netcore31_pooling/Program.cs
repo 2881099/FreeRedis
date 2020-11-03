@@ -1,4 +1,4 @@
-﻿using hiredis;
+﻿using FreeRedis;
 using Newtonsoft.Json;
 using System;
 using System.Diagnostics;

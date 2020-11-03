@@ -1,12 +1,12 @@
-<h1 align="center"> 🦄 hiredis-dotnet </h1>
+<h1 align="center"> 🦄 FreeRedis </h1>
 
 <div align="center">
 
-hiredis-dotnet is .NET redis client, supports .NETCore 2.1+, .NETFramework 4.0+, And Xamarin
+FreeRedis is .NET redis client, supports .NETCore 2.1+, .NETFramework 4.0+, And Xamarin
 
-[![nuget](https://img.shields.io/nuget/v/hiredis.svg?style=flat-square)](https://www.nuget.org/packages/hiredis) 
-[![stats](https://img.shields.io/nuget/dt/hiredis.svg?style=flat-square)](https://www.nuget.org/stats/packages/hiredis?groupby=Version) 
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://raw.githubusercontent.com/2881099/hiredis/master/LICENSE.txt)
+[![nuget](https://img.shields.io/nuget/v/FreeRedis.svg?style=flat-square)](https://www.nuget.org/packages/FreeRedis) 
+[![stats](https://img.shields.io/nuget/dt/FreeRedis.svg?style=flat-square)](https://www.nuget.org/stats/packages/FreeRedis?groupby=Version) 
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://raw.githubusercontent.com/2881099/FreeRedis/master/LICENSE.txt)
 
 </div>
 
