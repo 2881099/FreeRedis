@@ -162,6 +162,16 @@ using (var tran = cli.Multi())
 }
 ```
 
+#### GetDatabase (切库)
+
+```csharp
+using (var db = cli.GetDatabase(10))
+{
+    db.Set("key1", 10);
+    var val1 = db.Get("key1");
+}
+```
+
 #### 💕 　Donation
 
 > Thank you for your donation

@@ -45,6 +45,7 @@ namespace FreeRedis.Internal
             public Encoding Encoding { get => _owner.Encoding; set => _owner.Encoding = value; }
             public event EventHandler<EventArgs> Connected { add { _owner.Connected += value; } remove { _owner.Connected -= value; } }
             public ClientReplyType ClientReply => _owner.ClientReply;
+            public int Database => _owner.Database;
 
             public void Connect() => _owner.Connect();
             public void ResetHost(string host) => _owner.ResetHost(host);
@@ -86,7 +87,8 @@ namespace FreeRedis.Internal
         public Stream Stream => _stream ?? throw new RedisClientException("Redis socket connection was not opened");
         public bool IsConnected => _socket?.Connected == true && _stream != null;
         public event EventHandler<EventArgs> Connected;
-        public ClientReplyType ClientReply { get; protected set; }
+        public ClientReplyType ClientReply { get; protected set; } = ClientReplyType.on;
+        public int Database { get; protected set; } = 0;
 
         RespHelper.Resp3Reader _reader;
         RespHelper.Resp3Reader Reader => _reader ?? (_reader = new RespHelper.Resp3Reader(Stream));
@@ -104,11 +106,19 @@ namespace FreeRedis.Internal
         {
             if (IsConnected == false) Connect();
             RespHelper.Write(Stream, Encoding, cmd, Protocol);
-            if (string.Compare(cmd._command, "CLIENT", true) == 0 &&
-                string.Compare(cmd._subcommand, "REPLY", true) == 0)
+            switch (cmd._command.ToUpper())
             {
-                var type = cmd._input.LastOrDefault().ConvertTo<ClientReplyType>();
-                if (type != ClientReply) ClientReply = type;
+                case "CLIENT":
+                    if (string.Compare(cmd._subcommand, "REPLY", true) == 0)
+                    {
+                        var type = cmd._input.LastOrDefault().ConvertTo<ClientReplyType>();
+                        if (type != ClientReply) ClientReply = type;
+                    }
+                    break;
+                case "SELECT":
+                    var dbidx = cmd._input.LastOrDefault()?.ConvertTo<int?>();
+                    if (dbidx != null) Database = dbidx.Value;
+                    break;
             }
             cmd.WriteHost = this.Host;
         }

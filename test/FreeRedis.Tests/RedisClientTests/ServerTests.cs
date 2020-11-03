@@ -82,14 +82,14 @@ namespace FreeRedis.Tests.RedisClientTests.Other
             cli.AclDelUser(key1);
             cli.AclSetUser(key1, ">123456");
 
-            using (var sh = cli.GetShareClient())
+            using (var sh = cli.GetDatabase())
             {
                 Assert.Equal("WRONGPASS invalid username-password pair", Assert.Throws<RedisServerException>(() => sh.Auth(key1, "123456"))?.Message);
             }
 
             cli.AclSetUser(key1, "on", "+acl");
 
-            using (var sh = cli.GetShareClient())
+            using (var sh = cli.GetDatabase())
             {
                 sh.Auth(key1, "123456");
                 var r1 = sh.AclWhoami();
@@ -221,24 +221,20 @@ namespace FreeRedis.Tests.RedisClientTests.Other
         [Fact]
         public void FlushAll()
         {
-            using (var sh = cli.GetShareClient())
+            using (var sh = cli.GetDatabase(7))
             {
-                sh.Select(7);
                 cli.FlushAll(true);
                 cli.FlushAll(false);
-                sh.Select(1);
             }
         }
 
         [Fact]
         public void FlushDb()
         {
-            //using (var sh = cli.GetShareClient())
+            //using (var sh = cli.GetDatabase(7))
             //{
-            //    sh.Select(7);
             //    cli.FlushDb(true);
             //    cli.FlushDb(false);
-            //    sh.Select(1);
             //}
         }
 

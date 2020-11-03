@@ -14,7 +14,7 @@ namespace FreeRedis.Tests.RedisClientTests
         [Fact]
         public void Eval()
         {
-            using (var sh = cli.GetShareClient())
+            using (var sh = cli.GetDatabase())
             {
                 var r1 = sh.Eval("return {KEYS[1],KEYS[2],ARGV[1],ARGV[2]}", new[] { "key1", "key2" }, "first", "second") as object[];
                 Assert.NotNull(r1);

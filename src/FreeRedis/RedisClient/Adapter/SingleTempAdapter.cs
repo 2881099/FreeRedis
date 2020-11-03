@@ -9,16 +9,38 @@ namespace FreeRedis
 {
     partial class RedisClient
     {
-        // GetShareClient
-        public ShareClientHook GetShareClient()
+        // GetDatabase
+        public DatabaseHook GetDatabase(int? index = null)
         {
             CheckUseTypeOrThrow(UseType.Pooling, UseType.Sentinel);
             var rds = Adapter.GetRedisSocket(null);
-            return new ShareClientHook(new SingleTempAdapter(Adapter.TopOwner, rds, () => rds.Dispose()));
+            DatabaseHook hook = null;
+            try
+            {
+                var oldindex = rds.Database;
+                hook = new DatabaseHook(new SingleTempAdapter(Adapter.TopOwner, rds, () =>
+                {
+                    try
+                    {
+                        if (index != null) hook.Select(oldindex);
+                    }
+                    finally
+                    {
+                        rds.Dispose();
+                    }
+                }));
+                if (index != null) hook.Select(index.Value);
+            }
+            catch
+            {
+                rds.Dispose();
+                throw;
+            }
+            return hook;
         }
-        public class ShareClientHook : RedisClient
+        public class DatabaseHook : RedisClient
         {
-            internal ShareClientHook(BaseAdapter adapter) : base(adapter) { }
+            internal DatabaseHook(BaseAdapter adapter) : base(adapter) { }
         }
 
         public IRedisSocket GetTestRedisSocket() => Adapter.GetRedisSocket(null);
