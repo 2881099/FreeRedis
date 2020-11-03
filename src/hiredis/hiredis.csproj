@@ -5,7 +5,7 @@
     <AssemblyName>hiredis</AssemblyName>
     <PackageId>hiredis</PackageId>
     <RootNamespace>hiredis</RootNamespace>
-    <Version>0.0.2</Version>
+    <Version>0.0.3</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageProjectUrl>https://github.com/2881099/hiredis-dotnet</PackageProjectUrl>
     <Description>hiredis is .NET redis client, supports cluster, sentinel, master-slave, pipeline, transaction and connection pool.</Description>
