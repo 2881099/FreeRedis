@@ -40,15 +40,15 @@ _ + ER$#$#$#$24242424242423sfdsf+_+_#$@#4$+_+_+_+_+E_+ER$#$#$#$24242424242423sfd
         }
 
 
-        
-        //[Benchmark(Description = "Solution1")]
-        //public void Test1()
-        //{
-        //    _solution1.Clear();
-        //    Parallel.For(0, 7, item => { _solution1.Write(_buffer); });
-        //    var result = _solution1.GetBuffers();
 
-        //}
+        [Benchmark(Description = "Solution1")]
+        public void Test1()
+        {
+            _solution1.Clear();
+            Parallel.For(0, 7, item => { _solution1.Write(_buffer); });
+            var result = _solution1.GetBuffers();
+
+        }
 
         //[Benchmark(Description = "Solution2")]
         //public void Test2()

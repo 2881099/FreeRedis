@@ -9,13 +9,13 @@ namespace ConcurrentWriteBytes.Model
     public class Solution1
     {
 
-        private readonly List<(byte[],int)> _buffers;
+        private readonly List<TempData> _buffers;
         public readonly byte[] Buffer;
         public int Total;
         public Solution1()
         {
             Buffer = new byte[4096];
-            _buffers = new List<(byte[], int)>();
+            _buffers = new List<TempData>();
         }
         public void Write(byte[] data)
         {
@@ -23,7 +23,7 @@ namespace ConcurrentWriteBytes.Model
             lock (_buffers)
             {
 
-                _buffers.Add((data, Total));
+                _buffers.Add(new TempData(data, Total));
                 Total += data.Length;
 
             }
@@ -35,7 +35,7 @@ namespace ConcurrentWriteBytes.Model
 
             Parallel.For(0, _buffers.Count - 1, (item, state) => {
                 var node = _buffers[item];
-                Array.Copy(node.Item1, 0, Buffer, node.Item2, node.Item1.Length);
+                Array.Copy(node.Data, 0, Buffer, node.Offset, node.Data.Length);
             });
             return Buffer;
 
@@ -46,6 +46,17 @@ namespace ConcurrentWriteBytes.Model
             _buffers.Clear();
             Total = 0;
         }
+    }
+
+    public readonly struct TempData
+    {
+        public TempData(byte[] data,int offset)
+        {
+            Data = data;
+            Offset = offset;
+        }
+        public readonly byte[] Data;
+        public readonly int Offset;
     }
 
 }
