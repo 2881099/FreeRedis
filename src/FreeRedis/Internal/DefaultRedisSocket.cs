@@ -105,7 +105,13 @@ namespace FreeRedis.Internal
         public void Write(CommandPacket cmd)
         {
             if (IsConnected == false) Connect();
-            RespHelper.Write(Stream, Encoding, cmd, Protocol);
+            using (var ms = new MemoryStream()) //Writing data directly to will be very slow
+            {
+                new RespHelper.Resp3Writer(ms, Encoding, Protocol).WriteCommand(cmd);
+                ms.Position = 0;
+                ms.CopyTo(Stream);
+                ms.Close();
+            }
             switch (cmd._command.ToUpper())
             {
                 case "CLIENT":

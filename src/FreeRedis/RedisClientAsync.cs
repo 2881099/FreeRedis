@@ -16,7 +16,7 @@ namespace FreeRedis
 {
     partial class RedisClient
     {
-        //public Task<object> CallAsync(CommandPacket cmd) => Adapter.AdapterCallAsync(cmd, rt => rt.ThrowOrValue());
+        public Task<object> CallAsync(CommandPacket cmd) => Adapter.AdapterCallAsync(cmd, rt => rt.ThrowOrValue());
         protected Task<TValue> CallAsync<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse) => Adapter.AdapterCallAsync(cmd, parse);
 
         async internal Task<T> LogCallAsync<T>(CommandPacket cmd, Func<Task<T>> func)
