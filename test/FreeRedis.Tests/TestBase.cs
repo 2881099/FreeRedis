@@ -12,8 +12,8 @@ namespace FreeRedis.Tests
 		static Lazy<RedisClient> _cliLazy = new Lazy<RedisClient>(() =>
 		{
 			//var r = new RedisClient("127.0.0.1:6379,database=1"); //redis 3.2
-			//var r = new RedisClient("127.0.0.1:6379,database=1", "127.0.0.1:6379,database=1");
-			var r = new RedisClient("192.168.164.10:6379,database=1,max pool size=10,protocol=RESP2,ClientName=FreeRedis"); //redis 6.0
+			var r = new RedisClient("127.0.0.1:6379,database=1", "127.0.0.1:6379,database=1");
+			//var r = new RedisClient("192.168.164.10:6379,database=1,max pool size=10,protocol=RESP2,ClientName=FreeRedis"); //redis 6.0
 			r.Serialize = obj => JsonConvert.SerializeObject(obj);
 			r.Deserialize = (json, type) => JsonConvert.DeserializeObject(json, type);
 			r.Notice += (s, e) => Trace.WriteLine(e.Log);

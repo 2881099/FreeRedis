@@ -31,6 +31,7 @@ namespace FreeRedis.Internal
         RedisResult Read(bool isbytes);
         void ReadChunk(Stream destination, int bufferSize = 1024);
         ClientReplyType ClientReply { get; }
+        int Database { get; }
 
         void Connect();
 

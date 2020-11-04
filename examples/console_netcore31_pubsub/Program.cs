@@ -24,7 +24,7 @@ namespace console_netcore31
 
         static void Main(string[] args)
         {
-            using (var local = cli.GetShareClient())
+            using (var local = cli.GetDatabase())
             {
                 var r1 = local.Call(new CommandPacket("Subscribe").Input("abc"));
                 var r2 = local.Ping();

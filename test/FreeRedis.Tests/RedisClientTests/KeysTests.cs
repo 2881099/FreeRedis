@@ -89,33 +89,27 @@ namespace FreeRedis.Tests.RedisClientTests
            
             cli.MSet("TestMove_null1", base.Null, "TestMove_string1", base.String, "TestMove_bytes1", base.Bytes, "TestMove_class1", base.Class);
 
-            using (var sh = cli.GetShareClient())
+            using (var sh = cli.GetDatabase(11))
             {
-                sh.Select(11);
                 sh.Del("TestMove_string1");
-                sh.Select(1);
             }
 
             Assert.True(cli.Move("TestMove_string1", 11));
             Assert.False(cli.Exists("TestMove_string1"));
 
-            using (var sh = cli.GetShareClient())
+            using (var sh = cli.GetDatabase(11))
             {
-                sh.Select(11);
                 Assert.Equal(base.String, sh.Get("TestMove_string1"));
-                sh.Select(1);
             }
 
             cli.Set("TestMove_string1", base.String);
             Assert.False(cli.Move("TestMove_string1", 11)); //target exists
             Assert.Equal(base.String, cli.Get("TestMove_string1"));
 
-            using (var sh = cli.GetShareClient())
+            using (var sh = cli.GetDatabase(11))
             {
-                sh.Select(11);
                 Assert.Equal(base.String, sh.Get("TestMove_string1"));
                 sh.Del("TestMove_string1");
-                sh.Select(1);
             }
         }
 
