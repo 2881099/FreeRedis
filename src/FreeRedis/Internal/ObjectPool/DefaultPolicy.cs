@@ -37,8 +37,7 @@ namespace FreeRedis.Internal.ObjectPool
             OnGetObject?.Invoke(obj);
         }
 
-#if net40
-#else
+#if !NET40
         public Task OnGetAsync(Object<T> obj)
         {
             //Console.WriteLine("GetAsync: " + obj);

@@ -24,7 +24,7 @@ namespace FreeRedis
             if (this.Notice == null) return await func();
             Exception exception = null;
             Stopwatch sw = new Stopwatch();
-            T ret = default(T);
+            T ret = default;
             sw.Start();
             try
             {

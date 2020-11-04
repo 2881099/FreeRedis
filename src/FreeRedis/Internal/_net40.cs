@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FreeRedis
 {
-    static class TaskEx
+    internal static class TaskEx
     {
         public static Task<T> FromResult<T>(T value)
         {
@@ -64,8 +64,7 @@ namespace FreeRedis
             return tcs.Task;
         }
 
-#if net40
-#else
+#if !NET40
         public static async Task<TResult> TimeoutAfter<TResult>(this Task<TResult> task, TimeSpan timeout, string message = "The operation has timed out.")
         {
             using (var timeoutCancellationTokenSource = new CancellationTokenSource())
