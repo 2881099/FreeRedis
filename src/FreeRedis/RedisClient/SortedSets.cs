@@ -54,7 +54,7 @@ namespace FreeRedis
         public long ZCount(string key, string min, string max) => Call("ZCOUNT".Input(key, min, max).FlagKey(key), rt => rt.ThrowOrValue<long>());
 
         public decimal ZIncrBy(string key, decimal increment, string member) => Call("ZINCRBY".Input(key, increment, member).FlagKey(key), rt => rt.ThrowOrValue<decimal>());
-        //ZINTERSTORE destination numkeys key [key ...] [WEIGHTS weight [weight ...]] [AGGREGATE SUM|MIN|MAX]
+        public long ZInterStore(string destination, string[] keys, int[] weights = null, ZAggregate? aggregate = null) => ZStore(true, destination, keys, weights, aggregate);
         public long ZLexCount(string key, string min, string max) => Call("ZLEXCOUNT".Input(key, min, max).FlagKey(key), rt => rt.ThrowOrValue<long>());
 
         public ZMember ZPopMin(string key) => ZPop(false, key);
@@ -143,7 +143,16 @@ namespace FreeRedis
 
         //ZSCAN key cursor [MATCH pattern] [COUNT count]
         public decimal ZScore(string key, string member) => Call("ZSCORE".Input(key, member).FlagKey(key), rt => rt.ThrowOrValue<decimal>());
-        //ZUNIONSTORE destination numkeys key [key ...] [WEIGHTS weight [weight ...]] [AGGREGATE SUM|MIN|MAX]
+
+        public long ZUnionStore(string destination, string[] keys, int[] weights = null, ZAggregate? aggregate = null) => ZStore(false, destination, keys, weights, aggregate);
+        long ZStore(bool inter, string destination, string[] keys, int[] weights, ZAggregate? aggregate) => Call((inter ? "ZINTERSTORE" : "ZUNIONSTORE")
+            .Input(destination, keys?.Length ?? 0)
+            .InputIf(keys?.Any() == true, keys)
+            .InputIf(weights?.Any() == true, weights)
+            .InputIf(aggregate != null, "AGGREGATE", aggregate ?? ZAggregate.max)
+            .FlagKey(destination).FlagKey(keys), rt => rt
+            .ThrowOrValue<long>());
+
     }
 
     public class ZMember
@@ -152,4 +161,5 @@ namespace FreeRedis
         public readonly decimal score;
         public ZMember(string member, decimal score) { this.member = member; this.score = score; }
     }
+    public enum ZAggregate { sum, min, max }
 }
