@@ -140,7 +140,6 @@ namespace FreeRedis
                             switch (val1)
                             {
                                 case "pong":
-                                case "QUIT":
                                 case "punsubscribe":
                                 case "unsubscribe":
                                     continue;

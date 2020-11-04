@@ -29,8 +29,8 @@
   <PropertyGroup Condition="'$(TargetFramework)' == 'net40'">
     <DefineConstants>net40</DefineConstants>
   </PropertyGroup>
-  <!--<PropertyGroup Condition="'$(TargetFramework)' != 'net40'">
+  <PropertyGroup Condition="'$(TargetFramework)' != 'net40'">
     <DefineConstants>isasync</DefineConstants>
-  </PropertyGroup>-->
+  </PropertyGroup>
   
 </Project>

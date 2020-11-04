@@ -15,22 +15,9 @@ using System.Text;
 
 namespace FreeRedis
 {
-    public static class RespHelper
+    public static partial class RespHelper
     {
-        public static RedisResult Read(Stream stream, Encoding encoding) => new Resp3Reader(stream).ReadObject(encoding);
-        public static void ReadChunk(Stream stream, Stream destination, int bufferSize = 1024) => new Resp3Reader(stream).ReadBlobStringChunk(destination, bufferSize);
-        public static void Write(Stream stream, Encoding encoding, List<object> command, RedisProtocol protocol)
-        {
-            using (var ms = new MemoryStream()) //Writing data directly to will be very slow
-            {
-                new Resp3Writer(ms, encoding, protocol).WriteCommand(command);
-                ms.Position = 0;
-                ms.CopyTo(stream);
-                ms.Close();
-            }
-        }
-
-        internal class Resp3Reader
+        internal partial class Resp3Reader
         {
             internal Stream _stream;
 
@@ -216,8 +203,7 @@ namespace FreeRedis
             {
                 while (true)
                 {
-                    var cb = _stream.ReadByte();
-                    var c = (char)cb;
+                    var c = (char)_stream.ReadByte();
                     switch (c)
                     {
                         case '$': return new RedisResult(ReadBlobString(c, encoding, null, 1024), false, RedisMessageType.BlobString);
