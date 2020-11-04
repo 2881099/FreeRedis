@@ -249,7 +249,7 @@ namespace FreeRedis.Internal.ObjectPool
                 Console.CancelKeyPress += (s1, e1) =>
                 {
                     if (e1.Cancel) return;
-                    if (Policy.IsAutoDisposeWithSystem) 
+                    if (Policy.IsAutoDisposeWithSystem)
                         running = false;
                 };
             }
@@ -352,8 +352,7 @@ namespace FreeRedis.Internal.ObjectPool
             return obj;
         }
 
-#if net40
-#else
+#if !NET40
         async public Task<Object<T>> GetAsync()
         {
 

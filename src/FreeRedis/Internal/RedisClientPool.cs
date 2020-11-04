@@ -148,8 +148,7 @@ namespace FreeRedis.Internal
                 }
             }
         }
-#if net40
-#else
+#if !NET40
         public Task OnGetAsync(Object<RedisClient> obj)
         {
             OnGet(obj); //todo
