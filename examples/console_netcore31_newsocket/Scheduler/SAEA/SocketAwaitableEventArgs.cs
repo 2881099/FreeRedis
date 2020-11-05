@@ -15,7 +15,7 @@ namespace console_netcore31_newsocket
 {
     internal sealed class SocketAwaitableEventArgs : SocketAsyncEventArgs, ICriticalNotifyCompletion
     {
-        private static readonly Action _callbackCompleted = () => { };
+        private static readonly Action _callbackCompleted = () => { Console.WriteLine(1); };
 
         private readonly PipeScheduler _ioScheduler;
 
