@@ -1,4 +1,4 @@
-name: Socket-UnitTest
+name: UT - Socket
 
 on:
    push:
