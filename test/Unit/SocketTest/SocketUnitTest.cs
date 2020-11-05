@@ -3,6 +3,7 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -25,12 +26,16 @@ namespace SocketTest
         {
             TcpListener listener = new TcpListener(point);
             listener.Start();
-
+            Console.WriteLine("Start Accept!");
             var client = await listener.AcceptTcpClientAsync();
+            Console.WriteLine("Accept One!");
             byte[] bytes = new byte[1024];
-            while (client.Connected)
-            {
 
+            int count = 0;
+            while (count<20)
+            {
+                await Task.Delay(1000);
+                Console.WriteLine("loop!");
                 NetworkStream stream = client.GetStream();
                 int i;
                 if ((i = stream.Read(bytes, 0, bytes.Length)) != 0)
@@ -46,7 +51,6 @@ namespace SocketTest
                         return;
                     }
                 }
-
             }
         }
 
@@ -58,7 +62,10 @@ namespace SocketTest
             var connection = client.ConnectAsync(endpoit).Result;
             var buffer = Encoding.UTF8.GetBytes("test");
             await connection.Transport.Output.WriteAsync(buffer);
-            await Task.Delay(2000);
+            while (Result==default)
+            {
+                Thread.Sleep(1000);
+            }
             Assert.Contains("test", Result);
             await client.DisposeAsync();
         }
