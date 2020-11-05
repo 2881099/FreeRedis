@@ -15,7 +15,7 @@ namespace SocketTest
         [Fact]
         public void Test1()
         {
-            var point = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8989);
+            var point = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 18989);
             StartServer(point);
             StartClient(point);
 
@@ -35,7 +35,7 @@ namespace SocketTest
                 int i;
                 if ((i = stream.Read(bytes, 0, bytes.Length)) != 0)
                 {
-                    var data = System.Text.Encoding.UTF8.GetString(bytes, 0, i);
+                    var data = Encoding.UTF8.GetString(bytes, 0, i);
                     Assert.Equal("test", data);
                     client.Client.Send(bytes);
                     //Console.WriteLine("客户端发来：" + data);
@@ -52,15 +52,15 @@ namespace SocketTest
 
         private async void StartClient(IPEndPoint point)
         {
-            await Task.Delay(1000);
-            var endpoit = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8989);
+            await Task.Delay(2000);
+            var endpoit = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 18989);
             SocketConnectionFactory client = new SocketConnectionFactory(new SocketTransportOptions());
             var connection = client.ConnectAsync(endpoit).Result;
             var buffer = Encoding.UTF8.GetBytes("test");
             await connection.Transport.Output.WriteAsync(buffer);
-            await Task.Delay(1000);
+            await Task.Delay(2000);
             Assert.Contains("test", Result);
-
+            await client.DisposeAsync();
         }
     }
 }
