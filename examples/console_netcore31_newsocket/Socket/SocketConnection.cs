@@ -1,9 +1,10 @@
 ﻿
+using Microsoft.AspNetCore.Connections;
+using Microsoft.AspNetCore.Server.Kestrel.Transport.Abstractions.Internal;
 using System;
 using System.Buffers;
 using System.Diagnostics;
 using System.IO.Pipelines;
-using System.Net;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -15,7 +16,6 @@ namespace console_netcore31_newsocket
     {
         private static readonly int MinAllocBufferSize = SlabMemoryPool.BlockSize / 2;
         private static readonly bool IsWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
-        private static readonly bool IsMacOS = RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
 
         private readonly Socket _socket;
         private readonly SocketReceiver _receiver;
@@ -28,17 +28,22 @@ namespace console_netcore31_newsocket
         private Task _processingTask;
         private readonly TaskCompletionSource<object> _waitForConnectionClosedTcs = new TaskCompletionSource<object>(TaskCreationOptions.RunContinuationsAsynchronously);
         private bool _connectionClosed;
+        private readonly bool _waitForData;
 
         internal SocketConnection(Socket socket,
                                   MemoryPool<byte> memoryPool,
-                                  PipeScheduler scheduler,
+                                  PipeScheduler transportScheduler,
                                   long? maxReadBufferSize = null,
-                                  long? maxWriteBufferSize = null)
+                                  long? maxWriteBufferSize = null,
+                                  bool waitForData = true,
+                                  bool useInlineSchedulers = false)
         {
+            Debug.Assert(socket != null);
             Debug.Assert(memoryPool != null);
 
             _socket = socket;
             MemoryPool = memoryPool;
+            _waitForData = waitForData;
 
             LocalEndPoint = _socket.LocalEndPoint;
             RemoteEndPoint = _socket.RemoteEndPoint;
@@ -48,7 +53,15 @@ namespace console_netcore31_newsocket
             // On *nix platforms, Sockets already dispatches to the ThreadPool.
             // Yes, the IOQueues are still used for the PipeSchedulers. This is intentional.
             // https://github.com/aspnet/KestrelHttpServer/issues/2573
-            var awaiterScheduler = IsWindows ? scheduler : PipeScheduler.Inline;
+            var awaiterScheduler = IsWindows ? transportScheduler : PipeScheduler.Inline;
+
+            var applicationScheduler = PipeScheduler.ThreadPool;
+            if (useInlineSchedulers)
+            {
+                transportScheduler = PipeScheduler.Inline;
+                awaiterScheduler = PipeScheduler.Inline;
+                applicationScheduler = PipeScheduler.Inline;
+            }
 
             _receiver = new SocketReceiver(_socket, awaiterScheduler);
             _sender = new SocketSender(_socket, awaiterScheduler);
@@ -56,8 +69,8 @@ namespace console_netcore31_newsocket
             maxReadBufferSize ??= 0;
             maxWriteBufferSize ??= 0;
 
-            var inputOptions = new PipeOptions(MemoryPool, PipeScheduler.ThreadPool, scheduler, maxReadBufferSize.Value, maxReadBufferSize.Value / 2, useSynchronizationContext: false);
-            var outputOptions = new PipeOptions(MemoryPool, scheduler, PipeScheduler.ThreadPool, maxWriteBufferSize.Value, maxWriteBufferSize.Value / 2, useSynchronizationContext: false);
+            var inputOptions = new PipeOptions(MemoryPool, applicationScheduler, transportScheduler, maxReadBufferSize.Value, maxReadBufferSize.Value / 2, useSynchronizationContext: false);
+            var outputOptions = new PipeOptions(MemoryPool, transportScheduler, applicationScheduler, maxWriteBufferSize.Value, maxWriteBufferSize.Value / 2, useSynchronizationContext: false);
 
             var pair = DuplexPipe.CreateConnectionPair(inputOptions, outputOptions);
 
@@ -72,12 +85,12 @@ namespace console_netcore31_newsocket
 
         public override MemoryPool<byte> MemoryPool { get; }
 
-        public void Run()
+        public void Start()
         {
-            _processingTask = RunAsync();
+            _processingTask = StartAsync();
         }
 
-        private async Task RunAsync()
+        private async Task StartAsync()
         {
             try
             {
@@ -94,13 +107,21 @@ namespace console_netcore31_newsocket
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                //_trace.LogError(0, ex, $"Unexpected exception in {nameof(SocketConnection)}.{nameof(StartAsync)}.");
             }
         }
 
+        public override void Abort(ConnectionAbortedException abortReason)
+        {
+            // Try to gracefully close the socket to match libuv behavior.
+            Shutdown(abortReason);
+
+            // Cancel ProcessSends loop after calling shutdown to ensure the correct _shutdownReason gets set.
+            Output.CancelPendingRead();
+        }
 
         // Only called after connection middleware is complete which means the ConnectionClosed token has fired.
-        public async ValueTask DisposeAsync()
+        public override async ValueTask DisposeAsync()
         {
             Transport.Input.Complete();
             Transport.Output.Complete();
@@ -123,7 +144,15 @@ namespace console_netcore31_newsocket
             }
             catch (SocketException ex) when (IsConnectionResetError(ex.SocketErrorCode))
             {
-                Console.WriteLine(ex);
+                // This could be ignored if _shutdownReason is already set.
+                error = new ConnectionResetException(ex.Message, ex);
+
+                // There's still a small chance that both DoReceive() and DoSend() can log the same connection reset.
+                // Both logs will have the same ConnectionId. I don't think it's worthwhile to lock just to avoid this.
+                if (!_socketDisposed)
+                {
+                    //_trace.ConnectionReset(ConnectionId);
+                }
             }
             catch (Exception ex)
                 when ((ex is SocketException socketEx && IsConnectionAbortError(socketEx.SocketErrorCode)) ||
@@ -135,12 +164,14 @@ namespace console_netcore31_newsocket
                 if (!_socketDisposed)
                 {
                     // This is unexpected if the socket hasn't been disposed yet.
+                    //_trace.ConnectionError(ConnectionId, error);
                 }
             }
             catch (Exception ex)
             {
                 // This is unexpected.
                 error = ex;
+                //_trace.ConnectionError(ConnectionId, error);
             }
             finally
             {
@@ -159,16 +190,21 @@ namespace console_netcore31_newsocket
             var input = Input;
             while (true)
             {
-                // Wait for data before allocating a buffer.
-                var saea = _receiver.WaitForDataAsync();
-                await saea;
+                if (_waitForData)
+                {
+                    // Wait for data before allocating a buffer.
+                    await _receiver.WaitForDataAsync();
+                }
+
                 // Ensure we have some reasonable amount of buffer space
                 var buffer = input.GetMemory(MinAllocBufferSize);
+
                 var bytesReceived = await _receiver.ReceiveAsync(buffer);
-                saea.ProtocalAnalysis(buffer);
+
                 if (bytesReceived == 0)
                 {
                     // FIN
+                    //_trace.ConnectionReadFin(ConnectionId);
                     break;
                 }
 
@@ -178,7 +214,17 @@ namespace console_netcore31_newsocket
 
                 var paused = !flushTask.IsCompleted;
 
+                if (paused)
+                {
+                    //_trace.ConnectionPause(ConnectionId);
+                }
+
                 var result = await flushTask;
+
+                if (paused)
+                {
+                    //_trace.ConnectionResume(ConnectionId);
+                }
 
                 if (result.IsCompleted || result.IsCanceled)
                 {
@@ -199,7 +245,8 @@ namespace console_netcore31_newsocket
             }
             catch (SocketException ex) when (IsConnectionResetError(ex.SocketErrorCode))
             {
-                Console.WriteLine(ex);
+                shutdownReason = new ConnectionResetException(ex.Message, ex);
+                //_trace.ConnectionReset(ConnectionId);
             }
             catch (Exception ex)
                 when ((ex is SocketException socketEx && IsConnectionAbortError(socketEx.SocketErrorCode)) ||
@@ -212,6 +259,7 @@ namespace console_netcore31_newsocket
             {
                 shutdownReason = ex;
                 unexpectedError = ex;
+                //_trace.ConnectionError(ConnectionId, unexpectedError);
             }
             finally
             {
@@ -278,10 +326,8 @@ namespace console_netcore31_newsocket
 
         private void Shutdown(Exception shutdownReason)
         {
-
             lock (_shutdownLock)
             {
-
                 if (_socketDisposed)
                 {
                     return;
@@ -291,6 +337,13 @@ namespace console_netcore31_newsocket
                 // Without this, the RequestsCanBeAbortedMidRead test will sometimes fail when
                 // a BadHttpRequestException is thrown instead of a TaskCanceledException.
                 _socketDisposed = true;
+
+                // shutdownReason should only be null if the output was completed gracefully, so no one should ever
+                // ever observe the nondescript ConnectionAbortedException except for connection middleware attempting
+                // to half close the connection which is currently unsupported.
+                _shutdownReason = shutdownReason ?? new ConnectionAbortedException("The Socket transport's send loop completed gracefully.");
+
+                //_trace.ConnectionWriteFin(ConnectionId, _shutdownReason.Message);
 
                 try
                 {
@@ -314,18 +367,15 @@ namespace console_netcore31_newsocket
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                //_trace.LogError(0, ex, $"Unexpected exception in {nameof(SocketConnection)}.{nameof(CancelConnectionClosedToken)}.");
             }
         }
 
         private static bool IsConnectionResetError(SocketError errorCode)
         {
-            // A connection reset can be reported as SocketError.ConnectionAborted on Windows.
-            // ProtocolType can be removed once https://github.com/dotnet/corefx/issues/31927 is fixed.
             return errorCode == SocketError.ConnectionReset ||
                    errorCode == SocketError.Shutdown ||
-                   (errorCode == SocketError.ConnectionAborted && IsWindows) ||
-                   (errorCode == SocketError.ProtocolType && IsMacOS);
+                   (errorCode == SocketError.ConnectionAborted && IsWindows);
         }
 
         private static bool IsConnectionAbortError(SocketError errorCode)
@@ -334,65 +384,6 @@ namespace console_netcore31_newsocket
             return errorCode == SocketError.OperationAborted ||
                    errorCode == SocketError.Interrupted ||
                    (errorCode == SocketError.InvalidArgument && !IsWindows);
-        }
-    }
-
-
-    internal abstract partial class TransportConnection
-    {     
-        public TransportConnection()
-        {
-            
-        }
-
-        public EndPoint LocalEndPoint { get; set; }
-        public EndPoint RemoteEndPoint { get; set; }
-
-        public virtual MemoryPool<byte> MemoryPool { get; }
-
-        public IDuplexPipe Transport { get; set; }
-
-        public IDuplexPipe Application { get; set; }
-
-
-        public CancellationToken ConnectionClosed { get; set; }
-
-    }
-
-    internal class DuplexPipe : IDuplexPipe
-    {
-        public DuplexPipe(PipeReader reader, PipeWriter writer)
-        {
-            Input = reader;
-            Output = writer;
-        }
-
-        public PipeReader Input { get; }
-
-        public PipeWriter Output { get; }
-
-        public static DuplexPipePair CreateConnectionPair(PipeOptions inputOptions, PipeOptions outputOptions)
-        {
-            var input = new Pipe(inputOptions);
-            var output = new Pipe(outputOptions);
-
-            var transportToApplication = new DuplexPipe(output.Reader, input.Writer);
-            var applicationToTransport = new DuplexPipe(input.Reader, output.Writer);
-
-            return new DuplexPipePair(applicationToTransport, transportToApplication);
-        }
-
-        // This class exists to work around issues with value tuple on .NET Framework
-        public readonly struct DuplexPipePair
-        {
-            public IDuplexPipe Transport { get; }
-            public IDuplexPipe Application { get; }
-
-            public DuplexPipePair(IDuplexPipe transport, IDuplexPipe application)
-            {
-                Transport = transport;
-                Application = application;
-            }
         }
     }
 }

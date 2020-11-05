@@ -36,9 +36,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Benchmark", "Benchmark", "{
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConcurrentWriteBytes", "test\Benchmark\ConcurrentWriteBytes\ConcurrentWriteBytes.csproj", "{735C68EB-D4BC-4452-BD69-151E31D283AD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntrinsicsTest", "test\Benchmark\IntrinsicsTest\IntrinsicsTest.csproj", "{5FD085A0-84AA-4099-8B7F-9BC65A63073E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntrinsicsTest", "test\Benchmark\IntrinsicsTest\IntrinsicsTest.csproj", "{5FD085A0-84AA-4099-8B7F-9BC65A63073E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "console_netcore31_newsocket", "examples\console_netcore31_newsocket\console_netcore31_newsocket.csproj", "{ECE8D399-7EB0-4D95-B3F8-E7F21F94483C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "console_netcore31_newsocket", "examples\console_netcore31_newsocket\console_netcore31_newsocket.csproj", "{ECE8D399-7EB0-4D95-B3F8-E7F21F94483C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
