@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace FreeRedis
 {
@@ -83,15 +84,15 @@ namespace FreeRedis
 #if isasync
             List<AsyncRedisSocket> _asyncRedisSockets = new List<AsyncRedisSocket>();
             int _asyncRedisSocketsCount = 0;
+            long _asyncRedisSocketsConcurrentCounter = 0;
             object _asyncRedisSocketsLock = new object();
-            AsyncRedisSocket _asyncRedisSocketsLastNew;
             AsyncRedisSocket GetAsyncRedisSocket(CommandPacket cmd)
             {
                 AsyncRedisSocket asyncRds = null;
-
-                foreach (var limit in new[] { 0, 10, 20, 30, 40, 50 })
+                Interlocked.Increment(ref _asyncRedisSocketsConcurrentCounter);
+                for (var limit = 0; limit < 1000; limit += 1)
                 {
-                    if (_asyncRedisSocketsCount > limit)
+                    if (_asyncRedisSocketsCount > 0)
                     {
                         lock (_asyncRedisSocketsLock)
                         {
@@ -99,14 +100,17 @@ namespace FreeRedis
                             {
                                 asyncRds = _asyncRedisSockets[_rnd.Value.Next(_asyncRedisSockets.Count)];
                                 Interlocked.Increment(ref asyncRds._writeCounter);
+                                Interlocked.Decrement(ref _asyncRedisSocketsConcurrentCounter);
                                 return asyncRds;
                             }
                         }
                     }
-                    if (_asyncRedisSocketsCount > 1) Thread.CurrentThread.Join(1);
+                    if (limit > 50 && _asyncRedisSocketsConcurrentCounter < 2) break;
+                    if (_asyncRedisSocketsCount > 1) Thread.CurrentThread.Join(2);
                 }
                 NewAsyncRedisSocket();
-                AsyncRedisSocket.sb.AppendLine($"线程{Thread.CurrentThread.ManagedThreadId}：AsyncRedisSockets 数量 {_asyncRedisSocketsCount}");
+                //AsyncRedisSocket.sb.AppendLine($"线程{Thread.CurrentThread.ManagedThreadId}：AsyncRedisSockets 数量 {_asyncRedisSocketsCount} {_asyncRedisSocketsConcurrentCounter}");
+                Interlocked.Decrement(ref _asyncRedisSocketsConcurrentCounter);
                 return asyncRds;
 
                 void NewAsyncRedisSocket()
@@ -115,7 +119,7 @@ namespace FreeRedis
                     var key = Guid.NewGuid();
                     asyncRds = new AsyncRedisSocket(rds, () =>
                     {
-                        if (_asyncRedisSocketsCount > 1 || _asyncRedisSocketsLastNew != asyncRds) Thread.CurrentThread.Join(20);
+                        if (_asyncRedisSocketsConcurrentCounter > 0 || _asyncRedisSocketsCount > 1) Thread.CurrentThread.Join(8);
                         Interlocked.Decrement(ref _asyncRedisSocketsCount);
                         lock (_asyncRedisSocketsLock)
                             _asyncRedisSockets.Remove(asyncRds);
@@ -136,11 +140,22 @@ namespace FreeRedis
                     {
                         Interlocked.Increment(ref asyncRds._writeCounter);
                         _asyncRedisSockets.Add(asyncRds);
-                        _asyncRedisSocketsLastNew = asyncRds;
                     }
                     Interlocked.Increment(ref _asyncRedisSocketsCount);
                 }
             }
+
+            //class wpp
+            //{
+            //    public CommandPacket cmd;
+            //    public TaskCompletionSource<object> tcs;
+            //    public Func<RedisResult, object> parse;
+            //    public int tid;
+            //}
+            //ConcurrentBag<wpp> _globalAsyncQueue = new ConcurrentBag<wpp>();
+            //object _globalAsyncQueueLock = new object();
+            //long _globalAsyncStatus = 0;
+            //long _globalAsyncTicks;
             public override Task<TValue> AdapterCallAsync<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
             {
                 return TopOwner.LogCallAsync(cmd, async () =>
@@ -150,6 +165,66 @@ namespace FreeRedis
                     rt.IsErrorThrow = TopOwner._isThrowRedisSimpleError;
                     return parse(rt);
                 });
+                //var tid = Thread.CurrentThread.ManagedThreadId;
+                //var ticks = Environment.TickCount;
+                //var curq = new wpp
+                //{
+                //    cmd = cmd,
+                //    parse = rt => parse(rt),
+                //    tcs = new TaskCompletionSource<object>(),
+                //    tid = tid
+                //};
+                //var localQueue = new Queue<wpp>();
+                //lock (_globalAsyncQueueLock)
+                //{
+                //    _globalAsyncQueue.Add(curq);
+                //    if (_globalAsyncQueue.Count >= 100)
+                //    {
+                //        for (var a = 0; a < 100; a++)
+                //            if (_globalAsyncQueue.TryTake(out var tmpq))
+                //                localQueue.Enqueue(tmpq);
+                //    }
+                //}
+
+                //if (localQueue.Any())
+                //{
+                //    using (var rds = GetRedisSocket(cmd))
+                //    {
+                //        if (rds.IsConnected == false) rds.Connect();
+                //        using (var ms = new MemoryStream())
+                //        {
+                //            var writer = new RespHelper.Resp3Writer(ms, rds.Encoding, rds.Protocol);
+                //            foreach (var q in localQueue)
+                //                writer.WriteCommand(q.cmd);
+                //            ms.Position = 0;
+                //            ms.CopyTo(rds.Stream);
+                //        }
+                //        AsyncRedisSocket.sb.AppendLine($"线程{Thread.CurrentThread.ManagedThreadId}：写入 {localQueue.Count} 个命令 total:{AsyncRedisSocket.sw.ElapsedMilliseconds} ms");
+                //        if (rds.ClientReply == ClientReplyType.on)
+                //        {
+                //            while (localQueue.Any())
+                //            {
+                //                var q = localQueue.Dequeue();
+                //                var rt = rds.Read(false);
+                //                var val = q.parse(rt);
+                //                q.tcs.TrySetResult(val);
+                //            }
+                //        }
+                //        else
+                //        {
+                //            while (localQueue.Any())
+                //            {
+                //                var q = localQueue.Dequeue();
+                //                var val = q.parse(new RedisResult(null, true, RedisMessageType.SimpleString));
+                //                q.tcs.TrySetResult(val);
+                //            }
+                //        }
+                //    }
+
+                //}
+                //var ret = await curq.tcs.Task;
+                //return (TValue)ret;
+
             }
 #endif
 

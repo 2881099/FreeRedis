@@ -132,7 +132,7 @@ namespace FreeRedis.Internal
                     }
                     long counter = 0;
                     RedisResult rt = null;
-                    sb.AppendLine($"{name} 线程{Thread.CurrentThread.ManagedThreadId}：合并读取 {localQueue.Count} 个命令 total:{sw.ElapsedMilliseconds} ms");
+                    //sb.AppendLine($"{name} 线程{Thread.CurrentThread.ManagedThreadId}：合并读取 {localQueue.Count} 个命令 total:{sw.ElapsedMilliseconds} ms");
                     while (localQueue.Any())
                     {
                         var witem = localQueue.Dequeue();
@@ -153,9 +153,9 @@ namespace FreeRedis.Internal
                     if (counter == 0 && _finish())
                         break;
                     Thread.CurrentThread.Join(1);
-                    sb.AppendLine($"{name} 线程{Thread.CurrentThread.ManagedThreadId}：等待 1ms + {_writeQueue.Count} total:{sw.ElapsedMilliseconds} ms");
+                    //sb.AppendLine($"{name} 线程{Thread.CurrentThread.ManagedThreadId}：等待 1ms + {_writeQueue.Count} total:{sw.ElapsedMilliseconds} ms");
                 }
-                sb.AppendLine($"{name} 线程{Thread.CurrentThread.ManagedThreadId}：退出 total:{sw.ElapsedMilliseconds} ms");
+                //sb.AppendLine($"{name} 线程{Thread.CurrentThread.ManagedThreadId}：退出 total:{sw.ElapsedMilliseconds} ms");
                 _end(_rds, null);
             }
             return ret;
