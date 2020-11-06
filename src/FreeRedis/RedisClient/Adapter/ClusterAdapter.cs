@@ -38,7 +38,7 @@ namespace FreeRedis
                 var slots = cmd._flagKey.Select(a => GetClusterSlot(a)).Distinct().ToArray();
                 var poolkeys = slots.Select(a => _slotCache.TryGetValue(a, out var trykey) ? trykey : null).Distinct().Where(a => a != null).ToArray();
                 if (poolkeys.Length > 1) throw new RedisClientException($"Multiple key slot values not equal: {cmd}");
-                var poolkey = poolkeys.FirstOrDefault() ?? _clusterConnectionStrings.First().Host;
+                var poolkey = poolkeys.FirstOrDefault() ?? _ib.GetKeyFirst();
 
                 var pool = _ib.Get(poolkey);
                 if (pool.IsAvailable == false)
