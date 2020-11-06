@@ -148,8 +148,8 @@ namespace console_netcore31_vs
             sw.Stop();
             Console.WriteLine("FreeRedisAsync(0-10000): " + sw.ElapsedMilliseconds + "ms");
 
-            FreeRedis.Internal.AsyncRedisSocket.sb.Clear();
-            FreeRedis.Internal.AsyncRedisSocket.sw.Start();
+            //FreeRedis.Internal.AsyncRedisSocket.sb.Clear();
+            //FreeRedis.Internal.AsyncRedisSocket.sw.Start();
             sw.Reset();
             sw.Start();
             tasks = new List<Task>();
@@ -165,8 +165,9 @@ namespace console_netcore31_vs
             }
             Task.WaitAll(tasks.ToArray());
             sw.Stop();
-            var sbstr = FreeRedis.Internal.AsyncRedisSocket.sb.ToString();
-            Console.WriteLine(sbstr + sbstr.Split("\r\n").Length + "条消息 FreeRedisAsync(Task.WaitAll 10000): " + sw.ElapsedMilliseconds + "ms");
+            //var sbstr = FreeRedis.Internal.AsyncRedisSocket.sb.ToString()
+            //sbstr = sbstr + sbstr.Split("\r\n").Length + "条消息 ;
+            Console.WriteLine("FreeRedisAsync(Task.WaitAll 10000): " + sw.ElapsedMilliseconds + "ms");
             tasks.Clear();
 
             sw.Reset();

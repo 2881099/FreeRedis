@@ -37,6 +37,10 @@ namespace FreeRedis
 
                 _ib = new IdleBus<RedisClientPool>(TimeSpan.FromMinutes(10));
                 ResetSentinel();
+
+#if isasync
+                _asyncManager = new AsyncRedisSocket.Manager(this);
+#endif
             }
 
             public override void Dispose()
@@ -109,10 +113,16 @@ namespace FreeRedis
                 });
             }
 #if isasync
+            AsyncRedisSocket.Manager _asyncManager;
             public override Task<TValue> AdapterCallAsync<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
             {
-                //Single socket not support Async Multiplexing
-                return Task.FromResult(AdapterCall(cmd, parse));
+                return TopOwner.LogCallAsync(cmd, async () =>
+                {
+                    var asyncRds = _asyncManager.GetAsyncRedisSocket(cmd);
+                    var rt = await asyncRds.WriteAsync(cmd);
+                    rt.IsErrorThrow = TopOwner._isThrowRedisSimpleError;
+                    return parse(rt);
+                });
             }
 #endif
 

@@ -12,8 +12,81 @@ using System.Threading.Tasks;
 
 namespace FreeRedis.Internal
 {
-    public class AsyncRedisSocket
+    class AsyncRedisSocket
     {
+        internal class Manager
+        {
+            RedisClient.BaseAdapter _adapter;
+            public Manager(RedisClient.BaseAdapter adapter)
+            {
+                _adapter = adapter;
+            }
+
+            List<AsyncRedisSocket> _asyncRedisSockets = new List<AsyncRedisSocket>();
+            int _asyncRedisSocketsCount = 0;
+            long _asyncRedisSocketsConcurrentCounter = 0;
+            object _asyncRedisSocketsLock = new object();
+
+            public AsyncRedisSocket GetAsyncRedisSocket(CommandPacket cmd)
+            {
+                AsyncRedisSocket asyncRds = null;
+                Interlocked.Increment(ref _asyncRedisSocketsConcurrentCounter);
+                for (var limit = 0; limit < 1000; limit += 1)
+                {
+                    if (_asyncRedisSocketsCount > 0)
+                    {
+                        lock (_asyncRedisSocketsLock)
+                        {
+                            if (_asyncRedisSockets.Count > 0)
+                            {
+                                asyncRds = _asyncRedisSockets[RedisClient.BaseAdapter._rnd.Value.Next(_asyncRedisSockets.Count)];
+                                Interlocked.Increment(ref asyncRds._writeCounter);
+                                Interlocked.Decrement(ref _asyncRedisSocketsConcurrentCounter);
+                                return asyncRds;
+                            }
+                        }
+                    }
+                    if (limit > 50 && _asyncRedisSocketsConcurrentCounter < 2) break;
+                    if (_asyncRedisSocketsCount > 1) Thread.CurrentThread.Join(2);
+                }
+                NewAsyncRedisSocket();
+                //AsyncRedisSocket.sb.AppendLine($"线程{Thread.CurrentThread.ManagedThreadId}：AsyncRedisSockets 数量 {_asyncRedisSocketsCount} {_asyncRedisSocketsConcurrentCounter}");
+                Interlocked.Decrement(ref _asyncRedisSocketsConcurrentCounter);
+                return asyncRds;
+
+                void NewAsyncRedisSocket()
+                {
+                    var rds = _adapter.GetRedisSocket(cmd);
+                    var key = Guid.NewGuid();
+                    asyncRds = new AsyncRedisSocket(rds, () =>
+                    {
+                        if (_asyncRedisSocketsConcurrentCounter > 0 || _asyncRedisSocketsCount > 1) Thread.CurrentThread.Join(8);
+                        Interlocked.Decrement(ref _asyncRedisSocketsCount);
+                        lock (_asyncRedisSocketsLock)
+                            _asyncRedisSockets.Remove(asyncRds);
+
+                    }, (innerRds, ioex) =>
+                    {
+                        if (ioex != null) (rds as DefaultRedisSocket.TempProxyRedisSocket)._pool.SetUnavailable(ioex);
+                        innerRds.Dispose();
+                    }, () =>
+                    {
+                        lock (_asyncRedisSocketsLock)
+                        {
+                            if (asyncRds._writeCounter == 0) return true;
+                        }
+                        return false;
+                    });
+                    lock (_asyncRedisSocketsLock)
+                    {
+                        Interlocked.Increment(ref asyncRds._writeCounter);
+                        _asyncRedisSockets.Add(asyncRds);
+                    }
+                    Interlocked.Increment(ref _asyncRedisSocketsCount);
+                }
+            }
+        }
+
         internal readonly IRedisSocket _rds;
         readonly Action _begin;
         readonly Action<IRedisSocket, Exception> _end;
@@ -161,9 +234,9 @@ namespace FreeRedis.Internal
             return ret;
         }
 
-        public string name = Guid.NewGuid().ToString();
-        public static StringBuilder sb = new StringBuilder();
-        public static Stopwatch sw = new Stopwatch();
+        //public string name = Guid.NewGuid().ToString();
+        //public static StringBuilder sb = new StringBuilder();
+        //public static Stopwatch sw = new Stopwatch();
     }
 }
 #endif
