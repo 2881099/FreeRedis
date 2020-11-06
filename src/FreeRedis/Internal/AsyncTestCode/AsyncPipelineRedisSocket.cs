@@ -114,7 +114,7 @@
 //                        flush.AsTask().Wait();
 //                    }
 //                }
-//                catch(Exception ex)
+//                catch (Exception ex)
 //                {
 //                    Trace.WriteLine(ex.Message);
 //                    throw ex;
@@ -153,7 +153,7 @@
 //                                        //Console.WriteLine(Encoding.UTF8.GetString(it.ToArray()));
 //                                    }
 
-//                                    while(TryReadSize(ref buffer, ref offset, 1, out var tmp))
+//                                    while (TryReadSize(ref buffer, ref offset, 1, out var tmp))
 //                                    {
 //                                    }
 //                                    bufferStart = readResult.Buffer.GetPosition(offset);
