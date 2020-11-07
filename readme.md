@@ -53,18 +53,23 @@ string[] vals = cli.MGet("key1", "key2");
 
 > IPv6: [fe80::b164:55b3:4b4f:7ce6%15]:6379
 
+-----
+
 #### Master-Slave (读写分离)
 
 ```csharp
-public static cli = new RedisClient(
+public static RedisClient cli = new RedisClient(
     "127.0.0.1:6379,password=123,defaultDatabase=13",
     "127.0.0.1:6380,password=123,defaultDatabase=13",
-    "127.0.0.1:6381,password=123,defaultDatabase=13");
+    "127.0.0.1:6381,password=123,defaultDatabase=13"
+    );
 
 var value = cli.Get("key1");
 ```
 
 > 写入时连接 127.0.0.1:6379，读取时随机连接 6380 6381
+
+-----
 
 #### Redis Sentinel (哨兵高可用)
 
@@ -76,15 +81,19 @@ public static RedisClient cli = new RedisClient(
     );
 ```
 
+-----
+
 #### Redis Cluster (集群)
 
 假如你有一个 Redis Cluster 集群，其中有三个主节点(7001-7003)、三个从节点(7004-7006)，则连接此集群的代码：
 
 ```csharp
-var r = new RedisClient(new ConnectionStringBuilder[] { "192.168.0.2:7001", "192.168.0.2:7001", "192.168.0.2:7003" });
+public static RedisClient cli = new RedisClient(
+    new ConnectionStringBuilder[] { "192.168.0.2:7001", "192.168.0.2:7001", "192.168.0.2:7003" }
+    );
 ```
 
-
+-----
 
 #### Scripting (脚本)
 
