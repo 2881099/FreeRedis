@@ -11,7 +11,6 @@ FreeRedis is .NET redis client, supports .NETCore 2.1+, .NETFramework 4.0+, And 
 </div>
 
 - 🌈 RedisClient Keep all method names consistent with redis-cli
-- ☀️ Support geo type commands (redis-server 3.2 or above is required)
 - 🌌 Support Redis Cluster
 - ⛳ Support Redis Sentinel
 - 🎣 Support Redis Master-Slave
@@ -19,8 +18,9 @@ FreeRedis is .NET redis client, supports .NETCore 2.1+, .NETFramework 4.0+, And 
 - 📃 Support Redis Lua Scripting
 - 💻 Support Pipeline
 - 📰 Support Transaction
-- 💕 Supports stream type commands (requires redis-server 5.0 and above)
-- ⚙️ Supports Redis 6 RESP3 Protocol
+- 🌴 Support Geo type commands (redis-server 3.2 or above is required)
+- 🌲 Supports Streams type commands (requires redis-server 5.0 and above)
+- 🌳 Supports Redis 6 RESP3 Protocol
 
 QQ群：4336577(已满)、8578575(在线)、52508226(在线)
 
