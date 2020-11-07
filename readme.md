@@ -15,6 +15,10 @@ FreeRedis is .NET redis client, supports .NETCore 2.1+, .NETFramework 4.0+, And 
 - 🌌 Support Redis Cluster
 - ⛳ Support Redis Sentinel
 - 🎣 Support Redis Master-Slave
+- 📡 Support Redis Pub-Sub
+- 📃 Support Redis Lua Scripting
+- 💻 Support Pipeline
+- 📰 Support Transaction
 - 💕 Supports stream type commands (requires redis-server 5.0 and above)
 - ⚙️ Supports Redis 6 RESP3 Protocol
 
@@ -90,6 +94,20 @@ public static RedisClient cli = new RedisClient(
 ```
 
 -----
+
+#### 📡 Subscribe (订阅)
+
+```csharp
+using (cli.Subscribe("abc", ondata)) //wait .Dispose()
+{
+    Console.ReadKey();
+}
+
+void ondata(string channel, string data)
+{
+    Console.WriteLine($"{channel} -> {data}");
+}
+```
 
 #### 📃 Scripting (脚本)
 
