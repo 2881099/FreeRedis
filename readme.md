@@ -103,10 +103,8 @@ using (cli.Subscribe("abc", ondata)) //wait .Dispose()
     Console.ReadKey();
 }
 
-void ondata(string channel, string data)
-{
+void ondata(string channel, string data) =>
     Console.WriteLine($"{channel} -> {data}");
-}
 ```
 
 #### 📃 Scripting (脚本)
