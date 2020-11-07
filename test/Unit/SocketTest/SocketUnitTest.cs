@@ -54,6 +54,8 @@ namespace SocketTest
             }
         }
 
+        
+
         private async void StartClient(IPEndPoint point)
         {
             await Task.Delay(3000);
@@ -61,9 +63,14 @@ namespace SocketTest
             var connection = client.ConnectAsync(point).Result;
             Console.WriteLine("Client: Connected!");
             var buffer = Encoding.UTF8.GetBytes("test");
+            Task.Run(async () =>
+            {
+                var result = await connection.Transport.Input.ReadAsync();
+                Result = Encoding.UTF8.GetString(result.Buffer.FirstSpan);
+            });
             await connection.Transport.Output.WriteAsync(buffer);
             Console.WriteLine("Client: Data has been send!");
-            while (Result==default)
+            while (Result == default)
             {
                 Thread.Sleep(1000);
                 Console.WriteLine("Client: Loop!");

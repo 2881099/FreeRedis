@@ -226,7 +226,7 @@ namespace console_netcore31_newsocket
                 {
                     //_trace.ConnectionResume(ConnectionId);
                 }
-                _receiver._awaitableEventArgs.ReadBuffer(buffer);
+
                 if (result.IsCompleted || result.IsCanceled)
                 {
                     // Pipe consumer is shut down, do we stop writing

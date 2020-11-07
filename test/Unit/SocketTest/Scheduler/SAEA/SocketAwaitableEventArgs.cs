@@ -27,12 +27,6 @@ namespace console_netcore31_newsocket
             _ioScheduler = ioScheduler;
         }
 
-
-        public void ReadBuffer(Memory<byte> buffer)
-        {
-            SocketUnitTest.Result = Encoding.UTF8.GetString(buffer.Span);
-        }
-
         public SocketAwaitableEventArgs GetAwaiter() => this;
         public bool IsCompleted => ReferenceEquals(_callback, _callbackCompleted);
 
