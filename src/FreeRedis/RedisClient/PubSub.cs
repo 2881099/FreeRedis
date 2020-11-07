@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace FreeRedis
 {
@@ -23,6 +24,52 @@ namespace FreeRedis
                 return _pubsubPriv;
             }
         }
+
+#if isasync
+        #region async (copy from sync)
+        public Task<long> PublishAsync(string channel, string message) => CallAsync("PUBLISH".Input(channel, message).FlagKey(channel), rt => rt.ThrowOrValue<long>());
+        public Task<string[]> PubSubChannelsAsync(string pattern) => CallAsync("PUBSUB".SubCommand("CHANNELS").Input(pattern), rt => rt.ThrowOrValue<string[]>());
+        public Task<long> PubSubNumSubAsync(string channel) => CallAsync("PUBSUB".SubCommand("NUMSUB").Input(channel).FlagKey(channel), rt => rt.ThrowOrValue((a, _) => a.MapToList((x, y) => y.ConvertTo<long>()).FirstOrDefault()));
+        public Task<long[]> PubSubNumSubAsync(string[] channels) => CallAsync("PUBSUB".SubCommand("NUMSUB").Input(channels).FlagKey(channels), rt => rt.ThrowOrValue((a, _) => a.MapToList((x, y) => y.ConvertTo<long>()).ToArray()));
+        public Task<long> PubSubNumPatAsync(string message) => CallAsync("PUBLISH".SubCommand("NUMPAT").InputRaw(message), rt => rt.ThrowOrValue<long>());
+        #endregion
+#endif
+
+        public IDisposable PSubscribe(string pattern, Action<string, string> handler)
+        {
+            if (string.IsNullOrEmpty(pattern)) throw new ArgumentNullException(nameof(pattern));
+            if (handler == null) throw new ArgumentNullException(nameof(handler));
+            return _pubsub.Subscribe(true, new[] { pattern }, (p, k, d) => handler(k, d));
+        }
+        public IDisposable PSubscribe(string[] pattern, Action<string, string> handler)
+        {
+            if (pattern?.Any() != true) throw new ArgumentNullException(nameof(pattern));
+            if (handler == null) throw new ArgumentNullException(nameof(handler));
+            return _pubsub.Subscribe(true, pattern, (p, k, d) => handler(k, d));
+        }
+
+        public long Publish(string channel, string message) => Call("PUBLISH".Input(channel, message).FlagKey(channel), rt => rt.ThrowOrValue<long>());
+        public string[] PubSubChannels(string pattern) => Call("PUBSUB".SubCommand("CHANNELS").Input(pattern), rt => rt.ThrowOrValue<string[]>());
+        public long PubSubNumSub(string channel) => Call("PUBSUB".SubCommand("NUMSUB").Input(channel).FlagKey(channel), rt => rt.ThrowOrValue((a, _) => a.MapToList((x, y) => y.ConvertTo<long>()).FirstOrDefault()));
+        public long[] PubSubNumSub(string[] channels) => Call("PUBSUB".SubCommand("NUMSUB").Input(channels).FlagKey(channels), rt => rt.ThrowOrValue((a, _) => a.MapToList((x, y) => y.ConvertTo<long>()).ToArray()));
+        public long PubSubNumPat(string message) => Call("PUBLISH".SubCommand("NUMPAT").InputRaw(message), rt => rt.ThrowOrValue<long>());
+
+
+        public void PUnSubscribe(params string[] pattern) => _pubsub.UnSubscribe(true, pattern);
+        public IDisposable Subscribe(string[] channels, Action<string, string> handler)
+        {
+            if (channels?.Any() != true) throw new ArgumentNullException(nameof(channels));
+            if (handler == null) throw new ArgumentNullException(nameof(handler));
+            return _pubsub.Subscribe(false, channels, (p, k, d) => handler(k, d)); ;
+        }
+        public IDisposable Subscribe(string channel, Action<string, string> handler)
+        {
+            if (string.IsNullOrEmpty(channel)) throw new ArgumentNullException(nameof(channel));
+            if (handler == null) throw new ArgumentNullException(nameof(handler));
+            return _pubsub.Subscribe(false, new[] { channel }, (p, k, d) => handler(k, d));
+        }
+        public void UnSubscribe(params string[] channels) => _pubsub.UnSubscribe(false, channels);
+
 
         //ERR only (P)SUBSCRIBE / (P)UNSUBSCRIBE / PING / QUIT allowed in this context
         class PubSub
@@ -75,7 +122,7 @@ namespace FreeRedis
                 if (!_cancels.Any())
                     lock (_lock)
                         if (!_cancels.Any())
-                                _redisSocket.ReleaseSocket();
+                            _redisSocket.ReleaseSocket();
             }
             internal void UnSubscribe(bool punsub, string[] channels)
             {
@@ -185,40 +232,5 @@ namespace FreeRedis
                 });
             }
         }
-
-        public IDisposable PSubscribe(string pattern, Action<string, string> handler)
-        {
-            if (string.IsNullOrEmpty(pattern)) throw new ArgumentNullException(nameof(pattern));
-            if (handler == null) throw new ArgumentNullException(nameof(handler));
-            return _pubsub.Subscribe(true, new[] { pattern }, (p, k, d) => handler(k, d));
-        }
-        public IDisposable PSubscribe(string[] pattern, Action<string, string> handler)
-        {
-            if (pattern?.Any() != true) throw new ArgumentNullException(nameof(pattern));
-            if (handler == null) throw new ArgumentNullException(nameof(handler));
-            return _pubsub.Subscribe(true, pattern, (p, k, d) => handler(k, d));
-        }
-
-        public long Publish(string channel, string message) => Call("PUBLISH".Input(channel, message).FlagKey(channel), rt => rt.ThrowOrValue<long>());
-        public string[] PubSubChannels(string pattern) => Call("PUBSUB".SubCommand("CHANNELS").Input(pattern), rt => rt.ThrowOrValue<string[]>());
-        public long PubSubNumSub(string channel) => Call("PUBSUB".SubCommand("NUMSUB").Input(channel).FlagKey(channel), rt => rt.ThrowOrValue((a, _) => a.MapToList((x, y) => y.ConvertTo<long>()).FirstOrDefault()));
-        public long[] PubSubNumSub(string[] channels) => Call("PUBSUB".SubCommand("NUMSUB").Input(channels).FlagKey(channels), rt => rt.ThrowOrValue((a, _) => a.MapToList((x, y) => y.ConvertTo<long>()).ToArray()));
-        public long PubSubNumPat(string message) => Call("PUBLISH".SubCommand("NUMPAT").InputRaw(message), rt => rt.ThrowOrValue<long>());
-
-
-        public void PUnSubscribe(params string[] pattern) => _pubsub.UnSubscribe(true, pattern);
-        public IDisposable Subscribe(string[] channels, Action<string, string> handler)
-        {
-            if (channels?.Any() != true) throw new ArgumentNullException(nameof(channels));
-            if (handler == null) throw new ArgumentNullException(nameof(handler));
-            return _pubsub.Subscribe(false, channels, (p, k, d) => handler(k, d)); ;
-        }
-        public IDisposable Subscribe(string channel, Action<string, string> handler)
-        {
-            if (string.IsNullOrEmpty(channel)) throw new ArgumentNullException(nameof(channel));
-            if (handler == null) throw new ArgumentNullException(nameof(handler));
-            return _pubsub.Subscribe(false, new[] { channel }, (p, k, d) => handler(k, d));
-        }
-        public void UnSubscribe(params string[] channels) => _pubsub.UnSubscribe(false, channels);
     }
 }
