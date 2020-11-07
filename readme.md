@@ -69,8 +69,6 @@ var value = cli.Get("key1");
 
 > 写入时连接 127.0.0.1:6379，读取时随机连接 6380 6381
 
------
-
 #### Redis Sentinel (哨兵高可用)
 
 ```csharp
@@ -80,8 +78,6 @@ public static RedisClient cli = new RedisClient(
     true //是否读写分离
     );
 ```
-
------
 
 #### Redis Cluster (集群)
 
