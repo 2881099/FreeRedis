@@ -177,7 +177,7 @@ using (var db = cli.GetDatabase(10))
 }
 ```
 
-#### 💕 Donation
+#### 💕 Donation (捐赠)
 
 > Thank you for your donation
 
