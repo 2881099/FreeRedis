@@ -12,11 +12,11 @@ FreeRedis is .NET redis client, supports .NETCore 2.1+, .NETFramework 4.0+, And 
 
 - 🌈 RedisClient Keep all method names consistent with redis-cli
 - ☀️ Support geo type commands (redis-server 3.2 or above is required)
-- ⚙️ Support Redis Cluster
-- 🎨 Support Redis Sentinel
-- 📦 Support Redis Master-Slave
+- 🌌 Support Redis Cluster
+- ⛳ Support Redis Sentinel
+- 🎣 Support Redis Master-Slave
 - 💕 Supports stream type commands (requires redis-server 5.0 and above)
-- 🎁 Supports Redis 6 RESP3 Protocol
+- ⚙️ Supports Redis 6 RESP3 Protocol
 
 QQ群：4336577(已满)、8578575(在线)、52508226(在线)
 
@@ -55,7 +55,7 @@ string[] vals = cli.MGet("key1", "key2");
 
 -----
 
-#### 📦 Master-Slave (读写分离)
+#### 🎣 Master-Slave (读写分离)
 
 ```csharp
 public static RedisClient cli = new RedisClient(
@@ -69,7 +69,7 @@ var value = cli.Get("key1");
 
 > 写入时连接 127.0.0.1:6379，读取时随机连接 6380 6381
 
-#### 🎨 Redis Sentinel (哨兵高可用)
+#### ⛳ Redis Sentinel (哨兵高可用)
 
 ```csharp
 public static RedisClient cli = new RedisClient(
@@ -79,7 +79,7 @@ public static RedisClient cli = new RedisClient(
     );
 ```
 
-#### ⚙️ Redis Cluster (集群)
+#### 🌌 Redis Cluster (集群)
 
 假如你有一个 Redis Cluster 集群，其中有三个主节点(7001-7003)、三个从节点(7004-7006)，则连接此集群的代码：
 
