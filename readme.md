@@ -10,20 +10,27 @@ FreeRedis is .NET redis client, supports .NETCore 2.1+, .NETFramework 4.0+, And 
 
 </div>
 
-- RedisClient Keep all method names consistent with redis-cli
-- Support geo type commands (redis-server 3.2 or above is required)
-- Support Redis Cluster
-- Support Redis Sentinel
-- Support Redis Master-Slave
-- Supports stream type commands (requires redis-server 5.0 and above)
-- Supports Redis 6 RESP3 Protocol
+- 🌈 RedisClient Keep all method names consistent with redis-cli
+- 🌌 Support Redis Cluster
+- ⛳ Support Redis Sentinel
+- 🎣 Support Redis Master-Slave
+- 📡 Support Redis Pub-Sub
+- 📃 Support Redis Lua Scripting
+- 💻 Support Pipeline
+- 📰 Support Transaction
+- 🌴 Support Geo type commands (redis-server 3.2 or above is required)
+- 🌲 Supports Streams type commands (requires redis-server 5.0 and above)
+- 🌳 Supports Redis 6 RESP3 Protocol
 
 QQ群：4336577(已满)、8578575(在线)、52508226(在线)
 
-#### Single machine redis (单机)
+#### 🌈 Single machine redis (单机)
 
 ```csharp
 public static RedisClient cli = new RedisClient("127.0.0.1:6379,password=123,defaultDatabase=13");
+//cli.Serialize = obj => JsonConvert.SerializeObject(obj);
+//cli.Deserialize = (json, type) => JsonConvert.DeserializeObject(json, type);
+cli.Notice += (s, e) => Console.WriteLine(e.Log); //print command log
 
 cli.Set("key1", "value1");
 cli.MSet("key1", "value1", "key2", "value2");
@@ -53,20 +60,23 @@ string[] vals = cli.MGet("key1", "key2");
 
 > IPv6: [fe80::b164:55b3:4b4f:7ce6%15]:6379
 
-#### Master-Slave (读写分离)
+-----
+
+#### 🎣 Master-Slave (读写分离)
 
 ```csharp
-public static cli = new RedisClient(
+public static RedisClient cli = new RedisClient(
     "127.0.0.1:6379,password=123,defaultDatabase=13",
     "127.0.0.1:6380,password=123,defaultDatabase=13",
-    "127.0.0.1:6381,password=123,defaultDatabase=13");
+    "127.0.0.1:6381,password=123,defaultDatabase=13"
+    );
 
 var value = cli.Get("key1");
 ```
 
 > 写入时连接 127.0.0.1:6379，读取时随机连接 6380 6381
 
-#### Redis Sentinel (哨兵高可用)
+#### ⛳ Redis Sentinel (哨兵高可用)
 
 ```csharp
 public static RedisClient cli = new RedisClient(
@@ -76,17 +86,31 @@ public static RedisClient cli = new RedisClient(
     );
 ```
 
-#### Redis Cluster (集群)
+#### 🌌 Redis Cluster (集群)
 
 假如你有一个 Redis Cluster 集群，其中有三个主节点(7001-7003)、三个从节点(7004-7006)，则连接此集群的代码：
 
 ```csharp
-var r = new RedisClient(new ConnectionStringBuilder[] { "192.168.0.2:7001", "192.168.0.2:7001", "192.168.0.2:7003" });
+public static RedisClient cli = new RedisClient(
+    new ConnectionStringBuilder[] { "192.168.0.2:7001", "192.168.0.2:7001", "192.168.0.2:7003" }
+    );
 ```
 
+-----
 
+#### 📡 Subscribe (订阅)
 
-#### Scripting (脚本)
+```csharp
+using (cli.Subscribe("abc", ondata)) //wait .Dispose()
+{
+    Console.ReadKey();
+}
+
+void ondata(string channel, string data) =>
+    Console.WriteLine($"{channel} -> {data}");
+```
+
+#### 📃 Scripting (脚本)
 
 ```csharp
 var r1 = cli.Eval("return {KEYS[1],KEYS[2],ARGV[1],ARGV[2]}", 
@@ -98,7 +122,7 @@ cli.Eval("return redis.call('set',KEYS[1],'bar')",
     new[] { Guid.NewGuid().ToString() })
 ```
 
-#### Pipeline (管道)
+#### 💻 Pipeline (管道)
 
 ```csharp
 using (var pipe = cli.StartPipe())
@@ -130,7 +154,7 @@ using (var pipe = cli.StartPipe())
 }
 ```
 
-#### Transaction (事务)
+#### 📰 Transaction (事务)
 
 ```csharp
 using (var tran = cli.Multi())
@@ -162,7 +186,7 @@ using (var tran = cli.Multi())
 }
 ```
 
-#### GetDatabase (切库)
+#### 📯 GetDatabase (切库)
 
 ```csharp
 using (var db = cli.GetDatabase(10))
@@ -172,7 +196,7 @@ using (var db = cli.GetDatabase(10))
 }
 ```
 
-#### 💕 　Donation
+#### 💕 Donation (捐赠)
 
 > Thank you for your donation
 

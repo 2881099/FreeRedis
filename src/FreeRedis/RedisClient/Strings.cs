@@ -4,14 +4,83 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace FreeRedis
 {
     partial class RedisClient
     {
+#if isasync
+        #region async (copy from sync)
+        public Task<long> AppendAsync<T>(string key, T value) => CallAsync("APPEND".Input(key).InputRaw(SerializeRedisValue(value)).FlagKey(key), rt => rt.ThrowOrValue<long>());
+        public Task<long> BitCountAsync(string key, long start, long end) => CallAsync("BITCOUNT".Input(key, start, end).FlagKey(key), rt => rt.ThrowOrValue<long>());
+        //BITFIELD key [GET type offset] [SET type offset value] [INCRBY type offset increment] [OVERFLOW WRAP|SAT|FAIL]
+        public Task<long> BitOpAsync(BitOpOperation operation, string destkey, params string[] keys) => CallAsync("BITOP".SubCommand(null).Input(operation, destkey, keys).FlagKey(destkey).FlagKey(keys), rt => rt.ThrowOrValue<long>());
+        public Task<long> BitPosAsync(string key, bool bit, long? start = null, long? end = null) => CallAsync("BITPOS"
+            .Input(key)
+            .InputRaw(bit ? "1" : "0")
+            .InputIf(start != null, start)
+            .InputIf(end != null, start)
+            .FlagKey(key), rt => rt.ThrowOrValue<long>());
+        public Task<long> DecrAsync(string key) => CallAsync("DECR".Input(key).FlagKey(key), rt => rt.ThrowOrValue<long>());
+        public Task<long> DecrByAsync(string key, long decrement) => CallAsync("DECRBY".Input(key, decrement).FlagKey(key), rt => rt.ThrowOrValue<long>());
+        public Task<string> GetAsync(string key) => CallAsync("GET".Input(key).FlagKey(key), rt => rt.ThrowOrValue<string>());
+        public Task<T> GetAsync<T>(string key) => CallAsync("GET".Input(key).FlagKey(key).FlagReadbytes(true), rt => rt.ThrowOrValue(a => DeserializeRedisValue<T>(a.ConvertTo<byte[]>(), rt.Encoding)));
+        public Task<bool> GetBitAsync(string key, long offset) => CallAsync("GETBIT".Input(key, offset).FlagKey(key), rt => rt.ThrowOrValue<bool>());
+        public Task<string> GetRangeAsync(string key, long start, long end) => CallAsync("GETRANGE".Input(key, start, end).FlagKey(key), rt => rt.ThrowOrValue<string>());
+        public Task<T> GetRangeAsync<T>(string key, long start, long end) => CallAsync("GETRANGE".Input(key, start, end).FlagKey(key).FlagReadbytes(true), rt => rt.ThrowOrValue(a => DeserializeRedisValue<T>(a.ConvertTo<byte[]>(), rt.Encoding)));
+
+        public Task<string> GetSetAsync<T>(string key, T value) => CallAsync("GETSET".Input(key).InputRaw(SerializeRedisValue(value)).FlagKey(key), rt => rt.ThrowOrValue<string>());
+        public Task<long> IncrAsync(string key) => CallAsync("INCR".Input(key).FlagKey(key), rt => rt.ThrowOrValue<long>());
+        public Task<long> IncrByAsync(string key, long increment) => CallAsync("INCRBY".Input(key, increment).FlagKey(key), rt => rt.ThrowOrValue<long>());
+        public Task<decimal> IncrByFloatAsync(string key, decimal increment) => CallAsync("INCRBYFLOAT".Input(key, increment).FlagKey(key), rt => rt.ThrowOrValue<decimal>());
+
+        public Task<string[]> MGetAsync(params string[] keys) => CallAsync("MGET".Input(keys).FlagKey(keys), rt => rt.ThrowOrValue<string[]>());
+        public Task<T[]> MGetAsync<T>(params string[] keys) => CallAsync("MGET".Input(keys).FlagKey(keys).FlagReadbytes(true), rt => rt
+            .ThrowOrValue((a, _) => a.Select(b => DeserializeRedisValue<T>(b.ConvertTo<byte[]>(), rt.Encoding)).ToArray()));
+
+        public Task MSetAsync(string key, object value, params object[] keyValues) => MSetAsync<bool>(false, key, value, keyValues);
+        public Task MSetAsync<T>(Dictionary<string, T> keyValues) => CallAsync("MSET".SubCommand(null).InputKv(keyValues, SerializeRedisValue).FlagKey(keyValues.Keys), rt => rt.ThrowOrValue<string>());
+        public Task<bool> MSetNxAsync(string key, object value, params object[] keyValues) => MSetAsync<bool>(true, key, value, keyValues);
+        public Task<bool> MSetNxAsync<T>(Dictionary<string, T> keyValues) => CallAsync("MSETNX".SubCommand(null).InputKv(keyValues, SerializeRedisValue).FlagKey(keyValues.Keys), rt => rt.ThrowOrValue<bool>());
+        Task<T> MSetAsync<T>(bool nx, string key, object value, params object[] keyValues)
+        {
+            if (keyValues?.Any() == true)
+                return CallAsync((nx ? "MSETNX" : "MSET").SubCommand(null)
+                    .InputRaw(key).InputRaw(SerializeRedisValue(value))
+                    .InputKv(keyValues, SerializeRedisValue)
+                    .FlagKey(key)
+                    .FlagKey(keyValues.Where((a, b) => b % 2 == 0).Select(a => a?.ConvertTo<string>()).ToArray()), rt => rt.ThrowOrValue<T>());
+            return CallAsync((nx ? "MSETNX" : "MSET").SubCommand(null).InputRaw(key).InputRaw(SerializeRedisValue(value)).FlagKey(key), rt => rt.ThrowOrValue<T>());
+        }
+
+        public Task PSetExAsync<T>(string key, long milliseconds, T value) => CallAsync("PSETEX".Input(key, milliseconds).InputRaw(SerializeRedisValue(value)).FlagKey(key), rt => rt.ThrowOrNothing());
+
+        public Task SetAsync<T>(string key, T value, int timeoutSeconds = 0) => SetAsync(key, value, TimeSpan.FromSeconds(timeoutSeconds), false, false, false);
+        public Task SetAsync<T>(string key, T value, bool keepTtl) => SetAsync(key, value, TimeSpan.Zero, keepTtl, false, false);
+        async public Task<bool> SetNxAsync<T>(string key, T value, int timeoutSeconds) => await SetAsync(key, value, TimeSpan.FromSeconds(timeoutSeconds), false, true, false) == "OK";
+        async public Task<bool> SetXxAsync<T>(string key, T value, int timeoutSeconds = 0) => await SetAsync(key, value, TimeSpan.FromSeconds(timeoutSeconds), false, false, true) == "OK";
+        async public Task<bool> SetXxAsync<T>(string key, T value, bool keepTtl) => await SetAsync(key, value, TimeSpan.Zero, keepTtl, false, true) == "OK";
+        Task<string> SetAsync<T>(string key, T value, TimeSpan timeout, bool keepTtl, bool nx, bool xx) => CallAsync("SET"
+            .Input(key)
+            .InputRaw(SerializeRedisValue(value))
+            .InputIf(timeout.TotalSeconds >= 1, "EX", (long)timeout.TotalSeconds)
+            .InputIf(timeout.TotalSeconds < 1 && timeout.TotalMilliseconds >= 1, "PX", (long)timeout.TotalMilliseconds)
+            .InputIf(keepTtl, "KEEPTTL")
+            .InputIf(nx, "NX")
+            .InputIf(xx, "XX")
+            .FlagKey(key), rt => rt.ThrowOrValue<string>());
+
+        public Task<long> SetBitAsync(string key, long offset, bool value) => CallAsync("SETBIT".Input(key, offset).InputRaw(value ? "1" : "0").FlagKey(key), rt => rt.ThrowOrValue<long>());
+        public Task SetExAsync<T>(string key, int seconds, T value) => CallAsync("SETEX".Input(key, seconds).InputRaw(SerializeRedisValue(value)).FlagKey(key), rt => rt.ThrowOrNothing());
+        public Task<bool> SetNxAsync<T>(string key, T value) => CallAsync("SETNX".Input(key).InputRaw(SerializeRedisValue(value)).FlagKey(key), rt => rt.ThrowOrValue<bool>());
+        public Task<long> SetRangeAsync<T>(string key, long offset, T value) => CallAsync("SETRANGE".Input(key, offset).InputRaw(SerializeRedisValue(value)).FlagKey(key), rt => rt.ThrowOrValue<long>());
+        public Task<long> StrLenAsync(string key) => CallAsync("STRLEN".Input(key).FlagKey(key), rt => rt.ThrowOrValue<long>());
+        #endregion
+#endif
+
         public long Append<T>(string key, T value) => Call("APPEND".Input(key).InputRaw(SerializeRedisValue(value)).FlagKey(key), rt => rt.ThrowOrValue<long>());
         public long BitCount(string key, long start, long end) => Call("BITCOUNT".Input(key, start, end).FlagKey(key), rt => rt.ThrowOrValue<long>());
-        //BITFIELD key [GET type offset] [SET type offset value] [INCRBY type offset increment] [OVERFLOW WRAP|SAT|FAIL]
         public long BitOp(BitOpOperation operation, string destkey, params string[] keys) => Call("BITOP".SubCommand(null).Input(operation, destkey, keys).FlagKey(destkey).FlagKey(keys), rt => rt.ThrowOrValue<long>());
         public long BitPos(string key, bool bit, long? start = null, long? end = null) => Call("BITPOS"
             .Input(key)
