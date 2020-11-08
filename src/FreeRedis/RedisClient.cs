@@ -165,20 +165,24 @@ namespace FreeRedis
 
         internal object SerializeRedisValue(object value)
         {
-            return value switch
+            switch (value)
             {
-                null => null,
-                string or byte[] or char => value,
-                bool b => b ? "1" : "0",
-                DateTime time => time.ToString("yyyy-MM-ddTHH:mm:sszzzz", System.Globalization.DateTimeFormatInfo.InvariantInfo),
-                TimeSpan span => span.Ticks,
-                DateTimeOffset or Guid => value.ToString(),
-                _ => value.GetType() switch
-                {
-                    { IsPrimitive: true, IsValueType: true } => value.ToString(),
-                    _ => Adapter.TopOwner.Serialize?.Invoke(value) ?? value.ConvertTo<string>()
-                }
-            };
+                case null: return null;
+                case string _:
+                case byte[] _:
+                case char _:
+                    return value;
+                case bool b: return b ? "1" : "0";
+                case DateTime time: return time.ToString("yyyy-MM-ddTHH:mm:sszzzz", System.Globalization.DateTimeFormatInfo.InvariantInfo);
+                case TimeSpan span: return span.Ticks;
+                case DateTimeOffset _:
+                case Guid _:
+                    return value.ToString();
+                default:
+                    var type = value.GetType();
+                    if (type.IsPrimitive && type.IsValueType) return value.ToString();
+                    return Adapter.TopOwner.Serialize?.Invoke(value) ?? value.ConvertTo<string>();
+            }
         }
 
         internal T DeserializeRedisValue<T>(byte[] value, Encoding encoding)
@@ -213,7 +217,7 @@ namespace FreeRedis
                 return default;
             }
 
-            return (T)Adapter.TopOwner.Deserialize?.Invoke(valueStr, typeof(T)) ?? valueStr.ConvertTo<T>();
+            return Adapter.TopOwner.Deserialize != null ? (T)Adapter.TopOwner.Deserialize.Invoke(valueStr, typeof(T)) : valueStr.ConvertTo<T>();
         }
         #endregion
     }

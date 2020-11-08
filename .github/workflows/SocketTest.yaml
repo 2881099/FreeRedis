@@ -13,7 +13,7 @@ jobs:
       - name: Setup
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 5.0.100-rc.2.20479.15
+          dotnet-version: 3.1.300
       - name: Build
         run: dotnet build './test/Unit/SocketTest/SocketTest.csproj' --configuration Release
       - name: Test
@@ -26,7 +26,7 @@ jobs:
       - name: Setup
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 5.0.100-rc.2.20479.15
+          dotnet-version: 3.1.300
       - name: Build
         run: dotnet build './test/Unit/SocketTest/SocketTest.csproj' --configuration Release
       - name: Test
@@ -39,7 +39,7 @@ jobs:
       - name: Setup
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 5.0.100-rc.2.20479.15
+          dotnet-version: 3.1.300
       - name: Build
         run: dotnet build './test/Unit/SocketTest/SocketTest.csproj' --configuration Release
       - name: Test
