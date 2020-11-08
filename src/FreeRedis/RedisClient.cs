@@ -9,6 +9,8 @@ using System.Text;
 using System.Threading;
 using System.Diagnostics;
 using System.Collections;
+using System.Runtime.InteropServices;
+using System.Reflection;
 
 namespace FreeRedis
 {
@@ -163,131 +165,59 @@ namespace FreeRedis
 
         internal object SerializeRedisValue(object value)
         {
-            if (value == null) return null;
-            var type = value.GetType();
-            var typename = type.ToString().TrimEnd(']');
-            if (typename == TypeConstants.BYTE_L ||
-                typename == TypeConstants.STRING) return value;
-
-            if (type.IsValueType)
+            switch (value)
             {
-                bool isNullable = typename.StartsWith(TypeConstants.NULLABLE_1_L);
-                var basename = isNullable ? typename.Substring(18) : typename;
-
-                switch (basename)
-                {
-                    case TypeConstants.BOOLEAN: return value.ToString() == "True" ? "1" : "0";
-                    case TypeConstants.BYTE: return value.ToString();
-                    case TypeConstants.CHAR: return value.ToString()[0];
-                    case TypeConstants.DECIMAL:
-                    case TypeConstants.DOUBLE:
-                    case TypeConstants.SINGLE:
-                    case TypeConstants.INT32:
-                    case TypeConstants.INT64:
-                    case TypeConstants.SBYTE:
-                    case TypeConstants.INT16:
-                    case TypeConstants.INT32_U:
-                    case TypeConstants.INT64_U:
-                    case TypeConstants.INT16_U: return value.ToString();
-                    case TypeConstants.DATETIME: return ((DateTime)value).ToString("yyyy-MM-ddTHH:mm:sszzzz", System.Globalization.DateTimeFormatInfo.InvariantInfo);
-                    case TypeConstants.DATETIME_OFFSET: return value.ToString();
-                    case TypeConstants.TIMESPAN: return ((TimeSpan)value).Ticks;
-                    case TypeConstants.GUID: return value.ToString();
-                }
+                case null: return null;
+                case string _:
+                case byte[] _:
+                case char _:
+                    return value;
+                case bool b: return b ? "1" : "0";
+                case DateTime time: return time.ToString("yyyy-MM-ddTHH:mm:sszzzz", System.Globalization.DateTimeFormatInfo.InvariantInfo);
+                case TimeSpan span: return span.Ticks;
+                case DateTimeOffset _:
+                case Guid _:
+                    return value.ToString();
+                default:
+                    var type = value.GetType();
+                    if (type.IsPrimitive && type.IsValueType) return value.ToString();
+                    return Adapter.TopOwner.Serialize?.Invoke(value) ?? value.ConvertTo<string>();
             }
-
-            var ser = Adapter.TopOwner.Serialize;
-            if (ser != null) return ser(value);
-            return value.ConvertTo<string>();
         }
+
         internal T DeserializeRedisValue<T>(byte[] value, Encoding encoding)
         {
-            if (value == null) return default(T);
+            if (value == null) return default;
+
             var type = typeof(T);
-            var typename = type.ToString().TrimEnd(']');
-            if (typename == TypeConstants.BYTE_L) return (T)Convert.ChangeType(value, type);
-            if (typename == TypeConstants.STRING) return (T)Convert.ChangeType(encoding.GetString(value), type);
-            if (typename == TypeConstants.BOOLEAN_L) return (T)Convert.ChangeType(value.Select(a => a == 49).ToArray(), type);
-
+            if (type == typeof(byte[])) return (T)Convert.ChangeType(value, type);
+            if (type == typeof(string)) return (T)Convert.ChangeType(encoding.GetString(value), type);
+            if (type == typeof(bool[])) return (T)Convert.ChangeType(value.Select(a => a == 49).ToArray(), type);
+            
             var valueStr = encoding.GetString(value);
-            if (string.IsNullOrEmpty(valueStr)) return default(T);
-            if (type.IsValueType)
+            if (string.IsNullOrEmpty(valueStr)) return default;
+
+            var isNullable = type.IsValueType && type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
+            if (isNullable) type = type.GetGenericArguments().First();
+
+            if (type == typeof(bool)) return (T)(object)(valueStr == "1");
+            if (type == typeof(char)) return valueStr.Length > 0 ? (T)(object)valueStr[0] : default;
+            if (type == typeof(TimeSpan))
             {
-                bool isNullable = typename.StartsWith("System.Nullable`1[");
-                var basename = isNullable ? typename.Substring(18) : typename;
-
-                bool isElse = false;
-                object obj = null;
-                switch (basename)
-                {
-                    case TypeConstants.BOOLEAN:
-                        if (valueStr == "1") obj = true;
-                        else if (valueStr == "0") obj = false;
-                        break;
-                    case TypeConstants.BYTE:
-                        if (byte.TryParse(valueStr, out var trybyte)) obj = trybyte;
-                        break;
-                    case TypeConstants.CHAR:
-                        if (valueStr.Length > 0) obj = valueStr[0];
-                        break;
-                    case TypeConstants.DECIMAL:
-                        if (Decimal.TryParse(valueStr, out var trydec)) obj = trydec;
-                        break;
-                    case TypeConstants.DOUBLE:
-                        if (Double.TryParse(valueStr, out var trydb)) obj = trydb;
-                        break;
-                    case TypeConstants.SINGLE:
-                        if (Single.TryParse(valueStr, out var trysg)) obj = trysg;
-                        break;
-                    case TypeConstants.INT32:
-                        if (Int32.TryParse(valueStr, out var tryint32)) obj = tryint32;
-                        break;
-                    case TypeConstants.INT64:
-                        if (Int64.TryParse(valueStr, out var tryint64)) obj = tryint64;
-                        break;
-                    case TypeConstants.SBYTE:
-                        if (SByte.TryParse(valueStr, out var trysb)) obj = trysb;
-                        break;
-                    case TypeConstants.INT16:
-                        if (Int16.TryParse(valueStr, out var tryint16)) obj = tryint16;
-                        break;
-                    case TypeConstants.INT32_U:
-                        if (UInt32.TryParse(valueStr, out var tryuint32)) obj = tryuint32;
-                        break;
-                    case TypeConstants.INT64_U:
-                        if (UInt64.TryParse(valueStr, out var tryuint64)) obj = tryuint64;
-                        break;
-                    case TypeConstants.INT16_U:
-                        if (UInt16.TryParse(valueStr, out var tryuint16)) obj = tryuint16;
-                        break;
-                    case TypeConstants.DATETIME:
-                        if (DateTime.TryParse(valueStr, out var trydt)) obj = trydt;
-                        break;
-                    case TypeConstants.DATETIME_OFFSET:
-                        if (DateTimeOffset.TryParse(valueStr, out var trydtos)) obj = trydtos;
-                        break;
-                    case TypeConstants.TIMESPAN:
-                        if (Int64.TryParse(valueStr, out tryint64)) obj = new TimeSpan(tryint64);
-                        break;
-                    case TypeConstants.GUID:
-                        if (Guid.TryParse(valueStr, out var tryguid)) obj = tryguid;
-                        break;
-                    default:
-                        isElse = true;
-                        break;
-                }
-
-                if (isElse == false)
-                {
-                    if (obj == null) return default;
-                    return (T)obj;
-                    //return (T)Convert.ChangeType(obj, typeof(T));
-                }
+                if (long.TryParse(valueStr, out var i64Result)) return (T)(object)new TimeSpan(i64Result);
+                return default;
             }
 
-            var deser = Adapter.TopOwner.Deserialize;
-            if (deser != null) return (T)deser(valueStr, typeof(T));
-            return valueStr.ConvertTo<T>();
+            var parse = type.GetMethod("TryParse", BindingFlags.Static | BindingFlags.Public, null, new[] { typeof(string), type.MakeByRefType() }, null);
+            if (parse != null)
+            {
+                var parameters = new object[] { valueStr, null };
+                var succeeded = (bool)parse.Invoke(null, parameters);
+                if (succeeded) return (T)parameters[1];
+                return default;
+            }
+
+            return Adapter.TopOwner.Deserialize != null ? (T)Adapter.TopOwner.Deserialize.Invoke(valueStr, typeof(T)) : valueStr.ConvertTo<T>();
         }
         #endregion
     }
