@@ -18,10 +18,12 @@ namespace FreeRedis
     {
         internal BaseAdapter Adapter { get; }
         public event EventHandler<NoticeEventArgs> Notice;
+        public List<Func<BaseInterceptor>> Interceptors;
 
         protected RedisClient(BaseAdapter adapter)
         {
             Adapter = adapter;
+            Interceptors = new List<Func<BaseInterceptor>>();
         }
 
         /// <summary>
@@ -88,14 +90,34 @@ namespace FreeRedis
 
         internal T LogCall<T>(CommandPacket cmd, Func<T> func)
         {
-            if (this.Notice == null) return func();
+            var isnotice = this.Notice != null;
+            if (isnotice == false && this.Interceptors.Any() == false) return func();
             Exception exception = null;
-            Stopwatch sw = new Stopwatch();
+            Stopwatch sw = default;
+            if (isnotice)
+            {
+                sw = new Stopwatch();
+                sw.Start();
+            }
+
             T ret = default(T);
-            sw.Start();
+            var isnewval = false;
+            var localInterceptors = this.Interceptors.Select(ctor =>
+            {
+                var intercepter = ctor?.Invoke();
+                intercepter.Stopwatch.Start();
+                intercepter.Before(cmd);
+                if (intercepter.ValueIsChanged)
+                {
+                    isnewval = true;
+                    ret = (T)intercepter.Value;
+                }
+                return intercepter;
+            }).ToArray();
+
             try
             {
-                ret = func();
+                if (isnewval == false) ret = func();
                 return ret;
             }
             catch (Exception ex)
@@ -105,8 +127,19 @@ namespace FreeRedis
             }
             finally
             {
-                sw.Stop();
-                LogCallFinally(cmd, ret, sw, exception);
+                foreach (var interceptor in localInterceptors)
+                {
+                    interceptor.Value = ret;
+                    interceptor.Exception = exception;
+                    interceptor.Stopwatch.Stop();
+                    interceptor.End(cmd);
+                }
+
+                if (isnotice)
+                {
+                    sw.Stop();
+                    LogCallFinally(cmd, ret, sw, exception);
+                }
             }
         }
         void LogCallFinally<T>(CommandPacket cmd, T result, Stopwatch sw, Exception exception)
@@ -157,6 +190,27 @@ namespace FreeRedis
         {
             this.Notice?.Invoke(this, e);
             return this.Notice != null;
+        }
+
+        public abstract class BaseInterceptor
+        {
+            public object Value
+            {
+                get => _value;
+                set
+                {
+                    _value = value;
+                    this.ValueIsChanged = true;
+                }
+            }
+            private object _value;
+            public bool ValueIsChanged { get; private set; }
+
+            public Stopwatch Stopwatch { get; } = new Stopwatch();
+            public Exception Exception { get; internal set; }
+
+            internal protected abstract void Before(CommandPacket cmd);
+            internal protected abstract void End(CommandPacket cmd);
         }
 
         #region 序列化写入，反序列化

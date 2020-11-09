@@ -21,14 +21,34 @@ namespace FreeRedis
 
         async internal Task<T> LogCallAsync<T>(CommandPacket cmd, Func<Task<T>> func)
         {
-            if (this.Notice == null) return await func();
+            var isnotice = this.Notice != null;
+            if (isnotice == false && this.Interceptors.Any() == false) return await func();
             Exception exception = null;
-            Stopwatch sw = new Stopwatch();
-            T ret = default;
-            sw.Start();
+            Stopwatch sw = default;
+            if (isnotice)
+            {
+                sw = new Stopwatch();
+                sw.Start();
+            }
+
+            T ret = default(T);
+            var isnewval = false;
+            var localInterceptors = this.Interceptors.Select(ctor =>
+            {
+                var intercepter = ctor?.Invoke();
+                intercepter.Stopwatch.Start();
+                intercepter.Before(cmd);
+                if (intercepter.ValueIsChanged)
+                {
+                    isnewval = true;
+                    ret = (T)intercepter.Value;
+                }
+                return intercepter;
+            }).ToArray();
+
             try
             {
-                ret = await func();
+                if (isnewval == false) ret = await func();
                 return ret;
             }
             catch (Exception ex)
@@ -38,8 +58,19 @@ namespace FreeRedis
             }
             finally
             {
-                sw.Stop();
-                LogCallFinally(cmd, ret, sw, exception);
+                foreach (var interceptor in localInterceptors)
+                {
+                    interceptor.Value = ret;
+                    interceptor.Exception = exception;
+                    interceptor.Stopwatch.Stop();
+                    interceptor.End(cmd);
+                }
+
+                if (isnotice)
+                {
+                    sw.Stop();
+                    LogCallFinally(cmd, ret, sw, exception);
+                }
             }
         }
     }
