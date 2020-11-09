@@ -9,7 +9,7 @@ namespace FreeRedis
 {
     partial class RedisClient
     {
-        class SingleInsideAdapter : BaseAdapter
+        internal class SingleInsideAdapter : BaseAdapter
         {
             readonly IRedisSocket _redisSocket;
 
@@ -43,7 +43,8 @@ namespace FreeRedis
                     _redisSocket.Write(cmd);
                     var rt = _redisSocket.Read(cmd._flagReadbytes);
                     if (cmd._command == "QUIT") _redisSocket.ReleaseSocket();
-                    rt.IsErrorThrow = TopOwner._isThrowRedisSimpleError;
+                    rt.IsErrorThrow = _isThrowRedisSimpleError;
+                    if (rt.IsError) this.RedisSimpleError = new RedisServerException(rt.SimpleError);
                     return parse(rt);
                 });
             }
@@ -55,6 +56,18 @@ namespace FreeRedis
             }
 #endif
 
+            internal bool _isThrowRedisSimpleError { get; set; } = true;
+            protected internal RedisServerException RedisSimpleError { get; private set; }
+            protected internal IDisposable NoneRedisSimpleError()
+            {
+                var old_isThrowRedisSimpleError = _isThrowRedisSimpleError;
+                _isThrowRedisSimpleError = false;
+                return new TempDisposable(() =>
+                {
+                    _isThrowRedisSimpleError = old_isThrowRedisSimpleError;
+                    RedisSimpleError = null;
+                });
+            }
         }
     }
 }

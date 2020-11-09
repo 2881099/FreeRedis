@@ -11,84 +11,76 @@ namespace FreeRedis
     {
 #if isasync
         #region async (copy from sync)
-        public Task<long> XAckAsync(string key, string group, params string[] id) => CallAsync("XACK".Input(key, group).Input(id).FlagKey(key), rt => rt.ThrowOrValue<long>());
+        public Task<long> XAckAsync(string key, string group, params string[] id) => CallAsync("XACK".InputKey(key, group).Input(id), rt => rt.ThrowOrValue<long>());
 
         public Task<string> XAddAsync<T>(string key, string field, T value, params object[] fieldValues) => XAddAsync(key, 0, "*", field, value, fieldValues);
         public Task<string> XAddAsync<T>(string key, long maxlen, string id, string field, T value, params object[] fieldValues) => CallAsync("XADD"
-            .Input(key)
+            .InputKey(key)
             .InputIf(maxlen > 0, "MAXLEN", maxlen)
             .InputIf(maxlen < 0, "MAXLEN", "~", Math.Abs(maxlen))
             .Input(string.IsNullOrEmpty(id) ? "*" : id)
             .InputRaw(field).InputRaw(SerializeRedisValue(value))
-            .InputKv(fieldValues, SerializeRedisValue)
-            .FlagKey(key), rt => rt.ThrowOrValue<string>());
+            .InputKv(fieldValues, false, SerializeRedisValue), rt => rt.ThrowOrValue<string>());
         public Task<string> XAddAsync<T>(string key, Dictionary<string, T> fieldValues) => XAddAsync(key, 0, "*", fieldValues);
         public Task<string> XAddAsync<T>(string key, long maxlen, string id, Dictionary<string, T> fieldValues) => CallAsync("XADD"
-            .Input(key)
+            .InputKey(key)
             .InputIf(maxlen > 0, "MAXLEN", maxlen)
             .InputIf(maxlen < 0, "MAXLEN", "~", Math.Abs(maxlen))
             .Input(string.IsNullOrEmpty(id) ? "*" : id)
-            .InputKv(fieldValues, SerializeRedisValue)
-            .FlagKey(key), rt => rt.ThrowOrValue<string>());
+            .InputKv(fieldValues, false, SerializeRedisValue), rt => rt.ThrowOrValue<string>());
 
         public Task<StreamsEntry[]> XClaimAsync(string key, string group, string consumer, long minIdleTime, params string[] id) => CallAsync("XCLAIM"
-            .Input(key, group, consumer)
-            .Input(minIdleTime, id)
-            .FlagKey(key), rt => rt.ThrowOrValueToStreamsEntryArray());
+            .InputKey(key, group, consumer)
+            .Input(minIdleTime, id), rt => rt.ThrowOrValueToStreamsEntryArray());
         public Task<StreamsEntry[]> XClaimAsync(string key, string group, string consumer, long minIdleTime, string[] id, long idle, long retryCount, bool force) => CallAsync("XCLAIM"
-            .Input(key, group, consumer)
+            .InputKey(key, group, consumer)
             .Input(minIdleTime, id, "IDLE", idle, "RETRYCOUNT", retryCount)
-            .InputIf(force, "FORCE")
-            .FlagKey(key), rt => rt.ThrowOrValueToStreamsEntryArray());
+            .InputIf(force, "FORCE"), rt => rt.ThrowOrValueToStreamsEntryArray());
 
         public Task<string[]> XClaimJustIdAsync(string key, string group, string consumer, long minIdleTime, params string[] id) => CallAsync("XCLAIM"
-            .Input(key, group, consumer)
-            .Input(minIdleTime, id, "JUSTID")
-            .FlagKey(key), rt => rt.ThrowOrValue<string[]>());
+            .InputKey(key, group, consumer)
+            .Input(minIdleTime, id, "JUSTID"), rt => rt.ThrowOrValue<string[]>());
         public Task<string[]> XClaimJustIdAsync(string key, string group, string consumer, long minIdleTime, string[] id, long idle, long retryCount, bool force) => CallAsync("XCLAIM"
-            .Input(key, group, consumer)
+            .InputKey(key, group, consumer)
             .Input(minIdleTime, id, "IDLE", idle, "RETRYCOUNT", retryCount)
             .InputIf(force, "FORCE")
-            .Input("JUSTID")
-            .FlagKey(key), rt => rt.ThrowOrValue<string[]>());
+            .Input("JUSTID"), rt => rt.ThrowOrValue<string[]>());
 
-        public Task<long> XDelAsync(string key, params string[] id) => CallAsync("XDEL".Input(key).Input(id).FlagKey(key), rt => rt.ThrowOrValue<long>());
+        public Task<long> XDelAsync(string key, params string[] id) => CallAsync("XDEL".InputKey(key, id), rt => rt.ThrowOrValue<long>());
 
         public Task XGroupCreateAsync(string key, string group, string id = "$", bool MkStream = false) => CallAsync("XGROUP"
             .SubCommand("CREATE")
-            .Input(key, group, id)
-            .InputIf(MkStream, "MKSTREAM")
-            .FlagKey(key), rt => rt.ThrowOrNothing());
-        public Task XGroupSetIdAsync(string key, string group, string id = "$") => CallAsync("XGROUP".SubCommand("SETID").Input(key, group, id).FlagKey(key), rt => rt.ThrowOrNothing());
-        public Task<bool> XGroupDestroyAsync(string key, string group) => CallAsync("XGROUP".SubCommand("DESTROY").Input(key, group).FlagKey(key), rt => rt.ThrowOrValue<bool>());
-        public Task XGroupCreateConsumerAsync(string key, string group, string consumer) => CallAsync("XGROUP".SubCommand("CREATECONSUMER").Input(key, group, consumer).FlagKey(key), rt => rt.ThrowOrNothing());
-        public Task<long> XGroupDelConsumerAsync(string key, string group, string consumer) => CallAsync("XGROUP".SubCommand("DELCONSUMER").Input(key, group, consumer).FlagKey(key), rt => rt.ThrowOrValue<long>());
+            .InputKey(key)
+            .Input(group, id)
+            .InputIf(MkStream, "MKSTREAM"), rt => rt.ThrowOrNothing());
+        public Task XGroupSetIdAsync(string key, string group, string id = "$") => CallAsync("XGROUP".SubCommand("SETID").InputKey(key).Input(group, id), rt => rt.ThrowOrNothing());
+        public Task<bool> XGroupDestroyAsync(string key, string group) => CallAsync("XGROUP".SubCommand("DESTROY").InputKey(key).InputRaw(group), rt => rt.ThrowOrValue<bool>());
+        public Task XGroupCreateConsumerAsync(string key, string group, string consumer) => CallAsync("XGROUP".SubCommand("CREATECONSUMER").InputKey(key).Input(group, consumer), rt => rt.ThrowOrNothing());
+        public Task<long> XGroupDelConsumerAsync(string key, string group, string consumer) => CallAsync("XGROUP".SubCommand("DELCONSUMER").InputKey(key).Input(group, consumer), rt => rt.ThrowOrValue<long>());
 
-        public Task<StreamsXInfoStreamResult> XInfoStreamAsync(string key) => CallAsync("XINFO".SubCommand("STREAM").Input(key).FlagKey(key), rt => rt.ThrowOrValueToXInfoStream());
+        public Task<StreamsXInfoStreamResult> XInfoStreamAsync(string key) => CallAsync("XINFO".SubCommand("STREAM").InputKey(key), rt => rt.ThrowOrValueToXInfoStream());
         public Task<StreamsXInfoStreamFullResult> XInfoStreamFullAsync(string key, long count = 10) => CallAsync("XINFO"
-            .SubCommand("STREAM").Input(key).Input("FULL")
-            .InputIf(count != 10, "COUNT", count)
-            .FlagKey(key), rt => rt.ThrowOrValueToXInfoStreamFullResult());
-        public Task<StreamsXInfoGroupsResult[]> XInfoGroupsAsync(string key) => CallAsync("XINFO".SubCommand("GROUPS").Input(key).FlagKey(key), rt => rt.ThrowOrValue((a, _) => a.Select(x => (x as object[]).MapToClass<StreamsXInfoGroupsResult>(rt.Encoding)).ToArray()));
-        public Task<StreamsXInfoConsumersResult[]> XInfoConsumersAsync(string key, string group) => CallAsync("XINFO".SubCommand("CONSUMERS").Input(key, group).FlagKey(key), rt => rt.ThrowOrValue((a, _) => a.Select(x => (x as object[]).MapToClass<StreamsXInfoConsumersResult>(rt.Encoding)).ToArray()));
+            .SubCommand("STREAM")
+            .InputKey(key)
+            .Input("FULL")
+            .InputIf(count != 10, "COUNT", count), rt => rt.ThrowOrValueToXInfoStreamFullResult());
+        public Task<StreamsXInfoGroupsResult[]> XInfoGroupsAsync(string key) => CallAsync("XINFO".SubCommand("GROUPS").InputKey(key), rt => rt.ThrowOrValue((a, _) => a.Select(x => (x as object[]).MapToClass<StreamsXInfoGroupsResult>(rt.Encoding)).ToArray()));
+        public Task<StreamsXInfoConsumersResult[]> XInfoConsumersAsync(string key, string group) => CallAsync("XINFO".SubCommand("CONSUMERS").InputKey(key).InputRaw(group), rt => rt.ThrowOrValue((a, _) => a.Select(x => (x as object[]).MapToClass<StreamsXInfoConsumersResult>(rt.Encoding)).ToArray()));
 
-        public Task<long> XLenAsync(string key) => CallAsync("XLEN".Input(key).FlagKey(key), rt => rt.ThrowOrValue<long>());
+        public Task<long> XLenAsync(string key) => CallAsync("XLEN".InputKey(key), rt => rt.ThrowOrValue<long>());
 
-        public Task<StreamsXPendingResult> XPendingAsync(string key, string group) => CallAsync("XPENDING".Input(key, group).FlagKey(key), rt => rt.ThrowOrValueToXPending());
+        public Task<StreamsXPendingResult> XPendingAsync(string key, string group) => CallAsync("XPENDING".InputKey(key, group), rt => rt.ThrowOrValueToXPending());
         public Task<StreamsXPendingConsumerResult[]> XPendingAsync(string key, string group, string start, string end, long count, string consumer = null) => CallAsync("XPENDING"
-            .Input(key, group)
+            .InputKey(key, group)
             .Input(start, end, count)
-            .InputIf(!string.IsNullOrWhiteSpace(consumer), consumer)
-            .FlagKey(key), rt => rt.ThrowOrValueToXPendingConsumer());
+            .InputIf(!string.IsNullOrWhiteSpace(consumer), consumer), rt => rt.ThrowOrValueToXPendingConsumer());
 
         public Task<StreamsEntry[]> XRangeAsync(string key, string start, string end, long count = -1) => CallAsync("XRANGE"
-            .Input(key, string.IsNullOrEmpty(start) ? "-" : start, string.IsNullOrEmpty(end) ? "+" : end)
-            .InputIf(count > 0, "COUNT", count)
-            .FlagKey(key), rt => rt.ThrowOrValueToStreamsEntryArray());
+            .InputKey(key, string.IsNullOrEmpty(start) ? "-" : start, string.IsNullOrEmpty(end) ? "+" : end)
+            .InputIf(count > 0, "COUNT", count), rt => rt.ThrowOrValueToStreamsEntryArray());
         public Task<StreamsEntry[]> XRevRangeAsync(string key, string end, string start, long count = -1) => CallAsync("XREVRANGE"
-            .Input(key, string.IsNullOrEmpty(end) ? "+" : end, string.IsNullOrEmpty(start) ? "-" : start)
-            .InputIf(count > 0, "COUNT", count)
-            .FlagKey(key), rt => rt.ThrowOrValueToStreamsEntryArray());
+            .InputKey(key, string.IsNullOrEmpty(end) ? "+" : end, string.IsNullOrEmpty(start) ? "-" : start)
+            .InputIf(count > 0, "COUNT", count), rt => rt.ThrowOrValueToStreamsEntryArray());
 
         async public Task<StreamsEntry> XReadAsync(long block, string key, string id) => (await XReadAsync(1, block, key, id))?.FirstOrDefault()?.entries?.FirstOrDefault();
         public Task<StreamsEntryResult[]> XReadAsync(long count, long block, string key, string id, params string[] keyIds)
@@ -98,11 +90,11 @@ namespace FreeRedis
             return CallAsync("XREAD".SubCommand(null)
                 .InputIf(count != 0, "COUNT", count)
                 .InputIf(block > 0, "BLOCK", block)
-                .Input("STREAMS", key)
-                .InputIf(kikeys.Any(), kikeys)
+                .InputRaw("STREAMS")
+                .InputKey(key)
+                .InputKeyIf(kikeys.Any(), kikeys)
                 .Input(id)
-                .InputIf(kikeys.Any(), kis.Values.ToArray())
-                .FlagKey(key).FlagKey(kikeys), rt => rt.ThrowOrValueToXRead());
+                .InputIf(kikeys.Any(), kis.Values.ToArray()), rt => rt.ThrowOrValueToXRead());
         }
         public Task<StreamsEntryResult[]> XReadAsync(long count, long block, Dictionary<string, string> keyIds)
         {
@@ -111,9 +103,8 @@ namespace FreeRedis
                 .InputIf(count != 0, "COUNT", count)
                 .InputIf(block > 0, "BLOCK", block)
                 .InputRaw("STREAMS")
-                .Input(kikeys)
-                .Input(keyIds.Values.ToArray())
-                .FlagKey(kikeys), rt => rt.ThrowOrValueToXRead());
+                .InputKey(kikeys)
+                .Input(keyIds.Values.ToArray()), rt => rt.ThrowOrValueToXRead());
         }
 
         async public Task<StreamsEntry> XReadGroupAsync(string group, string consumer, long block, string key, string id) => (await XReadGroupAsync(group, consumer, 1, block, false, key, id))?.FirstOrDefault()?.entries?.First();
@@ -126,11 +117,11 @@ namespace FreeRedis
                 .InputIf(count != 0, "COUNT", count)
                 .InputIf(block > 0, "BLOCK", block)
                 .InputIf(noack, "NOACK")
-                .Input("STREAMS", key)
-                .InputIf(kikeys.Any(), kikeys)
+                .InputRaw("STREAMS")
+                .InputKey(key)
+                .InputKeyIf(kikeys.Any(), kikeys)
                 .Input(id)
-                .InputIf(kikeys.Any(), kis.Values.ToArray())
-                .FlagKey(key).FlagKey(kikeys), rt => rt.ThrowOrValueToXRead());
+                .InputIf(kikeys.Any(), kis.Values.ToArray()), rt => rt.ThrowOrValueToXRead());
         }
         public Task<StreamsEntryResult[]> XReadGroupAsync(string group, string consumer, long count, long block, bool noack, Dictionary<string, string> keyIds)
         {
@@ -141,97 +132,87 @@ namespace FreeRedis
                 .InputIf(block > 0, "BLOCK", block)
                 .InputIf(noack, "NOACK")
                 .InputRaw("STREAMS")
-                .Input(kikeys)
-                .Input(keyIds.Values.ToArray())
-                .FlagKey(kikeys), rt => rt.ThrowOrValueToXRead());
+                .InputKey(kikeys)
+                .Input(keyIds.Values.ToArray()), rt => rt.ThrowOrValueToXRead());
         }
 
         public Task<long> XTrimAsync(string key, long count) => CallAsync("XTRIM"
-            .Input(key)
+            .InputKey(key)
             .InputIf(count > 0, "MAXLEN", count)
-            .InputIf(count < 0, "MAXLEN", "~", Math.Abs(count))
-            .FlagKey(key), rt => rt.ThrowOrValue<long>());
+            .InputIf(count < 0, "MAXLEN", "~", Math.Abs(count)), rt => rt.ThrowOrValue<long>());
         #endregion
 #endif
 
-        public long XAck(string key, string group, params string[] id) => Call("XACK".Input(key, group).Input(id).FlagKey(key), rt => rt.ThrowOrValue<long>());
+        public long XAck(string key, string group, params string[] id) => Call("XACK".InputKey(key, group).Input(id), rt => rt.ThrowOrValue<long>());
 
         public string XAdd<T>(string key, string field, T value, params object[] fieldValues) => XAdd(key, 0, "*", field, value, fieldValues);
         public string XAdd<T>(string key, long maxlen, string id, string field, T value, params object[] fieldValues) => Call("XADD"
-            .Input(key)
+            .InputKey(key)
             .InputIf(maxlen > 0, "MAXLEN", maxlen)
             .InputIf(maxlen < 0, "MAXLEN", "~", Math.Abs(maxlen))
             .Input(string.IsNullOrEmpty(id) ? "*" : id)
             .InputRaw(field).InputRaw(SerializeRedisValue(value))
-            .InputKv(fieldValues, SerializeRedisValue)
-            .FlagKey(key), rt => rt.ThrowOrValue<string>());
+            .InputKv(fieldValues, false, SerializeRedisValue), rt => rt.ThrowOrValue<string>());
         public string XAdd<T>(string key, Dictionary<string, T> fieldValues) => XAdd(key, 0, "*", fieldValues);
         public string XAdd<T>(string key, long maxlen, string id, Dictionary<string, T> fieldValues) => Call("XADD"
-            .Input(key)
+            .InputKey(key)
             .InputIf(maxlen > 0, "MAXLEN", maxlen)
             .InputIf(maxlen < 0, "MAXLEN", "~", Math.Abs(maxlen))
             .Input(string.IsNullOrEmpty(id) ? "*" : id)
-            .InputKv(fieldValues, SerializeRedisValue)
-            .FlagKey(key), rt => rt.ThrowOrValue<string>());
+            .InputKv(fieldValues, false, SerializeRedisValue), rt => rt.ThrowOrValue<string>());
 
         public StreamsEntry[] XClaim(string key, string group, string consumer, long minIdleTime, params string[] id) => Call("XCLAIM"
-            .Input(key, group, consumer)
-            .Input(minIdleTime, id)
-            .FlagKey(key), rt => rt.ThrowOrValueToStreamsEntryArray());
+            .InputKey(key, group, consumer)
+            .Input(minIdleTime, id), rt => rt.ThrowOrValueToStreamsEntryArray());
         public StreamsEntry[] XClaim(string key, string group, string consumer, long minIdleTime, string[] id, long idle, long retryCount, bool force) => Call("XCLAIM"
-            .Input(key, group, consumer)
+            .InputKey(key, group, consumer)
             .Input(minIdleTime, id, "IDLE", idle, "RETRYCOUNT", retryCount)
-            .InputIf(force, "FORCE")
-            .FlagKey(key), rt => rt.ThrowOrValueToStreamsEntryArray());
+            .InputIf(force, "FORCE"), rt => rt.ThrowOrValueToStreamsEntryArray());
 
         public string[] XClaimJustId(string key, string group, string consumer, long minIdleTime, params string[] id) => Call("XCLAIM"
-            .Input(key, group, consumer)
-            .Input(minIdleTime, id, "JUSTID")
-            .FlagKey(key), rt => rt.ThrowOrValue<string[]>());
+            .InputKey(key, group, consumer)
+            .Input(minIdleTime, id, "JUSTID"), rt => rt.ThrowOrValue<string[]>());
         public string[] XClaimJustId(string key, string group, string consumer, long minIdleTime, string[] id, long idle, long retryCount, bool force) => Call("XCLAIM"
-            .Input(key, group, consumer)
+            .InputKey(key, group, consumer)
             .Input(minIdleTime, id, "IDLE", idle, "RETRYCOUNT", retryCount)
             .InputIf(force, "FORCE")
-            .Input("JUSTID")
-            .FlagKey(key), rt => rt.ThrowOrValue<string[]>());
+            .Input("JUSTID"), rt => rt.ThrowOrValue<string[]>());
 
-        public long XDel(string key, params string[] id) => Call("XDEL".Input(key).Input(id).FlagKey(key), rt => rt.ThrowOrValue<long>());
+        public long XDel(string key, params string[] id) => Call("XDEL".InputKey(key, id), rt => rt.ThrowOrValue<long>());
 
         public void XGroupCreate(string key, string group, string id = "$", bool MkStream = false) => Call("XGROUP"
             .SubCommand("CREATE")
-            .Input(key, group, id)
-            .InputIf(MkStream, "MKSTREAM")
-            .FlagKey(key), rt => rt.ThrowOrNothing());
-        public void XGroupSetId(string key, string group, string id = "$") => Call("XGROUP".SubCommand("SETID").Input(key, group, id).FlagKey(key), rt => rt.ThrowOrNothing());
-        public bool XGroupDestroy(string key, string group) => Call("XGROUP".SubCommand("DESTROY").Input(key, group).FlagKey(key), rt => rt.ThrowOrValue<bool>());
-        public void XGroupCreateConsumer(string key, string group, string consumer) => Call("XGROUP".SubCommand("CREATECONSUMER").Input(key, group, consumer).FlagKey(key), rt => rt.ThrowOrNothing());
-        public long XGroupDelConsumer(string key, string group, string consumer) => Call("XGROUP".SubCommand("DELCONSUMER").Input(key, group, consumer).FlagKey(key), rt => rt.ThrowOrValue<long>());
+            .InputKey(key)
+            .Input(group, id)
+            .InputIf(MkStream, "MKSTREAM"), rt => rt.ThrowOrNothing());
+        public void XGroupSetId(string key, string group, string id = "$") => Call("XGROUP".SubCommand("SETID").InputKey(key).Input(group, id), rt => rt.ThrowOrNothing());
+        public bool XGroupDestroy(string key, string group) => Call("XGROUP".SubCommand("DESTROY").InputKey(key).InputRaw(group), rt => rt.ThrowOrValue<bool>());
+        public void XGroupCreateConsumer(string key, string group, string consumer) => Call("XGROUP".SubCommand("CREATECONSUMER").InputKey(key).Input(group, consumer), rt => rt.ThrowOrNothing());
+        public long XGroupDelConsumer(string key, string group, string consumer) => Call("XGROUP".SubCommand("DELCONSUMER").InputKey(key).Input(group, consumer), rt => rt.ThrowOrValue<long>());
 
-        public StreamsXInfoStreamResult XInfoStream(string key) => Call("XINFO".SubCommand("STREAM").Input(key).FlagKey(key), rt => rt.ThrowOrValueToXInfoStream());
+        public StreamsXInfoStreamResult XInfoStream(string key) => Call("XINFO".SubCommand("STREAM").InputKey(key), rt => rt.ThrowOrValueToXInfoStream());
         public StreamsXInfoStreamFullResult XInfoStreamFull(string key, long count = 10) => Call("XINFO"
-            .SubCommand("STREAM").Input(key).Input("FULL")
-            .InputIf(count != 10, "COUNT", count)
-            .FlagKey(key), rt => rt.ThrowOrValueToXInfoStreamFullResult());
-        public StreamsXInfoGroupsResult[] XInfoGroups(string key) => Call("XINFO".SubCommand("GROUPS").Input(key).FlagKey(key), rt => rt.ThrowOrValue((a, _) => a.Select(x => (x as object[]).MapToClass<StreamsXInfoGroupsResult>(rt.Encoding)).ToArray()));
-        public StreamsXInfoConsumersResult[] XInfoConsumers(string key, string group) => Call("XINFO".SubCommand("CONSUMERS").Input(key, group).FlagKey(key), rt => rt.ThrowOrValue((a, _) => a.Select(x => (x as object[]).MapToClass<StreamsXInfoConsumersResult>(rt.Encoding)).ToArray()));
+            .SubCommand("STREAM")
+            .InputKey(key)
+            .Input("FULL")
+            .InputIf(count != 10, "COUNT", count), rt => rt.ThrowOrValueToXInfoStreamFullResult());
+        public StreamsXInfoGroupsResult[] XInfoGroups(string key) => Call("XINFO".SubCommand("GROUPS").InputKey(key), rt => rt.ThrowOrValue((a, _) => a.Select(x => (x as object[]).MapToClass<StreamsXInfoGroupsResult>(rt.Encoding)).ToArray()));
+        public StreamsXInfoConsumersResult[] XInfoConsumers(string key, string group) => Call("XINFO".SubCommand("CONSUMERS").InputKey(key).InputRaw(group), rt => rt.ThrowOrValue((a, _) => a.Select(x => (x as object[]).MapToClass<StreamsXInfoConsumersResult>(rt.Encoding)).ToArray()));
 
-        public long XLen(string key) => Call("XLEN".Input(key).FlagKey(key), rt => rt.ThrowOrValue<long>());
+        public long XLen(string key) => Call("XLEN".InputKey(key), rt => rt.ThrowOrValue<long>());
 
-        public StreamsXPendingResult XPending(string key, string group) => Call("XPENDING".Input(key, group).FlagKey(key), rt => rt.ThrowOrValueToXPending());
+        public StreamsXPendingResult XPending(string key, string group) => Call("XPENDING".InputKey(key, group), rt => rt.ThrowOrValueToXPending());
         public StreamsXPendingConsumerResult[] XPending(string key, string group, string start, string end, long count, string consumer = null) => Call("XPENDING"
-            .Input(key, group)
+            .InputKey(key, group)
             .Input(start, end, count)
-            .InputIf(!string.IsNullOrWhiteSpace(consumer), consumer)
-            .FlagKey(key), rt => rt.ThrowOrValueToXPendingConsumer());
+            .InputIf(!string.IsNullOrWhiteSpace(consumer), consumer), rt => rt.ThrowOrValueToXPendingConsumer());
 
         public StreamsEntry[] XRange(string key, string start, string end, long count = -1) => Call("XRANGE"
-            .Input(key, string.IsNullOrEmpty(start) ? "-" : start, string.IsNullOrEmpty(end) ? "+" : end)
-            .InputIf(count > 0, "COUNT", count)
-            .FlagKey(key), rt => rt.ThrowOrValueToStreamsEntryArray());
+            .InputKey(key, string.IsNullOrEmpty(start) ? "-" : start, string.IsNullOrEmpty(end) ? "+" : end)
+            .InputIf(count > 0, "COUNT", count), rt => rt.ThrowOrValueToStreamsEntryArray());
         public StreamsEntry[] XRevRange(string key, string end, string start, long count = -1) => Call("XREVRANGE"
-            .Input(key, string.IsNullOrEmpty(end) ? "+" : end, string.IsNullOrEmpty(start) ? "-" : start)
-            .InputIf(count > 0, "COUNT", count)
-            .FlagKey(key), rt => rt.ThrowOrValueToStreamsEntryArray());
+            .InputKey(key, string.IsNullOrEmpty(end) ? "+" : end, string.IsNullOrEmpty(start) ? "-" : start)
+            .InputIf(count > 0, "COUNT", count), rt => rt.ThrowOrValueToStreamsEntryArray());
 
         public StreamsEntry XRead(long block, string key, string id) => XRead(1, block, key, id)?.FirstOrDefault()?.entries?.FirstOrDefault();
         public StreamsEntryResult[] XRead(long count, long block, string key, string id, params string[] keyIds)
@@ -241,11 +222,11 @@ namespace FreeRedis
             return Call("XREAD".SubCommand(null)
                 .InputIf(count != 0, "COUNT", count)
                 .InputIf(block > 0, "BLOCK", block)
-                .Input("STREAMS", key)
-                .InputIf(kikeys.Any(), kikeys)
+                .InputRaw("STREAMS")
+                .InputKey(key)
+                .InputKeyIf(kikeys.Any(), kikeys)
                 .Input(id)
-                .InputIf(kikeys.Any(), kis.Values.ToArray())
-                .FlagKey(key).FlagKey(kikeys), rt => rt.ThrowOrValueToXRead());
+                .InputIf(kikeys.Any(), kis.Values.ToArray()), rt => rt.ThrowOrValueToXRead());
         }
         public StreamsEntryResult[] XRead(long count, long block, Dictionary<string, string> keyIds)
         {
@@ -254,9 +235,8 @@ namespace FreeRedis
                 .InputIf(count != 0, "COUNT", count)
                 .InputIf(block > 0, "BLOCK", block)
                 .InputRaw("STREAMS")
-                .Input(kikeys)
-                .Input(keyIds.Values.ToArray())
-                .FlagKey(kikeys), rt => rt.ThrowOrValueToXRead());
+                .InputKey(kikeys)
+                .Input(keyIds.Values.ToArray()), rt => rt.ThrowOrValueToXRead());
         }
 
         public StreamsEntry XReadGroup(string group, string consumer, long block, string key, string id) => XReadGroup(group, consumer, 1, block, false, key, id)?.FirstOrDefault()?.entries?.First();
@@ -268,11 +248,11 @@ namespace FreeRedis
                 .InputIf(count != 0, "COUNT", count)
                 .InputIf(block > 0, "BLOCK", block)
                 .InputIf(noack, "NOACK")
-                .Input("STREAMS", key)
-                .InputIf(kikeys.Any(), kikeys)
+                .InputRaw("STREAMS")
+                .InputKey(key)
+                .InputKeyIf(kikeys.Any(), kikeys)
                 .Input(id)
-                .InputIf(kikeys.Any(), kis.Values.ToArray())
-                .FlagKey(key).FlagKey(kikeys), rt => rt.ThrowOrValueToXRead());
+                .InputIf(kikeys.Any(), kis.Values.ToArray()), rt => rt.ThrowOrValueToXRead());
         }
         public StreamsEntryResult[] XReadGroup(string group, string consumer, long count, long block, bool noack, Dictionary<string, string> keyIds)
         {
@@ -283,16 +263,14 @@ namespace FreeRedis
                 .InputIf(block > 0, "BLOCK", block)
                 .InputIf(noack, "NOACK")
                 .InputRaw("STREAMS")
-                .Input(kikeys)
-                .Input(keyIds.Values.ToArray())
-                .FlagKey(kikeys), rt => rt.ThrowOrValueToXRead());
+                .InputKey(kikeys)
+                .Input(keyIds.Values.ToArray()), rt => rt.ThrowOrValueToXRead());
         }
 
         public long XTrim(string key, long count) => Call("XTRIM"
-            .Input(key)
+            .InputKey(key)
             .InputIf(count > 0, "MAXLEN", count)
-            .InputIf(count < 0, "MAXLEN", "~", Math.Abs(count))
-            .FlagKey(key), rt => rt.ThrowOrValue<long>());
+            .InputIf(count < 0, "MAXLEN", "~", Math.Abs(count)), rt => rt.ThrowOrValue<long>());
     }
 
     #region Model

@@ -180,7 +180,7 @@ namespace FreeRedis
             public void Watch(params string[] keys)
             {
                 if (_redisSocket == null) return;
-                SelfCall("WATCH".Input(keys).FlagKey(keys));
+                SelfCall("WATCH".InputKey(keys));
             }
         }
     }

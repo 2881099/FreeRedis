@@ -229,7 +229,7 @@ namespace FreeRedis
                 _topOwner.LogCall<object>(cmd, () =>
                 {
                     if (IsSubscribed == false)
-                        throw new Exception($"RedisClient: Subscription not opened, unable to execute");
+                        throw new RedisClientException($"Subscription not opened, unable to execute");
                     lock (_lock)
                         _redisSocket.Write(cmd);
                     return null;

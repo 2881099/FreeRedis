@@ -87,7 +87,6 @@ namespace FreeRedis
                         }
                         throw ioex;
                     }
-                    rt.IsErrorThrow = TopOwner._isThrowRedisSimpleError;
                     return parse(rt);
                 });
             }
@@ -99,7 +98,6 @@ namespace FreeRedis
                 {
                     var asyncRds = _asyncManager.GetAsyncRedisSocket(cmd);
                     var rt = await asyncRds.WriteAsync(cmd);
-                    rt.IsErrorThrow = TopOwner._isThrowRedisSimpleError;
                     return parse(rt);
                 });
             }
@@ -113,7 +111,7 @@ namespace FreeRedis
                     if (cmdset != null)
                     {
                         if (!_is_single && (cmdset.Status & CommandSets.LocalStatus.check_single) == CommandSets.LocalStatus.check_single)
-                            throw new RedisServerException($"RedisClient: Method cannot be used in {UseType} mode. You can set \"max pool size=1\", but it is not singleton mode.");
+                            throw new RedisClientException($"Method cannot be used in {UseType} mode. You can set \"max pool size=1\", but it is not singleton mode.");
 
                         if (_rw_splitting &&
                             ((cmdset.Tag & CommandSets.ServerTag.read) == CommandSets.ServerTag.read ||

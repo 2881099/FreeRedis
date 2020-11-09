@@ -49,7 +49,7 @@ namespace FreeRedis
         public void ConfigSet<T>(string parameter, T value) => Call("CONFIG".SubCommand("SET").InputRaw(parameter).InputRaw(SerializeRedisValue(value)), rt => rt.ThrowOrValue());
 
         public long DbSize() => Call("DBSIZE", rt => rt.ThrowOrValue<long>());
-        public string DebugObject(string key) => Call("DEBUG".SubCommand("OBJECT").InputRaw(key).FlagKey(key), rt => rt.ThrowOrValue<string>());
+        public string DebugObject(string key) => Call("DEBUG".SubCommand("OBJECT").InputKey(key), rt => rt.ThrowOrValue<string>());
         public void FlushAll(bool isasync = false) => Call("FLUSHALL".SubCommand(null).InputIf(isasync, "ASYNC"), rt => rt.ThrowOrValue());
         public void FlushDb(bool isasync = false) => Call("FLUSHDB".SubCommand(null).InputIf(isasync, "ASYNC"), rt => rt.ThrowOrValue());
         public string Info(string section = null) => Call("INFO".Input(section), rt => rt.ThrowOrValue<string>());
@@ -68,9 +68,8 @@ namespace FreeRedis
         public Dictionary<string, object> MemoryStats() => Call("MEMORY".SubCommand("STATS"), rt => rt.ThrowOrValue((a, _) => a.MapToHash<object>(rt.Encoding)));
         public long MemoryUsage(string key, long count = 0) => Call("MEMORY"
             .SubCommand("USAGE")
-            .InputRaw(key)
-            .InputIf(count > 0, "SAMPLES", count)
-            .FlagKey(key), rt => rt.ThrowOrValue<long>());
+            .InputKey(key)
+            .InputIf(count > 0, "SAMPLES", count), rt => rt.ThrowOrValue<long>());
 
         //public string[][] ModuleList() => Call("MODULE".SubCommand("LIST"), rt => rt.ThrowOrValue<string[][]>());
         //public string ModuleLoad(string path, params string[] args) => Call("MODULE".SubCommand("LOAD").InputRaw(path).InputIf(args?.Any() == true, args), rt => rt.ThrowOrValue<string>());

@@ -714,7 +714,7 @@ namespace FreeRedis
         #endregion
 
         #region 类型转换
-        internal static string ToInvariantCultureToString(this object obj) => string.Format(CultureInfo.InvariantCulture, @"{0}", obj);
+        internal static string ToInvariantCultureToString(this object obj) => obj is string objstr ?  objstr : string.Format(CultureInfo.InvariantCulture, @"{0}", obj);
         public static T MapToClass<T>(this object[] list, Encoding encoding)
         {
             if (list == null) return default(T);
@@ -923,8 +923,8 @@ namespace FreeRedis
         protected internal bool IsEnd { get; protected set; }
         public RedisMessageType MessageType { get; protected set; }
         public bool IsError => this.MessageType == RedisMessageType.SimpleError || this.MessageType == RedisMessageType.BlobError;
-        public bool IsErrorThrow { get; internal set; } = true;
-        public string SimpleError { get; protected set; }
+        internal bool IsErrorThrow { get; set; } = true;
+        internal string SimpleError { get; set; }
         public Encoding Encoding { get; internal set; }
 
         internal RedisResult(object value, bool isend, RedisMessageType msgtype)

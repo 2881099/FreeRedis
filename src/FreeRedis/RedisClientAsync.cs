@@ -21,6 +21,7 @@ namespace FreeRedis
 
         async internal Task<T> LogCallAsync<T>(CommandPacket cmd, Func<Task<T>> func)
         {
+            cmd.Prefix(Prefix);
             var isnotice = this.Notice != null;
             var isaop = this.Interceptors.Any();
             if (isnotice == false && isaop == false) return await func();
