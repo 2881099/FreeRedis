@@ -22,7 +22,8 @@ namespace FreeRedis
         async internal Task<T> LogCallAsync<T>(CommandPacket cmd, Func<Task<T>> func)
         {
             var isnotice = this.Notice != null;
-            if (isnotice == false && this.Interceptors.Any() == false) return await func();
+            var isaop = this.Interceptors.Any();
+            if (isnotice == false && isaop == false) return await func();
             Exception exception = null;
             Stopwatch sw = default;
             if (isnotice)
@@ -32,23 +33,30 @@ namespace FreeRedis
             }
 
             T ret = default(T);
-            var isnewval = false;
-            var localInterceptors = this.Interceptors.Select(ctor =>
+            var isaopval = false;
+            IInterceptor[] aops = null;
+            Stopwatch[] aopsws = null;
+            if (isaop)
             {
-                var intercepter = ctor?.Invoke();
-                intercepter.Stopwatch.Start();
-                intercepter.Before(cmd);
-                if (intercepter.ValueIsChanged)
+                aops = new IInterceptor[this.Interceptors.Count];
+                aopsws = new Stopwatch[aops.Length];
+                for (var idx = 0; idx < aops.Length; idx++)
                 {
-                    isnewval = true;
-                    ret = (T)intercepter.Value;
+                    aopsws[idx] = new Stopwatch();
+                    aopsws[idx].Start();
+                    aops[idx] = this.Interceptors[idx]?.Invoke();
+                    var args = new InterceptorBeforeEventArgs(this, cmd);
+                    aops[idx].Before(args);
+                    if (args.ValueIsChanged && args.Value is T argsValue)
+                    {
+                        isaopval = true;
+                        ret = argsValue;
+                    }
                 }
-                return intercepter;
-            }).ToArray();
-
+            }
             try
             {
-                if (isnewval == false) ret = await func();
+                if (isaopval == false) ret = await func();
                 return ret;
             }
             catch (Exception ex)
@@ -58,12 +66,14 @@ namespace FreeRedis
             }
             finally
             {
-                foreach (var interceptor in localInterceptors)
+                if (isaop)
                 {
-                    interceptor.Value = ret;
-                    interceptor.Exception = exception;
-                    interceptor.Stopwatch.Stop();
-                    interceptor.End(cmd);
+                    for (var idx = 0; idx < aops.Length; idx++)
+                    {
+                        aopsws[idx].Stop();
+                        var args = new InterceptorAfterEventArgs(this, cmd, ret, exception, aopsws[idx].ElapsedMilliseconds);
+                        aops[idx].After(args);
+                    }
                 }
 
                 if (isnotice)

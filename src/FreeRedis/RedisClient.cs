@@ -18,12 +18,11 @@ namespace FreeRedis
     {
         internal BaseAdapter Adapter { get; }
         public event EventHandler<NoticeEventArgs> Notice;
-        public List<Func<BaseInterceptor>> Interceptors;
+        public List<Func<IInterceptor>> Interceptors { get; } = new List<Func<IInterceptor>>();
 
         protected RedisClient(BaseAdapter adapter)
         {
             Adapter = adapter;
-            Interceptors = new List<Func<BaseInterceptor>>();
         }
 
         /// <summary>
@@ -91,7 +90,8 @@ namespace FreeRedis
         internal T LogCall<T>(CommandPacket cmd, Func<T> func)
         {
             var isnotice = this.Notice != null;
-            if (isnotice == false && this.Interceptors.Any() == false) return func();
+            var isaop = this.Interceptors.Any();
+            if (isnotice == false && isaop == false) return func();
             Exception exception = null;
             Stopwatch sw = default;
             if (isnotice)
@@ -101,23 +101,29 @@ namespace FreeRedis
             }
 
             T ret = default(T);
-            var isnewval = false;
-            var localInterceptors = this.Interceptors.Select(ctor =>
-            {
-                var intercepter = ctor?.Invoke();
-                intercepter.Stopwatch.Start();
-                intercepter.Before(cmd);
-                if (intercepter.ValueIsChanged)
+            var isaopval = false;
+            IInterceptor[] aops = null;
+            Stopwatch[] aopsws = null;
+            if (isaop) {
+                aops = new IInterceptor[this.Interceptors.Count];
+                aopsws = new Stopwatch[aops.Length];
+                for (var idx = 0; idx < aops.Length; idx++)
                 {
-                    isnewval = true;
-                    ret = (T)intercepter.Value;
+                    aopsws[idx] = new Stopwatch();
+                    aopsws[idx].Start();
+                    aops[idx] = this.Interceptors[idx]?.Invoke();
+                    var args = new InterceptorBeforeEventArgs(this, cmd);
+                    aops[idx].Before(args);
+                    if (args.ValueIsChanged && args.Value is T argsValue)
+                    {
+                        isaopval = true;
+                        ret = argsValue;
+                    }
                 }
-                return intercepter;
-            }).ToArray();
-
+            }
             try
             {
-                if (isnewval == false) ret = func();
+                if (isaopval == false) ret = func();
                 return ret;
             }
             catch (Exception ex)
@@ -127,12 +133,13 @@ namespace FreeRedis
             }
             finally
             {
-                foreach (var interceptor in localInterceptors)
-                {
-                    interceptor.Value = ret;
-                    interceptor.Exception = exception;
-                    interceptor.Stopwatch.Stop();
-                    interceptor.End(cmd);
+                if (isaop) {
+                    for (var idx = 0; idx < aops.Length; idx++)
+                    {
+                        aopsws[idx].Stop();
+                        var args = new InterceptorAfterEventArgs(this, cmd, ret, exception, aopsws[idx].ElapsedMilliseconds);
+                        aops[idx].After(args);
+                    }
                 }
 
                 if (isnotice)
@@ -167,50 +174,10 @@ namespace FreeRedis
                 $"{(cmd.WriteHost ?? "Not connected")} ({sw.ElapsedMilliseconds}ms) > {cmd}\r\n{log}",
                 result));
         }
-        public class NoticeEventArgs : EventArgs
-        {
-            public NoticeType NoticeType { get; }
-            public Exception Exception { get; }
-            public string Log { get; }
-            public object Tag { get; }
-
-            public NoticeEventArgs(NoticeType noticeType, Exception exception, string log, object tag)
-            {
-                this.NoticeType = noticeType;
-                this.Exception = exception;
-                this.Log = log;
-                this.Tag = tag;
-            }
-        }
-        public enum NoticeType
-        {
-            Call, Info
-        }
         internal bool OnNotice(NoticeEventArgs e)
         {
             this.Notice?.Invoke(this, e);
             return this.Notice != null;
-        }
-
-        public abstract class BaseInterceptor
-        {
-            public object Value
-            {
-                get => _value;
-                set
-                {
-                    _value = value;
-                    this.ValueIsChanged = true;
-                }
-            }
-            private object _value;
-            public bool ValueIsChanged { get; private set; }
-
-            public Stopwatch Stopwatch { get; } = new Stopwatch();
-            public Exception Exception { get; internal set; }
-
-            internal protected abstract void Before(CommandPacket cmd);
-            internal protected abstract void End(CommandPacket cmd);
         }
 
         #region 序列化写入，反序列化
@@ -247,7 +214,7 @@ namespace FreeRedis
             if (type == typeof(byte[])) return (T)Convert.ChangeType(value, type);
             if (type == typeof(string)) return (T)Convert.ChangeType(encoding.GetString(value), type);
             if (type == typeof(bool[])) return (T)Convert.ChangeType(value.Select(a => a == 49).ToArray(), type);
-            
+
             var valueStr = encoding.GetString(value);
             if (string.IsNullOrEmpty(valueStr)) return default;
 
@@ -311,5 +278,72 @@ namespace FreeRedis
         public readonly T[] items;
         public readonly long length;
         public ScanResult(long cursor, T[] items) { this.cursor = cursor; this.items = items; this.length = items.LongLength; }
+    }
+
+
+    public class NoticeEventArgs : EventArgs
+    {
+        public NoticeType NoticeType { get; }
+        public Exception Exception { get; }
+        public string Log { get; }
+        public object Tag { get; }
+
+        public NoticeEventArgs(NoticeType noticeType, Exception exception, string log, object tag)
+        {
+            this.NoticeType = noticeType;
+            this.Exception = exception;
+            this.Log = log;
+            this.Tag = tag;
+        }
+    }
+    public enum NoticeType
+    {
+        Call, Info
+    }
+    public interface IInterceptor
+    {
+        void Before(InterceptorBeforeEventArgs args);
+        void After(InterceptorAfterEventArgs args);
+    }
+    public class InterceptorBeforeEventArgs
+    {
+        public RedisClient Client { get; }
+        public CommandPacket Command { get; }
+
+        public InterceptorBeforeEventArgs(RedisClient cli, CommandPacket cmd)
+        {
+            this.Client = cli;
+            this.Command = cmd;
+        }
+
+        public object Value
+        {
+            get => _value;
+            set
+            {
+                _value = value;
+                this.ValueIsChanged = true;
+            }
+        }
+        private object _value;
+        public bool ValueIsChanged { get; private set; }
+    }
+    public class InterceptorAfterEventArgs
+    {
+        public RedisClient Client { get; }
+        public CommandPacket Command { get; }
+
+        public object Value { get; }
+        public Exception Exception { get; }
+        public long ElapsedMilliseconds { get; }
+
+        public InterceptorAfterEventArgs(RedisClient cli, CommandPacket cmd, object value, Exception exception, long elapsedMilliseconds)
+        {
+            this.Client = cli;
+            this.Command = cmd;
+            this.Value = value;
+            this.Exception = exception;
+            this.ElapsedMilliseconds = elapsedMilliseconds;
+        }
     }
 }
