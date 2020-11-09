@@ -18,9 +18,9 @@ namespace FreeRedis.Internal.ObjectPool
     {
         public IPolicy<T> Policy { get; protected set; }
 
-        private List<Object<T>> _allObjects = new List<Object<T>>();
+        internal protected List<Object<T>> _allObjects = new List<Object<T>>();
         private object _allObjectsLock = new object();
-        private ConcurrentStack<Object<T>> _freeObjects = new ConcurrentStack<Object<T>>();
+        internal protected ConcurrentStack<Object<T>> _freeObjects = new ConcurrentStack<Object<T>>();
 
         private ConcurrentQueue<GetSyncQueueInfo> _getSyncQueue = new ConcurrentQueue<GetSyncQueueInfo>();
         private ConcurrentQueue<TaskCompletionSource<Object<T>>> _getAsyncQueue = new ConcurrentQueue<TaskCompletionSource<Object<T>>>();

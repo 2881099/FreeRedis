@@ -23,36 +23,24 @@ namespace FreeRedis
         {
             cmd.Prefix(Prefix);
             var isnotice = this.Notice != null;
-            var isaop = this.Interceptors.Any();
-            if (isnotice == false && isaop == false) return await func();
+            if (isnotice == false && this.Interceptors.Any() == false) return await func();
             Exception exception = null;
-            Stopwatch sw = default;
-            if (isnotice)
-            {
-                sw = new Stopwatch();
-                sw.Start();
-            }
 
             T ret = default(T);
             var isaopval = false;
-            IInterceptor[] aops = null;
-            Stopwatch[] aopsws = null;
-            if (isaop)
+            IInterceptor[] aops = new IInterceptor[this.Interceptors.Count + (isnotice ? 1 : 0)];
+            Stopwatch[] aopsws = new Stopwatch[aops.Length];
+            for (var idx = 0; idx < aops.Length; idx++)
             {
-                aops = new IInterceptor[this.Interceptors.Count];
-                aopsws = new Stopwatch[aops.Length];
-                for (var idx = 0; idx < aops.Length; idx++)
+                aopsws[idx] = new Stopwatch();
+                aopsws[idx].Start();
+                aops[idx] = isnotice && idx == aops.Length - 1 ? new NoticeCallInterceptor(this) : this.Interceptors[idx]?.Invoke();
+                var args = new InterceptorBeforeEventArgs(this, cmd);
+                aops[idx].Before(args);
+                if (args.ValueIsChanged && args.Value is T argsValue)
                 {
-                    aopsws[idx] = new Stopwatch();
-                    aopsws[idx].Start();
-                    aops[idx] = this.Interceptors[idx]?.Invoke();
-                    var args = new InterceptorBeforeEventArgs(this, cmd);
-                    aops[idx].Before(args);
-                    if (args.ValueIsChanged && args.Value is T argsValue)
-                    {
-                        isaopval = true;
-                        ret = argsValue;
-                    }
+                    isaopval = true;
+                    ret = argsValue;
                 }
             }
             try
@@ -67,20 +55,11 @@ namespace FreeRedis
             }
             finally
             {
-                if (isaop)
+                for (var idx = 0; idx < aops.Length; idx++)
                 {
-                    for (var idx = 0; idx < aops.Length; idx++)
-                    {
-                        aopsws[idx].Stop();
-                        var args = new InterceptorAfterEventArgs(this, cmd, ret, exception, aopsws[idx].ElapsedMilliseconds);
-                        aops[idx].After(args);
-                    }
-                }
-
-                if (isnotice)
-                {
-                    sw.Stop();
-                    LogCallFinally(cmd, ret, sw, exception);
+                    aopsws[idx].Stop();
+                    var args = new InterceptorAfterEventArgs(this, cmd, ret, exception, aopsws[idx].ElapsedMilliseconds);
+                    aops[idx].After(args);
                 }
             }
         }

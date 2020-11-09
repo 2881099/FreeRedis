@@ -18,8 +18,10 @@ namespace FreeRedis
     {
         internal BaseAdapter Adapter { get; }
         internal string Prefix { get; }
-        public event EventHandler<NoticeEventArgs> Notice;
         public List<Func<IInterceptor>> Interceptors { get; } = new List<Func<IInterceptor>>();
+        public event EventHandler<NoticeEventArgs> Notice;
+        public event EventHandler<ConnectedEventArgs> Connected;
+        public event EventHandler<UnavailableEventArgs> Unavailable;
 
         protected RedisClient(BaseAdapter adapter)
         {
@@ -83,35 +85,24 @@ namespace FreeRedis
         {
             cmd.Prefix(Prefix);
             var isnotice = this.Notice != null;
-            var isaop = this.Interceptors.Any();
-            if (isnotice == false && isaop == false) return func();
+            if (isnotice == false && this.Interceptors.Any() == false) return func();
             Exception exception = null;
-            Stopwatch sw = default;
-            if (isnotice)
-            {
-                sw = new Stopwatch();
-                sw.Start();
-            }
 
             T ret = default(T);
             var isaopval = false;
-            IInterceptor[] aops = null;
-            Stopwatch[] aopsws = null;
-            if (isaop) {
-                aops = new IInterceptor[this.Interceptors.Count];
-                aopsws = new Stopwatch[aops.Length];
-                for (var idx = 0; idx < aops.Length; idx++)
+            IInterceptor[] aops = new IInterceptor[this.Interceptors.Count + (isnotice ? 1 : 0)];
+            Stopwatch[] aopsws = new Stopwatch[aops.Length];
+            for (var idx = 0; idx < aops.Length; idx++)
+            {
+                aopsws[idx] = new Stopwatch();
+                aopsws[idx].Start();
+                aops[idx] = isnotice && idx == aops.Length - 1 ? new NoticeCallInterceptor(this) : this.Interceptors[idx]?.Invoke();
+                var args = new InterceptorBeforeEventArgs(this, cmd);
+                aops[idx].Before(args);
+                if (args.ValueIsChanged && args.Value is T argsValue)
                 {
-                    aopsws[idx] = new Stopwatch();
-                    aopsws[idx].Start();
-                    aops[idx] = this.Interceptors[idx]?.Invoke();
-                    var args = new InterceptorBeforeEventArgs(this, cmd);
-                    aops[idx].Before(args);
-                    if (args.ValueIsChanged && args.Value is T argsValue)
-                    {
-                        isaopval = true;
-                        ret = argsValue;
-                    }
+                    isaopval = true;
+                    ret = argsValue;
                 }
             }
             try
@@ -126,50 +117,28 @@ namespace FreeRedis
             }
             finally
             {
-                if (isaop) {
-                    for (var idx = 0; idx < aops.Length; idx++)
-                    {
-                        aopsws[idx].Stop();
-                        var args = new InterceptorAfterEventArgs(this, cmd, ret, exception, aopsws[idx].ElapsedMilliseconds);
-                        aops[idx].After(args);
-                    }
-                }
-
-                if (isnotice)
+                for (var idx = 0; idx < aops.Length; idx++)
                 {
-                    sw.Stop();
-                    LogCallFinally(cmd, ret, sw, exception);
+                    aopsws[idx].Stop();
+                    var args = new InterceptorAfterEventArgs(this, cmd, ret, exception, aopsws[idx].ElapsedMilliseconds);
+                    aops[idx].After(args);
                 }
             }
-        }
-        void LogCallFinally<T>(CommandPacket cmd, T result, Stopwatch sw, Exception exception)
-        {
-            string log;
-            if (exception != null) log = $"{exception.Message}";
-            else if (result is Array array)
-            {
-                var sb = new StringBuilder().Append("[");
-                var itemindex = 0;
-                foreach (var item in array)
-                {
-                    if (itemindex++ > 0) sb.Append(", ");
-                    sb.Append(item.ToInvariantCultureToString());
-                }
-                log = sb.Append("]").ToString();
-                sb.Clear();
-            }
-            else
-                log = $"{result.ToInvariantCultureToString()}";
-            this.OnNotice(new NoticeEventArgs(
-                NoticeType.Call,
-                exception,
-                $"{(cmd.WriteHost ?? "Not connected")} ({sw.ElapsedMilliseconds}ms) > {cmd}\r\n{log}",
-                result));
         }
         internal bool OnNotice(NoticeEventArgs e)
         {
-            this.Notice?.Invoke(this, e);
-            return this.Notice != null;
+            Adapter.TopOwner.Notice?.Invoke(Adapter.TopOwner, e);
+            return Adapter.TopOwner.Notice != null;
+        }
+        internal bool OnConnected(ConnectedEventArgs e)
+        {
+            Adapter.TopOwner.Connected?.Invoke(Adapter.TopOwner, e);
+            return Adapter.TopOwner.Connected != null;
+        }
+        internal bool OnUnavailable(UnavailableEventArgs e)
+        {
+            Adapter.TopOwner.Unavailable?.Invoke(Adapter.TopOwner, e);
+            return Adapter.TopOwner.Unavailable != null;
         }
 
         #region 序列化写入，反序列化
@@ -272,70 +241,4 @@ namespace FreeRedis
         public ScanResult(long cursor, T[] items) { this.cursor = cursor; this.items = items; this.length = items.LongLength; }
     }
 
-
-    public class NoticeEventArgs : EventArgs
-    {
-        public NoticeType NoticeType { get; }
-        public Exception Exception { get; }
-        public string Log { get; }
-        public object Tag { get; }
-
-        public NoticeEventArgs(NoticeType noticeType, Exception exception, string log, object tag)
-        {
-            this.NoticeType = noticeType;
-            this.Exception = exception;
-            this.Log = log;
-            this.Tag = tag;
-        }
-    }
-    public enum NoticeType
-    {
-        Call, Info
-    }
-    public interface IInterceptor
-    {
-        void Before(InterceptorBeforeEventArgs args);
-        void After(InterceptorAfterEventArgs args);
-    }
-    public class InterceptorBeforeEventArgs
-    {
-        public RedisClient Client { get; }
-        public CommandPacket Command { get; }
-
-        public InterceptorBeforeEventArgs(RedisClient cli, CommandPacket cmd)
-        {
-            this.Client = cli;
-            this.Command = cmd;
-        }
-
-        public object Value
-        {
-            get => _value;
-            set
-            {
-                _value = value;
-                this.ValueIsChanged = true;
-            }
-        }
-        private object _value;
-        public bool ValueIsChanged { get; private set; }
-    }
-    public class InterceptorAfterEventArgs
-    {
-        public RedisClient Client { get; }
-        public CommandPacket Command { get; }
-
-        public object Value { get; }
-        public Exception Exception { get; }
-        public long ElapsedMilliseconds { get; }
-
-        public InterceptorAfterEventArgs(RedisClient cli, CommandPacket cmd, object value, Exception exception, long elapsedMilliseconds)
-        {
-            this.Client = cli;
-            this.Command = cmd;
-            this.Value = value;
-            this.Exception = exception;
-            this.ElapsedMilliseconds = elapsedMilliseconds;
-        }
-    }
 }

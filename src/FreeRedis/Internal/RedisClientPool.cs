@@ -67,6 +67,8 @@ namespace FreeRedis.Internal
                     }
                 }
                 connected?.Invoke(cli);
+                topOwner?.OnConnected(new ConnectedEventArgs(_policy._connectionStringBuilder.Host, this, cli));
+                topOwner?.OnNotice(new NoticeEventArgs(NoticeType.Info, null, $"{_policy._connectionStringBuilder.Host} > Connected {_freeObjects.Count}/{_allObjects.Count}", cli));
             };
             this.Policy = _policy;
             this.TopOwner = topOwner;
@@ -159,7 +161,11 @@ namespace FreeRedis.Internal
 
         public void OnGetTimeout() { }
         public void OnAvailable() { }
-        public void OnUnavailable() { }
+        public void OnUnavailable()
+        {
+            _pool.TopOwner?.OnUnavailable(new UnavailableEventArgs(_connectionStringBuilder.Host, _pool));
+            _pool.TopOwner?.OnNotice(new NoticeEventArgs(NoticeType.Info, null, $"{_connectionStringBuilder.Host} > Unavailable", null));
+        }
 
         public static void PrevReheatConnectionPool(ObjectPool<RedisClient> pool, int minPoolSize)
         {

@@ -8,13 +8,13 @@ namespace FreeRedis.Tests
 {
     public class InterceptorTests
     {
-
-        public static RedisClient GetClient() => new RedisClient("127.0.0.1:6379");
+        //public static RedisClient CreateClient() => new RedisClient("127.0.0.1:6379");
+        public static RedisClient CreateClient() => new RedisClient("192.168.164.10:6379");
 
         [Fact]
         public void Interceptor()
         {
-            using (var cli = new RedisClient("127.0.0.1:6379"))
+            using (var cli = CreateClient())
             {
                 cli.Interceptors.Add(() => new MemoryCacheAop());
 
