@@ -69,6 +69,9 @@ namespace FreeRedis
                 Discard();
             }
 
+            public override void Refersh(IRedisSocket redisSocket)
+            {
+            }
             public override IRedisSocket GetRedisSocket(CommandPacket cmd)
             {
                 TryMulti();

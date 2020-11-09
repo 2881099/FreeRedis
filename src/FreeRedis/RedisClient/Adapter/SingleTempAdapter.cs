@@ -63,6 +63,9 @@ namespace FreeRedis
                 _dispose?.Invoke();
             }
 
+            public override void Refersh(IRedisSocket redisSocket)
+            {
+            }
             public override IRedisSocket GetRedisSocket(CommandPacket cmd)
             {
                 return DefaultRedisSocket.CreateTempProxy(_redisSocket, null);

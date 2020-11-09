@@ -227,6 +227,9 @@ namespace FreeRedis
         public RedisClientException(string message) : base(message) { }
     }
 
+    /// <summary>
+    /// redis version >=6.2: Added the GT and LT options.
+    /// </summary>
     public enum ZAddThan { gt, lt }
     public enum BitOpOperation { and, or, xor, not }
     public enum ClusterSetSlotType { importing, migrating, stable, node }
@@ -242,9 +245,6 @@ namespace FreeRedis
     public enum KeyType { none, @string, list, set, zset, hash, stream }
     public enum RoleType { Master, Slave, Sentinel }
 
-    /// <summary>
-    /// redis version >=6.2: Added the GT and LT options.
-    /// </summary>
     public class KeyValue<T>
     {
         public readonly string key;

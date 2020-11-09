@@ -33,6 +33,11 @@ namespace FreeRedis
                 _ib.Dispose();
             }
 
+            public override void Refersh(IRedisSocket redisSocket)
+            {
+                var tmprds = redisSocket as DefaultRedisSocket.TempProxyRedisSocket;
+                if (tmprds != null) _ib.Get(tmprds._poolkey);
+            }
             public override IRedisSocket GetRedisSocket(CommandPacket cmd)
             {
                 var slots = cmd._flagKey.Select(a => GetClusterSlot(a)).Distinct().ToArray();
@@ -50,6 +55,7 @@ namespace FreeRedis
                 var cli = pool.Get();
                 var rds = cli.Value.Adapter.GetRedisSocket(null);
                 var rdsproxy = DefaultRedisSocket.CreateTempProxy(rds, () => pool.Return(cli));
+                rdsproxy._poolkey = poolkey;
                 rdsproxy._pool = pool;
                 return rdsproxy;
             }

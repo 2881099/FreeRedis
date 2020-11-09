@@ -75,6 +75,9 @@ namespace FreeRedis
                 _commands.Clear();
             }
 
+            public override void Refersh(IRedisSocket redisSocket)
+            {
+            }
             public override IRedisSocket GetRedisSocket(CommandPacket cmd)
             {
                 throw new RedisClientException($"RedisClient: Method cannot be used in {UseType} mode.");

@@ -166,7 +166,11 @@ namespace FreeRedis
                     {
                         _redisSocketReceiveTimeoutOld = _redisSocket.ReceiveTimeout;
                         _redisSocket.ReceiveTimeout = TimeSpan.Zero;
-                        var timer = new Timer(state => { try { _redisSocket.Write("PING"); } catch { } }, null, 10000, 10000);
+                        var timer = new Timer(state =>
+                        {
+                            _topOwner.Adapter.Refersh(_redisSocket); //防止 IdleBus 超时回收
+                            try { _redisSocket.Write("PING"); } catch { }
+                        }, null, 10000, 10000);
                         while (_stoped == false)
                         {
                             RedisResult rt = null;

@@ -22,6 +22,7 @@ namespace FreeRedis.Internal
         }
         internal class TempProxyRedisSocket : IRedisSocket
         {
+            internal string _poolkey; //flag idlebus key
             internal RedisClientPool _pool; //flag pooling
             internal IRedisSocket _owner;
             Action _dispose;
