@@ -9,10 +9,10 @@ namespace console_netcore31_newsocket
         protected readonly Socket _socket;
         protected readonly SocketAwaitableEventArgs _awaitableEventArgs;
 
-        protected SocketSenderReceiverBase(Socket socket, PipeScheduler scheduler)
+        protected SocketSenderReceiverBase(Socket socket, PipeScheduler scheduler, string name)
         {
             _socket = socket;
-            _awaitableEventArgs = new SocketAwaitableEventArgs(scheduler);
+            _awaitableEventArgs = new SocketAwaitableEventArgs(scheduler, name);
         }
 
         public void Dispose() => _awaitableEventArgs.Dispose();

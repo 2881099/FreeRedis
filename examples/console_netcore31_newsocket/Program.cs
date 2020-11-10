@@ -1,4 +1,5 @@
-﻿using FreeRedis;
+﻿using console_netcore31_newsocket.Scheduler;
+using FreeRedis;
 using Microsoft.AspNetCore.Connections;
 using System;
 using System.Buffers;
@@ -22,15 +23,21 @@ namespace console_netcore31_newsocket
     {
         static void Main(string[] args)
         {
-            FreeRedisTest();
+            //FreeRedisTest();
             //123.57.78.153:9379
-            var endpoit = new IPEndPoint(IPAddress.Parse("123.57.78.153"), 9379);
-            NewSocketTest(endpoit);
-            
-            //Server(endpoit);
-            //Test(endpoit);
+            //var endpoit = new IPEndPoint(IPAddress.Parse("123.57.78.153"), 9379);
+            var endpoit = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 9379);
+            //NewSocketTest(endpoit);
+
+            Server(endpoit);
+            Test(endpoit);
             Console.ReadKey();
 
+        }
+
+        public static async void TestTask()
+        {
+            //await new MyScheduler(100);
         }
         public static async void Server(IPEndPoint point)
         {
@@ -52,7 +59,7 @@ namespace console_netcore31_newsocket
                 {
                     var data = Encoding.UTF8.GetString(bytes, 0, i);
                     client.Client.Send(bytes);
-                    Console.WriteLine("Server: Data has been send!");
+                    //Console.WriteLine("Server: Data has been send!");
                     if (data == "test")
                     {
                         stream.Dispose();
@@ -90,7 +97,8 @@ namespace console_netcore31_newsocket
                 {
                     var buffer = Encoding.UTF8.GetBytes(temp + "\r\n");
                     await connection.Transport.Output.WriteAsync(buffer);
-                    Console.WriteLine("发送数据！");
+                    //connection.Transport.Output.Advance(result.);
+                    //Console.WriteLine("发送数据！");
                     //connection.Transport.Output.Complete();
                 }
 
@@ -102,12 +110,13 @@ namespace console_netcore31_newsocket
             while (true)
             {
 
-                Console.WriteLine("Input!");
+                //Console.WriteLine("Input!");
                 var result = await connection.Transport.Input.ReadAsync();
-                Console.WriteLine("GetData!");
-                var data = Encoding.UTF8.GetString(result.Buffer.FirstSpan);
+                //Console.WriteLine("GetData!");
+                var data = Encoding.UTF8.GetString(result.Buffer.ToArray());
                 Console.WriteLine(data);
                 connection.Transport.Input.AdvanceTo(result.Buffer.End);
+                //await result.Buffer.
                 //connection.Transport.Input.Complete();
 
             }
@@ -125,7 +134,7 @@ namespace console_netcore31_newsocket
 
         public static async void NewSocketTest(IPEndPoint endpoit)
         {
-            ResultDict = new ConcurrentDictionary<string, string>();
+            //ResultDict = new ConcurrentDictionary<string, string>();
             SocketConnectionFactory client = new SocketConnectionFactory(new SocketTransportOptions());
             var connection = client.ConnectAsync(endpoit).Result;
             connection.Transport.Output.WriteAsync(Encoding.UTF8.GetBytes("AUTH 0f649985e1ae10a\r\n"));
@@ -186,11 +195,11 @@ namespace console_netcore31_newsocket
         }
 
         private ConcurrentDictionary<string, string> ResultDict;
-        private Concur
-        public static async string Set(string key, string value)
-        {
+        //private Concur
+        //public static async string Set(string key, string value)
+        //{
 
-        }
+        //}
         #endregion
 
 
