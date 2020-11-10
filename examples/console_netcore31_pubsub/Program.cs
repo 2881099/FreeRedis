@@ -58,7 +58,7 @@ namespace console_netcore31
                 }
                 Console.ReadKey();
             }
-            void ondata(string channel, string data)
+            void ondata(string channel, object data)
             {
                 Console.WriteLine($"{channel} -> {data}");
             }

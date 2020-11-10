@@ -115,7 +115,7 @@ namespace FreeRedis.Tests.RedisClientTests.Other
                 }
                 Thread.CurrentThread.Join(2000);
             }
-            void ondata(string channel, string data)
+            void ondata(string channel, object data)
             {
                 Trace.WriteLine($"{channel} -> {data}");
             }
