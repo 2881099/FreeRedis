@@ -14,7 +14,7 @@ namespace FreeRedis
         public PipelineHook StartPipe()
         {
             CheckUseTypeOrThrow(UseType.Pooling, UseType.Cluster, UseType.Sentinel, UseType.SingleInside, UseType.SingleTemp);
-            return new PipelineHook(new PipelineAdapter(Adapter.TopOwner));
+            return new PipelineHook(new PipelineAdapter(Adapter));
         }
         public class PipelineHook : RedisClient
         {
@@ -30,6 +30,7 @@ namespace FreeRedis
         class PipelineAdapter : BaseAdapter
         {
             readonly List<PipelineCommand> _commands;
+            readonly BaseAdapter _baseAdapter;
 
             internal class PipelineCommand
             {
@@ -59,10 +60,11 @@ namespace FreeRedis
 #endif
             }
 
-            public PipelineAdapter(RedisClient topOwner)
+            public PipelineAdapter(BaseAdapter baseAdapter)
             {
                 UseType = UseType.Pipeline;
-                TopOwner = topOwner;
+                TopOwner = baseAdapter.TopOwner;
+                _baseAdapter = baseAdapter;
                 _commands = new List<PipelineCommand>();
             }
 
@@ -90,7 +92,7 @@ namespace FreeRedis
                     Parse = rt => parse(rt),
                     IsBytes = cmd._flagReadbytes
                 });
-                TopOwner.OnNotice(new NoticeEventArgs(NoticeType.Call, null, $"Pipeline > {cmd}", null));
+                TopOwner.OnNotice(null, new NoticeEventArgs(NoticeType.Call, null, $"{"Pipeline".PadRight(21)} > {cmd}", null));
                 return default(TValue);
             }
 #if isasync
@@ -104,7 +106,7 @@ namespace FreeRedis
                     IsBytes = cmd._flagReadbytes,
                     TaskCompletionSource = tsc
                 });
-                TopOwner.OnNotice(new NoticeEventArgs(NoticeType.Call, null, $"Pipeline > {cmd}", null));
+                TopOwner.OnNotice(null, new NoticeEventArgs(NoticeType.Call, null, $"{"Pipeline".PadRight(21)} > {cmd}", null));
                 var ret = await tsc.Task;
                 return (TValue)ret;
             }
@@ -128,7 +130,7 @@ namespace FreeRedis
                     CommandPacket epcmd = "EndPipe";
                     return TopOwner.LogCall(epcmd, () =>
                     {
-                        using (var rds = TopOwner.Adapter.GetRedisSocket(null))
+                        using (var rds = _baseAdapter.GetRedisSocket(null))
                         {
                             EndPipe(rds, _commands);
                         }
@@ -163,7 +165,7 @@ namespace FreeRedis
 
                     foreach (var pc in cmds)
                     {
-                        pc.RedisResult = rds.Read(pc.IsBytes);
+                        pc.RedisResult = rds.Read(pc.Command);
                         pc.Result = pc.Parse(pc.RedisResult);
                         if (pc.RedisResult.IsError) err.Add(pc);
 #if isasync

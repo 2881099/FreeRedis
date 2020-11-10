@@ -12,7 +12,14 @@ using System.Threading.Tasks;
 
 namespace FreeRedis.Internal
 {
-    class DefaultRedisSocket : IRedisSocket
+    public interface IRedisSocketModify
+    {
+        void SetClientReply(ClientReplyType value);
+        void SetClientId(long value);
+        void SetDatabase(int value);
+    }
+
+    class DefaultRedisSocket : IRedisSocket, IRedisSocketModify
     {
         internal static TempProxyRedisSocket CreateTempProxy(IRedisSocket rds, Action dispose)
         {
@@ -20,7 +27,7 @@ namespace FreeRedis.Internal
                 return new TempProxyRedisSocket(proxy._owner, dispose);
             return new TempProxyRedisSocket(rds, dispose);
         }
-        internal class TempProxyRedisSocket : IRedisSocket
+        internal class TempProxyRedisSocket : IRedisSocket, IRedisSocketModify
         {
             internal string _poolkey; //flag idlebus key
             internal RedisClientPool _pool; //flag pooling
@@ -46,13 +53,18 @@ namespace FreeRedis.Internal
             public Encoding Encoding { get => _owner.Encoding; set => _owner.Encoding = value; }
             public event EventHandler<EventArgs> Connected { add { _owner.Connected += value; } remove { _owner.Connected -= value; } }
             public ClientReplyType ClientReply => _owner.ClientReply;
+            public long ClientId => _owner.ClientId;
             public int Database => _owner.Database;
+
+            void IRedisSocketModify.SetClientReply(ClientReplyType value) => (_owner as IRedisSocketModify).SetClientReply(value);
+            void IRedisSocketModify.SetClientId(long value) => (_owner as IRedisSocketModify).SetClientId(value);
+            void IRedisSocketModify.SetDatabase(int value) => (_owner as IRedisSocketModify).SetDatabase(value);
 
             public void Connect() => _owner.Connect();
             public void ResetHost(string host) => _owner.ResetHost(host);
             public void ReleaseSocket() => _owner.ReleaseSocket();
             public void Write(CommandPacket cmd) => _owner.Write(cmd);
-            public RedisResult Read(bool isbytes) => _owner.Read(isbytes);
+            public RedisResult Read(CommandPacket cmd) => _owner.Read(cmd);
             public void ReadChunk(Stream destination, int bufferSize = 1024) => _owner.ReadChunk(destination, bufferSize);
         }
 
@@ -89,7 +101,12 @@ namespace FreeRedis.Internal
         public bool IsConnected => _socket?.Connected == true && _stream != null;
         public event EventHandler<EventArgs> Connected;
         public ClientReplyType ClientReply { get; protected set; } = ClientReplyType.on;
+        public long ClientId { get; protected set; }
         public int Database { get; protected set; } = 0;
+
+        void IRedisSocketModify.SetClientReply(ClientReplyType value) => this.ClientReply = value;
+        void IRedisSocketModify.SetClientId(long value) => this.ClientId = value;
+        void IRedisSocketModify.SetDatabase(int value) => this.Database = value;
 
         RespHelper.Resp3Reader _reader;
         RespHelper.Resp3Reader Reader => _reader ?? (_reader = new RespHelper.Resp3Reader(Stream));
@@ -113,13 +130,21 @@ namespace FreeRedis.Internal
                 ms.CopyTo(Stream);
                 ms.Close();
             }
-            switch (cmd._command.ToUpper())
+            switch (cmd._command)
             {
                 case "CLIENT":
-                    if (string.Compare(cmd._subcommand, "REPLY", true) == 0)
+                    switch (cmd._subcommand)
                     {
-                        var type = cmd._input.LastOrDefault().ConvertTo<ClientReplyType>();
-                        if (type != ClientReply) ClientReply = type;
+                        case "REPLY":
+                            var type = cmd._input.LastOrDefault().ConvertTo<ClientReplyType>();
+                            if (type != ClientReply) ClientReply = type;
+                            break;
+                        case "ID":
+                            cmd.OnData(rt =>
+                            {
+                                ClientId = rt.ThrowOrValue<long>();
+                            });
+                            break;
                     }
                     break;
                 case "SELECT":
@@ -129,13 +154,14 @@ namespace FreeRedis.Internal
             }
             cmd.WriteHost = this.Host;
         }
-        public RedisResult Read(bool isbytes)
+        public RedisResult Read(CommandPacket cmd)
         {
             if (ClientReply == ClientReplyType.on)
             {
                 if (IsConnected == false) Connect();
-                var rt = Reader.ReadObject(isbytes ? null : Encoding);
+                var rt = Reader.ReadObject(cmd?._flagReadbytes == true ? null : Encoding);
                 rt.Encoding = Encoding;
+                cmd?.OnDataTrigger(rt);
                 return rt;
             }
             return new RedisResult(null, true, RedisMessageType.SimpleString) { Encoding = Encoding };

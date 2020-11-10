@@ -923,7 +923,6 @@ namespace FreeRedis
         protected internal bool IsEnd { get; protected set; }
         public RedisMessageType MessageType { get; protected set; }
         public bool IsError => this.MessageType == RedisMessageType.SimpleError || this.MessageType == RedisMessageType.BlobError;
-        internal bool IsErrorThrow { get; set; } = true;
         internal string SimpleError { get; set; }
         public Encoding Encoding { get; internal set; }
 
@@ -936,12 +935,12 @@ namespace FreeRedis
         }
         public RedisResult ThrowOrNothing()
         {
-            if (IsError && IsErrorThrow) throw new RedisServerException(this.SimpleError);
+            if (IsError) throw new RedisServerException(this.SimpleError);
             return this;
         }
         public TValue ThrowOrValue<TValue>(Func<object, TValue> value)
         {
-            if (IsError && IsErrorThrow) throw new RedisServerException(this.SimpleError);
+            if (IsError) throw new RedisServerException(this.SimpleError);
             var newval = value(this.Value);
             if (newval == null && typeof(TValue).IsArray) newval = (TValue)typeof(TValue).CreateInstanceGetDefaultValue();
             this.Value = newval;
@@ -949,7 +948,7 @@ namespace FreeRedis
         }
         public TValue ThrowOrValue<TValue>(Func<object[], bool, TValue> value)
         {
-            if (IsError && IsErrorThrow) throw new RedisServerException(this.SimpleError);
+            if (IsError) throw new RedisServerException(this.SimpleError);
             var newval = value(this.Value as object[], false);
             if (newval == null && typeof(TValue).IsArray) newval = (TValue)typeof(TValue).CreateInstanceGetDefaultValue();
             this.Value = newval;
@@ -957,12 +956,12 @@ namespace FreeRedis
         }
         public object ThrowOrValue()
         {
-            if (IsError && IsErrorThrow) throw new RedisServerException(this.SimpleError);
+            if (IsError) throw new RedisServerException(this.SimpleError);
             return this.Value;
         }
         public TValue ThrowOrValue<TValue>(bool useDefaultValue = false)
         {
-            if (IsError && IsErrorThrow) throw new RedisServerException(this.SimpleError);
+            if (IsError) throw new RedisServerException(this.SimpleError);
             if (useDefaultValue == false)
             {
                 var newval = this.Value.ConvertTo<TValue>();

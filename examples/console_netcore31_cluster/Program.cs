@@ -72,6 +72,17 @@ namespace console_netcore31_cluster
             stopwatch.Stop();
             Console.WriteLine("Seredis:" + stopwatch.ElapsedMilliseconds);
 
+            cli.Subscribe("abc", (chan, msg) =>
+            {
+                Console.WriteLine($"FreeRedis {chan} => {msg}");
+            });
+
+            seredis.GetSubscriber().Subscribe("abc", (chan, msg) =>
+            {
+                Console.WriteLine($"Seredis {chan} => {msg}");
+            });
+            Console.ReadKey();
+
             return;
         }
     }

@@ -27,48 +27,91 @@ namespace FreeRedis.Internal
                 var cli = s as RedisClient;
                 var rds = cli.Adapter.GetRedisSocket(null);
                 var adapter = cli.Adapter as RedisClient.SingleInsideAdapter;
-                using (adapter.NoneRedisSimpleError())
-                {
-                    rds.Socket.ReceiveTimeout = (int)_policy._connectionStringBuilder.ReceiveTimeout.TotalMilliseconds;
-                    rds.Socket.SendTimeout = (int)_policy._connectionStringBuilder.SendTimeout.TotalMilliseconds;
-                    rds.Encoding = _policy._connectionStringBuilder.Encoding;
+                rds.Socket.ReceiveTimeout = (int)_policy._connectionStringBuilder.ReceiveTimeout.TotalMilliseconds;
+                rds.Socket.SendTimeout = (int)_policy._connectionStringBuilder.SendTimeout.TotalMilliseconds;
+                rds.Encoding = _policy._connectionStringBuilder.Encoding;
 
-                    if (_policy._connectionStringBuilder.Protocol == RedisProtocol.RESP3)
-                    {
-                        cli.Hello("3", _policy._connectionStringBuilder.User, _policy._connectionStringBuilder.Password, _policy._connectionStringBuilder.ClientName);
-                        if (adapter.RedisSimpleError != null)
-                            throw adapter.RedisSimpleError;
-                        rds.Protocol = RedisProtocol.RESP3;
-                    }
-                    else if (!string.IsNullOrEmpty(_policy._connectionStringBuilder.User) && !string.IsNullOrEmpty(_policy._connectionStringBuilder.Password))
-                    {
-                        cli.Auth(_policy._connectionStringBuilder.User, _policy._connectionStringBuilder.Password);
-                        if (adapter.RedisSimpleError != null)
-                            throw adapter.RedisSimpleError;
-                    }
-                    else if (!string.IsNullOrEmpty(_policy._connectionStringBuilder.Password))
-                    {
-                        cli.Auth(_policy._connectionStringBuilder.Password);
-                        if (adapter.RedisSimpleError != null && adapter.RedisSimpleError.Message != "ERR Client sent AUTH, but no password is set")
-                            throw adapter.RedisSimpleError;
-                    }
+                var cmds = new List<CommandPacket>();
+                if (_policy._connectionStringBuilder.Protocol == RedisProtocol.RESP3)
+                    cmds.Add("HELLO"
+                        .Input(3)
+                        .InputIf(!string.IsNullOrWhiteSpace(_policy._connectionStringBuilder.User) && !string.IsNullOrWhiteSpace(_policy._connectionStringBuilder.Password), "AUTH", _policy._connectionStringBuilder.User, _policy._connectionStringBuilder.Password)
+                        .InputIf(!string.IsNullOrWhiteSpace(_policy._connectionStringBuilder.ClientName), "SETNAME", _policy._connectionStringBuilder.ClientName)
+                        .OnData(rt =>
+                        {
+                            rt.ThrowOrNothing();
+                            rds.Protocol = RedisProtocol.RESP3;
+                        }));
+                else if (!string.IsNullOrEmpty(_policy._connectionStringBuilder.User) && !string.IsNullOrEmpty(_policy._connectionStringBuilder.Password))
+                    cmds.Add("AUTH".SubCommand(null)
+                        .InputIf(!string.IsNullOrWhiteSpace(_policy._connectionStringBuilder.User), _policy._connectionStringBuilder.User)
+                        .Input(_policy._connectionStringBuilder.Password)
+                        .OnData(rt =>
+                        {
+                            rt.ThrowOrNothing();
+                        }));
+                else if (!string.IsNullOrEmpty(_policy._connectionStringBuilder.Password))
+                    cmds.Add("AUTH".SubCommand(null)
+                        .Input(_policy._connectionStringBuilder.Password)
+                        .OnData(rt =>
+                        {
+                            if (rt.IsError && rt.SimpleError != "ERR Client sent AUTH, but no password is set")
+                                rt.ThrowOrNothing();
+                        }));
 
-                    if (_policy._connectionStringBuilder.Database > 0)
+                if (_policy._connectionStringBuilder.Database > 0)
+                    cmds.Add("SELECT".Input(_policy._connectionStringBuilder.Database)
+                        .OnData(rt =>
+                        {
+                            if (rt.IsError)
+                            {
+                                if (rt.SimpleError == "ERR SELECT is not allowed in cluster mode")
+                                    _policy._connectionStringBuilder.Database = 0;
+                                else
+                                    rt.ThrowOrNothing();
+                            }
+                            (rds as IRedisSocketModify).SetDatabase(_policy._connectionStringBuilder.Database);
+                        }));
+
+                if (!string.IsNullOrEmpty(_policy._connectionStringBuilder.ClientName) && _policy._connectionStringBuilder.Protocol == RedisProtocol.RESP2)
+                    cmds.Add("CLIENT".SubCommand("SETNAME").InputRaw(_policy._connectionStringBuilder.ClientName)
+                        .OnData(rt =>
+                        {
+                            rt.ThrowOrNothing();
+                        }));
+
+                cmds.Add("CLIENT".SubCommand("ID")
+                    .OnData(rt =>
                     {
-                        cli.Select(_policy._connectionStringBuilder.Database);
-                        if (adapter.RedisSimpleError != null && adapter.RedisSimpleError.Message != "ERR SELECT is not allowed in cluster mode")
-                            throw adapter.RedisSimpleError;
-                    }
-                    if (!string.IsNullOrEmpty(_policy._connectionStringBuilder.ClientName) && _policy._connectionStringBuilder.Protocol == RedisProtocol.RESP2)
+                        (rds as IRedisSocketModify).SetClientId(rt.ThrowOrValue<long>());
+                    }));
+
+                using (var ms = new MemoryStream()) {
+                    var writer = new RespHelper.Resp3Writer(ms, rds.Encoding, RedisProtocol.RESP2);
+                    cmds.ForEach(cmd =>
                     {
-                        cli.ClientSetName(_policy._connectionStringBuilder.ClientName);
-                        if (adapter.RedisSimpleError != null)
-                            throw adapter.RedisSimpleError;
-                    }
+                        cmd.WriteHost = rds.Host;
+                        writer.WriteCommand(cmd);
+                    });
+
+                    ms.Position = 0;
+                    ms.CopyTo(rds.Stream);
+                    ms.Close();
+                    ms.Dispose();
                 }
+                cmds.ForEach(cmd =>
+                {
+                    topOwner.LogCall(cmd, () =>
+                    {
+                        var rt = rds.Read(cmd);
+                        return rt.Value;
+                    });
+                    
+                });
+
                 connected?.Invoke(cli);
-                topOwner?.OnConnected(new ConnectedEventArgs(_policy._connectionStringBuilder.Host, this, cli));
-                topOwner?.OnNotice(new NoticeEventArgs(NoticeType.Info, null, $"{_policy._connectionStringBuilder.Host} > Connected {_freeObjects.Count}/{_allObjects.Count}", cli));
+                topOwner?.OnConnected(TopOwner, new ConnectedEventArgs(_policy._connectionStringBuilder.Host, this, cli));
+                topOwner?.OnNotice(TopOwner, new NoticeEventArgs(NoticeType.Info, null, $"{_policy._connectionStringBuilder.Host.PadRight(21)} > Connected, ClientId: {rds.ClientId}, Database: {rds.Database}, Pool: {_freeObjects.Count}/{_allObjects.Count}", cli));
             };
             this.Policy = _policy;
             this.TopOwner = topOwner;
@@ -163,8 +206,8 @@ namespace FreeRedis.Internal
         public void OnAvailable() { }
         public void OnUnavailable()
         {
-            _pool.TopOwner?.OnUnavailable(new UnavailableEventArgs(_connectionStringBuilder.Host, _pool));
-            _pool.TopOwner?.OnNotice(new NoticeEventArgs(NoticeType.Info, null, $"{_connectionStringBuilder.Host} > Unavailable", null));
+            _pool.TopOwner?.OnUnavailable(_pool.TopOwner, new UnavailableEventArgs(_connectionStringBuilder.Host, _pool));
+            _pool.TopOwner?.OnNotice(_pool.TopOwner, new NoticeEventArgs(NoticeType.Info, null, $"{_connectionStringBuilder.Host.PadRight(21)} > Unavailable", null));
         }
 
         public static void PrevReheatConnectionPool(ObjectPool<RedisClient> pool, int minPoolSize)

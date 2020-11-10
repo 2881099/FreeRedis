@@ -47,7 +47,7 @@ namespace FreeRedis
                         case ClientReplyType.off:
                             break;
                         case ClientReplyType.on:
-                            rds.Read(false).ThrowOrNothing();
+                            rds.Read(cmd).ThrowOrNothing();
                             break;
                         case ClientReplyType.skip:
                             break;

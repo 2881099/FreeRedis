@@ -211,7 +211,7 @@ namespace FreeRedis.Internal
                         var witem = localQueue.Dequeue();
                         try
                         {
-                            rt = _rds.Read(false);
+                            rt = _rds.Read(witem.Command);
                         }
                         catch (Exception ioex)
                         {

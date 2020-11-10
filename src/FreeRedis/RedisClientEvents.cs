@@ -122,10 +122,10 @@ namespace FreeRedis
             }
             else
                 log = $"{args.Value.ToInvariantCultureToString()}";
-            _cli.OnNotice(new NoticeEventArgs(
+            _cli.OnNotice(null, new NoticeEventArgs(
                 NoticeType.Call,
                 args.Exception,
-                $"{(args.Command.WriteHost ?? "Not connected")} ({args.ElapsedMilliseconds}ms) > {args.Command}\r\n{log}",
+                $"{(args.Command.WriteHost ?? "Not connected").PadRight(21)} > {args.Command}\r\n{log}\r\n({args.ElapsedMilliseconds}ms)\r\n",
                 args.Value));
         }
 

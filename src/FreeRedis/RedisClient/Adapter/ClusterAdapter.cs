@@ -12,7 +12,7 @@ namespace FreeRedis
     {
         class ClusterAdapter : BaseAdapter
         {
-            readonly IdleBus<RedisClientPool> _ib;
+            internal readonly IdleBus<RedisClientPool> _ib;
             readonly ConnectionStringBuilder[] _clusterConnectionStrings;
 
             public ClusterAdapter(RedisClient topOwner, ConnectionStringBuilder[] clusterConnectionStrings)
@@ -43,14 +43,19 @@ namespace FreeRedis
                 var slots = cmd?._keyIndexes.Select(a => GetClusterSlot(cmd._input[a].ToInvariantCultureToString())).Distinct().ToArray();
                 var poolkeys = slots?.Select(a => _slotCache.TryGetValue(a, out var trykey) ? trykey : null).Distinct().Where(a => a != null).ToArray();
                 //if (poolkeys.Length > 1) throw new RedisClientException($"CROSSSLOT Keys in request don't hash to the same slot: {cmd}");
-                var poolkey = poolkeys?.FirstOrDefault() ?? _ib.GetKeyFirst();
-
+                var poolkey = poolkeys?.FirstOrDefault();
+            goto_getrndkey:
+                if (string.IsNullOrEmpty(poolkey))
+                {
+                    var rndkeys = _ib.GetKeys(v => v == null || v.IsAvailable);
+                    if (rndkeys.Any() == false) throw new RedisClientException($"All nodes of the cluster failed to connect");
+                    poolkey = rndkeys[_rnd.Value.Next(0, rndkeys.Length)];
+                }
                 var pool = _ib.Get(poolkey);
                 if (pool.IsAvailable == false)
                 {
-                    poolkey = _ib.GetKeys(a => a != null && a.IsAvailable).FirstOrDefault();
-                    if (string.IsNullOrEmpty(poolkey)) throw new RedisClientException($"All nodes of the cluster failed to connect");
-                    pool = _ib.Get(poolkey);
+                    poolkey = null;
+                    goto goto_getrndkey;
                 }
                 var cli = pool.Get();
                 var rds = cli.Value.Adapter.GetRedisSocket(null);
@@ -89,11 +94,12 @@ namespace FreeRedis
                             if (cmd._clusterMovedAsking)
                             {
                                 cmd._clusterMovedAsking = false;
-                                rds.Write("ASKING");
-                                rds.Read(false);
+                                var askingCmd = "ASKING".SubCommand(null).FlagReadbytes(false);
+                                rds.Write(askingCmd);
+                                rds.Read(askingCmd);
                             }
                             rds.Write(cmd);
-                            rt = rds.Read(cmd._flagReadbytes);
+                            rt = rds.Read(cmd);
                         }
                         catch (Exception ex)
                         {
@@ -125,7 +131,7 @@ namespace FreeRedis
                             if (moved.isask)
                                 cmd._clusterMovedAsking = true;
 
-                            TopOwner.OnNotice(new NoticeEventArgs(NoticeType.Info, null, $"{(cmd.WriteHost ?? "Not connected")} > {cmd}\r\n{rt.SimpleError} ", null));
+                            TopOwner.OnNotice(null, new NoticeEventArgs(NoticeType.Info, null, $"{(cmd.WriteHost ?? "Not connected").PadRight(21)} > {cmd}\r\n{rt.SimpleError} ", null));
                             return AdapterCall(cmd, parse);
                         }
                     }

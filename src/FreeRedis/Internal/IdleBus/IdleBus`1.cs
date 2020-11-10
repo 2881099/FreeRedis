@@ -82,7 +82,6 @@ namespace FreeRedis.Internal
             if (filter == null) return _dic.Keys.ToArray();
             return _dic.Keys.ToArray().Where(key => _dic.TryGetValue(key, out var item) && filter(item.value)).ToArray();
         }
-        public TKey GetKeyFirst() => _dic.Keys.FirstOrDefault();
 
         /// <summary>
         /// 判断 key 是否注册

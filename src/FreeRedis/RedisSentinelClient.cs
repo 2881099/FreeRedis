@@ -40,7 +40,7 @@ namespace FreeRedis
         protected TValue Call<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
         {
             _redisSocket.Write(cmd);
-            var rt = _redisSocket.Read(false);
+            var rt = _redisSocket.Read(cmd);
             return parse(rt);
         }
 

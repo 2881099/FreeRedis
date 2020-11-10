@@ -70,6 +70,7 @@ namespace FreeRedis
         {
             if (Interlocked.Increment(ref _disposeCounter) != 1) return;
             Adapter.Dispose();
+            _pubsubPriv?.Dispose();
         }
 
         protected void CheckUseTypeOrThrow(params UseType[] useTypes)
@@ -125,20 +126,26 @@ namespace FreeRedis
                 }
             }
         }
-        internal bool OnNotice(NoticeEventArgs e)
+        internal bool OnNotice(RedisClient cli, NoticeEventArgs e)
         {
-            Adapter.TopOwner.Notice?.Invoke(Adapter.TopOwner, e);
-            return Adapter.TopOwner.Notice != null;
+            var topOwner = Adapter?.TopOwner ?? cli;
+            if (topOwner?.Notice == null) return false;
+            topOwner.Notice(topOwner, e);
+            return true;
         }
-        internal bool OnConnected(ConnectedEventArgs e)
+        internal bool OnConnected(RedisClient cli, ConnectedEventArgs e)
         {
-            Adapter.TopOwner.Connected?.Invoke(Adapter.TopOwner, e);
-            return Adapter.TopOwner.Connected != null;
+            var topOwner = Adapter?.TopOwner ?? cli;
+            if (topOwner?.Connected == null) return false;
+            topOwner.Connected(topOwner, e);
+            return true;
         }
-        internal bool OnUnavailable(UnavailableEventArgs e)
+        internal bool OnUnavailable(RedisClient cli, UnavailableEventArgs e)
         {
-            Adapter.TopOwner.Unavailable?.Invoke(Adapter.TopOwner, e);
-            return Adapter.TopOwner.Unavailable != null;
+            var topOwner = Adapter?.TopOwner ?? cli;
+            if (topOwner?.Unavailable == null) return false;
+            topOwner.Unavailable(topOwner, e);
+            return true;
         }
 
         #region 序列化写入，反序列化

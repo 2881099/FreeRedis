@@ -73,7 +73,7 @@ namespace FreeRedis
                         try
                         {
                             rds.Write(cmd);
-                            rt = rds.Read(cmd._flagReadbytes);
+                            rt = rds.Read(cmd);
                         }
                         catch (Exception ex)
                         {
@@ -122,7 +122,6 @@ namespace FreeRedis
                             {
                                 var rndkey = rndkeys[_rnd.Value.Next(0, rndkeys.Length)];
                                 return rndkey;
-
                             }
                         }
                     }

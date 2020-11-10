@@ -83,7 +83,7 @@ namespace FreeRedis
                 return TopOwner.LogCall(cmd, () =>
                 {
                     _redisSocket.Write(cmd);
-                    _redisSocket.Read(cmd._flagReadbytes).ThrowOrValue<TValue>(useDefaultValue: true);
+                    _redisSocket.Read(cmd).ThrowOrValue<TValue>(useDefaultValue: true);
                     _commands.Add(new TransactionCommand
                     {
                         Command = cmd,
@@ -103,7 +103,7 @@ namespace FreeRedis
                 TopOwner.LogCall(cmd, () =>
                 {
                     _redisSocket.Write(cmd);
-                    _redisSocket.Read(cmd._flagReadbytes).ThrowOrValue<TValue>(useDefaultValue: true);
+                    _redisSocket.Read(cmd).ThrowOrValue<TValue>(useDefaultValue: true);
                     _commands.Add(new TransactionCommand
                     {
                         Command = cmd,
@@ -122,7 +122,7 @@ namespace FreeRedis
                 return TopOwner.LogCall(cmd, () =>
                 {
                     _redisSocket.Write(cmd);
-                    return _redisSocket.Read(false).ThrowOrValue();
+                    return _redisSocket.Read(cmd).ThrowOrValue();
                 });
             }
             public void TryMulti()

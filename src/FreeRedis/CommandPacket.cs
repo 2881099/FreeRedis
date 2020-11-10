@@ -38,6 +38,20 @@ namespace FreeRedis
             return sb.ToString();
         }
 
+        internal Queue<Action<RedisResult>> _ondata;
+        public CommandPacket OnData(Action<RedisResult> ondata)
+        {
+            if (_ondata == null) _ondata = new Queue<Action<RedisResult>>();
+            _ondata.Enqueue(ondata);
+            return this;
+        }
+        internal void OnDataTrigger(RedisResult rt)
+        {
+            if (_ondata == null) return;
+            while (_ondata.Any())
+                _ondata.Dequeue()(rt);
+        }
+
         public CommandPacket Prefix(string prefix)
         {
             if (string.IsNullOrWhiteSpace(prefix)) return this;
@@ -154,7 +168,7 @@ namespace FreeRedis
 
         public CommandPacket InputKv(object[] keyValues, bool iskey, Func<object, object> serialize)
         {
-            if (keyValues == null | keyValues.Length == 0) return this;
+            if (keyValues == null || keyValues.Length == 0) return this;
             if (keyValues.Length % 2 != 0) throw new ArgumentException($"Array {nameof(keyValues)} length is not even");
             for (var a = 0;a < keyValues.Length; a += 2)
             {

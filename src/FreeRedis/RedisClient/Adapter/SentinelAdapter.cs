@@ -75,7 +75,7 @@ namespace FreeRedis
                         try
                         {
                             rds.Write(cmd);
-                            rt = rds.Read(cmd._flagReadbytes);
+                            rt = rds.Read(cmd);
                         }
                         catch (Exception ex)
                         {
@@ -236,7 +236,7 @@ namespace FreeRedis
 
                                 if (_ib.Get(_masterHost).CheckAvailable())
                                 {
-                                    if (!TopOwner.OnNotice(new NoticeEventArgs(NoticeType.Info, null, $"【{_connectionString.Host}】Redis Sentinel switch to {_masterHost}", null)))
+                                    if (!TopOwner.OnNotice(null, new NoticeEventArgs(NoticeType.Info, null, $"{_connectionString.Host.PadRight(21)} > Redis Sentinel switch to {_masterHost}", null)))
                                     {
                                         var bgcolor = Console.BackgroundColor;
                                         var forecolor = Console.ForegroundColor;
@@ -254,7 +254,7 @@ namespace FreeRedis
                             }
                             catch (Exception ex21)
                             {
-                                if (!TopOwner.OnNotice(new NoticeEventArgs(NoticeType.Info, null, $"【{_connectionString.Host}】Redis Sentinel switch to {_masterHost}", null)))
+                                if (!TopOwner.OnNotice(null, new NoticeEventArgs(NoticeType.Info, null, $"{_connectionString.Host.PadRight(21)} > Redis Sentinel switch to {_masterHost}", null)))
                                 {
                                     Console.WriteLine($"【{_connectionString.Host}】Redis Sentinel: {ex21.Message}");
                                 }
