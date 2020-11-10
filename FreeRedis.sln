@@ -44,6 +44,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Unit", "Unit", "{36C8EC48-1
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SocketTest", "test\Unit\SocketTest\SocketTest.csproj", "{D79610B1-ECD7-42D1-8821-2F51728B8D89}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PingTest", "test\Benchmark\PingTest\PingTest.csproj", "{FBE7D3F7-A567-4A38-A0CF-42BD942E2E7F}"
+EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "console_netcore31_client_side_caching", "examples\console_netcore31_client_side_caching\console_netcore31_client_side_caching.csproj", "{DA686F0B-E9F7-4AF1-AD2E-EE6EE0C24BB4}"
 EndProject
 Global
