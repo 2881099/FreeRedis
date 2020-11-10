@@ -13,7 +13,7 @@ namespace console_netcore31_newsocket
     {
         private List<ArraySegment<byte>> _bufferList;
 
-        public SocketSender(Socket socket, PipeScheduler scheduler) : base(socket, scheduler, "sender")
+        public SocketSender(Socket socket, PipeScheduler scheduler) : base(socket, scheduler)
         {
         }
 
@@ -33,12 +33,7 @@ namespace console_netcore31_newsocket
 
             if (!_socket.SendAsync(_awaitableEventArgs))
             {
-                Console.WriteLine("Sender Post Succeed！");
                 _awaitableEventArgs.Complete();
-            }
-            else
-            {
-                Console.WriteLine("Sender Post has been exist！");
             }
 
             return _awaitableEventArgs;
@@ -56,12 +51,7 @@ namespace console_netcore31_newsocket
 
             if (!_socket.SendAsync(_awaitableEventArgs))
             {
-                Console.WriteLine("Sender Post Succeed！");
                 _awaitableEventArgs.Complete();
-            }
-            else
-            {
-                Console.WriteLine("Sender Post has been exist！");
             }
 
             return _awaitableEventArgs;

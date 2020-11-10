@@ -7,7 +7,7 @@ namespace console_netcore31_newsocket
 {
     internal sealed class SocketReceiver : SocketSenderReceiverBase
     {
-        public SocketReceiver(Socket socket, PipeScheduler scheduler) : base(socket, scheduler, "receiver")
+        public SocketReceiver(Socket socket, PipeScheduler scheduler) : base(socket, scheduler)
         {
         }
 
@@ -17,12 +17,7 @@ namespace console_netcore31_newsocket
 
             if (!_socket.ReceiveAsync(_awaitableEventArgs))
             {
-                Console.WriteLine("Receiver Post Succeed！");
                 _awaitableEventArgs.Complete();
-            }
-            else
-            {
-                Console.WriteLine("Receiver Post has been exist！");
             }
 
             return _awaitableEventArgs;
@@ -34,14 +29,8 @@ namespace console_netcore31_newsocket
 
             if (!_socket.ReceiveAsync(_awaitableEventArgs))
             {
-                Console.WriteLine("Receiver Post Succeed！");
                 _awaitableEventArgs.Complete();
             }
-            else
-            {
-                Console.WriteLine("Receiver Post has been exist！");
-            }
-
 
             return _awaitableEventArgs;
         }

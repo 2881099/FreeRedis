@@ -44,7 +44,7 @@ namespace console_netcore31_newsocket
             _socket = socket;
             MemoryPool = memoryPool;
             _waitForData = waitForData;
-
+            
             LocalEndPoint = _socket.LocalEndPoint;
             RemoteEndPoint = _socket.RemoteEndPoint;
 
@@ -193,17 +193,15 @@ namespace console_netcore31_newsocket
                 if (_waitForData)
                 {
                     // Wait for data before allocating a buffer.
-                    // 此时 GetResult 无用
-                    // 自动机封装了后续代码
-                    Console.WriteLine("Receiver - Method : Run WaitForData!");
                     await _receiver.WaitForDataAsync();
-                    Console.WriteLine("Receiver - Method : Run WaitForData Completed!");
                 }
 
                 // Ensure we have some reasonable amount of buffer space
                 var buffer = input.GetMemory(MinAllocBufferSize);
+
                 var bytesReceived = await _receiver.ReceiveAsync(buffer);
-                Console.WriteLine("Receiver - Method : Run WriteBuffer Completed!");
+
+
                 if (bytesReceived == 0)
                 {
                     // FIN
@@ -213,21 +211,21 @@ namespace console_netcore31_newsocket
 
                 input.Advance(bytesReceived);
 
-                var result = await input.FlushAsync();
-                Console.WriteLine("Receiver - Method : Run FlushBuffer Completed!");
-                //var paused = !flushTask.IsCompleted;
+                var flushTask = input.FlushAsync();
 
-                //if (paused)
-                //{
-                //    //_trace.ConnectionPause(ConnectionId);
-                //}
+                var paused = !flushTask.IsCompleted;
 
-                //var result = await flushTask;
+                if (paused)
+                {
+                    //_trace.ConnectionPause(ConnectionId);
+                }
 
-                //if (paused)
-                //{
-                //    //_trace.ConnectionResume(ConnectionId);
-                //}
+                var result = await flushTask;
+
+                if (paused)
+                {
+                    //_trace.ConnectionResume(ConnectionId);
+                }
 
                 if (result.IsCompleted || result.IsCanceled)
                 {
@@ -283,12 +281,14 @@ namespace console_netcore31_newsocket
             while (true)
             {
                 var result = await output.ReadAsync();
+
                 if (result.IsCanceled)
                 {
                     break;
                 }
 
                 var buffer = result.Buffer;
+
                 var end = buffer.End;
                 var isCompleted = result.IsCompleted;
                 if (!buffer.IsEmpty)
@@ -297,6 +297,7 @@ namespace console_netcore31_newsocket
                 }
 
                 output.AdvanceTo(end);
+
                 if (isCompleted)
                 {
                     break;
