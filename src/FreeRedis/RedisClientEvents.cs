@@ -58,11 +58,13 @@ namespace FreeRedis
     {
         public RedisClient Client { get; }
         public CommandPacket Command { get; }
+        public Type ValueType { get; }
 
-        public InterceptorBeforeEventArgs(RedisClient cli, CommandPacket cmd)
+        public InterceptorBeforeEventArgs(RedisClient cli, CommandPacket cmd, Type valueType)
         {
             this.Client = cli;
             this.Command = cmd;
+            this.ValueType = valueType;
         }
 
         public object Value
@@ -81,15 +83,17 @@ namespace FreeRedis
     {
         public RedisClient Client { get; }
         public CommandPacket Command { get; }
+        public Type ValueType { get; }
 
         public object Value { get; }
         public Exception Exception { get; }
         public long ElapsedMilliseconds { get; }
 
-        public InterceptorAfterEventArgs(RedisClient cli, CommandPacket cmd, object value, Exception exception, long elapsedMilliseconds)
+        public InterceptorAfterEventArgs(RedisClient cli, CommandPacket cmd, Type valueType, object value, Exception exception, long elapsedMilliseconds)
         {
             this.Client = cli;
             this.Command = cmd;
+            this.ValueType = valueType;
             this.Value = value;
             this.Exception = exception;
             this.ElapsedMilliseconds = elapsedMilliseconds;

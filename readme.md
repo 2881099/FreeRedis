@@ -99,6 +99,22 @@ public static RedisClient cli = new RedisClient(
 
 -----
 
+#### ⚡ Client-side-cahing (本地缓存)
+
+> requires redis-server 6.0 and above
+
+```csharp
+cli.UseClientSideCaching(new ClientSideCachingOptions
+{
+    //本地缓存的容量
+    Capacity = 3,
+    //过滤哪些键能被本地缓存
+    KeyFilter = key => key.StartsWith("Interceptor"),
+    //检查长期未使用的缓存
+    CheckExpired = (key, dt) => DateTime.Now.Subtract(dt) > TimeSpan.FromSeconds(2)
+});
+```
+
 #### 📡 Subscribe (订阅)
 
 ```csharp

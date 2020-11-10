@@ -18,7 +18,7 @@ namespace FreeRedis.Tests
         {
             using (var cli = CreateClient())
             {
-                cli.UseClientSideCaching();
+                cli.Interceptors.Add(() => new MemoryCacheAop());
 
                 cli.Set("Interceptor01", "123123");
 
@@ -32,76 +32,34 @@ namespace FreeRedis.Tests
             }
         }
     }
-
-    static class MemoryCacheAopExtensions
+    
+    class MemoryCacheAop : IInterceptor
     {
-        public static void UseClientSideCaching(this RedisClient cli)
-        {
-            var context = new ClientSideCachingContext(cli);
-            cli.Subscribe("__redis__:invalidate", (chan, msg) =>
-            {
-            });
-
-            cli.Interceptors.Add(() => new MemoryCacheAop(context));
-            cli.Unavailable += (_, e) => 
-            {
-                _dicStrings.Clear();
-            };
-            cli.Connected += (_, e) =>
-            {
-                e.Client.ClientTracking(true, 100, null, false, false, false, false);
-            };
-        }
-
-        class ClientSideCachingContext
-        {
-            internal RedisClient _cli;
-            internal long _clientid;
-            public ClientSideCachingContext(RedisClient cli)
-            {
-                _cli = cli;
-            }
-        }
-
         static ConcurrentDictionary<string, object> _dicStrings = new ConcurrentDictionary<string, object>();
-        class MemoryCacheAop : IInterceptor
+
+        public void After(InterceptorAfterEventArgs args)
         {
-            ClientSideCachingContext _context;
-            public MemoryCacheAop(ClientSideCachingContext context)
+            switch (args.Command._command)
             {
-                _context = context;
+                case "GET":
+                    if (_iscached == false && args.Exception == null)
+                        _dicStrings.TryAdd(args.Command.GetKey(0), args.Value);
+                    break;
             }
+        }
 
-            public void After(InterceptorAfterEventArgs args)
+        bool _iscached = false;
+        public void Before(InterceptorBeforeEventArgs args)
+        {
+            switch (args.Command._command)
             {
-                switch (args.Command._command)
-                {
-                    case "GET":
-                        if (_iscached == false && args.Exception == null)
-                            _dicStrings.TryAdd(args.Command.GetKey(0), args.Value);
-                        break;
-                    case "SUBSCRIBLE":
-                        if (args.Command._input.Where((a, b) => b > 0 && string.Compare(a as string, "__redis__:invalidate", true) == 0).Any())
-                        {
-                            _context._clientid = _context._cli.ClientId();
-                        }
-                        break;
-                }
-            }
-
-            bool _iscached = false;
-            public void Before(InterceptorBeforeEventArgs args)
-            {
-                switch (args.Command._command)
-                {
-                    case "GET":
-                        if (_dicStrings.TryGetValue(args.Command.GetKey(0), out var tryval))
-                        {
-                            args.Value = tryval;
-                            _iscached = true;
-                        }
-                        break;
-                }
+                case "GET":
+                    if (_dicStrings.TryGetValue(args.Command.GetKey(0), out var tryval))
+                    {
+                        args.Value = tryval;
+                        _iscached = true;
+                    }
+                    break;
             }
         }
     }

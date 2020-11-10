@@ -98,7 +98,7 @@ namespace FreeRedis
                 aopsws[idx] = new Stopwatch();
                 aopsws[idx].Start();
                 aops[idx] = isnotice && idx == aops.Length - 1 ? new NoticeCallInterceptor(this) : this.Interceptors[idx]?.Invoke();
-                var args = new InterceptorBeforeEventArgs(this, cmd);
+                var args = new InterceptorBeforeEventArgs(this, cmd, typeof(T));
                 aops[idx].Before(args);
                 if (args.ValueIsChanged && args.Value is T argsValue)
                 {
@@ -121,7 +121,7 @@ namespace FreeRedis
                 for (var idx = 0; idx < aops.Length; idx++)
                 {
                     aopsws[idx].Stop();
-                    var args = new InterceptorAfterEventArgs(this, cmd, ret, exception, aopsws[idx].ElapsedMilliseconds);
+                    var args = new InterceptorAfterEventArgs(this, cmd, typeof(T), ret, exception, aopsws[idx].ElapsedMilliseconds);
                     aops[idx].After(args);
                 }
             }
