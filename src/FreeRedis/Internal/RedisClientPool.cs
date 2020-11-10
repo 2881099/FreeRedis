@@ -26,7 +26,8 @@ namespace FreeRedis.Internal
             {
                 var cli = s as RedisClient;
                 var rds = cli.Adapter.GetRedisSocket(null);
-                using (cli.NoneRedisSimpleError())
+                var adapter = cli.Adapter as RedisClient.SingleInsideAdapter;
+                using (adapter.NoneRedisSimpleError())
                 {
                     rds.Socket.ReceiveTimeout = (int)_policy._connectionStringBuilder.ReceiveTimeout.TotalMilliseconds;
                     rds.Socket.SendTimeout = (int)_policy._connectionStringBuilder.SendTimeout.TotalMilliseconds;
@@ -35,34 +36,34 @@ namespace FreeRedis.Internal
                     if (_policy._connectionStringBuilder.Protocol == RedisProtocol.RESP3)
                     {
                         cli.Hello("3", _policy._connectionStringBuilder.User, _policy._connectionStringBuilder.Password, _policy._connectionStringBuilder.ClientName);
-                        if (cli.RedisSimpleError != null)
-                            throw cli.RedisSimpleError;
+                        if (adapter.RedisSimpleError != null)
+                            throw adapter.RedisSimpleError;
                         rds.Protocol = RedisProtocol.RESP3;
                     }
                     else if (!string.IsNullOrEmpty(_policy._connectionStringBuilder.User) && !string.IsNullOrEmpty(_policy._connectionStringBuilder.Password))
                     {
                         cli.Auth(_policy._connectionStringBuilder.User, _policy._connectionStringBuilder.Password);
-                        if (cli.RedisSimpleError != null)
-                            throw cli.RedisSimpleError;
+                        if (adapter.RedisSimpleError != null)
+                            throw adapter.RedisSimpleError;
                     }
                     else if (!string.IsNullOrEmpty(_policy._connectionStringBuilder.Password))
                     {
                         cli.Auth(_policy._connectionStringBuilder.Password);
-                        if (cli.RedisSimpleError != null && cli.RedisSimpleError.Message != "ERR Client sent AUTH, but no password is set")
-                            throw cli.RedisSimpleError;
+                        if (adapter.RedisSimpleError != null && adapter.RedisSimpleError.Message != "ERR Client sent AUTH, but no password is set")
+                            throw adapter.RedisSimpleError;
                     }
 
                     if (_policy._connectionStringBuilder.Database > 0)
                     {
                         cli.Select(_policy._connectionStringBuilder.Database);
-                        if (cli.RedisSimpleError != null)
-                            throw cli.RedisSimpleError;
+                        if (adapter.RedisSimpleError != null && adapter.RedisSimpleError.Message != "ERR SELECT is not allowed in cluster mode")
+                            throw adapter.RedisSimpleError;
                     }
                     if (!string.IsNullOrEmpty(_policy._connectionStringBuilder.ClientName) && _policy._connectionStringBuilder.Protocol == RedisProtocol.RESP2)
                     {
                         cli.ClientSetName(_policy._connectionStringBuilder.ClientName);
-                        if (cli.RedisSimpleError != null)
-                            throw cli.RedisSimpleError;
+                        if (adapter.RedisSimpleError != null)
+                            throw adapter.RedisSimpleError;
                     }
                 }
                 connected?.Invoke(cli);

@@ -77,7 +77,6 @@ namespace FreeRedis
                     _redisSocket.Write(cmd);
                     var rt = _redisSocket.Read(cmd._flagReadbytes);
                     if (cmd._command == "QUIT") _redisSocket.ReleaseSocket();
-                    rt.IsErrorThrow = TopOwner._isThrowRedisSimpleError;
                     return parse(rt);
                 });
             }

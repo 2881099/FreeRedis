@@ -11,21 +11,21 @@ namespace FreeRedis
         #region async (copy from sync)
         public Task<long> GeoAddAsync(string key, params GeoMember[] members)
         {
-            var cmd = "GEOADD".Input(key);
+            var cmd = "GEOADD".InputKey(key);
             foreach (var mem in members) cmd.InputRaw(mem.longitude).InputRaw(mem.latitude).InputRaw(mem.member);
-            return CallAsync(cmd.FlagKey(key), rt => rt.ThrowOrValue<long>());
+            return CallAsync(cmd, rt => rt.ThrowOrValue<long>());
         }
         public Task<decimal?> GeoDistAsync(string key, string member1, string member2, GeoUnit unit = GeoUnit.m) => CallAsync("GEODIST"
-            .Input(key, member1, member2)
-            .InputIf(unit != GeoUnit.m, unit)
-            .FlagKey(key), rt => rt.ThrowOrValue<decimal?>());
+            .InputKey(key)
+            .Input(member1, member2)
+            .InputIf(unit != GeoUnit.m, unit), rt => rt.ThrowOrValue<decimal?>());
 
-        public Task<string> GeoHashAsync(string key, string member) => CallAsync("GEOHASH".Input(key).InputRaw(member).FlagKey(key), rt => rt.ThrowOrValue((a, _) => a.FirstOrDefault().ConvertTo<string>()));
-        public Task<string[]> GeoHashAsync(string key, string[] members) => CallAsync("GEOHASH".Input(key).Input(members).FlagKey(key), rt => rt.ThrowOrValue<string[]>());
+        public Task<string> GeoHashAsync(string key, string member) => CallAsync("GEOHASH".InputKey(key, member), rt => rt.ThrowOrValue((a, _) => a.FirstOrDefault().ConvertTo<string>()));
+        public Task<string[]> GeoHashAsync(string key, string[] members) => CallAsync("GEOHASH".InputKey(key, members), rt => rt.ThrowOrValue<string[]>());
 
         public Task<GeoMember> GeoPosAsync(string key, string member) => GeoPosAsync(key, new[] { member }, rt => rt.FirstOrDefault());
         public Task<GeoMember[]> GeoPosAsync(string key, string[] members) => GeoPosAsync(key, members, rt => rt);
-        Task<T> GeoPosAsync<T>(string key, string[] members, Func<GeoMember[], T> parse) => CallAsync("GEOPOS".Input(key).Input(members).FlagKey(key), rt => rt
+        Task<T> GeoPosAsync<T>(string key, string[] members, Func<GeoMember[], T> parse) => CallAsync("GEOPOS".InputKey(key, members), rt => rt
             .ThrowOrValue((a, _) => parse(a.Select((z, y) =>
             {
                 if (z == null) return null;
@@ -45,19 +45,18 @@ namespace FreeRedis
         {
             if (string.IsNullOrWhiteSpace(storekey) && string.IsNullOrWhiteSpace(storedistkey)) throw new ArgumentNullException(nameof(storekey));
             return CallAsync("GEORADIUS"
-                .Input(key, longitude, latitude)
-                .Input(radius, unit)
+                .InputKey(key)
+                .Input(longitude, latitude, radius, unit)
                 .InputIf(count != null, "COUNT", count)
                 .InputIf(collation != null, collation)
                 .InputIf(!string.IsNullOrWhiteSpace(storekey), "STORE", storekey)
-                .InputIf(!string.IsNullOrWhiteSpace(storedistkey), "STOREDIST", storedistkey)
-                .FlagKey(key), rt => rt.ThrowOrValue<long>());
+                .InputIf(!string.IsNullOrWhiteSpace(storedistkey), "STOREDIST", storedistkey), rt => rt.ThrowOrValue<long>());
         }
 
         Task<GeoRadiusResult[]> GeoRadiusAsync(string cmd, string key, string member, decimal? longitude, decimal? latitude, decimal radius, GeoUnit unit = GeoUnit.m,
             bool withdoord = false, bool withdist = false, bool withhash = false,
             long? count = null, Collation? collation = null) => CallAsync(cmd
-            .Input(key)
+            .InputKey(key)
             .InputIf(!string.IsNullOrEmpty(member), member)
             .InputIf(longitude != null && latitude != null, longitude, latitude)
             .InputRaw(radius)
@@ -66,8 +65,7 @@ namespace FreeRedis
             .InputIf(withdist, "WITHDIST")
             .InputIf(withhash, "WITHHASH")
             .InputIf(count != null, "COUNT", count)
-            .InputIf(collation != null, collation)
-            .FlagKey(key), rt => rt.ThrowOrValue((a, _) =>
+            .InputIf(collation != null, collation), rt => rt.ThrowOrValue((a, _) =>
             {
                 if (withdoord || withdist || withhash)
                     return a.Select(x =>
@@ -99,34 +97,33 @@ namespace FreeRedis
         {
             if (string.IsNullOrWhiteSpace(storekey) && string.IsNullOrWhiteSpace(storedistkey)) throw new ArgumentNullException(nameof(storekey));
             return CallAsync("GEORADIUSBYMEMBER"
-                .Input(key, member, radius)
-                .InputRaw(unit)
+                .InputKey(key)
+                .Input(member, radius, unit)
                 .InputIf(count != null, "COUNT", count)
                 .InputIf(collation != null, collation)
                 .InputIf(!string.IsNullOrWhiteSpace(storekey), "STORE", storekey)
-                .InputIf(!string.IsNullOrWhiteSpace(storedistkey), "STOREDIST", storedistkey)
-                .FlagKey(key), rt => rt.ThrowOrValue<long>());
+                .InputIf(!string.IsNullOrWhiteSpace(storedistkey), "STOREDIST", storedistkey), rt => rt.ThrowOrValue<long>());
         }
         #endregion
 #endif
 
         public long GeoAdd(string key, params GeoMember[] members)
         {
-            var cmd = "GEOADD".Input(key);
+            var cmd = "GEOADD".InputKey(key);
             foreach (var mem in members) cmd.InputRaw(mem.longitude).InputRaw(mem.latitude).InputRaw(mem.member);
-            return Call(cmd.FlagKey(key), rt => rt.ThrowOrValue<long>());
+            return Call(cmd, rt => rt.ThrowOrValue<long>());
         }
         public decimal? GeoDist(string key, string member1, string member2, GeoUnit unit = GeoUnit.m) => Call("GEODIST"
-            .Input(key, member1, member2)
-            .InputIf(unit != GeoUnit.m, unit)
-            .FlagKey(key), rt => rt.ThrowOrValue<decimal?>());
+            .InputKey(key)
+            .Input(member1, member2)
+            .InputIf(unit != GeoUnit.m, unit), rt => rt.ThrowOrValue<decimal?>());
 
-        public string GeoHash(string key, string member) => Call("GEOHASH".Input(key).InputRaw(member).FlagKey(key), rt => rt.ThrowOrValue((a, _) => a.FirstOrDefault().ConvertTo<string>()));
-        public string[] GeoHash(string key, string[] members) => Call("GEOHASH".Input(key).Input(members).FlagKey(key), rt => rt.ThrowOrValue<string[]>());
+        public string GeoHash(string key, string member) => Call("GEOHASH".InputKey(key, member), rt => rt.ThrowOrValue((a, _) => a.FirstOrDefault().ConvertTo<string>()));
+        public string[] GeoHash(string key, string[] members) => Call("GEOHASH".InputKey(key, members), rt => rt.ThrowOrValue<string[]>());
 
         public GeoMember GeoPos(string key, string member) => GeoPos(key, new[] { member }, rt => rt.FirstOrDefault());
         public GeoMember[] GeoPos(string key, string[] members) => GeoPos(key, members, rt => rt);
-        T GeoPos<T>(string key, string[] members, Func<GeoMember[], T> parse) => Call("GEOPOS".Input(key).Input(members).FlagKey(key), rt => rt
+        T GeoPos<T>(string key, string[] members, Func<GeoMember[], T> parse) => Call("GEOPOS".InputKey(key, members), rt => rt
             .ThrowOrValue((a, _) => parse(a.Select((z, y) =>
                 {
                     if (z == null) return null;
@@ -146,19 +143,18 @@ namespace FreeRedis
         {
             if (string.IsNullOrWhiteSpace(storekey) && string.IsNullOrWhiteSpace(storedistkey)) throw new ArgumentNullException(nameof(storekey));
             return Call("GEORADIUS"
-                .Input(key, longitude, latitude)
-                .Input(radius, unit)
+                .InputKey(key)
+                .Input(longitude, latitude, radius, unit)
                 .InputIf(count != null, "COUNT", count)
                 .InputIf(collation != null, collation)
                 .InputIf(!string.IsNullOrWhiteSpace(storekey), "STORE", storekey)
-                .InputIf(!string.IsNullOrWhiteSpace(storedistkey), "STOREDIST", storedistkey)
-                .FlagKey(key), rt => rt.ThrowOrValue<long>());
+                .InputIf(!string.IsNullOrWhiteSpace(storedistkey), "STOREDIST", storedistkey), rt => rt.ThrowOrValue<long>());
         }
         
         GeoRadiusResult[] GeoRadius(string cmd, string key, string member, decimal? longitude, decimal? latitude, decimal radius, GeoUnit unit = GeoUnit.m,
             bool withdoord = false, bool withdist = false, bool withhash = false,
             long? count = null, Collation? collation = null) => Call(cmd
-            .Input(key)
+            .InputKey(key)
             .InputIf(!string.IsNullOrEmpty(member), member)
             .InputIf(longitude != null && latitude != null, longitude, latitude)
             .InputRaw(radius)
@@ -167,8 +163,7 @@ namespace FreeRedis
             .InputIf(withdist, "WITHDIST")
             .InputIf(withhash, "WITHHASH")
             .InputIf(count != null, "COUNT", count)
-            .InputIf(collation != null, collation)
-            .FlagKey(key), rt => rt.ThrowOrValue((a, _) =>
+            .InputIf(collation != null, collation), rt => rt.ThrowOrValue((a, _) =>
             {
                 if (withdoord || withdist || withhash)
                     return a.Select(x =>
@@ -200,13 +195,12 @@ namespace FreeRedis
         {
             if (string.IsNullOrWhiteSpace(storekey) && string.IsNullOrWhiteSpace(storedistkey)) throw new ArgumentNullException(nameof(storekey));
             return Call("GEORADIUSBYMEMBER"
-                .Input(key, member, radius)
-                .InputRaw(unit)
+                .InputKey(key)
+                .Input(member, radius, unit)
                 .InputIf(count != null, "COUNT", count)
                 .InputIf(collation != null, collation)
                 .InputIf(!string.IsNullOrWhiteSpace(storekey), "STORE", storekey)
-                .InputIf(!string.IsNullOrWhiteSpace(storedistkey), "STOREDIST", storedistkey)
-                .FlagKey(key), rt => rt.ThrowOrValue<long>());
+                .InputIf(!string.IsNullOrWhiteSpace(storedistkey), "STOREDIST", storedistkey), rt => rt.ThrowOrValue<long>());
         }
     }
 

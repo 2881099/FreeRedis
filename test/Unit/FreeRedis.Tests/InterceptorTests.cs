@@ -38,10 +38,11 @@ namespace FreeRedis.Tests
             {
                 switch (args.Command._command)
                 {
-                    case "PING": return;
+                    case "GET":
+                        if (_iscached == false && args.Exception == null)
+                            _dicStrings.TryAdd(args.Command.GetKey(0), args.Value);
+                        break;
                 }
-                if (_iscached == false && args.Exception == null && args.Command._command == "GET")
-                    _dicStrings.TryAdd(args.Command._flagKey[0], args.Value);
             }
 
             bool _iscached = false;
@@ -49,12 +50,13 @@ namespace FreeRedis.Tests
             {
                 switch (args.Command._command)
                 {
-                    case "PING": return;
-                }
-                if (args.Command._command == "GET" && _dicStrings.TryGetValue(args.Command._flagKey[0], out var tryval))
-                {
-                    args.Value = tryval;
-                    _iscached = true;
+                    case "GET":
+                        if (_dicStrings.TryGetValue(args.Command.GetKey(0), out var tryval))
+                        {
+                            args.Value = tryval;
+                            _iscached = true;
+                        }
+                        break;
                 }
             }
 

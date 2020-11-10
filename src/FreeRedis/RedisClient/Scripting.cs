@@ -12,15 +12,13 @@ namespace FreeRedis
         #region async (copy from sync)
         public Task<object> EvalAsync(string script, string[] keys = null, params object[] arguments) => CallAsync("EVAL"
             .Input(script, keys?.Length ?? 0)
-            .InputIf(keys?.Any() == true, keys)
-            .Input(arguments)
-            .FlagKey(keys), rt => rt.ThrowOrValue());
+            .InputKeyIf(keys?.Any() == true, keys)
+            .Input(arguments), rt => rt.ThrowOrValue());
 
         public Task<object> EvalShaAsync(string sha1, string[] keys = null, params object[] arguments) => CallAsync("EVALSHA"
             .Input(sha1, keys?.Length ?? 0)
-            .InputIf(keys?.Any() == true, keys)
-            .Input(arguments)
-            .FlagKey(keys), rt => rt.ThrowOrValue());
+            .InputKeyIf(keys?.Any() == true, keys)
+            .Input(arguments), rt => rt.ThrowOrValue());
 
         public Task<bool> ScriptExistsAsync(string sha1) => CallAsync("SCRIPT".SubCommand("EXISTS").InputRaw(sha1), rt => rt.ThrowOrValue((a, _) => a.FirstOrDefault().ConvertTo<bool>()));
         public Task<bool[]> ScriptExistsAsync(string[] sha1) => CallAsync("SCRIPT".SubCommand("EXISTS").Input(sha1), rt => rt.ThrowOrValue<bool[]>());
@@ -33,15 +31,13 @@ namespace FreeRedis
 
         public object Eval(string script, string[] keys = null, params object[] arguments) => Call("EVAL"
             .Input(script, keys?.Length ?? 0)
-            .InputIf(keys?.Any() == true, keys)
-            .Input(arguments)
-            .FlagKey(keys), rt => rt.ThrowOrValue());
+            .InputKeyIf(keys?.Any() == true, keys)
+            .Input(arguments), rt => rt.ThrowOrValue());
 
         public object EvalSha(string sha1, string[] keys = null, params object[] arguments) => Call("EVALSHA"
             .Input(sha1, keys?.Length ?? 0)
-            .InputIf(keys?.Any() == true, keys)
-            .Input(arguments)
-            .FlagKey(keys), rt => rt.ThrowOrValue());
+            .InputKeyIf(keys?.Any() == true, keys)
+            .Input(arguments), rt => rt.ThrowOrValue());
 
         public bool ScriptExists(string sha1) => Call("SCRIPT".SubCommand("EXISTS").InputRaw(sha1), rt => rt.ThrowOrValue((a, _) => a.FirstOrDefault().ConvertTo<bool>()));
         public bool[] ScriptExists(string[] sha1) => Call("SCRIPT".SubCommand("EXISTS").Input(sha1), rt => rt.ThrowOrValue<bool[]>());

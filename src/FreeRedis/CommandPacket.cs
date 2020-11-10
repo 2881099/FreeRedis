@@ -12,7 +12,15 @@ namespace FreeRedis
         public string _command { get; private set; }
         public string _subcommand { get; private set; }
         public List<object> _input { get; } = new List<object>();
-        public List<string> _flagKey { get; } = new List<string>();
+        public List<int> _keyIndexes { get; } = new List<int>();
+        public string _prefix { get; private set; }
+
+        public string GetKey(int index, bool withoutPrefix = false)
+        {
+            if (withoutPrefix && !string.IsNullOrWhiteSpace(_prefix))
+                return _input[_keyIndexes[index]].ToInvariantCultureToString().Substring(_prefix.Length);
+            return _input[_keyIndexes[index]].ToInvariantCultureToString();
+        }
 
         public static implicit operator List<object>(CommandPacket cb) => cb._input;
         public static implicit operator CommandPacket(string cmd) => new CommandPacket(cmd);
@@ -28,6 +36,25 @@ namespace FreeRedis
                 sb.Append(tmpstr);
             }
             return sb.ToString();
+        }
+
+        public CommandPacket Prefix(string prefix)
+        {
+            if (string.IsNullOrWhiteSpace(prefix)) return this;
+            if (prefix == _prefix) return this;
+            if (!string.IsNullOrWhiteSpace(_prefix))
+            {
+                foreach (var idx in _keyIndexes)
+                {
+                    var key = _input[idx].ToInvariantCultureToString();
+                    if (key?.StartsWith(_prefix) == true)
+                        _input[idx] = key.Substring(_prefix.Length);
+                }
+            }
+            _prefix = prefix;
+            foreach (var idx in _keyIndexes)
+                _input[idx] = $"{prefix}{_input[idx]}";
+            return this;
         }
 
         internal bool _clusterMovedAsking;
@@ -61,21 +88,27 @@ namespace FreeRedis
             }
             return this;
         }
-        public CommandPacket FlagKey(params string[] keys)
+
+        public CommandPacket InputKey(string key)
         {
-            if (keys != null)
-                foreach (var key in keys) 
-                    if (!string.IsNullOrEmpty(key)) 
-                        _flagKey.Add(key);
+            _keyIndexes.Add(_input.Count);
+            _input.Add(key);
             return this;
         }
-        public CommandPacket FlagKey(IEnumerable<string> keys)
+        public CommandPacket InputKey(string[] keys)
         {
-            if (keys != null)
-                foreach (var key in keys)
-                    if (!string.IsNullOrEmpty(key))
-                        _flagKey.Add(key);
+            if (keys == null) return this;
+            foreach (var key in keys)
+            {
+                _keyIndexes.Add(_input.Count);
+                _input.Add(key);
+            }
             return this;
+        }
+        public CommandPacket InputKeyIf(bool condition, params string[] keys)
+        {
+            if (condition == false) return this;
+            return InputKey(keys);
         }
 
         public CommandPacket InputRaw(object arg)
@@ -119,38 +152,61 @@ namespace FreeRedis
             return this;
         }
 
-        public CommandPacket InputKv(object[] keyValues, Func<object, object> serialize)
+        public CommandPacket InputKv(object[] keyValues, bool iskey, Func<object, object> serialize)
         {
             if (keyValues == null | keyValues.Length == 0) return this;
             if (keyValues.Length % 2 != 0) throw new ArgumentException($"Array {nameof(keyValues)} length is not even");
-            _input.AddRange(keyValues.Select((a, b) => b % 2 == 0 ? a : (serialize?.Invoke(a) ?? a)));
+            for (var a = 0;a < keyValues.Length; a += 2)
+            {
+                if (iskey) InputKey(keyValues[a].ToInvariantCultureToString());
+                else InputRaw(keyValues[a]);
+                InputRaw((serialize?.Invoke(keyValues[a + 1]) ?? keyValues[a + 1]));
+            }
             return this;
         }
-        public CommandPacket InputKv<T>(Dictionary<string, T> args, Func<object, object> serialize)
+        public CommandPacket InputKv<T>(Dictionary<string, T> keyValues, bool iskey, Func<object, object> serialize)
         {
-            _input.AddRange(args.Select(a => new object[] { a.Key, serialize?.Invoke(a.Value) ?? a.Value }).SelectMany(a => a).ToArray());
+            foreach (var kv in keyValues)
+            {
+                if (iskey) InputKey(kv.Key);
+                else InputRaw(kv.Key);
+                InputRaw(serialize?.Invoke(kv.Value) ?? kv.Value);
+            }
             return this;
         }
     }
 
     static class CommandPacketExtensions
     {
-        public static CommandPacket SubCommand(this string that, string subcmd) => new CommandPacket(that, subcmd);
-        public static CommandPacket Input(this string that, string arg) => new CommandPacket(that).InputRaw(arg);
-        public static CommandPacket Input(this string that, long arg) => new CommandPacket(that).InputRaw(arg);
-        public static CommandPacket Input(this string that, string arg1, string arg2) => new CommandPacket(that).InputRaw(arg1).InputRaw(arg2);
-        public static CommandPacket Input(this string that, string arg1, long arg2) => new CommandPacket(that).InputRaw(arg1).InputRaw(arg2);
-        public static CommandPacket Input(this string that, string arg1, int arg2) => new CommandPacket(that).InputRaw(arg1).InputRaw(arg2);
-        public static CommandPacket Input(this string that, int arg1, int arg2) => new CommandPacket(that).InputRaw(arg1).InputRaw(arg2);
-        public static CommandPacket Input(this string that, long arg1, long arg2) => new CommandPacket(that).InputRaw(arg1).InputRaw(arg2);
-        public static CommandPacket Input(this string that, string arg1, decimal arg2) => new CommandPacket(that).InputRaw(arg1).InputRaw(arg2);
-        public static CommandPacket Input(this string that, string arg1, string arg2, string arg3) => new CommandPacket(that).InputRaw(arg1).InputRaw(arg2).InputRaw(arg3);
-        public static CommandPacket Input(this string that, string arg1, string arg2, long arg3) => new CommandPacket(that).InputRaw(arg1).InputRaw(arg2).InputRaw(arg3);
-        public static CommandPacket Input(this string that, string arg1, string arg2, decimal arg3) => new CommandPacket(that).InputRaw(arg1).InputRaw(arg2).InputRaw(arg3);
-        public static CommandPacket Input(this string that, string arg1, long arg2, long arg3) => new CommandPacket(that).InputRaw(arg1).InputRaw(arg2).InputRaw(arg3);
-        public static CommandPacket Input(this string that, string arg1, decimal arg2, string arg3) => new CommandPacket(that).InputRaw(arg1).InputRaw(arg2).InputRaw(arg3);
-        public static CommandPacket Input(this string that, string arg1, decimal arg2, decimal arg3) => new CommandPacket(that).InputRaw(arg1).InputRaw(arg2).InputRaw(arg3);
-        public static CommandPacket Input(this string that, string arg1, long arg2, long arg3, long arg4, decimal arg5) => new CommandPacket(that).InputRaw(arg1).InputRaw(arg2).InputRaw(arg3).InputRaw(arg4).InputRaw(arg5);
-        public static CommandPacket Input(this string that, string[] args) => new CommandPacket(that).Input(args);
+        public static CommandPacket SubCommand(this string cmd, string subcmd) => new CommandPacket(cmd, subcmd);
+        public static CommandPacket InputKey(this string cmd, string key) => new CommandPacket(cmd).InputKey(key);
+
+        public static CommandPacket InputKey(this string cmd, string key, string arg1) => new CommandPacket(cmd).InputKey(key).InputRaw(arg1);
+        public static CommandPacket InputKey(this string cmd, string key, string arg1, long arg2) => new CommandPacket(cmd).InputKey(key).InputRaw(arg1).InputRaw(arg2);
+        public static CommandPacket InputKey(this string cmd, string key, string arg1, decimal arg2) => new CommandPacket(cmd).InputKey(key).InputRaw(arg1).InputRaw(arg2);
+        public static CommandPacket InputKey(this string cmd, string key, string arg1, string arg2) => new CommandPacket(cmd).InputKey(key).InputRaw(arg1).InputRaw(arg2);
+        public static CommandPacket InputKey(this string cmd, string key, decimal arg1, string arg2) => new CommandPacket(cmd).InputKey(key).InputRaw(arg1).InputRaw(arg2);
+        public static CommandPacket InputKey(this string cmd, string key, string[] arg1) => new CommandPacket(cmd).InputKey(key).Input(arg1);
+
+        public static CommandPacket InputKey(this string cmd, string key, long arg1) => new CommandPacket(cmd).InputKey(key).InputRaw(arg1);
+        public static CommandPacket InputKey(this string cmd, string key, long arg1, long arg2) => new CommandPacket(cmd).InputKey(key).InputRaw(arg1).InputRaw(arg2);
+        public static CommandPacket InputKey(this string cmd, string key, int arg1) => new CommandPacket(cmd).InputKey(key).InputRaw(arg1);
+
+        public static CommandPacket InputKey(this string cmd, string key, decimal arg1) => new CommandPacket(cmd).InputKey(key).InputRaw(arg1);
+        public static CommandPacket InputKey(this string cmd, string key, decimal arg1, decimal arg2) => new CommandPacket(cmd).InputKey(key).InputRaw(arg1).InputRaw(arg2);
+
+        public static CommandPacket InputKey(this string cmd, string[] keys) => new CommandPacket(cmd).InputKey(keys);
+        public static CommandPacket InputKey(this string cmd, string[] keys, int arg1) => new CommandPacket(cmd).InputKey(keys).InputRaw(arg1);
+
+        public static CommandPacket InputRaw(this string cmd, object arg) => new CommandPacket(cmd).InputRaw(arg);
+
+        public static CommandPacket Input(this string cmd, string arg) => new CommandPacket(cmd).InputRaw(arg);
+        public static CommandPacket Input(this string cmd, long arg) => new CommandPacket(cmd).InputRaw(arg);
+        public static CommandPacket Input(this string cmd, string arg1, string arg2) => new CommandPacket(cmd).InputRaw(arg1).InputRaw(arg2);
+        public static CommandPacket Input(this string cmd, string arg1, int arg2) => new CommandPacket(cmd).InputRaw(arg1).InputRaw(arg2);
+        public static CommandPacket Input(this string cmd, int arg1, int arg2) => new CommandPacket(cmd).InputRaw(arg1).InputRaw(arg2);
+        public static CommandPacket Input(this string cmd, long arg1, long arg2) => new CommandPacket(cmd).InputRaw(arg1).InputRaw(arg2);
+        public static CommandPacket Input(this string cmd, string arg1, string arg2, string arg3) => new CommandPacket(cmd).InputRaw(arg1).InputRaw(arg2).InputRaw(arg3);
+        public static CommandPacket Input(this string cmd, string[] args) => new CommandPacket(cmd).Input(args);
     }
 }

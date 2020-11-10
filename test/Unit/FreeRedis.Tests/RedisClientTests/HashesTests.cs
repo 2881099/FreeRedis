@@ -168,7 +168,7 @@ namespace FreeRedis.Tests.RedisClientTests
         public void HStrLen()
         {
             cli.Del("HStrLen1");
-            cli.HSet("HStrLen1", "f1", 123, "f2", 2222);
+            cli.HMSet("HStrLen1", "f1", 123, "f2", 2222);
             Assert.Equal(3, cli.HStrLen("HStrLen1", "f1"));
             Assert.Equal(4, cli.HStrLen("HStrLen1", "f2"));
             Assert.Equal(0, cli.HStrLen("HStrLen1", "f3"));

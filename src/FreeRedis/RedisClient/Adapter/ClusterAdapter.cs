@@ -40,10 +40,10 @@ namespace FreeRedis
             }
             public override IRedisSocket GetRedisSocket(CommandPacket cmd)
             {
-                var slots = cmd._flagKey.Select(a => GetClusterSlot(a)).Distinct().ToArray();
-                var poolkeys = slots.Select(a => _slotCache.TryGetValue(a, out var trykey) ? trykey : null).Distinct().Where(a => a != null).ToArray();
-                if (poolkeys.Length > 1) throw new RedisClientException($"Multiple key slot values not equal: {cmd}");
-                var poolkey = poolkeys.FirstOrDefault() ?? _ib.GetKeyFirst();
+                var slots = cmd?._keyIndexes.Select(a => GetClusterSlot(cmd._input[a].ToInvariantCultureToString())).Distinct().ToArray();
+                var poolkeys = slots?.Select(a => _slotCache.TryGetValue(a, out var trykey) ? trykey : null).Distinct().Where(a => a != null).ToArray();
+                //if (poolkeys.Length > 1) throw new RedisClientException($"CROSSSLOT Keys in request don't hash to the same slot: {cmd}");
+                var poolkey = poolkeys?.FirstOrDefault() ?? _ib.GetKeyFirst();
 
                 var pool = _ib.Get(poolkey);
                 if (pool.IsAvailable == false)
@@ -61,6 +61,22 @@ namespace FreeRedis
             }
             public override TValue AdapterCall<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
             {
+                if (cmd._keyIndexes.Count > 1) //Multiple key slot values not equal
+                {
+                    switch (cmd._command)
+                    {
+                        case "DEL":
+                        case "UNLINK":
+                            return cmd._keyIndexes.Select((_, idx) => AdapterCall(cmd._command.InputKey(cmd.GetKey(idx)), parse)).Sum(a => a.ConvertTo<long>()).ConvertTo<TValue>();
+                        case "MSET":
+                            cmd._keyIndexes.ForEach(idx => AdapterCall(cmd._command.InputKey(cmd._input[idx].ToInvariantCultureToString()).InputRaw(cmd._input[idx + 1]), parse));
+                            return default;
+                        case "MGET":
+                            return cmd._keyIndexes.Select((_, idx) => AdapterCall(cmd._command.InputKey(cmd.GetKey(idx)), parse).ConvertTo<object[]>().First()).ToArray().ConvertTo<TValue>();
+                        case "PFCOUNT":
+                            return cmd._keyIndexes.Select((_, idx) => AdapterCall(cmd._command.InputKey(cmd.GetKey(idx)), parse)).Sum(a => a.ConvertTo<long>()).ConvertTo<TValue>();
+                    }
+                }
                 return TopOwner.LogCall(cmd, () =>
                 {
                     RedisResult rt = null;
@@ -113,7 +129,6 @@ namespace FreeRedis
                             return AdapterCall(cmd, parse);
                         }
                     }
-                    rt.IsErrorThrow = TopOwner._isThrowRedisSimpleError;
                     return parse(rt);
                 });
             }
