@@ -15,4 +15,10 @@
     <ProjectReference Include="..\..\src\FreeRedis\FreeRedis.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Redis.rsf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
