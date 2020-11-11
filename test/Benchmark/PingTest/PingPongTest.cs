@@ -25,10 +25,10 @@ namespace PingTest
         public PingPongTest()
         {
 
-            var endpoit = new IPEndPoint(IPAddress.Parse("123.57.78.153"), 9379);
+            var endpoit = new IPEndPoint(IPAddress.Parse("127"), 12);
             SocketConnectionFactory client = new SocketConnectionFactory(new SocketTransportOptions());
             connection = client.ConnectAsync(endpoit).Result;
-            connection.Transport.Output.WriteAsync(Encoding.UTF8.GetBytes("AUTH 0f649985e1ae10a\r\n"));
+            connection.Transport.Output.WriteAsync(Encoding.UTF8.GetBytes("AUTH \r\n"));
             var result = connection.Transport.Output.WriteAsync(Encoding.UTF8.GetBytes("SELECT 15\r\n")).Result;
             Thread.Sleep(3000);
             var readResult = connection.Transport.Input.ReadAsync().Result;
