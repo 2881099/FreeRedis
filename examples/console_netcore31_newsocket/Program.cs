@@ -24,7 +24,7 @@ namespace console_netcore31_newsocket
         static void Main(string[] args)
         {
             //FreeRedisTest();
-            //123.57.78.153:9379
+            //
             //var endpoit = new IPEndPoint(IPAddress.Parse(),);
             var endpoit = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 9379);
             //NewSocketTest(endpoit);
