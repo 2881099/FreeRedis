@@ -1,13 +1,12 @@
-﻿using console_netcore31_newsocket.Scheduler;
-using FreeRedis;
+﻿using FreeRedis;
 using Microsoft.AspNetCore.Connections;
 using System;
 using System.Buffers;
 using System.Collections.Concurrent;
 using System.Diagnostics;
+using System.IO;
 using System.Net;
 using System.Net.Sockets;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -21,12 +20,19 @@ namespace console_netcore31_newsocket
     /// </summary>
     class Program
     {
+        private static string ip;
+        private static int port;
+        private static string pwd;
         static void Main(string[] args)
         {
-            //FreeRedisTest();
-            //
-            //var endpoit = new IPEndPoint(IPAddress.Parse(),);
-            var endpoit = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 9379);
+            using (StreamReader stream = new StreamReader("Redis.rsf"))
+            {
+                ip = stream.ReadLine();
+                port = int.Parse(stream.ReadLine());
+                pwd = stream.ReadLine();
+            }
+            
+            var endpoit = new IPEndPoint(IPAddress.Parse(ip), port);
             //NewSocketTest(endpoit);
 
             Server(endpoit);
@@ -137,7 +143,7 @@ namespace console_netcore31_newsocket
             //ResultDict = new ConcurrentDictionary<string, string>();
             SocketConnectionFactory client = new SocketConnectionFactory(new SocketTransportOptions());
             var connection = client.ConnectAsync(endpoit).Result;
-            connection.Transport.Output.WriteAsync(Encoding.UTF8.GetBytes("AUTH \r\n"));
+            connection.Transport.Output.WriteAsync(Encoding.UTF8.GetBytes($"AUTH {pwd}\r\n"));
             var result = connection.Transport.Output.WriteAsync(Encoding.UTF8.GetBytes("SELECT 15\r\n")).Result;
             Thread.Sleep(3000);
             var readResult = connection.Transport.Input.ReadAsync().Result;
@@ -207,7 +213,7 @@ namespace console_netcore31_newsocket
         public static async void FreeRedisTest()
         {
 
-            var client = new RedisClient("");
+            var client = new RedisClient($"{ip}:{port},password={pwd},database=15,asyncPipeline=true");
             SendPing(client);
             while (count != frequence)
             {
