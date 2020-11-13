@@ -25,13 +25,14 @@ namespace console_netcore31_newsocket
         private static string pwd;
         static void Main(string[] args)
         {
-            using (StreamReader stream = new StreamReader("Redis.rsf"))
-            {
-                ip = stream.ReadLine();
-                port = int.Parse(stream.ReadLine());
-                pwd = stream.ReadLine();
-            }
-            
+            //using (StreamReader stream = new StreamReader("Redis.rsf"))
+            //{
+            //    ip = stream.ReadLine();
+            //    port = int.Parse(stream.ReadLine());
+            //    pwd = stream.ReadLine();
+            //}
+            ip = "127.0.0.1";
+            port = 9999;
             var endpoit = new IPEndPoint(IPAddress.Parse(ip), port);
             //NewSocketTest(endpoit);
 
