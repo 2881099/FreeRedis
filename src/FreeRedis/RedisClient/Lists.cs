@@ -17,7 +17,7 @@ namespace FreeRedis
         }
         public Task<KeyValue<string>> BLPopAsync(string[] keys, int timeoutSeconds) => BLRPopAsync<string>("BLPOP", keys, timeoutSeconds);
         public Task<KeyValue<T>> BLPopAsync<T>(string[] keys, int timeoutSeconds) => BLRPopAsync<T>("BLPOP", keys, timeoutSeconds);
-        public Task<string> BRPopAsync(string key, int timeoutSeconds) => CallAsync("BRPOP".InputKey(key, timeoutSeconds).FlagReadbytes(true), rt => rt.ThrowOrValue((a, _) => a.LastOrDefault().ConvertTo<string>()));
+        public Task<string> BRPopAsync(string key, int timeoutSeconds) => CallAsync("BRPOP".InputKey(key, timeoutSeconds), rt => rt.ThrowOrValue((a, _) => a.LastOrDefault().ConvertTo<string>()));
         async public Task<T> BRPopAsync<T>(string key, int timeoutSeconds)
         {
             var kv = await BLRPopAsync<T>("BRPOP", new[] { key }, timeoutSeconds);
@@ -88,7 +88,7 @@ namespace FreeRedis
         }
         public KeyValue<string> BLPop(string[] keys, int timeoutSeconds) => BLRPop<string>("BLPOP", keys, timeoutSeconds);
         public KeyValue<T> BLPop<T>(string[] keys, int timeoutSeconds) => BLRPop<T>("BLPOP", keys, timeoutSeconds);
-        public string BRPop(string key, int timeoutSeconds) => Call("BRPOP".InputKey(key, timeoutSeconds).FlagReadbytes(true), rt => rt.ThrowOrValue((a, _) => a.LastOrDefault().ConvertTo<string>()));
+        public string BRPop(string key, int timeoutSeconds) => Call("BRPOP".InputKey(key, timeoutSeconds), rt => rt.ThrowOrValue((a, _) => a.LastOrDefault().ConvertTo<string>()));
         public T BRPop<T>(string key, int timeoutSeconds)
         {
             var kv = BLRPop<T>("BRPOP", new[] { key }, timeoutSeconds);

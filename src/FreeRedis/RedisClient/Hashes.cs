@@ -20,7 +20,11 @@ namespace FreeRedis
         public Task<Dictionary<string, T>> HGetAllAsync<T>(string key) => CallAsync("HGETALL".InputKey(key).FlagReadbytes(true), rt => rt
             .ThrowOrValue((a, _) =>
             {
-                for (var x = 0; x < a.Length; x += 2) a[x + 1] = DeserializeRedisValue<T>(a[x + 1].ConvertTo<byte[]>(), rt.Encoding);
+                for (var x = 0; x < a.Length; x += 2)
+                {
+                    a[x] = rt.Encoding.GetString(a[x].ConvertTo<byte[]>());
+                    a[x + 1] = DeserializeRedisValue<T>(a[x + 1].ConvertTo<byte[]>(), rt.Encoding);
+                }
                 return a.MapToHash<T>(rt.Encoding);
             }));
 
@@ -69,7 +73,11 @@ namespace FreeRedis
         public Dictionary<string, T> HGetAll<T>(string key) => Call("HGETALL".InputKey(key).FlagReadbytes(true), rt => rt
             .ThrowOrValue((a, _) =>
             {
-                for (var x = 0; x < a.Length; x += 2) a[x + 1] = DeserializeRedisValue<T>(a[x + 1].ConvertTo<byte[]>(), rt.Encoding);
+                for (var x = 0; x < a.Length; x += 2)
+                {
+                    a[x] = rt.Encoding.GetString(a[x].ConvertTo<byte[]>());
+                    a[x + 1] = DeserializeRedisValue<T>(a[x + 1].ConvertTo<byte[]>(), rt.Encoding);
+                }
                 return a.MapToHash<T>(rt.Encoding);
             }));
 
