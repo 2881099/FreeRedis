@@ -1,13 +1,14 @@
-﻿using console_netcore31_newsocket.Scheduler;
-using FreeRedis;
+﻿using FreeRedis;
 using Microsoft.AspNetCore.Connections;
+using StackExchange.Redis;
 using System;
 using System.Buffers;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Net;
 using System.Net.Sockets;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -21,24 +22,48 @@ namespace console_netcore31_newsocket
     /// </summary>
     class Program
     {
+        private static string ip;
+        private static int port;
+        private static string pwd;
         static void Main(string[] args)
         {
-            //FreeRedisTest();
-            //123.57.78.153:9379
-            //var endpoit = new IPEndPoint(IPAddress.Parse("123.57.78.153"), 9379);
-            var endpoit = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 9379);
-            //NewSocketTest(endpoit);
+            using (StreamReader stream = new StreamReader("Redis.rsf"))
+            {
+                ip = stream.ReadLine();
+                port = int.Parse(stream.ReadLine());
+                //pwd = stream.ReadLine();
+            }
+            //ip = "127.0.0.1";
+            //port = 6379;
+            var endpoit = new IPEndPoint(IPAddress.Parse(ip), port);
 
-            Server(endpoit);
-            Test(endpoit);
+            //new
+            NewRedisClient client = new NewRedisClient(endpoit);
+            var result = client.SelectDB(0).Result;
+
+            //FreeRedis
+            var redisClient = new RedisClient($"{ip}:{port},database=15,asyncPipeline=true");
+
+            //StackExchange
+            ConnectionMultiplexer seredis = ConnectionMultiplexer.Connect("127.0.0.1:6379");
+            IDatabase sedb = seredis.GetDatabase(1);
+
+            //SendFromFreeRedis(redisClient);
+            //SendFromFreeRedis(redisClient);
+            SendFromNewSocketRedis(client);
+            SendFromStackExchangeRedis(sedb);
+
+
+
+            //NewSocketTest(endpoit);
+            //result = client.Set("newRedis", "natasha").Result;
+            //Console.WriteLine(result);
+            //Server(endpoit);
+            //Test(endpoit);
             Console.ReadKey();
 
         }
 
-        public static async void TestTask()
-        {
-            //await new MyScheduler(100);
-        }
         public static async void Server(IPEndPoint point)
         {
             TcpListener listener = new TcpListener(point);
@@ -125,9 +150,6 @@ namespace console_netcore31_newsocket
 
         private static readonly Stopwatch sw = new Stopwatch();
         private const int frequence = 20000;
-        
-
-
         private static int count = 0;
 
         #region newSocket
@@ -137,7 +159,7 @@ namespace console_netcore31_newsocket
             //ResultDict = new ConcurrentDictionary<string, string>();
             SocketConnectionFactory client = new SocketConnectionFactory(new SocketTransportOptions());
             var connection = client.ConnectAsync(endpoit).Result;
-            connection.Transport.Output.WriteAsync(Encoding.UTF8.GetBytes("AUTH 0f649985e1ae10a\r\n"));
+            connection.Transport.Output.WriteAsync(Encoding.UTF8.GetBytes($"AUTH {pwd}\r\n"));
             var result = connection.Transport.Output.WriteAsync(Encoding.UTF8.GetBytes("SELECT 15\r\n")).Result;
             Thread.Sleep(3000);
             var readResult = connection.Transport.Input.ReadAsync().Result;
@@ -168,7 +190,6 @@ namespace console_netcore31_newsocket
                 index += 1;
             }
         }
-
         public static async void GetPong(ConnectionContext connection)
         {
             while (true)
@@ -182,7 +203,6 @@ namespace console_netcore31_newsocket
             }
 
         }
-
         public static async void AddCount(byte[] buffer)
         {
             var data = Encoding.UTF8.GetString(buffer);
@@ -207,7 +227,7 @@ namespace console_netcore31_newsocket
         public static async void FreeRedisTest()
         {
 
-            var client = new RedisClient("123.57.78.153:9379,password=0f649985e1ae10a,database=15,asyncPipeline=true");
+            var client = new RedisClient($"{ip}:{port},password={pwd},database=15,asyncPipeline=true");
             SendPing(client);
             while (count != frequence)
             {
@@ -235,6 +255,66 @@ namespace console_netcore31_newsocket
                     Console.WriteLine("FreeRedis:"+sw.ElapsedMilliseconds + "ms");
                 } });
             
+        }
+        #endregion
+
+
+        #region newSocketRedis - SET
+        public static async void SendFromNewSocketRedis(NewRedisClient client)
+        {
+            //var tasks = new Task[10000];
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+            for (var a = 0; a < 10000; a+=1)
+            {
+                await client.PingAsync();
+                //tasks[a] = client.Set("NTest:" + a.ToString(), "Natasha");
+                //if (result)
+                //{
+                //    Interlocked.Increment(ref count);
+                //    if (count == 10000)
+                //    {
+                //        //sw.Stop();
+                //        //Console.WriteLine("NewRedisClient(0-10000): " + sw.ElapsedMilliseconds + "ms");
+                //    }
+                //}
+            }
+            //Task.WaitAll(tasks);
+            sw.Stop();
+            Console.WriteLine("NewRedisClient(0-10000): " + sw.ElapsedMilliseconds + "ms");
+        }
+        #endregion
+
+        #region FreeRedis - SET
+        public static async void SendFromFreeRedis(RedisClient client)
+        {
+            var tasks = new Task[10000];
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+            for (var a = 0; a < 10000; a+=1)
+            {
+                tasks[a] = client.SetAsync("NTest:" + a.ToString(), "Natasha");
+            }
+            Task.WaitAll(tasks);
+            sw.Stop();
+            Console.WriteLine("FreeRedisClient(0-10000): " + sw.ElapsedMilliseconds + "ms");
+        }
+        #endregion
+
+        #region StackExchangeRedis - SET
+        public static async void SendFromStackExchangeRedis(IDatabase sedb)
+        {
+            //var tasks = new Task[10000];
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+            for (var a = 0; a < 10000; a+=1)
+            {
+                await sedb.PingAsync();
+                //tasks[a] = sedb.StringSetAsync("NTest:" + a.ToString(), "Natasha");
+            }
+            //Task.WaitAll(tasks);
+            sw.Stop();
+            Console.WriteLine("StackExchangeAsync(0-10000): " + sw.ElapsedMilliseconds + "ms\r\n");
         }
         #endregion
     }

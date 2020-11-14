@@ -33,12 +33,12 @@ namespace console_netcore31_newsocket
 
             if (!_socket.SendAsync(_awaitableEventArgs))
             {
-                Console.WriteLine("Sender Post Succeed！");
+                //Console.WriteLine("Sender Post Succeed！");
                 _awaitableEventArgs.Complete();
             }
             else
             {
-                Console.WriteLine("Sender Post has been exist！");
+                //Console.WriteLine("Sender Post has been exist！");
             }
 
             return _awaitableEventArgs;
@@ -56,12 +56,12 @@ namespace console_netcore31_newsocket
 
             if (!_socket.SendAsync(_awaitableEventArgs))
             {
-                Console.WriteLine("Sender Post Succeed！");
+                //Console.WriteLine("Sender Post Succeed！");
                 _awaitableEventArgs.Complete();
             }
             else
             {
-                Console.WriteLine("Sender Post has been exist！");
+                //Console.WriteLine("Sender Post has been exist！");
             }
 
             return _awaitableEventArgs;

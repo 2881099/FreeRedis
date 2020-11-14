@@ -17,12 +17,12 @@ namespace console_netcore31_newsocket
 
             if (!_socket.ReceiveAsync(_awaitableEventArgs))
             {
-                Console.WriteLine("Receiver Post Succeed！");
+                //Console.WriteLine("Receiver Post Succeed！");
                 _awaitableEventArgs.Complete();
             }
             else
             {
-                Console.WriteLine("Receiver Post has been exist！");
+                //Console.WriteLine("Receiver Post has been exist！");
             }
 
             return _awaitableEventArgs;
@@ -34,12 +34,12 @@ namespace console_netcore31_newsocket
 
             if (!_socket.ReceiveAsync(_awaitableEventArgs))
             {
-                Console.WriteLine("Receiver Post Succeed！");
+                //Console.WriteLine("Receiver Post Succeed！");
                 _awaitableEventArgs.Complete();
             }
             else
             {
-                Console.WriteLine("Receiver Post has been exist！");
+                //Console.WriteLine("Receiver Post has been exist！");
             }
 
 
