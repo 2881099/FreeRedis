@@ -83,6 +83,7 @@ namespace FreeRedis.Internal
                 cmds.Add("CLIENT".SubCommand("ID")
                     .OnData(rt =>
                     {
+                        if (rt.IsError) return; //ERR Syntax error, try CLIENT (LIST | KILL | GETNAME | SETNAME | PAUSE | REPLY)
                         (rds as IRedisSocketModify).SetClientId(rt.ThrowOrValue<long>());
                     }));
 

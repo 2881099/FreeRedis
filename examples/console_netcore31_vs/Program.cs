@@ -32,62 +32,62 @@ namespace console_netcore31_vs
             cli.Set("TestMGet_null1", "");
             RedisHelper.Set("TestMGet_null1", "");
             sedb.StringSet("TestMGet_string1", String);
-            ThreadPool.SetMinThreads(1000, 1000);
+            ThreadPool.SetMinThreads(10001, 10001);
             Stopwatch sw = new Stopwatch();
             var tasks = new List<Task>();
 
             cli.FlushAll();
 
 
-            //sw.Reset();
-            //sw.Start();
-            //for (var a = 0; a < 10000; a++)
-            //{
-            //    var tmp = Guid.NewGuid().ToString();
-            //    sedb.StringSet(tmp, String);
-            //    var val = sedb.StringGet(tmp);
-            //    if (val != String) throw new Exception("not equal");
-            //}
-            //sw.Stop();
-            //Console.WriteLine("StackExchange(0-10000): " + sw.ElapsedMilliseconds + "ms");
-
-            //sw.Reset();
-            //sw.Start();
-            //var tasks = new List<Task>();
-            //for (var a = 0; a < 10000; a++)
-            //{
-            //    tasks.Add(Task.Run(() =>
-            //    {
-            //        var tmp = Guid.NewGuid().ToString();
-            //        sedb.StringSet(tmp, String);
-            //        var val = sedb.StringGet(tmp);
-            //        if (val != String) throw new Exception("not equal");
-            //    }));
-            //}
-            //Task.WaitAll(tasks.ToArray());
-            //sw.Stop();
-            //Console.WriteLine("StackExchange(Task.WaitAll 10000): " + sw.ElapsedMilliseconds + "ms");
-            //tasks.Clear();
-
-            //sw.Reset();
-            //sw.Start();
-            //Task.Run(async () =>
-            //{
-            //    for (var a = 0; a < 10000; a++)
-            //    {
-            //        var tmp = Guid.NewGuid().ToString();
-            //        await sedb.StringSetAsync(tmp, String);
-            //        var val = await sedb.StringGetAsync(tmp);
-            //        if (val != String) throw new Exception("not equal");
-            //    }
-            //}).Wait();
-            //sw.Stop();
-            //Console.WriteLine("StackExchangeAsync(0-10000): " + sw.ElapsedMilliseconds + "ms");
+            sw.Reset();
+            sw.Start();
+            for (var a = 0; a < 100000; a++)
+            {
+                var tmp = Guid.NewGuid().ToString();
+                sedb.StringSet(tmp, String);
+                var val = sedb.StringGet(tmp);
+                if (val != String) throw new Exception("not equal");
+            }
+            sw.Stop();
+            Console.WriteLine("StackExchange(0-100000): " + sw.ElapsedMilliseconds + "ms");
 
             sw.Reset();
             sw.Start();
             tasks = new List<Task>();
-            for (var a = 0; a < 10000; a++)
+            for (var a = 0; a < 100000; a++)
+            {
+                tasks.Add(Task.Run(() =>
+                {
+                    var tmp = Guid.NewGuid().ToString();
+                    sedb.StringSet(tmp, String);
+                    var val = sedb.StringGet(tmp);
+                    if (val != String) throw new Exception("not equal");
+                }));
+            }
+            Task.WaitAll(tasks.ToArray());
+            sw.Stop();
+            Console.WriteLine("StackExchange(Task.WaitAll 100000): " + sw.ElapsedMilliseconds + "ms");
+            tasks.Clear();
+
+            sw.Reset();
+            sw.Start();
+            Task.Run(async () =>
+            {
+                for (var a = 0; a < 100000; a++)
+                {
+                    var tmp = Guid.NewGuid().ToString();
+                    await sedb.StringSetAsync(tmp, String);
+                    var val = await sedb.StringGetAsync(tmp);
+                    if (val != String) throw new Exception("not equal");
+                }
+            }).Wait();
+            sw.Stop();
+            Console.WriteLine("StackExchangeAsync(0-100000): " + sw.ElapsedMilliseconds + "ms");
+
+            sw.Reset();
+            sw.Start();
+            tasks = new List<Task>();
+            for (var a = 0; a < 100000; a++)
             {
                 tasks.Add(Task.Run(async () =>
                 {
@@ -99,13 +99,13 @@ namespace console_netcore31_vs
             }
             Task.WaitAll(tasks.ToArray());
             sw.Stop();
-            Console.WriteLine("StackExchangeAsync(Task.WaitAll 10000): " + sw.ElapsedMilliseconds + "ms\r\n");
+            Console.WriteLine("StackExchangeAsync(Task.WaitAll 100000): " + sw.ElapsedMilliseconds + "ms\r\n");
             tasks.Clear();
 
 
             sw.Reset();
             sw.Start();
-            for (var a = 0; a < 10000; a++)
+            for (var a = 0; a < 100000; a++)
             {
                 var tmp = Guid.NewGuid().ToString();
                 cli.Set(tmp, String);
@@ -113,12 +113,12 @@ namespace console_netcore31_vs
                 if (val != String) throw new Exception("not equal");
             }
             sw.Stop();
-            Console.WriteLine("FreeRedis(0-10000): " + sw.ElapsedMilliseconds + "ms");
+            Console.WriteLine("FreeRedis(0-100000): " + sw.ElapsedMilliseconds + "ms");
 
             sw.Reset();
             sw.Start();
             tasks = new List<Task>();
-            for (var a = 0; a < 10000; a++)
+            for (var a = 0; a < 100000; a++)
             {
                 tasks.Add(Task.Run(() =>
                 {
@@ -130,14 +130,14 @@ namespace console_netcore31_vs
             }
             Task.WaitAll(tasks.ToArray());
             sw.Stop();
-            Console.WriteLine("FreeRedis(Task.WaitAll 10000): " + sw.ElapsedMilliseconds + "ms");
+            Console.WriteLine("FreeRedis(Task.WaitAll 100000): " + sw.ElapsedMilliseconds + "ms");
             tasks.Clear();
 
             sw.Reset();
             sw.Start();
             Task.Run(async () =>
             {
-                for (var a = 0; a < 10000; a++)
+                for (var a = 0; a < 100000; a++)
                 {
                     var tmp = Guid.NewGuid().ToString();
                     await cli.SetAsync(tmp, String);
@@ -146,14 +146,14 @@ namespace console_netcore31_vs
                 }
             }).Wait();
             sw.Stop();
-            Console.WriteLine("FreeRedisAsync(0-10000): " + sw.ElapsedMilliseconds + "ms");
+            Console.WriteLine("FreeRedisAsync(0-100000): " + sw.ElapsedMilliseconds + "ms");
 
             //FreeRedis.Internal.AsyncRedisSocket.sb.Clear();
             //FreeRedis.Internal.AsyncRedisSocket.sw.Start();
             sw.Reset();
             sw.Start();
             tasks = new List<Task>();
-            for (var a = 0; a < 10000; a++)
+            for (var a = 0; a < 100000; a++)
             {
                 tasks.Add(Task.Run(async () =>
                 {
@@ -167,38 +167,38 @@ namespace console_netcore31_vs
             sw.Stop();
             //var sbstr = FreeRedis.Internal.AsyncRedisSocket.sb.ToString()
             //sbstr = sbstr + sbstr.Split("\r\n").Length + "条消息 ;
-            Console.WriteLine("FreeRedisAsync(Task.WaitAll 10000): " + sw.ElapsedMilliseconds + "ms");
+            Console.WriteLine("FreeRedisAsync(Task.WaitAll 100000): " + sw.ElapsedMilliseconds + "ms");
             tasks.Clear();
 
             sw.Reset();
             sw.Start();
             using (var pipe = cli.StartPipe())
             {
-                for (var a = 0; a < 10000; a++)
+                for (var a = 0; a < 100000; a++)
                 {
                     var tmp = Guid.NewGuid().ToString();
                     pipe.Set(tmp, String);
                     var val = pipe.Get(tmp);
                 }
                 var vals = pipe.EndPipe();
-                for (var a = 1; a < 10000; a += 2)
+                for (var a = 1; a < 100000; a += 2)
                 {
                     if (vals[a].ToString() != String) throw new Exception("not equal");
                 }
             }
             sw.Stop();
-            Console.WriteLine("FreeRedisPipeline(0-10000): " + sw.ElapsedMilliseconds + "ms\r\n");
+            Console.WriteLine("FreeRedisPipeline(0-100000): " + sw.ElapsedMilliseconds + "ms\r\n");
 
             //sw.Reset();
             //sw.Start();
-            //for (var a = 0; a < 10000; a++)
+            //for (var a = 0; a < 100000; a++)
             //    cli.Call(new CommandPacket("SET").Input("TestMGet_string1").InputRaw(String));
             //sw.Stop();
             //Console.WriteLine("FreeRedis2: " + sw.ElapsedMilliseconds + "ms");
 
             //sw.Reset();
             //sw.Start();
-            //for (var a = 0; a < 10000; a++)
+            //for (var a = 0; a < 100000; a++)
             //{
             //    using (var rds = cli.GetTestRedisSocket())
             //    {
@@ -214,7 +214,7 @@ namespace console_netcore31_vs
 
             sw.Reset();
             sw.Start();
-            for (var a = 0; a < 10000; a++)
+            for (var a = 0; a < 100000; a++)
             {
                 var tmp = Guid.NewGuid().ToString();
                 RedisHelper.Set(tmp, String);
@@ -222,12 +222,12 @@ namespace console_netcore31_vs
                 if (val != String) throw new Exception("not equal");
             }
             sw.Stop();
-            Console.WriteLine("CSRedisCore(0-10000): " + sw.ElapsedMilliseconds + "ms");
+            Console.WriteLine("CSRedisCore(0-100000): " + sw.ElapsedMilliseconds + "ms");
 
             sw.Reset();
             sw.Start();
             tasks = new List<Task>();
-            for (var a = 0; a < 10000; a++)
+            for (var a = 0; a < 100000; a++)
             {
                 tasks.Add(Task.Run(() =>
                 {
@@ -239,14 +239,14 @@ namespace console_netcore31_vs
             }
             Task.WaitAll(tasks.ToArray());
             sw.Stop();
-            Console.WriteLine("CSRedisCore(Task.WaitAll 10000): " + sw.ElapsedMilliseconds + "ms");
+            Console.WriteLine("CSRedisCore(Task.WaitAll 100000): " + sw.ElapsedMilliseconds + "ms");
             tasks.Clear();
 
             sw.Reset();
             sw.Start();
             Task.Run(async () =>
             {
-                for (var a = 0; a < 10000; a++)
+                for (var a = 0; a < 100000; a++)
                 {
                     var tmp = Guid.NewGuid().ToString();
                     await RedisHelper.SetAsync(tmp, String);
@@ -255,12 +255,12 @@ namespace console_netcore31_vs
                 }
             }).Wait();
             sw.Stop();
-            Console.WriteLine("CSRedisCoreAsync(0-10000): " + sw.ElapsedMilliseconds + "ms");
+            Console.WriteLine("CSRedisCoreAsync(0-100000): " + sw.ElapsedMilliseconds + "ms");
 
             sw.Reset();
             sw.Start();
             tasks = new List<Task>();
-            for (var a = 0; a < 10000; a++)
+            for (var a = 0; a < 100000; a++)
             {
                 tasks.Add(Task.Run(async () =>
                 {
@@ -272,7 +272,7 @@ namespace console_netcore31_vs
             }
             Task.WaitAll(tasks.ToArray());
             sw.Stop();
-            Console.WriteLine("CSRedisCoreAsync(Task.WaitAll 10000): " + sw.ElapsedMilliseconds + "ms\r\n");
+            Console.WriteLine("CSRedisCoreAsync(Task.WaitAll 100000): " + sw.ElapsedMilliseconds + "ms\r\n");
             tasks.Clear();
         }
 
