@@ -34,22 +34,28 @@ namespace console_netcore31_newsocket
                 //pwd = stream.ReadLine();
             }
             //ip = "127.0.0.1";
-            //port = 9999;
+            //port = 6379;
             var endpoit = new IPEndPoint(IPAddress.Parse(ip), port);
-            //NewSocketTest(endpoit);
+
+            //new
             NewRedisClient client = new NewRedisClient(endpoit);
             var result = client.SelectDB(0).Result;
-            Console.WriteLine(client.PingAsync().Result);
+
+            //FreeRedis
             var redisClient = new RedisClient($"{ip}:{port},database=15,asyncPipeline=true");
 
-
-            //SendFromFreeRedis(redisClient);
-
+            //StackExchange
             ConnectionMultiplexer seredis = ConnectionMultiplexer.Connect("127.0.0.1:6379");
             IDatabase sedb = seredis.GetDatabase(1);
+
+            //SendFromFreeRedis(redisClient);
             //SendFromFreeRedis(redisClient);
             SendFromNewSocketRedis(client);
             SendFromStackExchangeRedis(sedb);
+
+
+
+            //NewSocketTest(endpoit);
             //result = client.Set("newRedis", "natasha").Result;
             //Console.WriteLine(result);
             //Server(endpoit);
