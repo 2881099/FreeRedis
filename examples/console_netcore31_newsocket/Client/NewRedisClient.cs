@@ -18,7 +18,7 @@ namespace console_netcore31_newsocket
         private readonly ConnectionContext _connection;
         private readonly PipeWriter _sender;
         private readonly PipeReader _reciver;
-        public NewRedisClient(string ip, int port) :this(new IPEndPoint(IPAddress.Parse(ip), port))
+        public NewRedisClient(string ip, int port) : this(new IPEndPoint(IPAddress.Parse(ip), port))
         {
         }
         public NewRedisClient(IPEndPoint point)
@@ -37,29 +37,56 @@ namespace console_netcore31_newsocket
             while (true)
             {
                 var result = await _reciver.ReadAsync();
-                var array = result.Buffer.ToArray();
-                Handler(array.AsSpan());
+                var buffer = result.Buffer;
+                if (!buffer.IsSingleSegment)
+                {
+                    Handler(buffer.FirstSpan);
+                }
+                else
+                {
+                    Handler(result.Buffer);
+                }
                 _reciver.AdvanceTo(result.Buffer.End);
             }
         }
 
 
-        private void Handler(ReadOnlySpan<byte> span)
+        private void Handler(in ReadOnlySequence<byte> sequence)
         {
             TaskCompletionSource<string> task;
-            var offset = span.IndexOf((byte)43);
+            var reader = new SequenceReader<byte>(sequence);
+            if (reader.TryReadTo(out ReadOnlySpan<byte> result, 43, advancePastDelimiter: true))
+            {
+                while (reader.TryReadTo(out result, 43, advancePastDelimiter: true))
+                {
+
+                    while (!_taskQueue.TryDequeue(out task)) { }
+                    task.SetResult(Encoding.UTF8.GetString(result));
+                }
+            }
+            while (!_taskQueue.TryDequeue(out task)) { }
+            task.SetResult(Encoding.UTF8.GetString(sequence.Slice(reader.Position, sequence.End).ToArray()));
+        }
+
+        private void Handler(in ReadOnlySpan<byte> span)
+        {
+            var tempSpan = span;
+            TaskCompletionSource<string> task;
+            //var reader = new SequenceReader<byte>(new ReadOnlySequence<byte>(span));
+            var offset = tempSpan.IndexOf((byte)43);
             while (offset != -1)
             {
                 if (offset != 0)
                 {
                     while (!_taskQueue.TryDequeue(out task)) { }
-                    task.SetResult(Encoding.UTF8.GetString(span.Slice(0, offset)));
+                    task.SetResult(Encoding.UTF8.GetString(tempSpan.Slice(0, offset)));
                 }
-                span = span.Slice(offset + 1, span.Length - offset - 1);
-                offset = span.IndexOf((byte)43);
+                tempSpan = tempSpan.Slice(offset + 1, tempSpan.Length - offset - 1);
+                offset = tempSpan.IndexOf((byte)43);
             }
             while (!_taskQueue.TryDequeue(out task)) { }
-            task.SetResult(Encoding.UTF8.GetString(span.Slice(0, span.Length)));
+            task.SetResult(Encoding.UTF8.GetString(tempSpan.Slice(0, tempSpan.Length)));
+
         }
 
 
@@ -100,7 +127,7 @@ namespace console_netcore31_newsocket
             var result = await SendAsync($"SELECT {dbIndex}\r\n");
             return result == "OK\r\n";
         }
-        public async Task<bool> Set(string key,string value)
+        public async Task<bool> Set(string key, string value)
         {
             var result = await SendAsync(new List<object> { "SET", key, value });
             return result == "OK\r\n";

@@ -37,29 +37,29 @@ namespace console_netcore31_newsocket
             port = 6379;
             var endpoit = new IPEndPoint(IPAddress.Parse(ip), port);
 
-            //new
+            ////new
             NewRedisClient client = new NewRedisClient(endpoit);
             var result = client.SelectDB(0).Result;
 
             client.Set("test01", "123123").Wait();
 
-            //FreeRedis
+            ////FreeRedis
             var redisClient = new RedisClient($"{ip}:{port},database=15,min pool size=100");
 
-            //StackExchange
+            ////StackExchange
             ConnectionMultiplexer seredis = ConnectionMultiplexer.Connect("127.0.0.1:6379");
             IDatabase sedb = seredis.GetDatabase(1);
 
-            redisClient.FlushDb();
-            //SendFromFreeRedis(redisClient);
+            //redisClient.FlushDb();
+            ////SendFromFreeRedis(redisClient);
             SendFromFreeRedis(redisClient);
             SendFromNewSocketRedis(client, seredis.GetDatabase(0));
             SendFromStackExchangeRedis(sedb);
 
-            redisClient.FlushDb();
-            SendFromFreeRedis(redisClient);
-            SendFromNewSocketRedis(client, seredis.GetDatabase(0));
-            SendFromStackExchangeRedis(sedb);
+            //redisClient.FlushDb();
+            //SendFromFreeRedis(redisClient);
+            //SendFromNewSocketRedis(client, seredis.GetDatabase(0));
+            //SendFromStackExchangeRedis(sedb);
 
 
 
@@ -145,10 +145,38 @@ namespace console_netcore31_newsocket
 
                 //Console.WriteLine("Input!");
                 var result = await connection.Transport.Input.ReadAsync();
-                //Console.WriteLine("GetData!");
-                var data = Encoding.UTF8.GetString(result.Buffer.ToArray());
-                Console.WriteLine(data);
-                connection.Transport.Input.AdvanceTo(result.Buffer.End);
+                var buffer = result.Buffer;
+                try
+                {
+                    if (!buffer.IsEmpty)
+                    {
+                        if (!buffer.IsSingleSegment)
+                        {
+                            var data = Encoding.UTF8.GetString(buffer.FirstSpan);
+                            Console.WriteLine("-----------");
+                            Console.WriteLine(data);
+                            connection.Transport.Input.AdvanceTo(buffer.End);
+                        }
+                        else
+                        {
+                            var data = Encoding.UTF8.GetString(buffer.ToArray());
+                            Console.WriteLine("==============");
+                            Console.WriteLine(data);
+                            connection.Transport.Input.AdvanceTo(buffer.End);
+                        }
+                    }
+                    else if (result.IsCompleted)
+                    {
+                        break;
+                    }
+                }
+                finally
+                {
+                    
+                }
+               
+
+
                 //await result.Buffer.
                 //connection.Transport.Input.Complete();
 
@@ -223,11 +251,7 @@ namespace console_netcore31_newsocket
         }
 
         private ConcurrentDictionary<string, string> ResultDict;
-        //private Concur
-        //public static async string Set(string key, string value)
-        //{
 
-        //}
         #endregion
 
 
@@ -331,5 +355,8 @@ namespace console_netcore31_newsocket
             Console.WriteLine("StackExchangeAsync(0-10000): " + sw.ElapsedMilliseconds + "ms\r\n");
         }
         #endregion
+
+
+        
     }
 }
