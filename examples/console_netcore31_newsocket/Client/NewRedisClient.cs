@@ -71,12 +71,12 @@ namespace console_netcore31_newsocket
             AddSendAndReciverTask(content, taskSource);
             return taskSource.Task;
         }
-        private Task<string> SendAsync(object[] command)
+        private Task<string> SendAsync(List<object> command)
         {
             var taskSource = new TaskCompletionSource<string>();
             using (var ms = new MemoryStream())
             {
-                new FreeRedis.RespHelper.Resp3Writer(ms, null, FreeRedis.RedisProtocol.RESP2);
+                new FreeRedis.RespHelper.Resp3Writer(ms, null, FreeRedis.RedisProtocol.RESP2).WriteCommand(command);
                 AddSendAndReciverTask(ms.ToArray(), taskSource);
                 ms.Close();
             }
@@ -102,14 +102,14 @@ namespace console_netcore31_newsocket
         }
         public async Task<bool> Set(string key,string value)
         {
-            var result = await SendAsync(new object[] { "SET", key, value });
+            var result = await SendAsync(new List<object> { "SET", key, value });
             return result == "OK\r\n";
             //var result = await SendAsync($"SET {key} {value}\r\n");
             //return result == "OK\r\n";
         }
         public async Task<string> Get(string key)
         {
-            var result = await SendAsync(new object[] { "GET", key });
+            var result = await SendAsync(new List<object> { "GET", key });
             return result;
             //var result = await SendAsync($"SET {key} {value}\r\n");
             //return result == "OK\r\n";

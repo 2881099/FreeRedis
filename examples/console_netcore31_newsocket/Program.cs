@@ -41,6 +41,8 @@ namespace console_netcore31_newsocket
             NewRedisClient client = new NewRedisClient(endpoit);
             var result = client.SelectDB(0).Result;
 
+            client.Set("test01", "123123").Wait();
+
             //FreeRedis
             var redisClient = new RedisClient($"{ip}:{port},database=15,min pool size=100");
 
@@ -51,12 +53,12 @@ namespace console_netcore31_newsocket
             redisClient.FlushDb();
             //SendFromFreeRedis(redisClient);
             SendFromFreeRedis(redisClient);
-            //SendFromNewSocketRedis(client);
+            SendFromNewSocketRedis(client, seredis.GetDatabase(0));
             SendFromStackExchangeRedis(sedb);
 
             redisClient.FlushDb();
             SendFromFreeRedis(redisClient);
-            //SendFromNewSocketRedis(client);
+            SendFromNewSocketRedis(client, seredis.GetDatabase(0));
             SendFromStackExchangeRedis(sedb);
 
 
@@ -265,7 +267,7 @@ namespace console_netcore31_newsocket
         #endregion
 
         #region newSocketRedis - SET
-        public static void SendFromNewSocketRedis(NewRedisClient client)
+        public static void SendFromNewSocketRedis(NewRedisClient client, IDatabase sedb)
         {
             var tasks = new Task[10000];
             Stopwatch sw = new Stopwatch();
@@ -276,7 +278,7 @@ namespace console_netcore31_newsocket
                 {
                     var tmp = Guid.NewGuid().ToString();
                     await client.Set(tmp, "Natasha");
-                    var val = await client.Get(tmp);
+                    var val = await sedb.StringGetAsync(tmp); //valid
                     if (val != "Natasha") throw new Exception("not equal");
                 });
             }
@@ -298,7 +300,7 @@ namespace console_netcore31_newsocket
                 {
                     var tmp = Guid.NewGuid().ToString();
                     await client.SetAsync(tmp, "Natasha");
-                    var val = await client.GetAsync(tmp);
+                    var val = await client.GetAsync(tmp); //valid
                     if (val != "Natasha") throw new Exception("not equal");
                 });
             }
@@ -320,7 +322,7 @@ namespace console_netcore31_newsocket
                 {
                     var tmp = Guid.NewGuid().ToString();
                     await sedb.StringSetAsync(tmp, "Natasha");
-                    var val = await sedb.StringGetAsync(tmp);
+                    var val = await sedb.StringGetAsync(tmp); //valid
                     if (val != "Natasha") throw new Exception("not equal");
                 });
             }
