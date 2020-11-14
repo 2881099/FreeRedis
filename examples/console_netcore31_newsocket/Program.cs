@@ -145,10 +145,38 @@ namespace console_netcore31_newsocket
 
                 //Console.WriteLine("Input!");
                 var result = await connection.Transport.Input.ReadAsync();
-                //Console.WriteLine("GetData!");
-                var data = Encoding.UTF8.GetString(result.Buffer.ToArray());
-                Console.WriteLine(data);
-                connection.Transport.Input.AdvanceTo(result.Buffer.End);
+                var buffer = result.Buffer;
+                try
+                {
+                    if (!buffer.IsEmpty)
+                    {
+                        if (!buffer.IsSingleSegment)
+                        {
+                            var data = Encoding.UTF8.GetString(buffer.FirstSpan);
+                            Console.WriteLine("-----------");
+                            Console.WriteLine(data);
+                            connection.Transport.Input.AdvanceTo(buffer.End);
+                        }
+                        else
+                        {
+                            var data = Encoding.UTF8.GetString(buffer.ToArray());
+                            Console.WriteLine("==============");
+                            Console.WriteLine(data);
+                            connection.Transport.Input.AdvanceTo(buffer.End);
+                        }
+                    }
+                    else if (result.IsCompleted)
+                    {
+                        break;
+                    }
+                }
+                finally
+                {
+                    
+                }
+               
+
+
                 //await result.Buffer.
                 //connection.Transport.Input.Complete();
 
@@ -223,11 +251,7 @@ namespace console_netcore31_newsocket
         }
 
         private ConcurrentDictionary<string, string> ResultDict;
-        //private Concur
-        //public static async string Set(string key, string value)
-        //{
 
-        //}
         #endregion
 
 
@@ -331,5 +355,8 @@ namespace console_netcore31_newsocket
             Console.WriteLine("StackExchangeAsync(0-10000): " + sw.ElapsedMilliseconds + "ms\r\n");
         }
         #endregion
+
+
+        
     }
 }

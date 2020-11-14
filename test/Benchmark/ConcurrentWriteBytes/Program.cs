@@ -9,7 +9,7 @@ namespace ConcurrentWriteBytes
         static void Main(string[] args)
         {
            
-            BenchmarkRunner.Run<WriteTest>();
+            BenchmarkRunner.Run<ByteWriteTest>();
             Console.ReadKey();
 
         }
