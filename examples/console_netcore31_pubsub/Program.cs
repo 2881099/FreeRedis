@@ -1,5 +1,4 @@
 ﻿using FreeRedis;
-using Newtonsoft.Json;
 using System;
 using System.Diagnostics;
 using System.Text;
@@ -15,8 +14,8 @@ namespace console_netcore31
             var r = new RedisClient("127.0.0.1:6379,database=10"); //redis 3.2
             //var r = new RedisClient("127.0.0.1:6379,database=1", "127.0.0.1:6379,database=1");
             //var r = new RedisClient("192.168.164.10:6379,database=1"); //redis 6.0
-            r.Serialize = obj => JsonConvert.SerializeObject(obj);
-            r.Deserialize = (json, type) => JsonConvert.DeserializeObject(json, type);
+            //r.Serialize = obj => JsonConvert.SerializeObject(obj);
+            //r.Deserialize = (json, type) => JsonConvert.DeserializeObject(json, type);
             //r.Notice += (s, e) => Trace.WriteLine(e.Log);
             return r;
         });
@@ -65,19 +64,5 @@ namespace console_netcore31
             //return;
         }
 
-    }
-
-    public class TestClass
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public DateTime CreateTime { get; set; }
-
-        public int[] TagId { get; set; }
-
-        public override string ToString()
-        {
-            return JsonConvert.SerializeObject(this);
-        }
     }
 }

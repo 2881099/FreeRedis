@@ -53,12 +53,12 @@ namespace console_netcore31_newsocket
             redisClient.FlushDb();
             //SendFromFreeRedis(redisClient);
             SendFromFreeRedis(redisClient);
-            SendFromNewSocketRedis(client, seredis.GetDatabase(0));
+            //SendFromNewSocketRedis(client, seredis.GetDatabase(0));
             SendFromStackExchangeRedis(sedb);
 
             redisClient.FlushDb();
             SendFromFreeRedis(redisClient);
-            SendFromNewSocketRedis(client, seredis.GetDatabase(0));
+            //SendFromNewSocketRedis(client, seredis.GetDatabase(0));
             SendFromStackExchangeRedis(sedb);
 
 
@@ -277,9 +277,9 @@ namespace console_netcore31_newsocket
                 tasks[a] = Task.Run(async () =>
                 {
                     var tmp = Guid.NewGuid().ToString();
-                    await client.Set(tmp, "Natasha");
+                    await client.Set(tmp, "Natasha\r\nNatasha");
                     var val = await sedb.StringGetAsync(tmp); //valid
-                    if (val != "Natasha") throw new Exception("not equal");
+                    if (val != "Natasha\r\nNatasha") throw new Exception("not equal");
                 });
             }
             Task.WaitAll(tasks);
@@ -299,9 +299,9 @@ namespace console_netcore31_newsocket
                 tasks[a] = Task.Run(async () =>
                 {
                     var tmp = Guid.NewGuid().ToString();
-                    await client.SetAsync(tmp, "Natasha");
+                    await client.SetAsync(tmp, Encoding.UTF8.GetBytes("Natasha\r\nNatasha"));
                     var val = await client.GetAsync(tmp); //valid
-                    if (val != "Natasha") throw new Exception("not equal");
+                    if (val != "Natasha\r\nNatasha") throw new Exception("not equal");
                 });
             }
             Task.WaitAll(tasks);
@@ -321,9 +321,9 @@ namespace console_netcore31_newsocket
                 tasks[a] = Task.Run(async () =>
                 {
                     var tmp = Guid.NewGuid().ToString();
-                    await sedb.StringSetAsync(tmp, "Natasha");
+                    await sedb.StringSetAsync(tmp, Encoding.UTF8.GetBytes("Natasha\r\nNatasha"));
                     var val = await sedb.StringGetAsync(tmp); //valid
-                    if (val != "Natasha") throw new Exception("not equal");
+                    if (val != "Natasha\r\nNatasha") throw new Exception("not equal");
                 });
             }
             Task.WaitAll(tasks);
