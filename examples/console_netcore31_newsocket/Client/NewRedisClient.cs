@@ -3,6 +3,7 @@ using System;
 using System.Buffers;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
 using System.IO.Pipelines;
 using System.Net;
 using System.Text;
@@ -70,6 +71,17 @@ namespace console_netcore31_newsocket
             AddSendAndReciverTask(content, taskSource);
             return taskSource.Task;
         }
+        private Task<string> SendAsync(object[] command)
+        {
+            var taskSource = new TaskCompletionSource<string>();
+            using (var ms = new MemoryStream())
+            {
+                new FreeRedis.RespHelper.Resp3Writer(ms, null, FreeRedis.RedisProtocol.RESP2);
+                AddSendAndReciverTask(ms.ToArray(), taskSource);
+                ms.Close();
+            }
+            return taskSource.Task;
+        }
 
         private async void AddSendAndReciverTask(byte[] content, TaskCompletionSource<string> task)
         {
@@ -90,8 +102,17 @@ namespace console_netcore31_newsocket
         }
         public async Task<bool> Set(string key,string value)
         {
-            var result = await SendAsync($"SET {key} {value}\r\n");
+            var result = await SendAsync(new object[] { "SET", key, value });
             return result == "OK\r\n";
+            //var result = await SendAsync($"SET {key} {value}\r\n");
+            //return result == "OK\r\n";
+        }
+        public async Task<string> Get(string key)
+        {
+            var result = await SendAsync(new object[] { "GET", key });
+            return result;
+            //var result = await SendAsync($"SET {key} {value}\r\n");
+            //return result == "OK\r\n";
         }
         public async Task<bool> PingAsync()
         {

@@ -17,7 +17,7 @@ namespace FreeRedis
 {
     public static partial class RespHelper
     {
-        internal partial class Resp3Reader
+        public partial class Resp3Reader
         {
             internal Stream _stream;
 
@@ -317,7 +317,7 @@ namespace FreeRedis
             }
         }
 
-        internal class Resp3Writer
+        public class Resp3Writer
         {
             internal Stream _stream;
             internal Encoding _encoding;
