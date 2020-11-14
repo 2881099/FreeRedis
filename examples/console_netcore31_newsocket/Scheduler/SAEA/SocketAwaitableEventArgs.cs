@@ -35,36 +35,36 @@ namespace console_netcore31_newsocket
 
         public int GetResult()
         {
-            Console.WriteLine(_name+":In GetResult!");
-            Debug.Assert(ReferenceEquals(_callback, _callbackCompleted));
-            Console.WriteLine(_name + ":In GetResult! Set _callback = null!");
+            //Console.WriteLine(_name+":In GetResult!");
+            //Debug.Assert(ReferenceEquals(_callback, _callbackCompleted));
+            //Console.WriteLine(_name + ":In GetResult! Set _callback = null!");
             _callback = null;
 
-            if (SocketError != SocketError.Success)
-            {
-                ThrowSocketException(SocketError);
-            }
+            //if (SocketError != SocketError.Success)
+            //{
+            //    ThrowSocketException(SocketError);
+            //}
 
             return BytesTransferred;
 
-            static void ThrowSocketException(SocketError e)
-            {
-                throw new SocketException((int)e);
-            }
+            //static void ThrowSocketException(SocketError e)
+            //{
+            //    throw new SocketException((int)e);
+            //}
         }
 
         public void OnCompleted(Action continuation)
         {
-            Console.WriteLine(_name + ":In OnCompleted Action!");
-            Console.WriteLine(_name + $":In OnCompleted Action! continuation code is {continuation.Method.GetHashCode()}?");
-            Console.WriteLine(_name + $":In OnCompleted Action! _callback is {(_callback == null?"":"not")}null.");
+            //Console.WriteLine(_name + ":In OnCompleted Action!");
+            //Console.WriteLine(_name + $":In OnCompleted Action! continuation code is {continuation.Method.GetHashCode()}?");
+            //Console.WriteLine(_name + $":In OnCompleted Action! _callback is {(_callback == null?"":"not")}null.");
 
             if (ReferenceEquals(_callback, _callbackCompleted) ||
                 ReferenceEquals(Interlocked.CompareExchange(ref _callback, continuation, null), _callbackCompleted))
             {
                 
-                Console.WriteLine(_name + ":In OnCompleted Action! Will Task.Run Continuation!");
-                Console.WriteLine(_name + $":In OnCompleted Action! callback is movenext? {_callback.Method.Name.Contains("Next")}");
+                //Console.WriteLine(_name + ":In OnCompleted Action! Will Task.Run Continuation!");
+                //Console.WriteLine(_name + $":In OnCompleted Action! callback is movenext? {_callback.Method.Name.Contains("Next")}");
                 Task.Run(continuation);
             }
 
@@ -72,30 +72,31 @@ namespace console_netcore31_newsocket
 
         public void UnsafeOnCompleted(Action continuation)
         {
-            Console.WriteLine(_name + ":In UnsafeOnCompleted! -> OnCompleted!");
+            //Console.WriteLine(_name + ":In UnsafeOnCompleted! -> OnCompleted!");
             OnCompleted(continuation);
         }
 
         public void Complete()
         {
-            Console.WriteLine(_name + ":In Complete! -> OnCompleted!");
+            //Console.WriteLine(_name + ":In Complete! -> OnCompleted!");
             OnCompleted(this);
         }
 
         protected override void OnCompleted(SocketAsyncEventArgs _)
         {
-            Console.WriteLine(_name + ":In OnCompleted!");
+            //Console.WriteLine(_name + ":In OnCompleted!");
             var continuation = Interlocked.Exchange(ref _callback, _callbackCompleted);
             if (continuation != null)
             {
-                Console.WriteLine(_name + ":In OnCompleted! _callback is movenext!");
-                Console.WriteLine(_name + $":In OnCompleted! _callback code is {continuation.Method.GetHashCode()}");
-                _ioScheduler.Schedule(state => { 
-                    var callBack = (Action)state;
-                    Console.WriteLine("Scheduler : Running customer callback!");
-                    callBack();
-                    Console.WriteLine("Scheduler : Run customer callback completed!");
-                }  , continuation);
+                //Console.WriteLine(_name + ":In OnCompleted! _callback is movenext!");
+                //Console.WriteLine(_name + $":In OnCompleted! _callback code is {continuation.Method.GetHashCode()}");
+                //{
+                //    var callBack = (Action)state;
+                //    // Console.WriteLine("Scheduler : Running customer callback!");
+                //    callBack();
+                //    // Console.WriteLine("Scheduler : Run customer callback completed!");
+                //}
+                _ioScheduler.Schedule(state => ((Action)state)()  , continuation);
             }
         }
     }
