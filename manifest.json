@@ -5,6 +5,18 @@
   "files": [
     {
       "type": "Conceptual",
+      "source_relative_path": "README.zh-CN.md",
+      "output": {
+        ".html": {
+          "relative_path": "README.zh-CN.html",
+          "hash": "0DjhVXTV53ai4+b+BMviKw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
       "source_relative_path": "docs/ReleaseNotes.md",
       "output": {
         ".html": {
@@ -1185,7 +1197,7 @@
       "output": {
         ".html": {
           "relative_path": "readme.html",
-          "hash": "ZuN/fZUlP+YFf9SiGAfS2Q=="
+          "hash": "/DEH2zwSYSa+rHpIYbesNw=="
         }
       },
       "is_incremental": false,
@@ -1218,7 +1230,7 @@
         "ConceptualDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 5,
+          "total_file_count": 6,
           "skipped_file_count": 0
         },
         "ManagedReferenceDocumentProcessor": {

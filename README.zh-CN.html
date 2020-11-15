@@ -63,35 +63,35 @@
 <h1 align="center"> 🦄 FreeRedis </h1>
 
 <div align="center">
-<p>FreeRedis is a redis client based on .NET, supports .NET Core 2.1+, .NET Framework 4.0+, and Xamarin.</p>
+<p>基于 .NET 的 Redis 客户端，支持 .NET Core 2.1+、.NET Framework 4.0+ 以及 Xamarin。</p>
 <p><a href="https://www.nuget.org/packages/FreeRedis"><img src="https://img.shields.io/nuget/v/FreeRedis.svg?style=flat-square" alt="nuget"></a>
 <a href="https://www.nuget.org/stats/packages/FreeRedis?groupby=Version"><img src="https://img.shields.io/nuget/dt/FreeRedis.svg?style=flat-square" alt="stats"></a>
 <a href="https://raw.githubusercontent.com/2881099/FreeRedis/master/LICENSE.txt"><img src="https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square" alt="GitHub license"></a></p>
-<p>
-    <span>English</span> |  
-    <a href="README.zh-CN.html">中文</a>
+<p align="center">
+    <a href="readme.html">English</a> |   
+    <span>中文</span>
 </p>
 </div>
 <ul>
-<li>🌈 RedisClient Keep all method names consistent with redis-cli</li>
-<li>🌌 Support Redis Cluster (requires redis-server 3.2 and above)</li>
-<li>⛳ Support Redis Sentinel</li>
-<li>🎣 Support Redis Master-Slave</li>
-<li>📡 Support Redis Pub-Sub</li>
-<li>📃 Support Redis Lua Scripting</li>
-<li>💻 Support Pipeline</li>
-<li>📰 Support Transaction</li>
-<li>🌴 Support Geo type commands (requires redis-server 3.2 and above)</li>
-<li>🌲 Support Streams type commands (requires redis-server 5.0 and above)</li>
-<li>⚡ Support Client-side-cahing (requires redis-server 6.0 and above)</li>
-<li>🌳 Support Redis 6 RESP3 Protocol</li>
+<li>🌈 所有方法名与 redis-cli 保持一致</li>
+<li>🌌 支持 Redis 集群（服务端要求 3.2 及以上版本）</li>
+<li>⛳ 支持 Redis 哨兵模式</li>
+<li>🎣 支持主从分离（Master-Slave）</li>
+<li>📡 支持发布订阅（Pub-Sub）</li>
+<li>📃 支持 Redis Lua 脚本</li>
+<li>💻 支持管道（Pipeline）</li>
+<li>📰 支持事务</li>
+<li>🌴 支持 GEO 命令（服务端要求 3.2 及以上版本）</li>
+<li>🌲 支持 STREAM 类型命令（服务端要求 5.0 及以上版本）</li>
+<li>⚡ 支持本地缓存（Client-side-cahing，服务端要求 6.0 及以上版本）</li>
+<li>🌳 支持 Redis 6 的 RESP3 协议</li>
 </ul>
-<p>QQ群：4336577(full)、<strong>8578575(available)</strong>、<strong>52508226(available)</strong></p>
-<h4 id="-single-machine-redis">🌈 Single machine redis</h4>
+<p>QQ群：4336577(已满)、8578575(在线)、52508226(在线)</p>
+<h4 id="-single-machine-redis-单机">🌈 Single machine redis (单机)</h4>
 <pre><code class="lang-csharp">public static RedisClient cli = new RedisClient(&quot;127.0.0.1:6379,password=123,defaultDatabase=13&quot;);
 //cli.Serialize = obj =&gt; JsonConvert.SerializeObject(obj);
 //cli.Deserialize = (json, type) =&gt; JsonConvert.DeserializeObject(json, type);
-cli.Notice += (s, e) =&gt; Console.WriteLine(e.Log); //print command log
+cli.Notice += (s, e) =&gt; Console.WriteLine(e.Log); //打印命令日志
 
 cli.Set(&quot;key1&quot;, &quot;value1&quot;);
 cli.MSet(&quot;key1&quot;, &quot;value1&quot;, &quot;key2&quot;, &quot;value2&quot;);
@@ -100,86 +100,86 @@ string value1 = cli.Get(&quot;key1&quot;);
 string[] vals = cli.MGet(&quot;key1&quot;, &quot;key2&quot;);
 </code></pre>
 <blockquote>
-<p>Supports strings, hashes, lists, sets, sorted sets, bitmaps, hyperloglogs, geo, streams And BloomFilter.</p>
+<p>支持 STRING、HASH、LIST、SET、ZSET、BITMAP、HyperLogLog、GEO、Stream 以及布隆过滤器等。</p>
 </blockquote>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Parameter</th>
-<th style="text-align: right;">Default</th>
-<th style="text-align: left;">Explain</th>
+<th style="text-align: left;">参数</th>
+<th style="text-align: right;">默认值</th>
+<th style="text-align: left;">说明</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td style="text-align: left;">protocol</td>
 <td style="text-align: right;">RESP2</td>
-<td style="text-align: left;">If you use RESP3, you need redis 6.0 environment</td>
+<td style="text-align: left;">若使用 RESP3 协议，你需要 Redis 6.0 环境</td>
 </tr>
 <tr>
 <td style="text-align: left;">user</td>
 <td style="text-align: right;">&lt;empty&gt;</td>
-<td style="text-align: left;">Redis server username, requires redis-server 6.0</td>
+<td style="text-align: left;">Redis 服务端用户名，要求 Redis 6.0 环境</td>
 </tr>
 <tr>
 <td style="text-align: left;">password</td>
 <td style="text-align: right;">&lt;empty&gt;</td>
-<td style="text-align: left;">Redis server password</td>
+<td style="text-align: left;">Redis 服务端密码</td>
 </tr>
 <tr>
 <td style="text-align: left;">defaultDatabase</td>
 <td style="text-align: right;">0</td>
-<td style="text-align: left;">Redis server database</td>
+<td style="text-align: left;">Redis 服务端数据库</td>
 </tr>
 <tr>
 <td style="text-align: left;">max poolsize</td>
 <td style="text-align: right;">100</td>
-<td style="text-align: left;">Connection max pool size</td>
+<td style="text-align: left;">连接池最大连接数</td>
 </tr>
 <tr>
 <td style="text-align: left;">min poolsize</td>
 <td style="text-align: right;">5</td>
-<td style="text-align: left;">Connection min pool size</td>
+<td style="text-align: left;">连接池最小连接数</td>
 </tr>
 <tr>
 <td style="text-align: left;">idleTimeout</td>
 <td style="text-align: right;">20000</td>
-<td style="text-align: left;">Idle time of elements in the connection pool (MS), suitable for connecting to remote redis server</td>
+<td style="text-align: left;">连接池中元素的空闲时间（单位为毫秒 ms），适用于连接到远程服务器</td>
 </tr>
 <tr>
 <td style="text-align: left;">connectTimeout</td>
 <td style="text-align: right;">10000</td>
-<td style="text-align: left;">Connection timeout (MS)</td>
+<td style="text-align: left;">连接超时，单位为毫秒（ms）</td>
 </tr>
 <tr>
 <td style="text-align: left;">receiveTimeout</td>
 <td style="text-align: right;">10000</td>
-<td style="text-align: left;">Receive timeout (MS)</td>
+<td style="text-align: left;">接收超时，单位为毫秒（ms）</td>
 </tr>
 <tr>
 <td style="text-align: left;">sendTimeout</td>
 <td style="text-align: right;">10000</td>
-<td style="text-align: left;">Send timeout (MS)</td>
+<td style="text-align: left;">发送超时，单位为毫秒（ms）</td>
 </tr>
 <tr>
 <td style="text-align: left;">encoding</td>
 <td style="text-align: right;">utf-8</td>
-<td style="text-align: left;">string charset</td>
+<td style="text-align: left;">字符串字符集</td>
 </tr>
 <tr>
 <td style="text-align: left;">ssl</td>
 <td style="text-align: right;">false</td>
-<td style="text-align: left;">Enable encrypted transmission</td>
+<td style="text-align: left;">启用加密传输</td>
 </tr>
 <tr>
 <td style="text-align: left;">name</td>
 <td style="text-align: right;">&lt;empty&gt;</td>
-<td style="text-align: left;">Connection name, use client list command to view</td>
+<td style="text-align: left;">连接名，使用 CLIENT LIST 命令查看</td>
 </tr>
 <tr>
 <td style="text-align: left;">prefix</td>
 <td style="text-align: right;">&lt;empty&gt;</td>
-<td style="text-align: left;">The prefix of the key, all methods will have this prefix. cli.Set(prefix + &quot;key&quot;, 111);</td>
+<td style="text-align: left;"><code>key</code> 前辍，所有方法都会附带此前辍，cli.Set(prefix + &quot;key&quot;, 111);</td>
 </tr>
 </tbody>
 </table>
@@ -187,7 +187,7 @@ string[] vals = cli.MGet(&quot;key1&quot;, &quot;key2&quot;);
 <p>IPv6: [fe80::b164:55b3:4b4f:7ce6%15]:6379</p>
 </blockquote>
 <hr>
-<h4 id="-master-slave">🎣 Master-Slave</h4>
+<h4 id="-master-slave-读写分离">🎣 Master-Slave (读写分离)</h4>
 <pre><code class="lang-csharp">public static RedisClient cli = new RedisClient(
     &quot;127.0.0.1:6379,password=123,defaultDatabase=13&quot;,
     &quot;127.0.0.1:6380,password=123,defaultDatabase=13&quot;,
@@ -197,37 +197,37 @@ string[] vals = cli.MGet(&quot;key1&quot;, &quot;key2&quot;);
 var value = cli.Get(&quot;key1&quot;);
 </code></pre>
 <blockquote>
-<p>Write data at 127.0.0.1:6379; randomly read data from port 6380 or 6381.</p>
+<p>写入时连接 127.0.0.1:6379，读取时随机连接 6380 6381</p>
 </blockquote>
-<h4 id="-redis-sentinel">⛳ Redis Sentinel</h4>
+<h4 id="-redis-sentinel-哨兵高可用">⛳ Redis Sentinel (哨兵高可用)</h4>
 <pre><code class="lang-csharp">public static RedisClient cli = new RedisClient(
     &quot;mymaster,password=123&quot;, 
     new [] { &quot;192.169.1.10:26379&quot;, &quot;192.169.1.11:26379&quot;, &quot;192.169.1.12:26379&quot; },
-    true //This variable indicates whether to use the read-write separation mode.
+    true //是否读写分离
     );
 </code></pre>
-<h4 id="-redis-cluster">🌌 Redis Cluster</h4>
-<p>Suppose, a Redis cluster has three master nodes (7001-7003) and three slave nodes (7004-7006), then use the following code to connect to the cluster:</p>
+<h4 id="-redis-cluster-集群">🌌 Redis Cluster (集群)</h4>
+<p>假如你有一个 Redis Cluster 集群，其中有三个主节点(7001-7003)、三个从节点(7004-7006)，则连接此集群的代码：</p>
 <pre><code class="lang-csharp">public static RedisClient cli = new RedisClient(
     new ConnectionStringBuilder[] { &quot;192.168.0.2:7001&quot;, &quot;192.168.0.2:7001&quot;, &quot;192.168.0.2:7003&quot; }
     );
 </code></pre>
 <hr>
-<h4 id="-client-side-cahing">⚡ Client-side-cahing</h4>
+<h4 id="-client-side-cahing-本地缓存">⚡ Client-side-cahing (本地缓存)</h4>
 <blockquote>
-<p>requires redis-server 6.0 and above</p>
+<p>服务端要求 6.0 及以上版本</p>
 </blockquote>
 <pre><code class="lang-csharp">cli.UseClientSideCaching(new ClientSideCachingOptions
 {
-    //Client cache capacity
+    //本地缓存的容量
     Capacity = 3,
-    //Filtering rules, which specify which keys can be cached locally
+    //过滤哪些键能被本地缓存
     KeyFilter = key =&gt; key.StartsWith(&quot;Interceptor&quot;),
-    //Check long-term unused cache
+    //检查长期未使用的缓存
     CheckExpired = (key, dt) =&gt; DateTime.Now.Subtract(dt) &gt; TimeSpan.FromSeconds(2)
 });
 </code></pre>
-<h4 id="-subscribe">📡 Subscribe</h4>
+<h4 id="-subscribe-订阅">📡 Subscribe (订阅)</h4>
 <pre><code class="lang-csharp">using (cli.Subscribe(&quot;abc&quot;, ondata)) //wait .Dispose()
 {
     Console.ReadKey();
@@ -236,7 +236,7 @@ var value = cli.Get(&quot;key1&quot;);
 void ondata(string channel, string data) =&gt;
     Console.WriteLine($&quot;{channel} -&gt; {data}&quot;);
 </code></pre>
-<h4 id="-scripting">📃 Scripting</h4>
+<h4 id="-scripting-脚本">📃 Scripting (脚本)</h4>
 <pre><code class="lang-csharp">var r1 = cli.Eval(&quot;return {KEYS[1],KEYS[2],ARGV[1],ARGV[2]}&quot;, 
     new[] { &quot;key1&quot;, &quot;key2&quot; }, &quot;first&quot;, &quot;second&quot;) as object[];
 
@@ -245,7 +245,7 @@ var r2 = cli.Eval(&quot;return {1,2,{3,'Hello World!'}}&quot;) as object[];
 cli.Eval(&quot;return redis.call('set',KEYS[1],'bar')&quot;, 
     new[] { Guid.NewGuid().ToString() })
 </code></pre>
-<h4 id="-pipeline">💻 Pipeline</h4>
+<h4 id="-pipeline-管道">💻 Pipeline (管道)</h4>
 <pre><code class="lang-csharp">using (var pipe = cli.StartPipe())
 {
     pipe.IncrBy(&quot;key1&quot;, 10);
@@ -256,25 +256,25 @@ cli.Eval(&quot;return redis.call('set',KEYS[1],'bar')&quot;,
     Console.WriteLine(ret[0] + &quot;, &quot; + ret[2]);
 }
 
-// or Async Callback
+// 或异步回调
 
 using (var pipe = cli.StartPipe())
 {
     var tasks = new List&lt;Task&gt;();
     long t0 = 0;
-    task.Add(pipe.IncrByAsync(&quot;key1&quot;, 10).ContinueWith(t =&gt; t0 = t.Result)); //callback
+    task.Add(pipe.IncrByAsync(&quot;key1&quot;, 10).ContinueWith(t =&gt; t0 = t.Result)); //回调
 
     pipe.SetAsync(&quot;key2&quot;, Null);
 
     string t2 = null;
-    task.Add(pipe.GetAsync(&quot;key1&quot;).ContinueWith(t =&gt; t2 = t.Result)); //callback
+    task.Add(pipe.GetAsync(&quot;key1&quot;).ContinueWith(t =&gt; t2 = t.Result)); //回调
 
     pipe.EndPipe();
-    Task.WaitAll(tasks.ToArray()); //wait all callback
+    Task.WaitAll(tasks.ToArray()); //等待所有回调完成
     Console.WriteLine(t0 + &quot;, &quot; + t2);
 }
 </code></pre>
-<h4 id="-transaction">📰 Transaction</h4>
+<h4 id="-transaction-事务">📰 Transaction (事务)</h4>
 <pre><code class="lang-csharp">using (var tran = cli.Multi())
 {
     tran.IncrBy(&quot;key1&quot;, 10);
@@ -291,28 +291,28 @@ using (var tran = cli.Multi())
 {
     var tasks = new List&lt;Task&gt;();
     long t0 = 0;
-    task.Add(tran.IncrByAsync(&quot;key1&quot;, 10).ContinueWith(t =&gt; t0 = t.Result)); //callback
+    task.Add(tran.IncrByAsync(&quot;key1&quot;, 10).ContinueWith(t =&gt; t0 = t.Result)); //回调
 
     tran.SetAsync(&quot;key2&quot;, Null);
 
     string t2 = null;
-    task.Add(tran.GetAsync(&quot;key1&quot;).ContinueWith(t =&gt; t2 = t.Result)); //callback
+    task.Add(tran.GetAsync(&quot;key1&quot;).ContinueWith(t =&gt; t2 = t.Result)); //回调
 
     tran.Exec();
-    Task.WaitAll(tasks.ToArray()); //wait all callback
+    Task.WaitAll(tasks.ToArray()); //等待所有回调完成
     Console.WriteLine(t0 + &quot;, &quot; + t2);
 }
 </code></pre>
-<h4 id="-getdatabase-switch-database">📯 GetDatabase: switch database</h4>
+<h4 id="-getdatabase-切库">📯 GetDatabase (切库)</h4>
 <pre><code class="lang-csharp">using (var db = cli.GetDatabase(10))
 {
     db.Set(&quot;key1&quot;, 10);
     var val1 = db.Get(&quot;key1&quot;);
 }
 </code></pre>
-<h4 id="-donation">💕 Donation</h4>
+<h4 id="-donation-捐赠">💕 Donation (捐赠)</h4>
 <blockquote>
-<p>Thank you for your donation</p>
+<p>感谢你的打赏</p>
 </blockquote>
 <ul>
 <li><p><a href="https://www.cnblogs.com/FreeSql/gallery/image/338860.html">Alipay</a></p>
@@ -328,7 +328,7 @@ using (var tran = cli.Multi())
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/2881099/FreeRedis/blob/master/readme.md/#L1" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/2881099/FreeRedis/blob/master/README.zh-CN.md/#L1" class="contribution-link">Improve this Doc</a>
                   </li>
                 </ul>
               </div>
