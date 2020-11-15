@@ -282,6 +282,7 @@ namespace console_netcore31_newsocket
             var output = Output;
             while (true)
             {
+
                 var result = await output.ReadAsync();
                 if (result.IsCanceled)
                 {
