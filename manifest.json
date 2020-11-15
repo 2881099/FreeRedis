@@ -5,11 +5,23 @@
   "files": [
     {
       "type": "Conceptual",
+      "source_relative_path": "README.md",
+      "output": {
+        ".html": {
+          "relative_path": "README.html",
+          "hash": "PM9yfvOKE0WALQkod9q8+w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
       "source_relative_path": "README.zh-CN.md",
       "output": {
         ".html": {
           "relative_path": "README.zh-CN.html",
-          "hash": "0DjhVXTV53ai4+b+BMviKw=="
+          "hash": "xCsRzjpKHYsBqsY6ZxocZw=="
         }
       },
       "is_incremental": false,
@@ -1186,18 +1198,6 @@
         ".html": {
           "relative_path": "index.html",
           "hash": "xCBjQfqJ8VFczs0OR6gCbw=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "Conceptual",
-      "source_relative_path": "readme.md",
-      "output": {
-        ".html": {
-          "relative_path": "readme.html",
-          "hash": "/DEH2zwSYSa+rHpIYbesNw=="
         }
       },
       "is_incremental": false,
