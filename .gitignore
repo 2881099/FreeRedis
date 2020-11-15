@@ -246,3 +246,8 @@ ModelManifest.xml
 # FAKE - F# Make
 .fake/
 *.rsf
+
+# docfx
+_site
+docs/api/*.yml
+docs/api/.manifest
