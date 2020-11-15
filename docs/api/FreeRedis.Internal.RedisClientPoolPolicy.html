@@ -1,0 +1,632 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class RedisClientPoolPolicy
+   </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class RedisClientPoolPolicy
+   ">
+    <meta name="generator" content="docfx 2.56.5.0">
+    
+    <link rel="shortcut icon" href="../../favicon.ico">
+    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../styles/docfx.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <meta property="docfx:navrel" content="../../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../../index.html">
+                <img id="logo" class="svg" src="../../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="FreeRedis.Internal.RedisClientPoolPolicy">
+  
+  
+  <h1 id="FreeRedis_Internal_RedisClientPoolPolicy" data-uid="FreeRedis.Internal.RedisClientPoolPolicy" class="text-break">Class RedisClientPoolPolicy
+  </h1>
+  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><span class="xref">RedisClientPoolPolicy</span></div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="FreeRedis.Internal.html">FreeRedis.Internal</a></h6>
+  <h6><strong>Assembly</strong>: cs.temp.dll.dll</h6>
+  <h5 id="FreeRedis_Internal_RedisClientPoolPolicy_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class RedisClientPoolPolicy : IPolicy&lt;RedisClient&gt;</code></pre>
+  </div>
+  <h3 id="properties">Properties
+  </h3>
+  
+  
+  <a id="FreeRedis_Internal_RedisClientPoolPolicy_AsyncGetCapacity_" data-uid="FreeRedis.Internal.RedisClientPoolPolicy.AsyncGetCapacity*"></a>
+  <h4 id="FreeRedis_Internal_RedisClientPoolPolicy_AsyncGetCapacity" data-uid="FreeRedis.Internal.RedisClientPoolPolicy.AsyncGetCapacity">AsyncGetCapacity</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int AsyncGetCapacity { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="FreeRedis_Internal_RedisClientPoolPolicy_CheckAvailableInterval_" data-uid="FreeRedis.Internal.RedisClientPoolPolicy.CheckAvailableInterval*"></a>
+  <h4 id="FreeRedis_Internal_RedisClientPoolPolicy_CheckAvailableInterval" data-uid="FreeRedis.Internal.RedisClientPoolPolicy.CheckAvailableInterval">CheckAvailableInterval</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int CheckAvailableInterval { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="FreeRedis_Internal_RedisClientPoolPolicy_ConnectionString_" data-uid="FreeRedis.Internal.RedisClientPoolPolicy.ConnectionString*"></a>
+  <h4 id="FreeRedis_Internal_RedisClientPoolPolicy_ConnectionString" data-uid="FreeRedis.Internal.RedisClientPoolPolicy.ConnectionString">ConnectionString</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string ConnectionString { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="FreeRedis_Internal_RedisClientPoolPolicy_IdleTimeout_" data-uid="FreeRedis.Internal.RedisClientPoolPolicy.IdleTimeout*"></a>
+  <h4 id="FreeRedis_Internal_RedisClientPoolPolicy_IdleTimeout" data-uid="FreeRedis.Internal.RedisClientPoolPolicy.IdleTimeout">IdleTimeout</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TimeSpan IdleTimeout { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.TimeSpan</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="FreeRedis_Internal_RedisClientPoolPolicy_IsAutoDisposeWithSystem_" data-uid="FreeRedis.Internal.RedisClientPoolPolicy.IsAutoDisposeWithSystem*"></a>
+  <h4 id="FreeRedis_Internal_RedisClientPoolPolicy_IsAutoDisposeWithSystem" data-uid="FreeRedis.Internal.RedisClientPoolPolicy.IsAutoDisposeWithSystem">IsAutoDisposeWithSystem</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool IsAutoDisposeWithSystem { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="FreeRedis_Internal_RedisClientPoolPolicy_IsThrowGetTimeoutException_" data-uid="FreeRedis.Internal.RedisClientPoolPolicy.IsThrowGetTimeoutException*"></a>
+  <h4 id="FreeRedis_Internal_RedisClientPoolPolicy_IsThrowGetTimeoutException" data-uid="FreeRedis.Internal.RedisClientPoolPolicy.IsThrowGetTimeoutException">IsThrowGetTimeoutException</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool IsThrowGetTimeoutException { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="FreeRedis_Internal_RedisClientPoolPolicy_Name_" data-uid="FreeRedis.Internal.RedisClientPoolPolicy.Name*"></a>
+  <h4 id="FreeRedis_Internal_RedisClientPoolPolicy_Name" data-uid="FreeRedis.Internal.RedisClientPoolPolicy.Name">Name</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string Name { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="FreeRedis_Internal_RedisClientPoolPolicy_PoolSize_" data-uid="FreeRedis.Internal.RedisClientPoolPolicy.PoolSize*"></a>
+  <h4 id="FreeRedis_Internal_RedisClientPoolPolicy_PoolSize" data-uid="FreeRedis.Internal.RedisClientPoolPolicy.PoolSize">PoolSize</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int PoolSize { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="FreeRedis_Internal_RedisClientPoolPolicy_SyncGetTimeout_" data-uid="FreeRedis.Internal.RedisClientPoolPolicy.SyncGetTimeout*"></a>
+  <h4 id="FreeRedis_Internal_RedisClientPoolPolicy_SyncGetTimeout" data-uid="FreeRedis.Internal.RedisClientPoolPolicy.SyncGetTimeout">SyncGetTimeout</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TimeSpan SyncGetTimeout { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.TimeSpan</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  
+  
+  <a id="FreeRedis_Internal_RedisClientPoolPolicy_OnAvailable_" data-uid="FreeRedis.Internal.RedisClientPoolPolicy.OnAvailable*"></a>
+  <h4 id="FreeRedis_Internal_RedisClientPoolPolicy_OnAvailable" data-uid="FreeRedis.Internal.RedisClientPoolPolicy.OnAvailable">OnAvailable()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void OnAvailable()</code></pre>
+  </div>
+  
+  
+  <a id="FreeRedis_Internal_RedisClientPoolPolicy_OnCheckAvailable_" data-uid="FreeRedis.Internal.RedisClientPoolPolicy.OnCheckAvailable*"></a>
+  <h4 id="FreeRedis_Internal_RedisClientPoolPolicy_OnCheckAvailable_System_Object_FreeRedis_RedisClient__" data-uid="FreeRedis.Internal.RedisClientPoolPolicy.OnCheckAvailable(System.Object{FreeRedis.RedisClient})">OnCheckAvailable(Object&lt;RedisClient&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool OnCheckAvailable(Object&lt;RedisClient&gt; obj)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Object</span>&lt;<a class="xref" href="FreeRedis.RedisClient.html">RedisClient</a>&gt;</td>
+        <td><span class="parametername">obj</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="FreeRedis_Internal_RedisClientPoolPolicy_OnCreate_" data-uid="FreeRedis.Internal.RedisClientPoolPolicy.OnCreate*"></a>
+  <h4 id="FreeRedis_Internal_RedisClientPoolPolicy_OnCreate" data-uid="FreeRedis.Internal.RedisClientPoolPolicy.OnCreate">OnCreate()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public RedisClient OnCreate()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="FreeRedis.RedisClient.html">RedisClient</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="FreeRedis_Internal_RedisClientPoolPolicy_OnDestroy_" data-uid="FreeRedis.Internal.RedisClientPoolPolicy.OnDestroy*"></a>
+  <h4 id="FreeRedis_Internal_RedisClientPoolPolicy_OnDestroy_FreeRedis_RedisClient_" data-uid="FreeRedis.Internal.RedisClientPoolPolicy.OnDestroy(FreeRedis.RedisClient)">OnDestroy(RedisClient)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void OnDestroy(RedisClient obj)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="FreeRedis.RedisClient.html">RedisClient</a></td>
+        <td><span class="parametername">obj</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="FreeRedis_Internal_RedisClientPoolPolicy_OnGet_" data-uid="FreeRedis.Internal.RedisClientPoolPolicy.OnGet*"></a>
+  <h4 id="FreeRedis_Internal_RedisClientPoolPolicy_OnGet_System_Object_FreeRedis_RedisClient__" data-uid="FreeRedis.Internal.RedisClientPoolPolicy.OnGet(System.Object{FreeRedis.RedisClient})">OnGet(Object&lt;RedisClient&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void OnGet(Object&lt;RedisClient&gt; obj)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Object</span>&lt;<a class="xref" href="FreeRedis.RedisClient.html">RedisClient</a>&gt;</td>
+        <td><span class="parametername">obj</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="FreeRedis_Internal_RedisClientPoolPolicy_OnGetAsync_" data-uid="FreeRedis.Internal.RedisClientPoolPolicy.OnGetAsync*"></a>
+  <h4 id="FreeRedis_Internal_RedisClientPoolPolicy_OnGetAsync_System_Object_FreeRedis_RedisClient__" data-uid="FreeRedis.Internal.RedisClientPoolPolicy.OnGetAsync(System.Object{FreeRedis.RedisClient})">OnGetAsync(Object&lt;RedisClient&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task OnGetAsync(Object&lt;RedisClient&gt; obj)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Object</span>&lt;<a class="xref" href="FreeRedis.RedisClient.html">RedisClient</a>&gt;</td>
+        <td><span class="parametername">obj</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="FreeRedis_Internal_RedisClientPoolPolicy_OnGetTimeout_" data-uid="FreeRedis.Internal.RedisClientPoolPolicy.OnGetTimeout*"></a>
+  <h4 id="FreeRedis_Internal_RedisClientPoolPolicy_OnGetTimeout" data-uid="FreeRedis.Internal.RedisClientPoolPolicy.OnGetTimeout">OnGetTimeout()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void OnGetTimeout()</code></pre>
+  </div>
+  
+  
+  <a id="FreeRedis_Internal_RedisClientPoolPolicy_OnReturn_" data-uid="FreeRedis.Internal.RedisClientPoolPolicy.OnReturn*"></a>
+  <h4 id="FreeRedis_Internal_RedisClientPoolPolicy_OnReturn_System_Object_FreeRedis_RedisClient__" data-uid="FreeRedis.Internal.RedisClientPoolPolicy.OnReturn(System.Object{FreeRedis.RedisClient})">OnReturn(Object&lt;RedisClient&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void OnReturn(Object&lt;RedisClient&gt; obj)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Object</span>&lt;<a class="xref" href="FreeRedis.RedisClient.html">RedisClient</a>&gt;</td>
+        <td><span class="parametername">obj</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="FreeRedis_Internal_RedisClientPoolPolicy_OnUnavailable_" data-uid="FreeRedis.Internal.RedisClientPoolPolicy.OnUnavailable*"></a>
+  <h4 id="FreeRedis_Internal_RedisClientPoolPolicy_OnUnavailable" data-uid="FreeRedis.Internal.RedisClientPoolPolicy.OnUnavailable">OnUnavailable()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void OnUnavailable()</code></pre>
+  </div>
+  
+  
+  <a id="FreeRedis_Internal_RedisClientPoolPolicy_PrevReheatConnectionPool_" data-uid="FreeRedis.Internal.RedisClientPoolPolicy.PrevReheatConnectionPool*"></a>
+  <h4 id="FreeRedis_Internal_RedisClientPoolPolicy_PrevReheatConnectionPool_FreeRedis_Internal_ObjectPool_FreeRedis_RedisClient__System_Int32_" data-uid="FreeRedis.Internal.RedisClientPoolPolicy.PrevReheatConnectionPool(FreeRedis.Internal.ObjectPool{FreeRedis.RedisClient},System.Int32)">PrevReheatConnectionPool(ObjectPool&lt;RedisClient&gt;, Int32)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void PrevReheatConnectionPool(ObjectPool&lt;RedisClient&gt; pool, int minPoolSize)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">FreeRedis.Internal.ObjectPool</span>&lt;<a class="xref" href="FreeRedis.RedisClient.html">RedisClient</a>&gt;</td>
+        <td><span class="parametername">pool</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">minPoolSize</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="events">Events
+  </h3>
+  
+  
+  <h4 id="FreeRedis_Internal_RedisClientPoolPolicy_Connected" data-uid="FreeRedis.Internal.RedisClientPoolPolicy.Connected">Connected</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event EventHandler Connected</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.EventHandler</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In This Article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../styles/main.js"></script>
+  </body>
+</html>

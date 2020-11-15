@@ -1,9 +1,0 @@
-- name: Home
-  href: index.md
-- name: API Documentation
-  href: docs/api/
-- name: Release Notes
-  href: docs/ReleaseNotes.md
-- name: Articles
-  href: docs/articles/
-  homepage: docs/articles/intro.md

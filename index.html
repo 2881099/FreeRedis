@@ -1,0 +1,358 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title> &#129412; FreeRedis  </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content=" &#129412; FreeRedis  ">
+    <meta name="generator" content="docfx 2.56.5.0">
+    
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" href="styles/docfx.vendor.css">
+    <link rel="stylesheet" href="styles/docfx.css">
+    <link rel="stylesheet" href="styles/main.css">
+    <meta property="docfx:navrel" content="toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="index.html">
+                <img id="logo" class="svg" src="logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        <div class="article row grid">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h1 align="center"> 🦄 FreeRedis </h1>
+
+<div align="center">
+<p>FreeRedis is .NET redis client, supports .NETCore 2.1+, .NETFramework 4.0+, And Xamarin</p>
+<p><a href="https://www.nuget.org/packages/FreeRedis"><img src="https://img.shields.io/nuget/v/FreeRedis.svg?style=flat-square" alt="nuget"></a>
+<a href="https://www.nuget.org/stats/packages/FreeRedis?groupby=Version"><img src="https://img.shields.io/nuget/dt/FreeRedis.svg?style=flat-square" alt="stats"></a>
+<a href="https://raw.githubusercontent.com/2881099/FreeRedis/master/LICENSE.txt"><img src="https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square" alt="GitHub license"></a></p>
+</div>
+<ul>
+<li>🌈 RedisClient Keep all method names consistent with redis-cli</li>
+<li>🌌 Support Redis Cluster (requires redis-server 3.2 and above)</li>
+<li>⛳ Support Redis Sentinel</li>
+<li>🎣 Support Redis Master-Slave</li>
+<li>📡 Support Redis Pub-Sub</li>
+<li>📃 Support Redis Lua Scripting</li>
+<li>💻 Support Pipeline</li>
+<li>📰 Support Transaction</li>
+<li>🌴 Support Geo type commands (requires redis-server 3.2 and above)</li>
+<li>🌲 Support Streams type commands (requires redis-server 5.0 and above)</li>
+<li>⚡ Support Client-side-cahing (requires redis-server 6.0 and above)</li>
+<li>🌳 Support Redis 6 RESP3 Protocol</li>
+</ul>
+<p>QQ群：4336577(已满)、8578575(在线)、52508226(在线)</p>
+<h4 id="-single-machine-redis-单机">🌈 Single machine redis (单机)</h4>
+<pre><code class="lang-csharp">public static RedisClient cli = new RedisClient(&quot;127.0.0.1:6379,password=123,defaultDatabase=13&quot;);
+//cli.Serialize = obj =&gt; JsonConvert.SerializeObject(obj);
+//cli.Deserialize = (json, type) =&gt; JsonConvert.DeserializeObject(json, type);
+cli.Notice += (s, e) =&gt; Console.WriteLine(e.Log); //print command log
+
+cli.Set(&quot;key1&quot;, &quot;value1&quot;);
+cli.MSet(&quot;key1&quot;, &quot;value1&quot;, &quot;key2&quot;, &quot;value2&quot;);
+
+string value1 = cli.Get(&quot;key1&quot;);
+string[] vals = cli.MGet(&quot;key1&quot;, &quot;key2&quot;);
+</code></pre>
+<blockquote>
+<p>Supports strings, hashes, lists, sets, sorted sets, bitmaps, hyperloglogs, geo, streams And BloomFilter.</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Parameter</th>
+<th style="text-align: right;">Default</th>
+<th style="text-align: left;">Explain</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">protocol</td>
+<td style="text-align: right;">RESP2</td>
+<td style="text-align: left;">If you use RESP3, you need redis 6.0 environment</td>
+</tr>
+<tr>
+<td style="text-align: left;">user</td>
+<td style="text-align: right;">&lt;empty&gt;</td>
+<td style="text-align: left;">Redis server username, requires redis-server 6.0</td>
+</tr>
+<tr>
+<td style="text-align: left;">password</td>
+<td style="text-align: right;">&lt;empty&gt;</td>
+<td style="text-align: left;">Redis server password</td>
+</tr>
+<tr>
+<td style="text-align: left;">defaultDatabase</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">Redis server database</td>
+</tr>
+<tr>
+<td style="text-align: left;">max poolsize</td>
+<td style="text-align: right;">100</td>
+<td style="text-align: left;">Connection max pool size</td>
+</tr>
+<tr>
+<td style="text-align: left;">min poolsize</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">Connection min pool size</td>
+</tr>
+<tr>
+<td style="text-align: left;">idleTimeout</td>
+<td style="text-align: right;">20000</td>
+<td style="text-align: left;">Idle time of elements in the connection pool (MS), suitable for connecting to remote redis server</td>
+</tr>
+<tr>
+<td style="text-align: left;">connectTimeout</td>
+<td style="text-align: right;">10000</td>
+<td style="text-align: left;">Connection timeout (MS)</td>
+</tr>
+<tr>
+<td style="text-align: left;">receiveTimeout</td>
+<td style="text-align: right;">10000</td>
+<td style="text-align: left;">Receive timeout (MS)</td>
+</tr>
+<tr>
+<td style="text-align: left;">sendTimeout</td>
+<td style="text-align: right;">10000</td>
+<td style="text-align: left;">Send timeout (MS)</td>
+</tr>
+<tr>
+<td style="text-align: left;">encoding</td>
+<td style="text-align: right;">utf-8</td>
+<td style="text-align: left;">string charset</td>
+</tr>
+<tr>
+<td style="text-align: left;">ssl</td>
+<td style="text-align: right;">false</td>
+<td style="text-align: left;">Enable encrypted transmission</td>
+</tr>
+<tr>
+<td style="text-align: left;">name</td>
+<td style="text-align: right;">&lt;empty&gt;</td>
+<td style="text-align: left;">Connection name, use client list command to view</td>
+</tr>
+<tr>
+<td style="text-align: left;">prefix</td>
+<td style="text-align: right;">&lt;empty&gt;</td>
+<td style="text-align: left;">key前辍，所有方法都会附带此前辍，cli.Set(prefix + &quot;key&quot;, 111);</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>IPv6: [fe80::b164:55b3:4b4f:7ce6%15]:6379</p>
+</blockquote>
+<hr>
+<h4 id="-master-slave-读写分离">🎣 Master-Slave (读写分离)</h4>
+<pre><code class="lang-csharp">public static RedisClient cli = new RedisClient(
+    &quot;127.0.0.1:6379,password=123,defaultDatabase=13&quot;,
+    &quot;127.0.0.1:6380,password=123,defaultDatabase=13&quot;,
+    &quot;127.0.0.1:6381,password=123,defaultDatabase=13&quot;
+    );
+
+var value = cli.Get(&quot;key1&quot;);
+</code></pre>
+<blockquote>
+<p>写入时连接 127.0.0.1:6379，读取时随机连接 6380 6381</p>
+</blockquote>
+<h4 id="-redis-sentinel-哨兵高可用">⛳ Redis Sentinel (哨兵高可用)</h4>
+<pre><code class="lang-csharp">public static RedisClient cli = new RedisClient(
+    &quot;mymaster,password=123&quot;, 
+    new [] { &quot;192.169.1.10:26379&quot;, &quot;192.169.1.11:26379&quot;, &quot;192.169.1.12:26379&quot; },
+    true //是否读写分离
+    );
+</code></pre>
+<h4 id="-redis-cluster-集群">🌌 Redis Cluster (集群)</h4>
+<p>假如你有一个 Redis Cluster 集群，其中有三个主节点(7001-7003)、三个从节点(7004-7006)，则连接此集群的代码：</p>
+<pre><code class="lang-csharp">public static RedisClient cli = new RedisClient(
+    new ConnectionStringBuilder[] { &quot;192.168.0.2:7001&quot;, &quot;192.168.0.2:7001&quot;, &quot;192.168.0.2:7003&quot; }
+    );
+</code></pre>
+<hr>
+<h4 id="-client-side-cahing-本地缓存">⚡ Client-side-cahing (本地缓存)</h4>
+<blockquote>
+<p>requires redis-server 6.0 and above</p>
+</blockquote>
+<pre><code class="lang-csharp">cli.UseClientSideCaching(new ClientSideCachingOptions
+{
+    //本地缓存的容量
+    Capacity = 3,
+    //过滤哪些键能被本地缓存
+    KeyFilter = key =&gt; key.StartsWith(&quot;Interceptor&quot;),
+    //检查长期未使用的缓存
+    CheckExpired = (key, dt) =&gt; DateTime.Now.Subtract(dt) &gt; TimeSpan.FromSeconds(2)
+});
+</code></pre>
+<h4 id="-subscribe-订阅">📡 Subscribe (订阅)</h4>
+<pre><code class="lang-csharp">using (cli.Subscribe(&quot;abc&quot;, ondata)) //wait .Dispose()
+{
+    Console.ReadKey();
+}
+
+void ondata(string channel, string data) =&gt;
+    Console.WriteLine($&quot;{channel} -&gt; {data}&quot;);
+</code></pre>
+<h4 id="-scripting-脚本">📃 Scripting (脚本)</h4>
+<pre><code class="lang-csharp">var r1 = cli.Eval(&quot;return {KEYS[1],KEYS[2],ARGV[1],ARGV[2]}&quot;, 
+    new[] { &quot;key1&quot;, &quot;key2&quot; }, &quot;first&quot;, &quot;second&quot;) as object[];
+
+var r2 = cli.Eval(&quot;return {1,2,{3,'Hello World!'}}&quot;) as object[];
+
+cli.Eval(&quot;return redis.call('set',KEYS[1],'bar')&quot;, 
+    new[] { Guid.NewGuid().ToString() })
+</code></pre>
+<h4 id="-pipeline-管道">💻 Pipeline (管道)</h4>
+<pre><code class="lang-csharp">using (var pipe = cli.StartPipe())
+{
+    pipe.IncrBy(&quot;key1&quot;, 10);
+    pipe.Set(&quot;key2&quot;, Null);
+    pipe.Get(&quot;key1&quot;);
+
+    object[] ret = pipe.EndPipe();
+    Console.WriteLine(ret[0] + &quot;, &quot; + ret[2]);
+}
+
+// or Async Callback
+
+using (var pipe = cli.StartPipe())
+{
+    var tasks = new List&lt;Task&gt;();
+    long t0 = 0;
+    task.Add(pipe.IncrByAsync(&quot;key1&quot;, 10).ContinueWith(t =&gt; t0 = t.Result)); //callback
+
+    pipe.SetAsync(&quot;key2&quot;, Null);
+
+    string t2 = null;
+    task.Add(pipe.GetAsync(&quot;key1&quot;).ContinueWith(t =&gt; t2 = t.Result)); //callback
+
+    pipe.EndPipe();
+    Task.WaitAll(tasks.ToArray()); //wait all callback
+    Console.WriteLine(t0 + &quot;, &quot; + t2);
+}
+</code></pre>
+<h4 id="-transaction-事务">📰 Transaction (事务)</h4>
+<pre><code class="lang-csharp">using (var tran = cli.Multi())
+{
+    tran.IncrBy(&quot;key1&quot;, 10);
+    tran.Set(&quot;key2&quot;, Null);
+    tran.Get(&quot;key1&quot;);
+
+    object[] ret = tran.Exec();
+    Console.WriteLine(ret[0] + &quot;, &quot; + ret[2]);
+}
+
+// or Async Callback
+
+using (var tran = cli.Multi())
+{
+    var tasks = new List&lt;Task&gt;();
+    long t0 = 0;
+    task.Add(tran.IncrByAsync(&quot;key1&quot;, 10).ContinueWith(t =&gt; t0 = t.Result)); //callback
+
+    tran.SetAsync(&quot;key2&quot;, Null);
+
+    string t2 = null;
+    task.Add(tran.GetAsync(&quot;key1&quot;).ContinueWith(t =&gt; t2 = t.Result)); //callback
+
+    tran.Exec();
+    Task.WaitAll(tasks.ToArray()); //wait all callback
+    Console.WriteLine(t0 + &quot;, &quot; + t2);
+}
+</code></pre>
+<h4 id="-getdatabase-切库">📯 GetDatabase (切库)</h4>
+<pre><code class="lang-csharp">using (var db = cli.GetDatabase(10))
+{
+    db.Set(&quot;key1&quot;, 10);
+    var val1 = db.Get(&quot;key1&quot;);
+}
+</code></pre>
+<h4 id="-donation-捐赠">💕 Donation (捐赠)</h4>
+<blockquote>
+<p>Thank you for your donation</p>
+</blockquote>
+<ul>
+<li><p><a href="https://www.cnblogs.com/FreeSql/gallery/image/338860.html">Alipay</a></p>
+</li>
+<li><p><a href="https://www.cnblogs.com/FreeSql/gallery/image/338859.html">WeChat</a></p>
+</li>
+</ul>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/2881099/FreeRedis/blob/master/index.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In This Article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="styles/docfx.js"></script>
+    <script type="text/javascript" src="styles/main.js"></script>
+  </body>
+</html>
