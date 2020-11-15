@@ -7583,6 +7583,15 @@ references:
   fullName.vb: FreeRedis.RedisClient.Set(Of T)(System.String, T, System.Int32)
   nameWithType: RedisClient.Set<T>(String, T, Int32)
   nameWithType.vb: RedisClient.Set(Of T)(String, T, Int32)
+- uid: FreeRedis.RedisClient.Set``1(System.String,``0,System.TimeSpan,System.Boolean,System.Boolean,System.Boolean,System.Boolean)
+  name: Set<T>(String, T, TimeSpan, Boolean, Boolean, Boolean, Boolean)
+  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_Set__1_System_String___0_System_TimeSpan_System_Boolean_System_Boolean_System_Boolean_System_Boolean_
+  commentId: M:FreeRedis.RedisClient.Set``1(System.String,``0,System.TimeSpan,System.Boolean,System.Boolean,System.Boolean,System.Boolean)
+  name.vb: Set(Of T)(String, T, TimeSpan, Boolean, Boolean, Boolean, Boolean)
+  fullName: FreeRedis.RedisClient.Set<T>(System.String, T, System.TimeSpan, System.Boolean, System.Boolean, System.Boolean, System.Boolean)
+  fullName.vb: FreeRedis.RedisClient.Set(Of T)(System.String, T, System.TimeSpan, System.Boolean, System.Boolean, System.Boolean, System.Boolean)
+  nameWithType: RedisClient.Set<T>(String, T, TimeSpan, Boolean, Boolean, Boolean, Boolean)
+  nameWithType.vb: RedisClient.Set(Of T)(String, T, TimeSpan, Boolean, Boolean, Boolean, Boolean)
 - uid: FreeRedis.RedisClient.SetBit(System.String,System.Int64,System.Boolean)
   name: SetBit(String, Int64, Boolean)
   href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_SetBit_System_String_System_Int64_System_Boolean_
