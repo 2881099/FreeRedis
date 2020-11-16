@@ -34,40 +34,40 @@ namespace console_netcore31_newsocket
             //    //pwd = stream.ReadLine();
             //}
             ip = "127.0.0.1";
-            port = 6379;
+            port = 8989;
             var endpoit = new IPEndPoint(IPAddress.Parse(ip), port);
 
             //new
-            NewRedisClient client = new NewRedisClient(endpoit);
-            var result = client.SelectDB(0).Result;
+            //NewRedisClient client = new NewRedisClient(endpoit);
+            //var result = client.SelectDB(0).Result;
 
-            client.Set("test01", "123123").Wait();
+            //client.Set("test01", "123123").Wait();
 
-            //FreeRedis
-            var redisClient = new RedisClient($"{ip}:{port},database=15,min pool size=100");
+            ////FreeRedis
+            //var redisClient = new RedisClient($"{ip}:{port},database=15,min pool size=100");
 
-            //StackExchange
-            ConnectionMultiplexer seredis = ConnectionMultiplexer.Connect("127.0.0.1:6379");
-            IDatabase sedb = seredis.GetDatabase(1);
+            ////StackExchange
+            //ConnectionMultiplexer seredis = ConnectionMultiplexer.Connect("127.0.0.1:6379");
+            //IDatabase sedb = seredis.GetDatabase(1);
 
-            redisClient.FlushDb();
+            //redisClient.FlushDb();
+            ////SendFromFreeRedis(redisClient);
             //SendFromFreeRedis(redisClient);
-            SendFromFreeRedis(redisClient);
-            //SendFromNewSocketRedis(client, seredis.GetDatabase(0));
-            SendFromStackExchangeRedis(sedb);
+            ////SendFromNewSocketRedis(client, seredis.GetDatabase(0));
+            //SendFromStackExchangeRedis(sedb);
 
-            redisClient.FlushDb();
-            SendFromFreeRedis(redisClient);
-            //SendFromNewSocketRedis(client, seredis.GetDatabase(0));
-            SendFromStackExchangeRedis(sedb);
+            //redisClient.FlushDb();
+            //SendFromFreeRedis(redisClient);
+            ////SendFromNewSocketRedis(client, seredis.GetDatabase(0));
+            //SendFromStackExchangeRedis(sedb);
 
 
 
             //NewSocketTest(endpoit);
             //result = client.Set("newRedis", "natasha").Result;
             //Console.WriteLine(result);
-            //Server(endpoit);
-            //Test(endpoit);
+            Server(endpoit);
+            Test(endpoit);
             Console.ReadKey();
 
         }
@@ -85,7 +85,6 @@ namespace console_netcore31_newsocket
             while (count < 20)
             {
                 await Task.Delay(1000);
-                Console.WriteLine("Server: Loop!");
                 NetworkStream stream = client.GetStream();
                 int i;
                 if ((i = stream.Read(bytes, 0, bytes.Length)) != 0)
@@ -120,15 +119,14 @@ namespace console_netcore31_newsocket
         public static async void Output(ConnectionContext connection)
         {
 
-            Console.WriteLine("Run Output!");
+            Console.WriteLine("Run Sender!");
             while (true)
             {
 
-                Console.WriteLine("");
                 var temp = Console.ReadLine();
                 if (temp != null)
                 {
-                    var buffer = Encoding.UTF8.GetBytes(temp + "\r\n");
+                    var buffer = Encoding.UTF8.GetBytes(temp);
                     await connection.Transport.Output.WriteAsync(buffer);
                     //connection.Transport.Output.Advance(result.);
                     //Console.WriteLine("发送数据！");
@@ -139,7 +137,7 @@ namespace console_netcore31_newsocket
         }
         public static async void Input(ConnectionContext connection)
         {
-            Console.WriteLine("Run Input!");
+            Console.WriteLine("Run Receiver!");
             while (true)
             {
 
@@ -148,20 +146,21 @@ namespace console_netcore31_newsocket
                 var buffer = result.Buffer;
                 try
                 {
+                    Console.WriteLine();
                     if (!buffer.IsEmpty)
                     {
                         if (!buffer.IsSingleSegment)
                         {
                             var data = Encoding.UTF8.GetString(buffer.FirstSpan);
+                            Console.WriteLine("Receive : " + data);
                             Console.WriteLine("-----------");
-                            Console.WriteLine(data);
                             connection.Transport.Input.AdvanceTo(buffer.End);
                         }
                         else
                         {
                             var data = Encoding.UTF8.GetString(buffer.ToArray());
+                            Console.WriteLine("Receive : " + data);
                             Console.WriteLine("==============");
-                            Console.WriteLine(data);
                             connection.Transport.Input.AdvanceTo(buffer.End);
                         }
                     }
@@ -169,10 +168,12 @@ namespace console_netcore31_newsocket
                     {
                         break;
                     }
+                    //await connection.Transport.Input.CompleteAsync();
                 }
                 finally
                 {
-                    
+                    Console.WriteLine("==============");
+                    Console.Write("Send:");
                 }
                
 
