@@ -28,7 +28,7 @@ FreeRedis is a redis client based on .NET, supports .NET Core 2.1+, .NET Framewo
 - ⚡ Support Client-side-cahing (requires redis-server 6.0 and above)
 - 🌳 Support Redis 6 RESP3 Protocol
 
-QQ群：4336577(full)、**8578575(available)**、**52508226(available)**
+QQ Groups：4336577(full)、**8578575(available)**、**52508226(available)**
 
 #### 🌈 Single machine redis
 
