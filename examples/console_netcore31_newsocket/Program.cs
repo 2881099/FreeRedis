@@ -70,7 +70,14 @@ namespace console_netcore31_newsocket
             //Console.WriteLine(result);
             Server(endpoit);
             Test(endpoit);
+            Task.Run(async () =>
+            {
+                await Task.Delay(5000);
+                Console.WriteLine();
+                Console.WriteLine(_sendQueue.Count);
+                Console.WriteLine(_receiverQueue.Count);
 
+            });
             Console.ReadKey();
 
         }
@@ -187,7 +194,7 @@ namespace console_netcore31_newsocket
             //object obj = new object();
             //var bytes = Encoding.UTF8.GetBytes("te1111st");
 
-            Parallel.For(0, 10000, async (state) =>
+            var result = Parallel.For(0, 10000, async (state) =>
             {
 
                 if (state == 9999)
@@ -202,6 +209,7 @@ namespace console_netcore31_newsocket
                 //await sender.FlushAsync(CancellationToken.None).ConfigureAwait(false);
                 //await sender.WriteAsync(bytes);
             });
+
         }
 
         public static int flag = 0;
