@@ -131,7 +131,7 @@ namespace FreeRedis
                             if (moved.isask)
                                 cmd._clusterMovedAsking = true;
 
-                            TopOwner.OnNotice(null, new NoticeEventArgs(NoticeType.Info, null, $"{(cmd.WriteHost ?? "Not connected").PadRight(21)} > {cmd}\r\n{rt.SimpleError} ", null));
+                            TopOwner.OnNotice(null, new NoticeEventArgs(NoticeType.Info, null, $"{(cmd.WriteTarget ?? "Not connected").PadRight(21)} > {cmd}\r\n{rt.SimpleError} ", null));
                             return AdapterCall(cmd, parse);
                         }
                     }
