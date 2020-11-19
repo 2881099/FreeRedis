@@ -46,6 +46,10 @@ namespace console_netcore31_newsocket
                 {
                     Handler(result.Buffer);
                 }
+                if (result.IsCompleted)
+                {
+                    return;
+                }
                 _reciver.AdvanceTo(result.Buffer.End);
             }
         }
@@ -93,13 +97,12 @@ namespace console_netcore31_newsocket
 
         private Task<string> SendAsync(string commond)
         {
-            //lock (_lock)
-            //{
-                var content = Encoding.UTF8.GetBytes(commond);
-                var taskSource = new TaskCompletionSource<string>();
-                AddSendAndReciverTask(content, taskSource);
-                return taskSource.Task;
-            //}
+
+            var content = Encoding.UTF8.GetBytes(commond);
+            var taskSource = new TaskCompletionSource<string>();
+            var result = _sender.WriteAsync(content);
+            _taskQueue.Enqueue(taskSource);
+            return taskSource.Task;
 
 
         }
@@ -107,34 +110,18 @@ namespace console_netcore31_newsocket
         {
             //lock (_lock)
             //{
-                var taskSource = new TaskCompletionSource<string>();
-                using (var ms = new MemoryStream())
-                {
-                    new FreeRedis.RespHelper.Resp3Writer(ms, null, FreeRedis.RedisProtocol.RESP2).WriteCommand(command);
-                    AddSendAndReciverTask(ms.ToArray(), taskSource);
-                    ms.Close();
-                }
-                return taskSource.Task;
+            var taskSource = new TaskCompletionSource<string>();
+            using (var ms = new MemoryStream())
+            {
+                new FreeRedis.RespHelper.Resp3Writer(ms, null, FreeRedis.RedisProtocol.RESP2).WriteCommand(command);
+                var result = _sender.WriteAsync(ms.ToArray());
+                _taskQueue.Enqueue(taskSource);
+                ms.Close();
+            }
+            return taskSource.Task;
             //}
         }
         private readonly object _lock = new object();
-        private async void AddSendAndReciverTask(byte[] content, TaskCompletionSource<string> task)
-        {
-            //try
-            //{
-
-                await _sender.WriteAsync(content);
-                _taskQueue.Enqueue(task);
-                //_sender.Advance(content.Length);
-
-            //}
-            //catch (Exception ex)
-            //{
-                //File.WriteAllText("1.txt", ex.StackTrace);
-                //Console.WriteLine(ex);
-            //}
-
-        }
 
         public async Task<bool> AuthAsync(string password)
         {

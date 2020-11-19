@@ -7,6 +7,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Pipelines;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -61,13 +62,15 @@ namespace console_netcore31_newsocket
             ////SendFromNewSocketRedis(client, seredis.GetDatabase(0));
             //SendFromStackExchangeRedis(sedb);
 
-
+            _sendQueue = new ConcurrentQueue<TaskWithBytes>();
+            _receiverQueue = new ConcurrentQueue<TaskCompletionSource<bool>>();
 
             //NewSocketTest(endpoit);
             //result = client.Set("newRedis", "natasha").Result;
             //Console.WriteLine(result);
             Server(endpoit);
             Test(endpoit);
+
             Console.ReadKey();
 
         }
@@ -84,21 +87,25 @@ namespace console_netcore31_newsocket
             int count = 0;
             while (count < 20)
             {
-                await Task.Delay(1000);
+                //await Task.Delay(10);
                 NetworkStream stream = client.GetStream();
-                int i;
-                if ((i = stream.Read(bytes, 0, bytes.Length)) != 0)
+                if (stream.CanRead)
                 {
-                    var data = Encoding.UTF8.GetString(bytes, 0, i);
-                    client.Client.Send(bytes);
-                    //Console.WriteLine("Server: Data has been send!");
-                    if (data == "test")
+                    int i;
+                    if ((i = stream.Read(bytes, 0, bytes.Length)) != 0)
                     {
-                        stream.Dispose();
-                        client.Dispose();
-                        return;
+                        var data = Encoding.UTF8.GetString(bytes, 0, i);
+                        client.Client.Send(bytes);
+                        //Console.WriteLine("Server: Data has been send!");
+                        if (data == "test")
+                        {
+                            stream.Dispose();
+                            client.Dispose();
+                            return;
+                        }
                     }
                 }
+
             }
         }
         public static async void Test(IPEndPoint endpoit)
@@ -111,7 +118,111 @@ namespace console_netcore31_newsocket
             SocketConnectionFactory client = new SocketConnectionFactory(new SocketTransportOptions());
             var connection = client.ConnectAsync(endpoit).Result;
             Input(connection);
-            Output(connection);
+            Output(connection.Transport.Output);
+            ParallelOutput2();
+
+
+        }
+
+        private static ConcurrentQueue<TaskWithBytes> _sendQueue;
+        private static ConcurrentQueue<TaskCompletionSource<bool>> _receiverQueue;
+
+        public static bool IsRunning;
+
+        public static async Task SendAsync(string value)
+        {
+            var bytes = Encoding.UTF8.GetBytes(value);
+            var taskSource = new TaskCompletionSource<bool>();
+            _sendQueue.Enqueue(new TaskWithBytes(bytes, taskSource));
+            if (!sendTask.Task.IsCompleted)
+            {
+                lock (sendTask)
+                {
+
+                    if (!sendTask.Task.IsCompleted)
+                    {
+                        sendTask.SetResult(true);
+                    }
+
+                }
+            }
+            await taskSource.Task;
+
+        }
+        private static TaskCompletionSource<bool> sendTask;
+        public static async void Output(PipeWriter sender)
+        {
+            while (true)
+            {
+
+                if (_sendQueue.IsEmpty)
+                {
+
+                    sendTask = new TaskCompletionSource<bool>();
+                    await sendTask.Task;
+
+                }
+                else if (_sendQueue.TryDequeue(out var task))
+                {
+                    await sender.WriteAsync(task.Bytes).ConfigureAwait(false);
+                    _receiverQueue.Enqueue(task.Task);
+                    task.Task.SetResult(true);
+                }
+
+            }
+
+        }
+        public static async void ParallelOutput2()
+        {
+            //object obj = new object();
+            //var bytes = Encoding.UTF8.GetBytes("te1111st");
+
+            Parallel.For(0, 10000, async (state) =>
+            {
+
+                if (state == 9999)
+                {
+                    await SendAsync("------------$$$$-----------" + state.ToString()).ConfigureAwait(false);
+                }
+                else
+                {
+                    await SendAsync(state.ToString()).ConfigureAwait(false);
+                }
+
+            //await sender.FlushAsync(CancellationToken.None).ConfigureAwait(false);
+            //await sender.WriteAsync(bytes);
+        });
+        }
+
+        public static int flag = 0;
+        public static async void ParallelOutput(PipeWriter sender)
+        {
+            object obj = new object();
+            var bytes = Encoding.UTF8.GetBytes("te1111st");
+
+            Parallel.For(0, 10000, async (state) =>
+            {
+
+                while (flag == 1)
+                {
+                    await Task.Delay(100).ConfigureAwait(false);
+                }
+                Interlocked.Exchange(ref flag, 1);
+                if (state == 9999)
+                {
+                    await sender.WriteAsync(Encoding.UTF8.GetBytes("------------$$$$-----------" + state.ToString())).ConfigureAwait(false);
+                }
+                else
+                {
+                    await sender.WriteAsync(Encoding.UTF8.GetBytes(state.ToString())).ConfigureAwait(false);
+                }
+
+                Interlocked.Exchange(ref flag, 0);
+
+            //await sender.FlushAsync(CancellationToken.None).ConfigureAwait(false);
+            //await sender.WriteAsync(bytes);
+        });
+
 
 
         }
@@ -175,7 +286,7 @@ namespace console_netcore31_newsocket
                     Console.WriteLine("==============");
                     Console.Write("Send:");
                 }
-               
+
 
 
                 //await result.Buffer.
@@ -280,14 +391,15 @@ namespace console_netcore31_newsocket
             Parallel.For(0, frequence, (state) =>
             {
                 var data = client.Ping();
-                //Console.WriteLine(data);
-                Interlocked.Add(ref count, data.Split('N').Length - 1);
+            //Console.WriteLine(data);
+            Interlocked.Add(ref count, data.Split('N').Length - 1);
                 if (count == frequence)
                 {
                     sw.Stop();
-                    Console.WriteLine("FreeRedis:"+sw.ElapsedMilliseconds + "ms");
-                } });
-            
+                    Console.WriteLine("FreeRedis:" + sw.ElapsedMilliseconds + "ms");
+                }
+            });
+
         }
         #endregion
 
@@ -297,14 +409,14 @@ namespace console_netcore31_newsocket
             var tasks = new Task[10000];
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            for (var a = 0; a < 10000; a+=1)
+            for (var a = 0; a < 10000; a += 1)
             {
                 tasks[a] = Task.Run(async () =>
                 {
                     var tmp = Guid.NewGuid().ToString();
                     await client.Set(tmp, "Natasha\r\nNatasha");
                     var val = await sedb.StringGetAsync(tmp); //valid
-                    if (val != "Natasha\r\nNatasha") throw new Exception("not equal");
+                if (val != "Natasha\r\nNatasha") throw new Exception("not equal");
                 });
             }
             Task.WaitAll(tasks);
@@ -319,14 +431,14 @@ namespace console_netcore31_newsocket
             var tasks = new Task[10000];
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            for (var a = 0; a < 10000; a+=1)
+            for (var a = 0; a < 10000; a += 1)
             {
                 tasks[a] = Task.Run(async () =>
                 {
                     var tmp = Guid.NewGuid().ToString();
                     await client.SetAsync(tmp, Encoding.UTF8.GetBytes("Natasha\r\nNatasha"));
                     var val = await client.GetAsync(tmp); //valid
-                    if (val != "Natasha\r\nNatasha") throw new Exception("not equal");
+                if (val != "Natasha\r\nNatasha") throw new Exception("not equal");
                 });
             }
             Task.WaitAll(tasks);
@@ -348,7 +460,7 @@ namespace console_netcore31_newsocket
                     var tmp = Guid.NewGuid().ToString();
                     await sedb.StringSetAsync(tmp, Encoding.UTF8.GetBytes("Natasha\r\nNatasha"));
                     var val = await sedb.StringGetAsync(tmp); //valid
-                    if (val != "Natasha\r\nNatasha") throw new Exception("not equal");
+                if (val != "Natasha\r\nNatasha") throw new Exception("not equal");
                 });
             }
             Task.WaitAll(tasks);
@@ -358,6 +470,18 @@ namespace console_netcore31_newsocket
         #endregion
 
 
-        
+
     }
+
+    public class TaskWithBytes
+    {
+        public readonly byte[] Bytes;
+        public readonly TaskCompletionSource<bool> Task;
+        public TaskWithBytes(byte[] bytes, TaskCompletionSource<bool> task)
+        {
+            Bytes = bytes;
+            Task = task;
+        }
+    }
+
 }
