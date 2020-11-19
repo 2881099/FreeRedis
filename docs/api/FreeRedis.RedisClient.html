@@ -221,6 +221,39 @@
   
   
   <a id="FreeRedis_RedisClient__ctor_" data-uid="FreeRedis.RedisClient.#ctor*"></a>
+  <h4 id="FreeRedis_RedisClient__ctor_FreeRedis_ConnectionStringBuilder___System_Func_System_String_System_String__" data-uid="FreeRedis.RedisClient.#ctor(FreeRedis.ConnectionStringBuilder[],System.Func{System.String,System.String})">RedisClient(ConnectionStringBuilder[], Func&lt;String, String&gt;)</h4>
+  <div class="markdown level1 summary"><p>Norman RedisClient</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public RedisClient(ConnectionStringBuilder[] connectionStrings, Func&lt;string, string&gt; redirectRule)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="FreeRedis.ConnectionStringBuilder.html">ConnectionStringBuilder</a>[]</td>
+        <td><span class="parametername">connectionStrings</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Func</span>&lt;<span class="xref">System.String</span>, <span class="xref">System.String</span>&gt;</td>
+        <td><span class="parametername">redirectRule</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="FreeRedis_RedisClient__ctor_" data-uid="FreeRedis.RedisClient.#ctor*"></a>
   <h4 id="FreeRedis_RedisClient__ctor_FreeRedis_RedisClient_System_String_System_Boolean_System_TimeSpan_System_TimeSpan_System_TimeSpan_System_Action_FreeRedis_RedisClient__" data-uid="FreeRedis.RedisClient.#ctor(FreeRedis.RedisClient,System.String,System.Boolean,System.TimeSpan,System.TimeSpan,System.TimeSpan,System.Action{FreeRedis.RedisClient})">RedisClient(RedisClient, String, Boolean, TimeSpan, TimeSpan, TimeSpan, Action&lt;RedisClient&gt;)</h4>
   <div class="markdown level1 summary"><p>Single inside RedisClient</p>
 </div>
@@ -357,6 +390,31 @@
   </h3>
   
   
+  <a id="FreeRedis_RedisClient_Adapter_" data-uid="FreeRedis.RedisClient.Adapter*"></a>
+  <h4 id="FreeRedis_RedisClient_Adapter" data-uid="FreeRedis.RedisClient.Adapter">Adapter</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected RedisClient.BaseAdapter Adapter { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="FreeRedis.RedisClient.BaseAdapter.html">RedisClient.BaseAdapter</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
   <a id="FreeRedis_RedisClient_Interceptors_" data-uid="FreeRedis.RedisClient.Interceptors*"></a>
   <h4 id="FreeRedis_RedisClient_Interceptors" data-uid="FreeRedis.RedisClient.Interceptors">Interceptors</h4>
   <div class="markdown level1 summary"></div>
@@ -376,6 +434,31 @@
     <tbody>
       <tr>
         <td><span class="xref">System.Collections.Generic.List</span>&lt;<span class="xref">System.Func</span>&lt;<a class="xref" href="FreeRedis.IInterceptor.html">IInterceptor</a>&gt;&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="FreeRedis_RedisClient_Prefix_" data-uid="FreeRedis.RedisClient.Prefix*"></a>
+  <h4 id="FreeRedis_RedisClient_Prefix" data-uid="FreeRedis.RedisClient.Prefix">Prefix</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected string Prefix { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -7478,6 +7561,68 @@ Available since 2.6.0.</li>
     <tbody>
       <tr>
         <td><span class="xref">System.Int64</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="FreeRedis_RedisClient_LogCall_" data-uid="FreeRedis.RedisClient.LogCall*"></a>
+  <h4 id="FreeRedis_RedisClient_LogCall__1_FreeRedis_CommandPacket_System_Func___0__" data-uid="FreeRedis.RedisClient.LogCall``1(FreeRedis.CommandPacket,System.Func{``0})">LogCall&lt;T&gt;(CommandPacket, Func&lt;T&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual T LogCall&lt;T&gt;(CommandPacket cmd, Func&lt;T&gt; func)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="FreeRedis.CommandPacket.html">CommandPacket</a></td>
+        <td><span class="parametername">cmd</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Func</span>&lt;T&gt;</td>
+        <td><span class="parametername">func</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">T</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
         <td></td>
       </tr>
     </tbody>
