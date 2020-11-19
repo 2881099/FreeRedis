@@ -4294,7 +4294,15 @@ Available since 1.0.0.</p>
   
   <a id="FreeRedis_RedisClient_Del_" data-uid="FreeRedis.RedisClient.Del*"></a>
   <h4 id="FreeRedis_RedisClient_Del_System_String___" data-uid="FreeRedis.RedisClient.Del(System.String[])">Del(String[])</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>DEL command (A Synchronized Version) <br><br>
+<br>
+Removes the specified keys. A key is ignored if it does not exist.<br><br>
+<br>
+移除指定的键。如果键不存在，则忽略之。<br><br>
+<br>
+Document link: <a href="https://redis.io/commands/del">https://redis.io/commands/del</a> <br>
+Available since 2.6.0.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -4313,7 +4321,8 @@ Available since 1.0.0.</p>
       <tr>
         <td><span class="xref">System.String</span>[]</td>
         <td><span class="parametername">keys</span></td>
-        <td></td>
+        <td><p>Keys</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -4328,7 +4337,8 @@ Available since 1.0.0.</p>
     <tbody>
       <tr>
         <td><span class="xref">System.Int64</span></td>
-        <td></td>
+        <td><p>The number of keys that were removed.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -4346,7 +4356,15 @@ Available since 1.0.0.</p>
   
   <a id="FreeRedis_RedisClient_Dump_" data-uid="FreeRedis.RedisClient.Dump*"></a>
   <h4 id="FreeRedis_RedisClient_Dump_System_String_" data-uid="FreeRedis.RedisClient.Dump(System.String)">Dump(String)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>DUMP command (A Synchronized Version) <br><br>
+<br>
+Serialize the value stored at key in a Redis-specific format and return it to the user. The returned value can be synthesized back into a Redis key using the RESTORE command.<br><br>
+<br>
+以 Redis 特有格式序列化指定的键值，并返回给用户。可结合 RESTORE 命令将序列化的结果重新写回 Redis。<br><br>
+<br>
+Document link: <a href="https://redis.io/commands/dump">https://redis.io/commands/dump</a> <br>
+Available since 2.6.0.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -4365,7 +4383,8 @@ Available since 1.0.0.</p>
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">key</span></td>
-        <td></td>
+        <td><p>Key</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -4380,7 +4399,8 @@ Available since 1.0.0.</p>
     <tbody>
       <tr>
         <td><span class="xref">System.Byte</span>[]</td>
-        <td></td>
+        <td><p>The serialized value.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -4534,7 +4554,15 @@ Available since 1.0.0.</p>
   
   <a id="FreeRedis_RedisClient_Exists_" data-uid="FreeRedis.RedisClient.Exists*"></a>
   <h4 id="FreeRedis_RedisClient_Exists_System_String_" data-uid="FreeRedis.RedisClient.Exists(System.String)">Exists(String)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>EXISTS command (A Synchronized Version) <br><br>
+<br>
+Returns if key exists.<br><br>
+<br>
+返回键是否存在。<br><br>
+<br>
+Document link: <a href="https://redis.io/commands/exists">https://redis.io/commands/exists</a> <br>
+Available since 1.0.0.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -4553,7 +4581,8 @@ Available since 1.0.0.</p>
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">key</span></td>
-        <td></td>
+        <td><p>Key</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -4568,7 +4597,8 @@ Available since 1.0.0.</p>
     <tbody>
       <tr>
         <td><span class="xref">System.Boolean</span></td>
-        <td></td>
+        <td><p>Specifically: True if the key exists. False if the key does not exist.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -4576,7 +4606,15 @@ Available since 1.0.0.</p>
   
   <a id="FreeRedis_RedisClient_Exists_" data-uid="FreeRedis.RedisClient.Exists*"></a>
   <h4 id="FreeRedis_RedisClient_Exists_System_String___" data-uid="FreeRedis.RedisClient.Exists(System.String[])">Exists(String[])</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>EXISTS command (A Synchronized Version) <br><br>
+<br>
+Returns if key exists.<br><br>
+<br>
+返回键是否存在。<br><br>
+<br>
+Document link: <a href="https://redis.io/commands/exists">https://redis.io/commands/exists</a> <br>
+Available since 3.0.3.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -4595,7 +4633,8 @@ Available since 1.0.0.</p>
       <tr>
         <td><span class="xref">System.String</span>[]</td>
         <td><span class="parametername">keys</span></td>
-        <td></td>
+        <td><p>Keys</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -4610,7 +4649,8 @@ Available since 1.0.0.</p>
     <tbody>
       <tr>
         <td><span class="xref">System.Int64</span></td>
-        <td></td>
+        <td><p>The number of keys existing among the ones specified as arguments. Keys mentioned multiple times and existing are counted multiple times.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -4618,7 +4658,15 @@ Available since 1.0.0.</p>
   
   <a id="FreeRedis_RedisClient_Expire_" data-uid="FreeRedis.RedisClient.Expire*"></a>
   <h4 id="FreeRedis_RedisClient_Expire_System_String_System_Int32_" data-uid="FreeRedis.RedisClient.Expire(System.String,System.Int32)">Expire(String, Int32)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>EXPIRE command (A Synchronized Version) <br><br>
+<br>
+Set a timeout on key. After the timeout has expired, the key will automatically be deleted. A key with an associated timeout is often said to be volatile in Redis terminology.<br><br>
+<br>
+设置键的超时时间。到期后，键将被自动删除。<br><br>
+<br>
+Document link: <a href="https://redis.io/commands/expire">https://redis.io/commands/expire</a> <br>
+Available since 1.0.0.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -4637,12 +4685,14 @@ Available since 1.0.0.</p>
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">key</span></td>
-        <td></td>
+        <td><p>Key</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.Int32</span></td>
         <td><span class="parametername">seconds</span></td>
-        <td></td>
+        <td><p>Expires time (seconds)</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -4657,7 +4707,8 @@ Available since 1.0.0.</p>
     <tbody>
       <tr>
         <td><span class="xref">System.Boolean</span></td>
-        <td></td>
+        <td><p>Specifically: True if the timeout was set.False if key does not exist.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -4665,7 +4716,15 @@ Available since 1.0.0.</p>
   
   <a id="FreeRedis_RedisClient_ExpireAt_" data-uid="FreeRedis.RedisClient.ExpireAt*"></a>
   <h4 id="FreeRedis_RedisClient_ExpireAt_System_String_System_DateTime_" data-uid="FreeRedis.RedisClient.ExpireAt(System.String,System.DateTime)">ExpireAt(String, DateTime)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>EXPIREAT command (A Synchronized Version) <br><br>
+<br>
+EXPIREAT has the same effect and semantic as EXPIRE, but instead of specifying the number of seconds representing the TTL (time to live), it takes an absolute Unix timestamp (seconds since January 1, 1970). A timestamp in the past will delete the key immediately.<br><br>
+<br>
+EXPIREAT 具有与 EXPIRE 相同的作用和语义，但是它没有指定表示 TTL（生存时间）的秒数，而是使用了绝对的 Unix 时间戳（自1970年1月1日以来的秒数）。时间戳一旦过期就会被删除。<br><br>
+<br>
+Document link: <a href="https://redis.io/commands/expireat">https://redis.io/commands/expireat</a> <br>
+Available since 1.2.0.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -4684,12 +4743,14 @@ Available since 1.0.0.</p>
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">key</span></td>
-        <td></td>
+        <td><p>Key</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.DateTime</span></td>
         <td><span class="parametername">timestamp</span></td>
-        <td></td>
+        <td><p>UNIX Timestamp</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -4704,7 +4765,8 @@ Available since 1.0.0.</p>
     <tbody>
       <tr>
         <td><span class="xref">System.Boolean</span></td>
-        <td></td>
+        <td><p>Specifically: True if the timeout was set.False if key does not exist.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -7269,7 +7331,15 @@ Available since 2.6.0.</li>
   
   <a id="FreeRedis_RedisClient_Keys_" data-uid="FreeRedis.RedisClient.Keys*"></a>
   <h4 id="FreeRedis_RedisClient_Keys_System_String_" data-uid="FreeRedis.RedisClient.Keys(System.String)">Keys(String)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>KEYS command (A Synchronized Version) <br><br>
+<br>
+Returns all keys matching pattern.<br><br>
+<br>
+返回所有与模式匹配的键。<br><br>
+<br>
+Document link: <a href="https://redis.io/commands/keys">https://redis.io/commands/keys</a> <br>
+Available since 1.0.0.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -7288,7 +7358,8 @@ Available since 2.6.0.</li>
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">pattern</span></td>
-        <td></td>
+        <td><p>Pattern</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -7303,7 +7374,8 @@ Available since 2.6.0.</li>
     <tbody>
       <tr>
         <td><span class="xref">System.String</span>[]</td>
-        <td></td>
+        <td><p>List of keys matching pattern.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -8494,7 +8566,15 @@ Available since 1.0.0.</p>
   
   <a id="FreeRedis_RedisClient_Migrate_" data-uid="FreeRedis.RedisClient.Migrate*"></a>
   <h4 id="FreeRedis_RedisClient_Migrate_System_String_System_Int32_System_String_System_Int32_System_Int64_System_Boolean_System_Boolean_System_String_System_String_System_String_System_String___" data-uid="FreeRedis.RedisClient.Migrate(System.String,System.Int32,System.String,System.Int32,System.Int64,System.Boolean,System.Boolean,System.String,System.String,System.String,System.String[])">Migrate(String, Int32, String, Int32, Int64, Boolean, Boolean, String, String, String, String[])</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>MIGRATE command (A Synchronized Version) <br><br>
+<br>
+Atomically transfer a key from a source Redis instance to a destination Redis instance. On success the key is deleted from the original instance and is guaranteed to exist in the target instance.<br><br>
+<br>
+原子地将键从 Redis 源实例转移到目标实例。转移成功后，Key 将从源实例中删除，并确保保存在目标实例之中。<br><br>
+<br>
+Document link: <a href="https://redis.io/commands/migrate">https://redis.io/commands/migrate</a> <br>
+Available since 2.6.0.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -8513,57 +8593,68 @@ Available since 1.0.0.</p>
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">host</span></td>
-        <td></td>
+        <td><p>Destination Instance's Host</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.Int32</span></td>
         <td><span class="parametername">port</span></td>
-        <td></td>
+        <td><p>Destination Instance's Port</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">key</span></td>
-        <td></td>
+        <td><p>Key</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.Int32</span></td>
         <td><span class="parametername">destinationDb</span></td>
-        <td></td>
+        <td><p>Destination Instance's Database</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.Int64</span></td>
         <td><span class="parametername">timeoutMilliseconds</span></td>
-        <td></td>
+        <td><p>Timeout milliseconds</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.Boolean</span></td>
         <td><span class="parametername">copy</span></td>
-        <td></td>
+        <td><p>Do not remove the key from the local instance. Available since 3.0.0.</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.Boolean</span></td>
         <td><span class="parametername">replace</span></td>
-        <td></td>
+        <td><p>Replace existing key on the remote instance. Available since 3.0.0.</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">authPassword</span></td>
-        <td></td>
+        <td><p>Authenticate with the given password to the remote instance. Available since 4.0.7.</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">auth2Username</span></td>
-        <td></td>
+        <td><p>Authenticate with the given username (Redis 6 or greater ACL auth style).</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">auth2Password</span></td>
-        <td></td>
+        <td><p>Authenticate with the given password (Redis 6 or greater ACL auth style).</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.String</span>[]</td>
         <td><span class="parametername">keys</span></td>
-        <td></td>
+        <td><p>If the key argument is an empty string, the command will instead migrate all the keys that follow the KEYS option (see the above section for more info). Available since 3.0.6.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -8571,7 +8662,16 @@ Available since 1.0.0.</p>
   
   <a id="FreeRedis_RedisClient_Move_" data-uid="FreeRedis.RedisClient.Move*"></a>
   <h4 id="FreeRedis_RedisClient_Move_System_String_System_Int32_" data-uid="FreeRedis.RedisClient.Move(System.String,System.Int32)">Move(String, Int32)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>MOVE command (A Synchronized Version) <br><br>
+<br>
+Move key from the currently selected database (see SELECT) to the specified destination database. When key already exists in the destination database, or it does not exist in the source database, it does nothing. It is possible to use MOVE as a locking primitive because of this. <br><br>
+<br>
+将指定的 Key 从当前数据库移动到目标数据库。<br>
+如果目标数据库中已存在该键，或源数据库中不存在该键，则什么都不做。<br><br>
+<br>
+Document link: <a href="https://redis.io/commands/move">https://redis.io/commands/move</a> <br>
+Available since 1.0.0.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -8590,12 +8690,14 @@ Available since 1.0.0.</p>
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">key</span></td>
-        <td></td>
+        <td><p>Key</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.Int32</span></td>
         <td><span class="parametername">db</span></td>
-        <td></td>
+        <td><p>Database</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -8610,7 +8712,8 @@ Available since 1.0.0.</p>
     <tbody>
       <tr>
         <td><span class="xref">System.Boolean</span></td>
-        <td></td>
+        <td><p>Specifically: True if key was moved. False if key was not moved.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -8873,7 +8976,15 @@ Available since 1.0.1.</p>
   
   <a id="FreeRedis_RedisClient_ObjectEncoding_" data-uid="FreeRedis.RedisClient.ObjectEncoding*"></a>
   <h4 id="FreeRedis_RedisClient_ObjectEncoding_System_String_" data-uid="FreeRedis.RedisClient.ObjectEncoding(System.String)">ObjectEncoding(String)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>OBJECT ENCODING command (A Synchronized Version) <br><br>
+<br>
+Returns the kind of internal representation used in order to store the value associated with a key.<br><br>
+<br>
+返回用于存储与键关联的值的内部表示形式的类型。
+<br>
+Document link: <a href="https://redis.io/commands/object">https://redis.io/commands/object</a> <br>
+Available since 2.2.3.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -8892,7 +9003,8 @@ Available since 1.0.1.</p>
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">key</span></td>
-        <td></td>
+        <td><p>Key</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -8907,7 +9019,8 @@ Available since 1.0.1.</p>
     <tbody>
       <tr>
         <td><span class="xref">System.String</span></td>
-        <td></td>
+        <td><p>Returns the kind of internal representation used in order to store the value associated with a key.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -8915,7 +9028,15 @@ Available since 1.0.1.</p>
   
   <a id="FreeRedis_RedisClient_ObjectFreq_" data-uid="FreeRedis.RedisClient.ObjectFreq*"></a>
   <h4 id="FreeRedis_RedisClient_ObjectFreq_System_String_" data-uid="FreeRedis.RedisClient.ObjectFreq(System.String)">ObjectFreq(String)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>OBJECT FREQ command (A Synchronized Version) <br><br>
+<br>
+Returns the logarithmic access frequency counter of the object stored at the specified key. This subcommand is available when maxmemory-policy is set to an LFU policy.<br><br>
+<br>
+返回存储在指定键处的对象的对数访问频率计数器。<br><br>
+<br>
+Document link: <a href="https://redis.io/commands/object">https://redis.io/commands/object</a> <br>
+Available since 2.2.3.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -8934,7 +9055,8 @@ Available since 1.0.1.</p>
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">key</span></td>
-        <td></td>
+        <td><p>Key</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -8949,7 +9071,8 @@ Available since 1.0.1.</p>
     <tbody>
       <tr>
         <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int64</span>&gt;</td>
-        <td></td>
+        <td><p>Returns the logarithmic access frequency counter of the object stored at the specified key.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -8957,7 +9080,15 @@ Available since 1.0.1.</p>
   
   <a id="FreeRedis_RedisClient_ObjectIdleTime_" data-uid="FreeRedis.RedisClient.ObjectIdleTime*"></a>
   <h4 id="FreeRedis_RedisClient_ObjectIdleTime_System_String_" data-uid="FreeRedis.RedisClient.ObjectIdleTime(System.String)">ObjectIdleTime(String)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>OBJECT IDLETIME command (A Synchronized Version) <br><br>
+<br>
+returns the number of seconds since the object stored at the specified key is idle (not requested by read or write operations). While the value is returned in seconds the actual resolution of this timer is 10 seconds, but may vary in future implementations. This subcommand is available when maxmemory-policy is set to an LRU policy or noeviction and maxmemory is set. <br><br>
+<br>
+返回指定键值的空闲时间，单位为秒。<br><br>
+<br>
+Document link: <a href="https://redis.io/commands/object">https://redis.io/commands/object</a> <br>
+Available since 2.2.3.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -8976,7 +9107,8 @@ Available since 1.0.1.</p>
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">key</span></td>
-        <td></td>
+        <td><p>Key</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -8991,7 +9123,8 @@ Available since 1.0.1.</p>
     <tbody>
       <tr>
         <td><span class="xref">System.Int64</span></td>
-        <td></td>
+        <td><p>Returns the number of seconds since the object stored at the specified key is idle</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -8999,7 +9132,15 @@ Available since 1.0.1.</p>
   
   <a id="FreeRedis_RedisClient_ObjectRefCount_" data-uid="FreeRedis.RedisClient.ObjectRefCount*"></a>
   <h4 id="FreeRedis_RedisClient_ObjectRefCount_System_String_" data-uid="FreeRedis.RedisClient.ObjectRefCount(System.String)">ObjectRefCount(String)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>OBJECT REFCOUNT command (A Synchronized Version) <br><br>
+<br>
+Returns the number of references of the value associated with the specified key. This command is mainly useful for debugging.<br><br>
+<br>
+返回与指定键关联的值的引用数。<br><br>
+<br>
+Document link: <a href="https://redis.io/commands/object">https://redis.io/commands/object</a> <br>
+Available since 2.2.3.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -9018,7 +9159,8 @@ Available since 1.0.1.</p>
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">key</span></td>
-        <td></td>
+        <td><p>Key</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -9033,7 +9175,8 @@ Available since 1.0.1.</p>
     <tbody>
       <tr>
         <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int64</span>&gt;</td>
-        <td></td>
+        <td><p>Returns the number of references of the value associated with the specified key.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -9041,7 +9184,15 @@ Available since 1.0.1.</p>
   
   <a id="FreeRedis_RedisClient_Persist_" data-uid="FreeRedis.RedisClient.Persist*"></a>
   <h4 id="FreeRedis_RedisClient_Persist_System_String_" data-uid="FreeRedis.RedisClient.Persist(System.String)">Persist(String)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>PERSIST command (A Synchronized Version) <br><br>
+<br>
+Remove the existing timeout on key, turning the key from volatile (a key with an expire set) to persistent (a key that will never expire as no timeout is associated).<br><br>
+<br>
+将指定键的超时设置移除，将键从可变键转换为持久键。<br><br>
+<br>
+Document link: <a href="https://redis.io/commands/persist">https://redis.io/commands/persist</a> <br>
+Available since 2.2.0.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -9060,7 +9211,8 @@ Available since 1.0.1.</p>
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">key</span></td>
-        <td></td>
+        <td><p>Key</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -9075,7 +9227,8 @@ Available since 1.0.1.</p>
     <tbody>
       <tr>
         <td><span class="xref">System.Boolean</span></td>
-        <td></td>
+        <td><p>Specifically: True if the timeout was removed. False if key does not exist or does not have an associated timeout.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -9083,7 +9236,15 @@ Available since 1.0.1.</p>
   
   <a id="FreeRedis_RedisClient_PExpire_" data-uid="FreeRedis.RedisClient.PExpire*"></a>
   <h4 id="FreeRedis_RedisClient_PExpire_System_String_System_Int32_" data-uid="FreeRedis.RedisClient.PExpire(System.String,System.Int32)">PExpire(String, Int32)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>PEXPIRE command (A Synchronized Version) <br><br>
+<br>
+This command works exactly like EXPIRE but the time to live of the key is specified in milliseconds instead of seconds.<br><br>
+<br>
+此命令与 EXPIRE 相同，区别仅仅在于时间单位是毫秒，不是秒。<br><br>
+<br>
+Document link: <a href="https://redis.io/commands/expire">https://redis.io/commands/expire</a> <br>
+Available since 1.0.0.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -9102,12 +9263,14 @@ Available since 1.0.1.</p>
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">key</span></td>
-        <td></td>
+        <td><p>Key</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.Int32</span></td>
         <td><span class="parametername">milliseconds</span></td>
-        <td></td>
+        <td><p>Expires time (milliseconds)</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -9122,7 +9285,8 @@ Available since 1.0.1.</p>
     <tbody>
       <tr>
         <td><span class="xref">System.Boolean</span></td>
-        <td></td>
+        <td><p>Specifically: True if the timeout was set.False if key does not exist.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -9130,7 +9294,15 @@ Available since 1.0.1.</p>
   
   <a id="FreeRedis_RedisClient_PExpireAt_" data-uid="FreeRedis.RedisClient.PExpireAt*"></a>
   <h4 id="FreeRedis_RedisClient_PExpireAt_System_String_System_DateTime_" data-uid="FreeRedis.RedisClient.PExpireAt(System.String,System.DateTime)">PExpireAt(String, DateTime)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>PEXPIREAT command (A Synchronized Version) <br><br>
+<br>
+PEXPIREAT has the same effect and semantic as EXPIREAT, but the Unix time at which the key will expire is specified in milliseconds instead of seconds.<br><br>
+<br>
+PEXPIREAT 具有与 EXPIREAT 相同的作用和语义，但 Key 的时间戳使用的是毫秒，而不是秒。<br><br>
+<br>
+Document link: <a href="https://redis.io/commands/pexpireat">https://redis.io/commands/pexpireat</a> <br>
+Available since 2.6.0.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -9149,12 +9321,14 @@ Available since 1.0.1.</p>
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">key</span></td>
-        <td></td>
+        <td><p>Key</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.DateTime</span></td>
         <td><span class="parametername">timestamp</span></td>
-        <td></td>
+        <td><p>UNIX Timestamp</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -9169,7 +9343,8 @@ Available since 1.0.1.</p>
     <tbody>
       <tr>
         <td><span class="xref">System.Boolean</span></td>
-        <td></td>
+        <td><p>Specifically: True if the timeout was set.False if key does not exist.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -9497,7 +9672,25 @@ Available since 2.6.0.</p>
   
   <a id="FreeRedis_RedisClient_PTtl_" data-uid="FreeRedis.RedisClient.PTtl*"></a>
   <h4 id="FreeRedis_RedisClient_PTtl_System_String_" data-uid="FreeRedis.RedisClient.PTtl(System.String)">PTtl(String)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>PTTL command (A Synchronized Version) <br><br>
+<br>
+Like TTL this command returns the remaining time to live of a key that has an expire set, with the sole difference that TTL returns the amount of remaining time in seconds while PTTL returns it in milliseconds.<br>
+In Redis 2.6 or older the command returns -1 if the key does not exist or if the key exist but has no associated expire. <br>
+Starting with Redis 2.8 the return value in case of error changed: <br></p>
+<ul>
+<li>The command returns -2 if the key does not exist.<br></li>
+<li>The command returns -1 if the key exists but has no associated expire.<br><br>
+<br>
+与 TTL 命令一样，返回键的剩余生存时间，唯一的区别是 TTL 以秒为单位返回剩余时间，而 PTTL 以毫秒为单位返回。<br>
+在 Redis 2.6 之前，如果 Key 不存在或 Key 未设置过期时间，则返回 -1<br>
+从 Redis 2.8 开始，将针对不同的错误情况返回不同的值：<br></li>
+<li>如果 Key 不存在，则返回 -2 <br></li>
+<li>如果 Key 存在，但没有设置过过期时间，则返回 -1 <br><br>
+<br>
+Document link: <a href="https://redis.io/commands/pttl">https://redis.io/commands/pttl</a> <br>
+Available since 2.6.0.</li>
+</ul>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -9516,7 +9709,8 @@ Available since 2.6.0.</p>
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">key</span></td>
-        <td></td>
+        <td><p>Key</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -9531,7 +9725,8 @@ Available since 2.6.0.</p>
     <tbody>
       <tr>
         <td><span class="xref">System.Int64</span></td>
-        <td></td>
+        <td><p>TTL in milliseconds, or a negative value in order to signal an error (see the description above).</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -9791,7 +9986,15 @@ Available since 2.6.0.</p>
   
   <a id="FreeRedis_RedisClient_RandomKey_" data-uid="FreeRedis.RedisClient.RandomKey*"></a>
   <h4 id="FreeRedis_RedisClient_RandomKey" data-uid="FreeRedis.RedisClient.RandomKey">RandomKey()</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>RANDOMKEY command (A Synchronized Version) <br><br>
+<br>
+Return a random key from the currently selected database. <br><br>
+<br>
+从当前选择的数据库返回一个随机密钥。<br><br>
+<br>
+Document link: <a href="https://redis.io/commands/randomkey">https://redis.io/commands/randomkey</a> <br>
+Available since 1.0.0.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -9808,7 +10011,8 @@ Available since 2.6.0.</p>
     <tbody>
       <tr>
         <td><span class="xref">System.String</span></td>
-        <td></td>
+        <td><p>The random key, or nil when the database is empty.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -9816,7 +10020,20 @@ Available since 2.6.0.</p>
   
   <a id="FreeRedis_RedisClient_Rename_" data-uid="FreeRedis.RedisClient.Rename*"></a>
   <h4 id="FreeRedis_RedisClient_Rename_System_String_System_String_" data-uid="FreeRedis.RedisClient.Rename(System.String,System.String)">Rename(String, String)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>RENAME command (A Synchronized Version) <br><br>
+<br>
+Renames key to newkey. It returns an error when key does not exist. If newkey already exists it is overwritten, when this happens RENAME executes an implicit DEL operation, so if the deleted key contains a very big value it may cause high latency even if RENAME itself is usually a constant-time operation.<br></p>
+<ul>
+<li>Before Redis 3.2.0, an error is returned if source and destination names are the same.<br><br>
+<br>
+将 Key 重命名为 New Key。如果键不存在，返回错误。<br>
+如果 New Key 已存在，则将被覆盖，此时类似 DEL 命令，由于 RENAME 是 constant-time operation，因此当删除的键有很大的值时会有较大的延迟。<br></li>
+<li>在 Redis 3.2 之前，如果 Key 和 New Key 名字一样，将返回错误。<br><br>
+<br>
+Document link: <a href="https://redis.io/commands/rename">https://redis.io/commands/rename</a> <br>
+Available since 1.0.0.</li>
+</ul>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -9835,12 +10052,14 @@ Available since 2.6.0.</p>
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">key</span></td>
-        <td></td>
+        <td><p>Key</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">newkey</span></td>
-        <td></td>
+        <td><p>New key</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -9848,7 +10067,20 @@ Available since 2.6.0.</p>
   
   <a id="FreeRedis_RedisClient_RenameNx_" data-uid="FreeRedis.RedisClient.RenameNx*"></a>
   <h4 id="FreeRedis_RedisClient_RenameNx_System_String_System_String_" data-uid="FreeRedis.RedisClient.RenameNx(System.String,System.String)">RenameNx(String, String)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>RENAMENX command (A Synchronized Version) <br><br>
+<br>
+Renames key to newkey. It returns an error when key does not exist. If newkey already exists it is overwritten, when this happens RENAME executes an implicit DEL operation, so if the deleted key contains a very big value it may cause high latency even if RENAME itself is usually a constant-time operation.<br></p>
+<ul>
+<li>Before Redis 3.2.0, an error is returned if source and destination names are the same.<br><br>
+<br>
+将 Key 重命名为 New Key。如果键不存在，返回错误。<br>
+如果 New Key 已存在，则将被覆盖，此时类似 DEL 命令，由于 RENAME 是 constant-time operation，因此当删除的键有很大的值时会有较大的延迟。<br></li>
+<li>在 Redis 3.2 之前，如果 Key 和 New Key 名字一样，将返回错误。<br><br>
+<br>
+Document link: <a href="https://redis.io/commands/renamenx">https://redis.io/commands/renamenx</a> <br>
+Available since 1.0.0.</li>
+</ul>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -9867,12 +10099,14 @@ Available since 2.6.0.</p>
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">key</span></td>
-        <td></td>
+        <td><p>Key</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">newkey</span></td>
-        <td></td>
+        <td><p>New key</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -9887,7 +10121,8 @@ Available since 2.6.0.</p>
     <tbody>
       <tr>
         <td><span class="xref">System.Boolean</span></td>
-        <td></td>
+        <td><p>specifically: True if key was renamed to newkey. False if newkey already exists.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -9927,7 +10162,15 @@ Available since 2.6.0.</p>
   
   <a id="FreeRedis_RedisClient_Restore_" data-uid="FreeRedis.RedisClient.Restore*"></a>
   <h4 id="FreeRedis_RedisClient_Restore_System_String_System_Byte___" data-uid="FreeRedis.RedisClient.Restore(System.String,System.Byte[])">Restore(String, Byte[])</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>RESTORE command (A Synchronized Version) <br><br>
+<br>
+Create a key associated with a value that is obtained by deserializing the provided serialized value (obtained via DUMP).<br><br>
+<br>
+将经由 DUMP 命令序列化的值反序列化后，作为给定键的值进行保存。<br><br>
+<br>
+Document link: <a href="https://redis.io/commands/restore">https://redis.io/commands/restore</a> <br>
+Available since 2.6.0.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -9946,12 +10189,14 @@ Available since 2.6.0.</p>
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">key</span></td>
-        <td></td>
+        <td><p>Key</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.Byte</span>[]</td>
         <td><span class="parametername">serializedValue</span></td>
-        <td></td>
+        <td><p>Serialized value</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -9959,7 +10204,15 @@ Available since 2.6.0.</p>
   
   <a id="FreeRedis_RedisClient_Restore_" data-uid="FreeRedis.RedisClient.Restore*"></a>
   <h4 id="FreeRedis_RedisClient_Restore_System_String_System_Int32_System_Byte___System_Boolean_System_Boolean_System_Nullable_System_Int32__System_Nullable_System_Decimal__" data-uid="FreeRedis.RedisClient.Restore(System.String,System.Int32,System.Byte[],System.Boolean,System.Boolean,System.Nullable{System.Int32},System.Nullable{System.Decimal})">Restore(String, Int32, Byte[], Boolean, Boolean, Nullable&lt;Int32&gt;, Nullable&lt;Decimal&gt;)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>RESTORE command (A Synchronized Version) <br><br>
+<br>
+Create a key associated with a value that is obtained by deserializing the provided serialized value (obtained via DUMP).<br><br>
+<br>
+将经由 DUMP 命令序列化的值反序列化后，作为给定键的值进行保存。<br><br>
+<br>
+Document link: <a href="https://redis.io/commands/restore">https://redis.io/commands/restore</a> <br>
+Available since 2.6.0.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -9978,37 +10231,44 @@ Available since 2.6.0.</p>
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">key</span></td>
-        <td></td>
+        <td><p>Key</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.Int32</span></td>
         <td><span class="parametername">ttl</span></td>
-        <td></td>
+        <td><p>If ttl is 0 the key is created without any expire, otherwise the specified expire time (in milliseconds) is set.</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.Byte</span>[]</td>
         <td><span class="parametername">serializedValue</span></td>
-        <td></td>
+        <td><p>Serialized value</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.Boolean</span></td>
         <td><span class="parametername">replace</span></td>
-        <td></td>
+        <td><p>REPLACE modifier: If the Key already exists, replace it. Available since 3.0.0.</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.Boolean</span></td>
         <td><span class="parametername">absTtl</span></td>
-        <td></td>
+        <td><p>Absolute Unix timestamp (in milliseconds) in which the key will expire. Available since 5.0.0.</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
         <td><span class="parametername">idleTimeSeconds</span></td>
-        <td></td>
+        <td><p>IDLETIME modifier. Available since 5.0.0.</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Decimal</span>&gt;</td>
         <td><span class="parametername">frequency</span></td>
-        <td></td>
+        <td><p>FREQ modifier. Available since 5.0.0.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -10400,7 +10660,15 @@ Available since 2.6.0.</p>
   
   <a id="FreeRedis_RedisClient_Scan_" data-uid="FreeRedis.RedisClient.Scan*"></a>
   <h4 id="FreeRedis_RedisClient_Scan_System_Int64_System_String_System_Int64_System_String_" data-uid="FreeRedis.RedisClient.Scan(System.Int64,System.String,System.Int64,System.String)">Scan(Int64, String, Int64, String)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>SCAN command (A Synchronized Version) <br><br>
+<br>
+The SCAN command and the closely related commands SSCAN, HSCAN and ZSCAN are used in order to incrementally iterate over a collection of elements.<br><br>
+<br>
+使用 SCAN 命令及其关联的 SSCAN、HSCAN、ZSCAN 等命令来迭代返回元素集合。<br><br>
+<br>
+Document link: <a href="https://redis.io/commands/scan">https://redis.io/commands/scan</a> <br>
+Available since 2.8.0.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -10419,22 +10687,26 @@ Available since 2.6.0.</p>
       <tr>
         <td><span class="xref">System.Int64</span></td>
         <td><span class="parametername">cursor</span></td>
-        <td></td>
+        <td><p>Cursor</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">pattern</span></td>
-        <td></td>
+        <td><p>MATCH option</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.Int64</span></td>
         <td><span class="parametername">count</span></td>
-        <td></td>
+        <td><p>COUNT option: while SCAN does not provide guarantees about the number of elements returned at every iteration, it is possible to empirically adjust the behavior of SCAN using the COUNT option, default is 10</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">type</span></td>
-        <td></td>
+        <td><p>TYPE option: the type argument is the same string name that the TYPE command returns. Available since 6.0</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -10449,7 +10721,8 @@ Available since 2.6.0.</p>
     <tbody>
       <tr>
         <td><a class="xref" href="FreeRedis.ScanResult-1.html">ScanResult</a>&lt;<span class="xref">System.String</span>&gt;</td>
-        <td></td>
+        <td><p>Return a two elements multi-bulk reply, where the first element is a string representing an unsigned 64 bit number (the cursor), and the second element is a multi-bulk with an array of elements.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -12024,7 +12297,15 @@ Null reply: a Null Bulk Reply is returned if the SET operation was not performed
   
   <a id="FreeRedis_RedisClient_Sort_" data-uid="FreeRedis.RedisClient.Sort*"></a>
   <h4 id="FreeRedis_RedisClient_Sort_System_String_System_String_System_Int64_System_Int64_System_String___System_Nullable_FreeRedis_Collation__System_Boolean_" data-uid="FreeRedis.RedisClient.Sort(System.String,System.String,System.Int64,System.Int64,System.String[],System.Nullable{FreeRedis.Collation},System.Boolean)">Sort(String, String, Int64, Int64, String[], Nullable&lt;Collation&gt;, Boolean)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>SORT command (A Synchronized Version) <br><br>
+<br>
+Returns or stores the elements contained in the list, set or sorted set at key. By default, sorting is numeric and elements are compared by their value interpreted as double precision floating point number. <br><br>
+<br>
+返回含在 LIST、SET、ZSET 中的元素。默认情况下，排序是数字形式的，并且将元素的值进行比较以解释为双精度浮点数。<br><br>
+<br>
+Document link: <a href="https://redis.io/commands/sort">https://redis.io/commands/sort</a> <br>
+Available since 1.0.0.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -12043,37 +12324,44 @@ Null reply: a Null Bulk Reply is returned if the SET operation was not performed
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">key</span></td>
-        <td></td>
+        <td><p>Keys</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">byPattern</span></td>
-        <td></td>
+        <td><p>BY modifier</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.Int64</span></td>
         <td><span class="parametername">offset</span></td>
-        <td></td>
+        <td><p>The number of elements to skip.</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.Int64</span></td>
         <td><span class="parametername">count</span></td>
-        <td></td>
+        <td><p>Specifying the number of elements to return from starting at offset.</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.String</span>[]</td>
         <td><span class="parametername">getPatterns</span></td>
-        <td></td>
+        <td><p>GET modifier</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.Nullable</span>&lt;<a class="xref" href="FreeRedis.Collation.html">Collation</a>&gt;</td>
         <td><span class="parametername">collation</span></td>
-        <td></td>
+        <td><p>ASC | DESC modifier</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.Boolean</span></td>
         <td><span class="parametername">alpha</span></td>
-        <td></td>
+        <td><p>ALPHA modifier, sort by lexicographically.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -12088,7 +12376,8 @@ Null reply: a Null Bulk Reply is returned if the SET operation was not performed
     <tbody>
       <tr>
         <td><span class="xref">System.String</span>[]</td>
-        <td></td>
+        <td><p>A list of sorted elements</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -12096,7 +12385,15 @@ Null reply: a Null Bulk Reply is returned if the SET operation was not performed
   
   <a id="FreeRedis_RedisClient_SortStore_" data-uid="FreeRedis.RedisClient.SortStore*"></a>
   <h4 id="FreeRedis_RedisClient_SortStore_System_String_System_String_System_String_System_Int64_System_Int64_System_String___System_Nullable_FreeRedis_Collation__System_Boolean_" data-uid="FreeRedis.RedisClient.SortStore(System.String,System.String,System.String,System.Int64,System.Int64,System.String[],System.Nullable{FreeRedis.Collation},System.Boolean)">SortStore(String, String, String, Int64, Int64, String[], Nullable&lt;Collation&gt;, Boolean)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>SORT command (A Synchronized Version) <br><br>
+<br>
+Stores the elements contained in the list, set or sorted set at key. By default, sorting is numeric and elements are compared by their value interpreted as double precision floating point number. <br><br>
+<br>
+存储包含在 LIST、SET、ZSET 中的元素。默认情况下，排序是数字形式的，并且将元素的值进行比较以解释为双精度浮点数。<br><br>
+<br>
+Document link: <a href="https://redis.io/commands/sort">https://redis.io/commands/sort</a> <br>
+Available since 1.0.0.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -12115,42 +12412,50 @@ Null reply: a Null Bulk Reply is returned if the SET operation was not performed
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">storeDestination</span></td>
-        <td></td>
+        <td><p>Storing the result of a SORT operation to the destination key.</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">key</span></td>
-        <td></td>
+        <td><p>Keys</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">byPattern</span></td>
-        <td></td>
+        <td><p>BY modifier</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.Int64</span></td>
         <td><span class="parametername">offset</span></td>
-        <td></td>
+        <td><p>The number of elements to skip.</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.Int64</span></td>
         <td><span class="parametername">count</span></td>
-        <td></td>
+        <td><p>Specifying the number of elements to return from starting at offset.</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.String</span>[]</td>
         <td><span class="parametername">getPatterns</span></td>
-        <td></td>
+        <td><p>GET modifier</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.Nullable</span>&lt;<a class="xref" href="FreeRedis.Collation.html">Collation</a>&gt;</td>
         <td><span class="parametername">collation</span></td>
-        <td></td>
+        <td><p>ASC | DESC modifier</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.Boolean</span></td>
         <td><span class="parametername">alpha</span></td>
-        <td></td>
+        <td><p>ALPHA modifier, sort by lexicographically.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -12165,7 +12470,8 @@ Null reply: a Null Bulk Reply is returned if the SET operation was not performed
     <tbody>
       <tr>
         <td><span class="xref">System.Int64</span></td>
-        <td></td>
+        <td><p>The number of sorted elements in the destination list.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -13453,7 +13759,15 @@ Available since 2.2.0.</p>
   
   <a id="FreeRedis_RedisClient_Touch_" data-uid="FreeRedis.RedisClient.Touch*"></a>
   <h4 id="FreeRedis_RedisClient_Touch_System_String___" data-uid="FreeRedis.RedisClient.Touch(System.String[])">Touch(String[])</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>TOUCH command (A Synchronized Version) <br><br>
+<br>
+Alters the last access time of a key(s). A key is ignored if it does not exist.<br><br>
+<br>
+更改 Key(s) 最后访问时间。如果键不存在，则忽略之。<br><br>
+<br>
+Document link: <a href="https://redis.io/commands/touch">https://redis.io/commands/touch</a> <br>
+Available since 3.2.1.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -13472,7 +13786,8 @@ Available since 2.2.0.</p>
       <tr>
         <td><span class="xref">System.String</span>[]</td>
         <td><span class="parametername">keys</span></td>
-        <td></td>
+        <td><p>Keys</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -13487,7 +13802,8 @@ Available since 2.2.0.</p>
     <tbody>
       <tr>
         <td><span class="xref">System.Int64</span></td>
-        <td></td>
+        <td><p>The number of keys that were touched.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -13495,7 +13811,25 @@ Available since 2.2.0.</p>
   
   <a id="FreeRedis_RedisClient_Ttl_" data-uid="FreeRedis.RedisClient.Ttl*"></a>
   <h4 id="FreeRedis_RedisClient_Ttl_System_String_" data-uid="FreeRedis.RedisClient.Ttl(System.String)">Ttl(String)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>TTL command (A Synchronized Version) <br><br>
+<br>
+Returns the remaining time to live of a key that has a timeout. This introspection capability allows a Redis client to check how many seconds a given key will continue to be part of the dataset.<br>
+In Redis 2.6 or older the command returns -1 if the key does not exist or if the key exist but has no associated expire. <br>
+Starting with Redis 2.8 the return value in case of error changed: <br></p>
+<ul>
+<li>The command returns -2 if the key does not exist.<br></li>
+<li>The command returns -1 if the key exists but has no associated expire.<br><br>
+<br>
+返回键的剩余生存时间。这种自省能力允许 Redis 客户端检查指定键还能再数据集中生存多少秒。<br>
+在 Redis 2.6 之前，如果 Key 不存在或 Key 未设置过期时间，则返回 -1<br>
+从 Redis 2.8 开始，将针对不同的错误情况返回不同的值：<br></li>
+<li>如果 Key 不存在，则返回 -2 <br></li>
+<li>如果 Key 存在，但没有设置过过期时间，则返回 -1 <br><br>
+<br>
+Document link: <a href="https://redis.io/commands/ttl">https://redis.io/commands/ttl</a> <br>
+Available since 1.0.0.</li>
+</ul>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -13514,7 +13848,8 @@ Available since 2.2.0.</p>
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">key</span></td>
-        <td></td>
+        <td><p>Key</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -13529,7 +13864,8 @@ Available since 2.2.0.</p>
     <tbody>
       <tr>
         <td><span class="xref">System.Int64</span></td>
-        <td></td>
+        <td><p>TTL in seconds, or a negative value in order to signal an error (see the description above).</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -13537,7 +13873,15 @@ Available since 2.2.0.</p>
   
   <a id="FreeRedis_RedisClient_Type_" data-uid="FreeRedis.RedisClient.Type*"></a>
   <h4 id="FreeRedis_RedisClient_Type_System_String_" data-uid="FreeRedis.RedisClient.Type(System.String)">Type(String)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>TYPE command (A Synchronized Version) <br><br>
+<br>
+Returns the string representation of the type of the value stored at key. The different types that can be returned are: string, list, set, zset, hash and stream.<br><br>
+<br>
+获取键对应值的类型的字符串表达形式。可以返回的类型是：string，list，set，zset，hash 以及 stream。<br><br>
+<br>
+Document link: <a href="https://redis.io/commands/type">https://redis.io/commands/type</a> <br>
+Available since 1.0.0.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -13556,7 +13900,8 @@ Available since 2.2.0.</p>
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">key</span></td>
-        <td></td>
+        <td><p>Key</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -13571,7 +13916,8 @@ Available since 2.2.0.</p>
     <tbody>
       <tr>
         <td><a class="xref" href="FreeRedis.KeyType.html">KeyType</a></td>
-        <td></td>
+        <td><p>The type of key, or none when key does not exist.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -13579,7 +13925,15 @@ Available since 2.2.0.</p>
   
   <a id="FreeRedis_RedisClient_UnLink_" data-uid="FreeRedis.RedisClient.UnLink*"></a>
   <h4 id="FreeRedis_RedisClient_UnLink_System_String___" data-uid="FreeRedis.RedisClient.UnLink(System.String[])">UnLink(String[])</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>UNLINK command (A Synchronized Version) <br><br>
+<br>
+This command is very similar to DEL: it removes the specified keys. Just like DEL a key is ignored if it does not exist. However the command performs the actual memory reclaiming in a different thread, so it is not blocking, while DEL is. <br><br>
+<br>
+本命令与 DEL 相似，能删除指定的键值；如果键不存在，则忽略。与 DEL 不同的是，本命令将在另一个线程中执行实际的内存回收，因此是非阻塞的。<br><br>
+<br>
+Document link: <a href="https://redis.io/commands/unlink">https://redis.io/commands/unlink</a> <br>
+Available since 4.0.0.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -13598,7 +13952,8 @@ Available since 2.2.0.</p>
       <tr>
         <td><span class="xref">System.String</span>[]</td>
         <td><span class="parametername">keys</span></td>
-        <td></td>
+        <td><p>Keys</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -13613,7 +13968,8 @@ Available since 2.2.0.</p>
     <tbody>
       <tr>
         <td><span class="xref">System.Int64</span></td>
-        <td></td>
+        <td><p>The number of keys that were unlinked.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -13648,7 +14004,16 @@ Available since 2.2.0.</p>
   
   <a id="FreeRedis_RedisClient_Wait_" data-uid="FreeRedis.RedisClient.Wait*"></a>
   <h4 id="FreeRedis_RedisClient_Wait_System_Int64_System_Int64_" data-uid="FreeRedis.RedisClient.Wait(System.Int64,System.Int64)">Wait(Int64, Int64)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>WAIT command (A Synchronized Version) <br><br>
+<br>
+This command blocks the current client until all the previous write commands are successfully transferred and acknowledged by at least the specified number of replicas. If the timeout, specified in milliseconds, is reached, the command returns even if the specified number of replicas were not yet reached. <br><br>
+<br>
+本命令将阻塞当前客户端，直到所有写命令成功发送、且大于等于指定数量的副本进行了确认。<br>
+如果超时（单位为毫秒），即便没能获得指定数量副本的确认，命令也会返回。<br><br>
+<br>
+Document link: <a href="https://redis.io/commands/wait">https://redis.io/commands/wait</a> <br>
+Available since 3.0.0.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -13667,12 +14032,14 @@ Available since 2.2.0.</p>
       <tr>
         <td><span class="xref">System.Int64</span></td>
         <td><span class="parametername">numreplicas</span></td>
-        <td></td>
+        <td><p>The number of replicas</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.Int64</span></td>
         <td><span class="parametername">timeoutMilliseconds</span></td>
-        <td></td>
+        <td><p>Timeout milliseconds</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -13687,7 +14054,8 @@ Available since 2.2.0.</p>
     <tbody>
       <tr>
         <td><span class="xref">System.Int64</span></td>
-        <td></td>
+        <td><p>The command returns the number of replicas reached by all the writes performed in the context of the current connection.</p>
+</td>
       </tr>
     </tbody>
   </table>
