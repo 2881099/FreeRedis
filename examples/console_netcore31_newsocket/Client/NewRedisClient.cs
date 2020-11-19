@@ -16,7 +16,7 @@ namespace console_netcore31_newsocket
 
         private readonly ConcurrentQueue<TaskCompletionSource<string>> _taskQueue;
         private readonly ConnectionContext _connection;
-        private readonly PipeWriter _sender;
+        public readonly PipeWriter _sender;
         private readonly PipeReader _reciver;
         public NewRedisClient(string ip, int port) : this(new IPEndPoint(IPAddress.Parse(ip), port))
         {
@@ -93,27 +93,47 @@ namespace console_netcore31_newsocket
 
         private Task<string> SendAsync(string commond)
         {
-            var content = Encoding.UTF8.GetBytes(commond);
-            var taskSource = new TaskCompletionSource<string>();
-            AddSendAndReciverTask(content, taskSource);
-            return taskSource.Task;
+            //lock (_lock)
+            //{
+                var content = Encoding.UTF8.GetBytes(commond);
+                var taskSource = new TaskCompletionSource<string>();
+                AddSendAndReciverTask(content, taskSource);
+                return taskSource.Task;
+            //}
+
+
         }
         private Task<string> SendAsync(List<object> command)
         {
-            var taskSource = new TaskCompletionSource<string>();
-            using (var ms = new MemoryStream())
-            {
-                new FreeRedis.RespHelper.Resp3Writer(ms, null, FreeRedis.RedisProtocol.RESP2).WriteCommand(command);
-                AddSendAndReciverTask(ms.ToArray(), taskSource);
-                ms.Close();
-            }
-            return taskSource.Task;
+            //lock (_lock)
+            //{
+                var taskSource = new TaskCompletionSource<string>();
+                using (var ms = new MemoryStream())
+                {
+                    new FreeRedis.RespHelper.Resp3Writer(ms, null, FreeRedis.RedisProtocol.RESP2).WriteCommand(command);
+                    AddSendAndReciverTask(ms.ToArray(), taskSource);
+                    ms.Close();
+                }
+                return taskSource.Task;
+            //}
         }
-
+        private readonly object _lock = new object();
         private async void AddSendAndReciverTask(byte[] content, TaskCompletionSource<string> task)
         {
-            await _sender.WriteAsync(content);
-            _taskQueue.Enqueue(task);
+            //try
+            //{
+
+                await _sender.WriteAsync(content);
+                _taskQueue.Enqueue(task);
+                //_sender.Advance(content.Length);
+
+            //}
+            //catch (Exception ex)
+            //{
+                //File.WriteAllText("1.txt", ex.StackTrace);
+                //Console.WriteLine(ex);
+            //}
+
         }
 
         public async Task<bool> AuthAsync(string password)
