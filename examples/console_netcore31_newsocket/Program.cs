@@ -146,12 +146,13 @@ namespace console_netcore31_newsocket
 
                 }
             }
-            await taskSource.Task;
+            await taskSource.Task.ConfigureAwait(false);
 
         }
         private static TaskCompletionSource<bool> sendTask;
         public static async void Output(PipeWriter sender)
         {
+            TaskWithBytes task;
             while (true)
             {
 
@@ -159,15 +160,24 @@ namespace console_netcore31_newsocket
                 {
 
                     sendTask = new TaskCompletionSource<bool>();
-                    await sendTask.Task;
+                    await sendTask.Task.ConfigureAwait(false);
 
                 }
-                else if (_sendQueue.TryDequeue(out var task))
+
+                while (!_sendQueue.IsEmpty)
                 {
+                    while (!_sendQueue.TryDequeue(out task)) { };
                     await sender.WriteAsync(task.Bytes).ConfigureAwait(false);
                     _receiverQueue.Enqueue(task.Task);
                     task.Task.SetResult(true);
+                    //if (_receiverQueue.Count == 10000)
+                    //{
+                    //    Debug.WriteLine(_receiverQueue.Count);
+                    //}
+
+                    //Debug.WriteLine(_receiverQueue.Count);
                 }
+
 
             }
 
@@ -189,9 +199,9 @@ namespace console_netcore31_newsocket
                     await SendAsync(state.ToString()).ConfigureAwait(false);
                 }
 
-            //await sender.FlushAsync(CancellationToken.None).ConfigureAwait(false);
-            //await sender.WriteAsync(bytes);
-        });
+                //await sender.FlushAsync(CancellationToken.None).ConfigureAwait(false);
+                //await sender.WriteAsync(bytes);
+            });
         }
 
         public static int flag = 0;
@@ -219,9 +229,9 @@ namespace console_netcore31_newsocket
 
                 Interlocked.Exchange(ref flag, 0);
 
-            //await sender.FlushAsync(CancellationToken.None).ConfigureAwait(false);
-            //await sender.WriteAsync(bytes);
-        });
+                //await sender.FlushAsync(CancellationToken.None).ConfigureAwait(false);
+                //await sender.WriteAsync(bytes);
+            });
 
 
 
@@ -391,8 +401,8 @@ namespace console_netcore31_newsocket
             Parallel.For(0, frequence, (state) =>
             {
                 var data = client.Ping();
-            //Console.WriteLine(data);
-            Interlocked.Add(ref count, data.Split('N').Length - 1);
+                //Console.WriteLine(data);
+                Interlocked.Add(ref count, data.Split('N').Length - 1);
                 if (count == frequence)
                 {
                     sw.Stop();
@@ -416,7 +426,7 @@ namespace console_netcore31_newsocket
                     var tmp = Guid.NewGuid().ToString();
                     await client.Set(tmp, "Natasha\r\nNatasha");
                     var val = await sedb.StringGetAsync(tmp); //valid
-                if (val != "Natasha\r\nNatasha") throw new Exception("not equal");
+                    if (val != "Natasha\r\nNatasha") throw new Exception("not equal");
                 });
             }
             Task.WaitAll(tasks);
@@ -438,7 +448,7 @@ namespace console_netcore31_newsocket
                     var tmp = Guid.NewGuid().ToString();
                     await client.SetAsync(tmp, Encoding.UTF8.GetBytes("Natasha\r\nNatasha"));
                     var val = await client.GetAsync(tmp); //valid
-                if (val != "Natasha\r\nNatasha") throw new Exception("not equal");
+                    if (val != "Natasha\r\nNatasha") throw new Exception("not equal");
                 });
             }
             Task.WaitAll(tasks);
@@ -460,7 +470,7 @@ namespace console_netcore31_newsocket
                     var tmp = Guid.NewGuid().ToString();
                     await sedb.StringSetAsync(tmp, Encoding.UTF8.GetBytes("Natasha\r\nNatasha"));
                     var val = await sedb.StringGetAsync(tmp); //valid
-                if (val != "Natasha\r\nNatasha") throw new Exception("not equal");
+                    if (val != "Natasha\r\nNatasha") throw new Exception("not equal");
                 });
             }
             Task.WaitAll(tasks);
