@@ -91,7 +91,7 @@ namespace FreeRedis.Internal
                     var writer = new RespHelper.Resp3Writer(ms, rds.Encoding, RedisProtocol.RESP2);
                     cmds.ForEach(cmd =>
                     {
-                        cmd.WriteHost = rds.Host;
+                        cmd.WriteTarget = $"{rds.Host}/{rds.Database}";
                         writer.WriteCommand(cmd);
                     });
 

@@ -73,7 +73,7 @@ namespace FreeRedis
 
         internal bool _clusterMovedAsking;
         internal int _clusterMovedTryCount;
-        public string WriteHost { get; internal set; }
+        public string WriteTarget { get; internal set; }
         public bool _flagReadbytes;
         /// <summary>
         /// read byte[]
