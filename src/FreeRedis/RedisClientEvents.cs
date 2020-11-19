@@ -129,7 +129,7 @@ namespace FreeRedis
             _cli.OnNotice(null, new NoticeEventArgs(
                 NoticeType.Call,
                 args.Exception,
-                $"{(args.Command.WriteHost ?? "Not connected").PadRight(21)} > {args.Command}\r\n{log}\r\n({args.ElapsedMilliseconds}ms)\r\n",
+                $"{(args.Command.WriteTarget ?? "Not connected").PadRight(21)} > {args.Command}\r\n{log}\r\n({args.ElapsedMilliseconds}ms)\r\n",
                 args.Value));
         }
 

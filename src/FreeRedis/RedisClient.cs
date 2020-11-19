@@ -16,8 +16,8 @@ namespace FreeRedis
 {
     public partial class RedisClient : IDisposable
     {
-        internal BaseAdapter Adapter { get; }
-        internal string Prefix { get; }
+        internal protected BaseAdapter Adapter { get; }
+        internal protected string Prefix { get; }
         public List<Func<IInterceptor>> Interceptors { get; } = new List<Func<IInterceptor>>();
         public event EventHandler<NoticeEventArgs> Notice;
         public event EventHandler<ConnectedEventArgs> Connected;
@@ -44,6 +44,14 @@ namespace FreeRedis
         {
             Adapter = new ClusterAdapter(this, clusterConnectionStrings);
             Prefix = clusterConnectionStrings[0].Prefix;
+        }
+        /// <summary>
+        /// Norman RedisClient
+        /// </summary>
+        public RedisClient(ConnectionStringBuilder[] connectionStrings, Func<string, string> redirectRule)
+        {
+            Adapter = new NormanAdapter(this, connectionStrings, redirectRule);
+            Prefix = connectionStrings[0].Prefix;
         }
 
         /// <summary>
@@ -82,7 +90,7 @@ namespace FreeRedis
         public object Call(CommandPacket cmd) => Adapter.AdapterCall(cmd, rt => rt.ThrowOrValue());
         protected TValue Call<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse) => Adapter.AdapterCall(cmd, parse);
 
-        internal T LogCall<T>(CommandPacket cmd, Func<T> func)
+        internal protected virtual T LogCall<T>(CommandPacket cmd, Func<T> func)
         {
             cmd.Prefix(Prefix);
             var isnotice = this.Notice != null;

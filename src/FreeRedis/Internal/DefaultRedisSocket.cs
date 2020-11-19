@@ -19,19 +19,19 @@ namespace FreeRedis.Internal
         void SetDatabase(int value);
     }
 
-    class DefaultRedisSocket : IRedisSocket, IRedisSocketModify
+    public class DefaultRedisSocket : IRedisSocket, IRedisSocketModify
     {
-        internal static TempProxyRedisSocket CreateTempProxy(IRedisSocket rds, Action dispose)
+        public static TempProxyRedisSocket CreateTempProxy(IRedisSocket rds, Action dispose)
         {
             if (rds is TempProxyRedisSocket proxy) 
                 return new TempProxyRedisSocket(proxy._owner, dispose);
             return new TempProxyRedisSocket(rds, dispose);
         }
-        internal class TempProxyRedisSocket : IRedisSocket, IRedisSocketModify
+        public class TempProxyRedisSocket : IRedisSocket, IRedisSocketModify
         {
-            internal string _poolkey; //flag idlebus key
-            internal RedisClientPool _pool; //flag pooling
-            internal IRedisSocket _owner;
+            public string _poolkey; //flag idlebus key
+            public RedisClientPool _pool; //flag pooling
+            public IRedisSocket _owner;
             Action _dispose;
             public TempProxyRedisSocket(IRedisSocket owner, Action dispose)
             {
@@ -152,7 +152,7 @@ namespace FreeRedis.Internal
                     if (dbidx != null) Database = dbidx.Value;
                     break;
             }
-            cmd.WriteHost = this.Host;
+            cmd.WriteTarget = $"{this.Host}/{this.Database}";
         }
         public RedisResult Read(CommandPacket cmd)
         {
