@@ -28,57 +28,66 @@ namespace console_netcore31_newsocket
         private static string pwd;
         static void Main(string[] args)
         {
-            //using (StreamReader stream = new StreamReader("Redis.rsf"))
-            //{
-            //    ip = stream.ReadLine();
-            //    port = int.Parse(stream.ReadLine());
-            //    //pwd = stream.ReadLine();
-            //}
-            ip = "127.0.0.1";
-            port = 8989;
+            using (StreamReader stream = new StreamReader("Redis.rsf"))
+            {
+                ip = stream.ReadLine();
+                port = int.Parse(stream.ReadLine());
+                //pwd = stream.ReadLine();
+            }
+            //ip = "127.0.0.1";
+            //port = 8989;
             var endpoit = new IPEndPoint(IPAddress.Parse(ip), port);
 
+            NewRedisClient2 client = new NewRedisClient2(endpoit);
+            TestClient2(client);
+            //TestClient2(client);
             //new
             //NewRedisClient client = new NewRedisClient(endpoit);
             //var result = client.SelectDB(0).Result;
 
             //client.Set("test01", "123123").Wait();
 
-            ////FreeRedis
-            //var redisClient = new RedisClient($"{ip}:{port},database=15,min pool size=100");
+            //FreeRedis
+            var redisClient = new RedisClient($"{ip}:{port},database=15,min pool size=100");
 
-            ////StackExchange
-            //ConnectionMultiplexer seredis = ConnectionMultiplexer.Connect("127.0.0.1:6379");
-            //IDatabase sedb = seredis.GetDatabase(1);
+            //StackExchange
+            ConnectionMultiplexer seredis = ConnectionMultiplexer.Connect("127.0.0.1:6379");
+            IDatabase sedb = seredis.GetDatabase(1);
+            redisClient.FlushDb();
+            SendFromFreeRedis(redisClient);
+            SendFromFreeRedis(redisClient);
+            SendFromStackExchangeRedis(sedb);
+            SendFromNewSocketRedis2(client, seredis.GetDatabase(0));
 
             //redisClient.FlushDb();
-            ////SendFromFreeRedis(redisClient);
             //SendFromFreeRedis(redisClient);
             ////SendFromNewSocketRedis(client, seredis.GetDatabase(0));
             //SendFromStackExchangeRedis(sedb);
 
-            //redisClient.FlushDb();
-            //SendFromFreeRedis(redisClient);
-            ////SendFromNewSocketRedis(client, seredis.GetDatabase(0));
-            //SendFromStackExchangeRedis(sedb);
+            //_sendQueue = new ConcurrentQueue<TaskWithBytes>();
+            //_receiverQueue = new ConcurrentQueue<TaskCompletionSource<bool>>();
 
-            _sendQueue = new ConcurrentQueue<TaskWithBytes>();
-            _receiverQueue = new ConcurrentQueue<TaskCompletionSource<bool>>();
+            ////NewSocketTest(endpoit);
+            ////result = client.Set("newRedis", "natasha").Result;
+            ////Console.WriteLine(result);
+            //Server(endpoit);
+            //Test(endpoit);
+            //Task.Run(async () =>
+            //{
+            //    await Task.Delay(5000);
+            //    Console.WriteLine();
+            //    Console.WriteLine(_sendQueue.Count);
+            //    Console.WriteLine(_receiverQueue.Count);
 
-            //NewSocketTest(endpoit);
-            //result = client.Set("newRedis", "natasha").Result;
-            //Console.WriteLine(result);
-            Server(endpoit);
-            Test(endpoit);
-            Task.Run(async () =>
-            {
-                await Task.Delay(5000);
-                Console.WriteLine();
-                Console.WriteLine(_sendQueue.Count);
-                Console.WriteLine(_receiverQueue.Count);
-
-            });
+            //});
             Console.ReadKey();
+
+        }
+        public static async void TestClient2(NewRedisClient2 client)
+        {
+
+            var result = await client.SetAsync("1","1");
+            Console.WriteLine(result);
 
         }
 
@@ -421,7 +430,7 @@ namespace console_netcore31_newsocket
         }
         #endregion
 
-        #region newSocketRedis - SET
+        #region NewSocketRedis - SET
         public static void SendFromNewSocketRedis(NewRedisClient client, IDatabase sedb)
         {
             var tasks = new Task[10000];
@@ -443,6 +452,28 @@ namespace console_netcore31_newsocket
         }
         #endregion
 
+        #region NewSocketRedis2 - SET
+        public static void SendFromNewSocketRedis2(NewRedisClient2 client, IDatabase sedb)
+        {
+            var tasks = new Task[10000];
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+            for (var a = 0; a < 10000; a += 1)
+            {
+                tasks[a] = Task.Run(async () =>
+                {
+                    var key = a.ToString();
+                    await client.SetAsync(key, key);
+                    var val = await sedb.StringGetAsync(key); //valid
+                    if (val != key) throw new Exception("not equal");
+                });
+            }
+            Task.WaitAll(tasks);
+            sw.Stop();
+            Console.WriteLine("NewRedisClient2(0-10000): " + sw.ElapsedMilliseconds + "ms");
+        }
+        #endregion
+
         #region FreeRedis - SET
         public static void SendFromFreeRedis(RedisClient client)
         {
@@ -453,10 +484,10 @@ namespace console_netcore31_newsocket
             {
                 tasks[a] = Task.Run(async () =>
                 {
-                    var tmp = Guid.NewGuid().ToString();
-                    await client.SetAsync(tmp, Encoding.UTF8.GetBytes("Natasha\r\nNatasha"));
-                    var val = await client.GetAsync(tmp); //valid
-                    if (val != "Natasha\r\nNatasha") throw new Exception("not equal");
+                    var key = a.ToString();
+                    await client.SetAsync(key, key);
+                    var val = await client.GetAsync(key); //valid
+                    if (val != key) throw new Exception("not equal");
                 });
             }
             Task.WaitAll(tasks);
@@ -475,16 +506,17 @@ namespace console_netcore31_newsocket
             {
                 tasks[a] = Task.Run(async () =>
                 {
-                    var tmp = Guid.NewGuid().ToString();
-                    await sedb.StringSetAsync(tmp, Encoding.UTF8.GetBytes("Natasha\r\nNatasha"));
-                    var val = await sedb.StringGetAsync(tmp); //valid
-                    if (val != "Natasha\r\nNatasha") throw new Exception("not equal");
+                    var key = a.ToString();
+                    await sedb.StringSetAsync(key, key);
+                    var val = await sedb.StringGetAsync(key); //valid
+                    if (val != key) throw new Exception("not equal");
                 });
             }
             Task.WaitAll(tasks);
             sw.Stop();
             Console.WriteLine("StackExchangeAsync(0-10000): " + sw.ElapsedMilliseconds + "ms\r\n");
         }
+        
         #endregion
 
 
