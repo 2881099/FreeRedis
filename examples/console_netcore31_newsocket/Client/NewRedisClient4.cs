@@ -14,26 +14,26 @@ using System.Threading.Tasks.Sources;
 namespace console_netcore31_newsocket
 {
     
-    public class NewRedisClient3
+    public class NewRedisClient4
     {
-        private readonly SourceConcurrentQueue<TaskCompletionSource<bool>> _receiverQueue;
+        private readonly SourceConcurrentQueue2<TaskCompletionSource<bool>> _receiverQueue;
         private readonly byte _protocalStart;
         private readonly ConnectionContext _connection;
         public readonly PipeWriter _sender;
         private readonly PipeReader _reciver;
 
 
-        public NewRedisClient3(string ip, int port) : this(new IPEndPoint(IPAddress.Parse(ip), port))
+        public NewRedisClient4(string ip, int port) : this(new IPEndPoint(IPAddress.Parse(ip), port))
         {
         }
-        public NewRedisClient3(IPEndPoint point)
+        public NewRedisClient4(IPEndPoint point)
         {
             _protocalStart = (byte)43;
             SocketConnectionFactory client = new SocketConnectionFactory(new SocketTransportOptions());
             _connection = client.ConnectAsync(point).Result;
             _sender = _connection.Transport.Output;
             _reciver = _connection.Transport.Input;
-            _receiverQueue = new SourceConcurrentQueue<TaskCompletionSource<bool>>(_sender);
+            _receiverQueue = new SourceConcurrentQueue2<TaskCompletionSource<bool>>(_sender);
             RunReciver();
         }
 
@@ -44,6 +44,7 @@ namespace console_netcore31_newsocket
             var taskSource = new TaskCompletionSource<bool>();
             _receiverQueue.Enqueue(taskSource, bytes);
             return taskSource.Task;
+            //return await SendAsync();
         }
         private readonly object _lock = new object();
         private int _taskCount;
@@ -131,6 +132,7 @@ namespace console_netcore31_newsocket
             }
             //Console.WriteLine($"本次完成 {_deal} 个任务! 剩余 {_taskCount} 个任务！");
         }
+
 
     }
 }
