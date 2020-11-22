@@ -28,14 +28,14 @@ namespace console_netcore31_newsocket
         private static string pwd;
         static void Main(string[] args)
         {
-            using (StreamReader stream = new StreamReader("Redis.rsf"))
-            {
-                ip = stream.ReadLine();
-                port = int.Parse(stream.ReadLine());
-                //pwd = stream.ReadLine();
-            }
-            //ip = "127.0.0.1";
-            //port = 8989;
+            //using (StreamReader stream = new StreamReader("Redis.rsf"))
+            //{
+            //    ip = stream.ReadLine();
+            //    port = int.Parse(stream.ReadLine());
+            //    //pwd = stream.ReadLine();
+            //}
+            ip = "127.0.0.1";
+            port = 6379;
             var endpoit = new IPEndPoint(IPAddress.Parse(ip), port);
 
             //NewRedisClient2 client = new NewRedisClient2(endpoit);
@@ -51,21 +51,26 @@ namespace console_netcore31_newsocket
             //client.Set("test01", "123123").Wait();
 
             //FreeRedis
-            //var redisClient = new RedisClient($"{ip}:{port},database=15,min pool size=100");
+            var redisClient = new RedisClient($"{ip}:{port},database=15,min pool size=100");
 
             //StackExchange
             ConnectionMultiplexer seredis = ConnectionMultiplexer.Connect("127.0.0.1:6379");
             IDatabase sedb = seredis.GetDatabase(1);
-            //redisClient.FlushDb();
-            //SendFromFreeRedis(redisClient);
-            //SendFromFreeRedis(redisClient);
+            redisClient.FlushDb();
+            SendFromFreeRedis(redisClient);
+            redisClient.FlushDb();
             SendFromStackExchangeRedis(sedb);
-            SendFromNewSocketRedis3(client3, default);
+            redisClient.FlushDb();
+            SendFromNewSocketRedis3(client3, sedb);
             Console.WriteLine("====== 以上预热 =======");
-            SendFromStackExchangeRedis(sedb);
             //seredis.get
             //SendFromNewSocketRedis2(client, seredis.GetDatabase(0));
-            SendFromNewSocketRedis3(client3, default);
+            redisClient.FlushDb();
+            SendFromFreeRedis(redisClient);
+            redisClient.FlushDb();
+            SendFromStackExchangeRedis(sedb);
+            redisClient.FlushDb();
+            SendFromNewSocketRedis3(client3, sedb);
             //redisClient.FlushDb();
             //SendFromFreeRedis(redisClient);
             ////SendFromNewSocketRedis(client, seredis.GetDatabase(0));
@@ -500,8 +505,8 @@ namespace console_netcore31_newsocket
                 {
                     var key = a.ToString();
                     await client.SetAsync(key, key);
-                    //var val = await sedb.StringGetAsync(key); //valid
-                    //if (val != key) throw new Exception("not equal");
+                    var val = await sedb.StringGetAsync(key); //valid
+                    if (val != key) throw new Exception("not equal");
                 });
             }
             Task.WaitAll(tasks);
@@ -514,22 +519,22 @@ namespace console_netcore31_newsocket
         #region FreeRedis - SET
         public static void SendFromFreeRedis(RedisClient client)
         {
-            var tasks = new Task[10000];
+            var tasks = new Task[100000];
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            for (var a = 0; a < 10000; a += 1)
+            for (var a = 0; a < 100000; a += 1)
             {
                 tasks[a] = Task.Run(async () =>
                 {
                     var key = a.ToString();
                     await client.SetAsync(key, key);
-                    //var val = await client.GetAsync(key); //valid
-                    //if (val != key) throw new Exception("not equal");
+                    var val = await client.GetAsync(key); //valid
+                    if (val != key) throw new Exception("not equal");
                 });
             }
             Task.WaitAll(tasks);
             sw.Stop();
-            Console.WriteLine("FreeRedisClient(0-10000): " + sw.ElapsedMilliseconds + "ms");
+            Console.WriteLine("FreeRedisClient(0-100000): " + sw.ElapsedMilliseconds + "ms");
         }
         #endregion
 
@@ -545,8 +550,8 @@ namespace console_netcore31_newsocket
                 {
                     var key = a.ToString();
                     await sedb.StringSetAsync(key, key);
-                    //var val = await sedb.StringGetAsync(key); //valid
-                    //if (val != key) throw new Exception("not equal");
+                    var val = await sedb.StringGetAsync(key); //valid
+                    if (val != key) throw new Exception("not equal");
                 });
             }
             Task.WaitAll(tasks);
