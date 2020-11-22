@@ -33,26 +33,21 @@ namespace console_netcore31_newsocket
             _connection = client.ConnectAsync(point).Result;
             _sender = _connection.Transport.Output;
             _reciver = _connection.Transport.Input;
-            _receiverQueue = new SourceConcurrentQueue<TaskCompletionSource<bool>>(_sender);
+            _receiverQueue = new SourceConcurrentQueue2<TaskCompletionSource<bool>>(_sender);
             RunReciver();
         }
 
         private TaskCompletionSource<bool> _sendTask;
-        public async ValueTask<bool> SetAsync(string key,string value)
+        public Task<bool> SetAsync(string key,string value)
         {
-            return await SendAsync($"SET {key} {value}\r\n");
-        }
-        private readonly object _lock = new object();
-        private int _taskCount;
-        public Task<bool> SendAsync(string value)
-        {
-            
-            var bytes = Encoding.UTF8.GetBytes(value);
+            var bytes = Encoding.UTF8.GetBytes($"SET {key} {value}\r\n");
             var taskSource = new TaskCompletionSource<bool>();
             _receiverQueue.Enqueue(taskSource, bytes);
             return taskSource.Task;
-
+            //return await SendAsync();
         }
+        private readonly object _lock = new object();
+        private int _taskCount;
         long total = 0;
 
         private async void RunReciver()
