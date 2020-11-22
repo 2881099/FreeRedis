@@ -8184,6 +8184,12 @@ references:
   commentId: M:FreeRedis.RedisClient.Scan(System.Int64,System.String,System.Int64,System.String)
   fullName: FreeRedis.RedisClient.Scan(System.Int64, System.String, System.Int64, System.String)
   nameWithType: RedisClient.Scan(Int64, String, Int64, String)
+- uid: FreeRedis.RedisClient.Scan(System.String,System.Int64,System.String)
+  name: Scan(String, Int64, String)
+  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_Scan_System_String_System_Int64_System_String_
+  commentId: M:FreeRedis.RedisClient.Scan(System.String,System.Int64,System.String)
+  fullName: FreeRedis.RedisClient.Scan(System.String, System.Int64, System.String)
+  nameWithType: RedisClient.Scan(String, Int64, String)
 - uid: FreeRedis.RedisClient.Scan*
   name: Scan
   href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_Scan_
