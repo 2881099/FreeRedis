@@ -310,6 +310,15 @@ using (var tran = cli.Multi())
     var val1 = db.Get(&quot;key1&quot;);
 }
 </code></pre>
+<h4 id="-scan">🔍 Scan</h4>
+<blockquote>
+<p>Support cluster mode</p>
+</blockquote>
+<pre><code class="lang-csharp">foreach (var keys in cli.Scan(&quot;*&quot;, 10, null))
+{
+    Console.WriteLine(string.Join(&quot;, &quot;, keys));
+}
+</code></pre>
 <h4 id="-donation">💕 Donation</h4>
 <blockquote>
 <p>Thank you for your donation</p>
