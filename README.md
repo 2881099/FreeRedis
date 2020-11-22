@@ -218,6 +218,17 @@ using (var db = cli.GetDatabase(10))
 }
 ```
 
+#### 🔍 Scan
+
+> Support cluster mode
+
+```csharp
+foreach (var keys in cli.Scan("*", 10, null))
+{
+    Console.WriteLine(string.Join(", ", keys));
+}
+```
+
 #### 💕 Donation
 
 > Thank you for your donation

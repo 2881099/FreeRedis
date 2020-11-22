@@ -218,6 +218,17 @@ using (var db = cli.GetDatabase(10))
 }
 ```
 
+#### 🔍 Scan (扫描)
+
+> 支持集群模式
+
+```csharp
+foreach (var keys in cli.Scan("*", 10, null))
+{
+    Console.WriteLine(string.Join(", ", keys));
+}
+```
+
 #### 💕 Donation (捐赠)
 
 > 感谢你的打赏
