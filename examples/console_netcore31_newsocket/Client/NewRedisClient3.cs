@@ -13,50 +13,28 @@ using System.Threading.Tasks.Sources;
 
 namespace console_netcore31_newsocket
 {
-    public class TaskWrapper
+    
+    public class NewRedisClient3
     {
-        public readonly byte[] Bytes;
-        public readonly TaskCompletionSource<bool> Task;
-        public TaskWrapper(byte[] bytes, TaskCompletionSource<bool> task)
-        {
-            Bytes = bytes;
-            Task = task;
-        }
-    }
-    public class NewRedisClient2
-    {
-
-        private readonly ConcurrentQueue<TaskWrapper> _sendQueue;
-        private readonly ConcurrentQueue<TaskCompletionSource<bool>> _receiverQueue;
+        private readonly SourceConcurrentQueue<TaskCompletionSource<bool>> _receiverQueue;
         private readonly byte _protocalStart;
         private readonly ConnectionContext _connection;
         public readonly PipeWriter _sender;
         private readonly PipeReader _reciver;
-        public NewRedisClient2(string ip, int port) : this(new IPEndPoint(IPAddress.Parse(ip), port))
+
+
+        public NewRedisClient3(string ip, int port) : this(new IPEndPoint(IPAddress.Parse(ip), port))
         {
         }
-        public NewRedisClient2(IPEndPoint point)
+        public NewRedisClient3(IPEndPoint point)
         {
             _protocalStart = (byte)43;
-            _sendQueue = new ConcurrentQueue<TaskWrapper>();
-            _receiverQueue = new ConcurrentQueue<TaskCompletionSource<bool>>();
             SocketConnectionFactory client = new SocketConnectionFactory(new SocketTransportOptions());
             _connection = client.ConnectAsync(point).Result;
             _sender = _connection.Transport.Output;
             _reciver = _connection.Transport.Input;
+            _receiverQueue = new SourceConcurrentQueue<TaskCompletionSource<bool>>(_sender);
             RunReciver();
-            Task.Run(async () => { 
-                await Task.Delay(30000);
-                Console.WriteLine(total);
-                Console.WriteLine(_receiverQueue.Count);
-                await Task.Delay(20000);
-                Console.WriteLine(total);
-                Console.WriteLine(_receiverQueue.Count);
-                await Task.Delay(10000);
-                Console.WriteLine(total);
-                Console.WriteLine(_receiverQueue.Count);
-            });
-            //RunSender();
         }
 
         private TaskCompletionSource<bool> _sendTask;
@@ -71,51 +49,12 @@ namespace console_netcore31_newsocket
             
             var bytes = Encoding.UTF8.GetBytes(value);
             var taskSource = new TaskCompletionSource<bool>();
-            lock (_lock)
-            {
-                //Interlocked.Increment(ref _taskCount);
-                _receiverQueue.Enqueue(taskSource);
-                _sender.WriteAsync(bytes);
-            }
-            
+            _receiverQueue.Enqueue(taskSource, bytes);
             return taskSource.Task;
 
         }
         long total = 0;
-        private async void RunSender()
-        {
 
-            TaskWrapper task;
-            while (true)
-            {
-
-                if (_sendQueue.IsEmpty)
-                {
-
-                    _sendTask = new TaskCompletionSource<bool>();
-                    await _sendTask.Task.ConfigureAwait(false);
-
-                }
-                int count = 0;
-                while (!_sendQueue.IsEmpty)
-                {
-                    count += 1;
-                    if (count == 1000)
-                    {
-                        Console.WriteLine("count = 1000");
-                        count = 0;
-                        await _sender.FlushAsync();
-                    }
-                    while (!_sendQueue.TryDequeue(out task)) { };
-                    await _sender.WriteAsync(task.Bytes).ConfigureAwait(false);
-                    //_sender.Advance(task.Bytes.Length);
-                    _receiverQueue.Enqueue(task.Task);
-                    
-                }
-
-
-            }
-        }
         private async void RunReciver()
         {
             

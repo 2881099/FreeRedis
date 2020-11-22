@@ -38,8 +38,11 @@ namespace console_netcore31_newsocket
             //port = 8989;
             var endpoit = new IPEndPoint(IPAddress.Parse(ip), port);
 
-            NewRedisClient2 client = new NewRedisClient2(endpoit);
-            TestClient2(client);
+            //NewRedisClient2 client = new NewRedisClient2(endpoit);
+            //TestClient2(client);
+            NewRedisClient3 client3 = new NewRedisClient3(endpoit);
+            TestClient3(client3);
+
             //TestClient2(client);
             //new
             //NewRedisClient client = new NewRedisClient(endpoit);
@@ -48,17 +51,21 @@ namespace console_netcore31_newsocket
             //client.Set("test01", "123123").Wait();
 
             //FreeRedis
-            var redisClient = new RedisClient($"{ip}:{port},database=15,min pool size=100");
+            //var redisClient = new RedisClient($"{ip}:{port},database=15,min pool size=100");
 
             //StackExchange
             ConnectionMultiplexer seredis = ConnectionMultiplexer.Connect("127.0.0.1:6379");
             IDatabase sedb = seredis.GetDatabase(1);
-            redisClient.FlushDb();
-            SendFromFreeRedis(redisClient);
-            SendFromFreeRedis(redisClient);
+            //redisClient.FlushDb();
+            //SendFromFreeRedis(redisClient);
+            //SendFromFreeRedis(redisClient);
             SendFromStackExchangeRedis(sedb);
-            SendFromNewSocketRedis2(client, seredis.GetDatabase(0));
-
+            SendFromNewSocketRedis3(client3, default);
+            Console.WriteLine("====== 以上预热 =======");
+            SendFromStackExchangeRedis(sedb);
+            //seredis.get
+            //SendFromNewSocketRedis2(client, seredis.GetDatabase(0));
+            SendFromNewSocketRedis3(client3, default);
             //redisClient.FlushDb();
             //SendFromFreeRedis(redisClient);
             ////SendFromNewSocketRedis(client, seredis.GetDatabase(0));
@@ -87,6 +94,13 @@ namespace console_netcore31_newsocket
         {
 
             var result = await client.SetAsync("1","1");
+            Console.WriteLine(result);
+
+        }
+        public static async void TestClient3(NewRedisClient3 client)
+        {
+
+            var result = await client.SetAsync("1", "1");
             Console.WriteLine(result);
 
         }
@@ -474,6 +488,29 @@ namespace console_netcore31_newsocket
         }
         #endregion
 
+        #region NewSocketRedis3 - SET
+        public static void SendFromNewSocketRedis3(NewRedisClient3 client, IDatabase sedb)
+        {
+            var tasks = new Task[100000];
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+            for (var a = 0; a < 100000; a += 1)
+            {
+                tasks[a] = Task.Run(async () =>
+                {
+                    var key = a.ToString();
+                    await client.SetAsync(key, key);
+                    //var val = await sedb.StringGetAsync(key); //valid
+                    //if (val != key) throw new Exception("not equal");
+                });
+            }
+            Task.WaitAll(tasks);
+            sw.Stop();
+            Console.WriteLine("NewRedisClient3(0-100000): " + sw.ElapsedMilliseconds + "ms");
+            //client.Dispose();
+        }
+        #endregion
+
         #region FreeRedis - SET
         public static void SendFromFreeRedis(RedisClient client)
         {
@@ -486,8 +523,8 @@ namespace console_netcore31_newsocket
                 {
                     var key = a.ToString();
                     await client.SetAsync(key, key);
-                    var val = await client.GetAsync(key); //valid
-                    if (val != key) throw new Exception("not equal");
+                    //var val = await client.GetAsync(key); //valid
+                    //if (val != key) throw new Exception("not equal");
                 });
             }
             Task.WaitAll(tasks);
@@ -499,22 +536,22 @@ namespace console_netcore31_newsocket
         #region StackExchangeRedis - SET
         public static void SendFromStackExchangeRedis(IDatabase sedb)
         {
-            var tasks = new Task[10000];
+            var tasks = new Task[100000];
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            for (var a = 0; a < 10000; a += 1)
+            for (var a = 0; a < 100000; a += 1)
             {
                 tasks[a] = Task.Run(async () =>
                 {
                     var key = a.ToString();
                     await sedb.StringSetAsync(key, key);
-                    var val = await sedb.StringGetAsync(key); //valid
-                    if (val != key) throw new Exception("not equal");
+                    //var val = await sedb.StringGetAsync(key); //valid
+                    //if (val != key) throw new Exception("not equal");
                 });
             }
             Task.WaitAll(tasks);
             sw.Stop();
-            Console.WriteLine("StackExchangeAsync(0-10000): " + sw.ElapsedMilliseconds + "ms\r\n");
+            Console.WriteLine("StackExchangeAsync(0-100000): " + sw.ElapsedMilliseconds + "ms\r\n");
         }
         
         #endregion
