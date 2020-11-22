@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="BeetleX.Redis" Version="1.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Connections.Abstractions" Version="5.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel.Transport.Abstractions" Version="2.2.0" />
     <PackageReference Include="StackExchange.Redis" Version="2.2.4" />

@@ -13,7 +13,7 @@ namespace FreeRedis
         class ClusterAdapter : BaseAdapter
         {
             internal readonly IdleBus<RedisClientPool> _ib;
-            readonly ConnectionStringBuilder[] _clusterConnectionStrings;
+            internal readonly ConnectionStringBuilder[] _clusterConnectionStrings;
 
             public ClusterAdapter(RedisClient topOwner, ConnectionStringBuilder[] clusterConnectionStrings)
             {

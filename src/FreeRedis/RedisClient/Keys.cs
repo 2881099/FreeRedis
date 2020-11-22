@@ -1,4 +1,7 @@
-﻿using System;
+﻿using FreeRedis.Internal;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -382,10 +385,10 @@ namespace FreeRedis
         /// <param name="type">TYPE option: the type argument is the same string name that the TYPE command returns. Available since 6.0</param>
         /// <returns>Return a two elements multi-bulk reply, where the first element is a string representing an unsigned 64 bit number (the cursor), and the second element is a multi-bulk with an array of elements.</returns>
         public Task<ScanResult<string>> ScanAsync(long cursor, string pattern, long count, string type) => CallAsync("SCAN"
-                                                                                                                     .Input(cursor)
-                                                                                                                     .InputIf(!string.IsNullOrWhiteSpace(pattern), "MATCH", pattern)
-                                                                                                                     .InputIf(count > 0, "COUNT", count)
-                                                                                                                     .InputIf(!string.IsNullOrWhiteSpace(type), "TYPE", type), rt => rt
+            .Input(cursor)
+            .InputIf(!string.IsNullOrWhiteSpace(pattern), "MATCH", pattern)
+            .InputIf(count > 0, "COUNT", count)
+            .InputIf(!string.IsNullOrWhiteSpace(type), "TYPE", type), rt => rt
             .ThrowOrValue((a, _) => new ScanResult<string>(a[0].ConvertTo<long>(), a[1].ConvertTo<string[]>())));
 
         /// <summary>
@@ -900,11 +903,97 @@ namespace FreeRedis
         /// <param name="type">TYPE option: the type argument is the same string name that the TYPE command returns. Available since 6.0</param>
         /// <returns>Return a two elements multi-bulk reply, where the first element is a string representing an unsigned 64 bit number (the cursor), and the second element is a multi-bulk with an array of elements.</returns>
         public ScanResult<string> Scan(long cursor, string pattern, long count, string type) => Call("SCAN"
-                                                                                                     .Input(cursor)
-                                                                                                     .InputIf(!string.IsNullOrWhiteSpace(pattern), "MATCH", pattern)
-                                                                                                     .InputIf(count > 0, "COUNT", count)
-                                                                                                     .InputIf(!string.IsNullOrWhiteSpace(type), "TYPE", type), rt => rt
+            .Input(cursor)
+            .InputIf(!string.IsNullOrWhiteSpace(pattern), "MATCH", pattern)
+            .InputIf(count > 0, "COUNT", count)
+            .InputIf(!string.IsNullOrWhiteSpace(type), "TYPE", type), rt => rt
             .ThrowOrValue((a, _) => new ScanResult<string>(a[0].ConvertTo<long>(), a[1].ConvertTo<string[]>())));
+
+        public IEnumerable<string[]> Scan(string pattern, long count, string type) => new ScanCollection(this, pattern, count, type);
+        #region Scan IEnumerable
+        class ScanCollection : IEnumerable<string[]>
+        {
+            public IEnumerator<string[]> GetEnumerator()
+            {
+                long cursor = 0;
+                if (_cli.Adapter.UseType == UseType.Cluster)
+                {
+                    var cluster = (_cli.Adapter as ClusterAdapter);
+                    var ibkeys = new List<string>();
+
+                    #region get ibkeys
+                    var testConnection = cluster._clusterConnectionStrings.FirstOrDefault();
+                    var cnodes = _cli.Call("CLUSTER".SubCommand("NODES"), rt => rt.ThrowOrValue<string>()).Split('\n');
+                    foreach (var cnode in cnodes)
+                    {
+                        if (string.IsNullOrEmpty(cnode)) continue;
+                        var dt = cnode.Trim().Split(' ');
+                        if (dt.Length < 9) continue;
+                        if (!dt[2].StartsWith("master") && !dt[2].EndsWith("master")) continue;
+                        if (dt[7] != "connected") continue;
+
+                        var endpoint = dt[1];
+                        var at40 = endpoint.IndexOf('@');
+                        if (at40 != -1) endpoint = endpoint.Remove(at40);
+
+                        if (endpoint.StartsWith("127.0.0.1"))
+                            endpoint = $"{DefaultRedisSocket.SplitHost(testConnection.Host).Key}:{endpoint.Substring(10)}";
+                        else if (endpoint.StartsWith("localhost", StringComparison.CurrentCultureIgnoreCase))
+                            endpoint = $"{DefaultRedisSocket.SplitHost(testConnection.Host).Key}:{endpoint.Substring(10)}";
+                        ibkeys.Add(endpoint);
+                    }
+                    #endregion
+
+                    foreach (var poolkey in ibkeys)
+                    {
+                        cursor = 0;
+                        var pool = cluster._ib.Get(poolkey);
+                        if (pool?.IsAvailable != true) continue;
+                        var cli = pool.Get();
+                        var rds = cli.Value.Adapter.GetRedisSocket(null);
+                        using (var rdsproxy = DefaultRedisSocket.CreateTempProxy(rds, () => pool.Return(cli)))
+                        {
+                            rdsproxy._poolkey = poolkey;
+                            rdsproxy._pool = pool;
+
+                            while (true)
+                            {
+                                var rt = cli.Value.Scan(cursor, _pattern, _count, _type);
+                                cursor = rt.cursor;
+                                if (rt.length > 0) yield return rt.items;
+                                if (cursor <= 0) break;
+                            }
+                        }
+                    }
+                    yield break;
+                }
+                else
+                {
+                    while (true)
+                    {
+                        var rt = _cli.Scan(cursor, _pattern, _count, _type);
+                        cursor = rt.cursor;
+                        if (rt.length > 0) yield return rt.items;
+                        if (cursor <= 0) break;
+                    }
+                    yield break;
+                }
+            }
+            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+            readonly RedisClient _cli;
+            readonly string _pattern;
+            readonly long _count;
+            readonly string _type;
+            public ScanCollection(RedisClient cli, string pattern, long count, string type)
+            {
+                _cli = cli;
+                _pattern = pattern;
+                _count = count;
+                _type = type;
+            }
+        }
+        #endregion
 
         /// <summary>
         /// SORT command (A Synchronized Version) <br /><br />

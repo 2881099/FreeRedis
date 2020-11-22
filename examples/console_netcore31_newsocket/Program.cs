@@ -52,25 +52,36 @@ namespace console_netcore31_newsocket
 
             //FreeRedis
             var redisClient = new RedisClient($"{ip}:{port},database=15,min pool size=100");
+            var beetlex = BeetleX.Redis.DefaultRedis.Instance;
+            beetlex.Host.AddWriteHost("127.0.0.1");
 
             //StackExchange
             ConnectionMultiplexer seredis = ConnectionMultiplexer.Connect("127.0.0.1:6379");
             IDatabase sedb = seredis.GetDatabase(1);
             redisClient.FlushDb();
-            SendFromFreeRedis(redisClient);
-            redisClient.FlushDb();
             SendFromStackExchangeRedis(sedb);
+
             redisClient.FlushDb();
-            SendFromNewSocketRedis3(client3, sedb);
+            SendFromFreeRedis(redisClient);
+
+            //redisClient.FlushDb();
+            //SendFromBeetleXRedis(beetlex);
+
+            //redisClient.FlushDb();
+            //SendFromNewSocketRedis3(client3, sedb);
             Console.WriteLine("====== 以上预热 =======");
-            //seredis.get
-            //SendFromNewSocketRedis2(client, seredis.GetDatabase(0));
-            redisClient.FlushDb();
-            SendFromFreeRedis(redisClient);
+
             redisClient.FlushDb();
             SendFromStackExchangeRedis(sedb);
+
             redisClient.FlushDb();
-            SendFromNewSocketRedis3(client3, sedb);
+            SendFromFreeRedis(redisClient);
+
+            //redisClient.FlushDb();
+            //SendFromBeetleXRedis(beetlex);
+
+            //redisClient.FlushDb();
+            //SendFromNewSocketRedis3(client3, sedb);
             //redisClient.FlushDb();
             //SendFromFreeRedis(redisClient);
             ////SendFromNewSocketRedis(client, seredis.GetDatabase(0));
@@ -535,6 +546,28 @@ namespace console_netcore31_newsocket
             Task.WaitAll(tasks);
             sw.Stop();
             Console.WriteLine("FreeRedisClient(0-100000): " + sw.ElapsedMilliseconds + "ms");
+        }
+        #endregion
+
+        #region BeetleX.Redis - SET
+        public static void SendFromBeetleXRedis(BeetleX.Redis.RedisDB redis)
+        {
+            var tasks = new Task[100000];
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+            for (var a = 0; a < 100000; a += 1)
+            {
+                tasks[a] = Task.Run(async () =>
+                {
+                    var key = a.ToString();
+                    await redis.Set(key, key);
+                    var val = await redis.Get<string>(key); //valid
+                    if (val != key) throw new Exception("not equal");
+                });
+            }
+            Task.WaitAll(tasks);
+            sw.Stop();
+            Console.WriteLine("BeetleX.Redis(0-100000): " + sw.ElapsedMilliseconds + "ms");
         }
         #endregion
 

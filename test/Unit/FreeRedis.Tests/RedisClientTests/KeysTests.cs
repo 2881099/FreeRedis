@@ -264,7 +264,14 @@ namespace FreeRedis.Tests.RedisClientTests
         [Fact]
         public void Scan()
         {
+            for (var a = 0; a < 11; a++)
+                cli.Set(Guid.NewGuid().ToString(), a);
 
+            var keys = new List<string>();
+            foreach (var rt in cli.Scan("*", 2, null))
+            {
+                keys.AddRange(rt);
+            }
         }
 
         [Fact]
