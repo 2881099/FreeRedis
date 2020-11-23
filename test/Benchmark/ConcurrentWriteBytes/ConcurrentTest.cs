@@ -13,26 +13,28 @@ namespace ConcurrentWriteBytes
     {
         public readonly NewConcurrentQueue<int> _newQueue;
         public readonly SourceConcurrentQueue<int> _sourceQueue;
+        public readonly SourceConcurrentQueue2<int> _sourceQueue2;
         public readonly ConcurrentQueue<int> _queue;
-        public const int Count = 1000;
+        public const int Count = 100;
 
         public ConcurrentTest()
         {
             _newQueue = new NewConcurrentQueue<int>(default);
             _queue = new ConcurrentQueue<int>();
             _sourceQueue = new SourceConcurrentQueue<int>();
+            _sourceQueue2 = new SourceConcurrentQueue2<int>();
         }
 
-        [Benchmark]
-        public void NewConcurrentQueue()
-        {
-            Parallel.For(0, Count, (i) => {
-                _newQueue.Enqueue(i);
-            });
-            Parallel.For(0, Count, (i) => {
-                var _ = _newQueue.Dequeue();
-            });
-        }
+        //[Benchmark]
+        //public void NewConcurrentQueue()
+        //{
+        //    Parallel.For(0, Count, (i) => {
+        //        _newQueue.Enqueue(i);
+        //    });
+        //    Parallel.For(0, Count, (i) => {
+        //        var _ = _newQueue.Dequeue();
+        //    });
+        //}
 
         [Benchmark]
         public void SourceConcurrentQueue()
@@ -42,6 +44,17 @@ namespace ConcurrentWriteBytes
             });
             Parallel.For(0, Count, (i) => {
                 _sourceQueue.TryDequeue(out var _);
+            });
+        }
+
+        [Benchmark]
+        public void SourceConcurrentQueue2()
+        {
+            Parallel.For(0, Count, (i) => {
+                _sourceQueue2.Enqueue(i);
+            });
+            Parallel.For(0, Count, (i) => {
+                _sourceQueue2.TryDequeue(out var _);
             });
         }
 
