@@ -5,7 +5,7 @@
     <AssemblyName>FreeRedis</AssemblyName>
     <PackageId>FreeRedis</PackageId>
     <RootNamespace>FreeRedis</RootNamespace>
-    <Version>0.1.4</Version>
+    <Version>0.1.5</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageProjectUrl>https://github.com/2881099/FreeRedis</PackageProjectUrl>
     <Description>FreeRedis is .NET redis client, supports cluster, sentinel, master-slave, pipeline, transaction and connection pool.</Description>
@@ -29,7 +29,7 @@
   <PropertyGroup Condition="'$(TargetFramework)' == 'net40'">
     <DefineConstants>net40</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0' or '$(TargetFramework)' == 'net45'">
     <DefineConstants>isasync</DefineConstants>
   </PropertyGroup>
   
