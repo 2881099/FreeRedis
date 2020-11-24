@@ -77,6 +77,12 @@ namespace console_netcore31_newsocket
 
         #region TestNewSocket
 
+        public static async void RunInOutTest(IPEndPoint point)
+        {
+            Server(point);
+            Test(point);
+        }
+
         public static async void Server(IPEndPoint point)
         {
             TcpListener listener = new TcpListener(point);
