@@ -3,15 +3,11 @@ using Microsoft.AspNetCore.Connections;
 using StackExchange.Redis;
 using System;
 using System.Buffers;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.IO.Pipelines;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace console_netcore31_newsocket
@@ -23,97 +19,63 @@ namespace console_netcore31_newsocket
     /// </summary>
     class Program
     {
-        private static string ip;
+
         private static int port;
+        private static string ip;
         private static string pwd;
-        static void Main(string[] args)
+        private const int frequence = 20000;
+
+        private static RedisClient _freeRedisClient;
+        private static NewRedisClient3 _redisClient3;
+        private static NewRedisClient4 _redisClient4;
+        private static IDatabase _stackExnchangeClient;
+       
+        private static void InitClient()
         {
-            //using (StreamReader stream = new StreamReader("Redis.rsf"))
-            //{
-            //    ip = stream.ReadLine();
-            //    port = int.Parse(stream.ReadLine());
-            //    //pwd = stream.ReadLine();
-            //}
+            //Notice : Please use "//" comment "/*".
+
+            ///*
+            using (StreamReader stream = new StreamReader("Redis.rsf"))
+            {
+                ip = stream.ReadLine();
+                port = int.Parse(stream.ReadLine());
+                //pwd = stream.ReadLine();
+            }//*/
+            /*
             ip = "127.0.0.1";
             port = 6379;
-            var endpoit = new IPEndPoint(IPAddress.Parse(ip), port);
-
-            //NewRedisClient2 client = new NewRedisClient2(endpoit);
-            //TestClient2(client);
-            NewRedisClient3 client3 = new NewRedisClient3(endpoit);
-            //TestClient3(client3);
-            NewRedisClient4 client4 = new NewRedisClient4(endpoit);
-            //TestClient3(client3);
-            //TestClient2(client);
-            //new
-            //NewRedisClient client = new NewRedisClient(endpoit);
-            //var result = client.SelectDB(0).Result;
-
-            //client.Set("test01", "123123").Wait();
-
-            //FreeRedis
-            var redisClient = new RedisClient($"{ip}:{port},database=15,min pool size=100");
-
-            //StackExchange
+            //*/
+            _freeRedisClient = new RedisClient($"{ip}:{port},database=15,min pool size=100");
+            _redisClient3 = new NewRedisClient3(ip, port);
+            _redisClient4 = new NewRedisClient4(ip, port);
             ConnectionMultiplexer seredis = ConnectionMultiplexer.Connect("127.0.0.1:6379");
-            IDatabase sedb = seredis.GetDatabase(1);
-            redisClient.FlushDb();
-            SendFromFreeRedis(redisClient);
-            redisClient.FlushDb();
-            SendFromStackExchangeRedis(sedb);
-            redisClient.FlushDb();
-            SendFromNewSocketRedis3(client3, sedb);
-            redisClient.FlushDb();
-            SendFromNewSocketRedis4(client4, sedb);
+            _stackExnchangeClient = seredis.GetDatabase(1);
+
+        }
+
+        
+        static void Main(string[] args)
+        {
+
+            InitClient();
+            FreeRedisSetTest();
+            StackExchangeRedisSetTest();
+            NewSocketRedis3SetTest();
+            NewSocketRedis4SetTest();
+            
             Console.WriteLine("====== 以上预热 =======");
-            //seredis.get
-            //SendFromNewSocketRedis2(client, seredis.GetDatabase(0));
-            redisClient.FlushDb();
-            SendFromFreeRedis(redisClient);
-            redisClient.FlushDb();
-            SendFromStackExchangeRedis(sedb);
-            redisClient.FlushDb();
-            SendFromNewSocketRedis3(client3, sedb);
-            redisClient.FlushDb();
-            SendFromNewSocketRedis4(client4, sedb);
-            //redisClient.FlushDb();
-            //SendFromFreeRedis(redisClient);
-            ////SendFromNewSocketRedis(client, seredis.GetDatabase(0));
-            //SendFromStackExchangeRedis(sedb);
 
-            //_sendQueue = new ConcurrentQueue<TaskWithBytes>();
-            //_receiverQueue = new ConcurrentQueue<TaskCompletionSource<bool>>();
+            FreeRedisSetTest();
+            StackExchangeRedisSetTest();
+            NewSocketRedis3SetTest();
+            NewSocketRedis4SetTest();
 
-            ////NewSocketTest(endpoit);
-            ////result = client.Set("newRedis", "natasha").Result;
-            ////Console.WriteLine(result);
-            //Server(endpoit);
-            //Test(endpoit);
-            //Task.Run(async () =>
-            //{
-            //    await Task.Delay(5000);
-            //    Console.WriteLine();
-            //    Console.WriteLine(_sendQueue.Count);
-            //    Console.WriteLine(_receiverQueue.Count);
-
-            //});
             Console.ReadKey();
 
         }
-        public static async void TestClient2(NewRedisClient2 client)
-        {
 
-            var result = await client.SetAsync("1","1");
-            Console.WriteLine(result);
 
-        }
-        public static async void TestClient3(NewRedisClient3 client)
-        {
-
-            var result = await client.SetAsync("1", "1");
-            Console.WriteLine(result);
-
-        }
+        #region TestNewSocket
 
         public static async void Server(IPEndPoint point)
         {
@@ -158,125 +120,12 @@ namespace console_netcore31_newsocket
             SocketConnectionFactory client = new SocketConnectionFactory(new SocketTransportOptions());
             var connection = client.ConnectAsync(endpoit).Result;
             Input(connection);
-            Output(connection.Transport.Output);
-            ParallelOutput2();
-
+            Output(connection);
 
         }
 
-        private static ConcurrentQueue<TaskWithBytes> _sendQueue;
-        private static ConcurrentQueue<TaskCompletionSource<bool>> _receiverQueue;
 
-        public static bool IsRunning;
-
-        public static async Task SendAsync(string value)
-        {
-            var bytes = Encoding.UTF8.GetBytes(value);
-            var taskSource = new TaskCompletionSource<bool>();
-            _sendQueue.Enqueue(new TaskWithBytes(bytes, taskSource));
-            if (!sendTask.Task.IsCompleted)
-            {
-                lock (sendTask)
-                {
-
-                    if (!sendTask.Task.IsCompleted)
-                    {
-                        sendTask.SetResult(true);
-                    }
-
-                }
-            }
-            await taskSource.Task.ConfigureAwait(false);
-
-        }
-        private static TaskCompletionSource<bool> sendTask;
-        public static async void Output(PipeWriter sender)
-        {
-            TaskWithBytes task;
-            while (true)
-            {
-
-                if (_sendQueue.IsEmpty)
-                {
-
-                    sendTask = new TaskCompletionSource<bool>();
-                    await sendTask.Task.ConfigureAwait(false);
-
-                }
-
-                while (!_sendQueue.IsEmpty)
-                {
-                    while (!_sendQueue.TryDequeue(out task)) { };
-                    await sender.WriteAsync(task.Bytes).ConfigureAwait(false);
-                    _receiverQueue.Enqueue(task.Task);
-                    task.Task.SetResult(true);
-                    //if (_receiverQueue.Count == 10000)
-                    //{
-                    //    Debug.WriteLine(_receiverQueue.Count);
-                    //}
-
-                    //Debug.WriteLine(_receiverQueue.Count);
-                }
-
-
-            }
-
-        }
-        public static async void ParallelOutput2()
-        {
-            //object obj = new object();
-            //var bytes = Encoding.UTF8.GetBytes("te1111st");
-
-            var result = Parallel.For(0, 10000, async (state) =>
-            {
-
-                if (state == 9999)
-                {
-                    await SendAsync("------------$$$$-----------" + state.ToString()).ConfigureAwait(false);
-                }
-                else
-                {
-                    await SendAsync(state.ToString()).ConfigureAwait(false);
-                }
-
-                //await sender.FlushAsync(CancellationToken.None).ConfigureAwait(false);
-                //await sender.WriteAsync(bytes);
-            });
-
-        }
-
-        public static int flag = 0;
-        public static async void ParallelOutput(PipeWriter sender)
-        {
-            object obj = new object();
-            var bytes = Encoding.UTF8.GetBytes("te1111st");
-
-            Parallel.For(0, 10000, async (state) =>
-            {
-
-                while (flag == 1)
-                {
-                    await Task.Delay(100).ConfigureAwait(false);
-                }
-                Interlocked.Exchange(ref flag, 1);
-                if (state == 9999)
-                {
-                    await sender.WriteAsync(Encoding.UTF8.GetBytes("------------$$$$-----------" + state.ToString())).ConfigureAwait(false);
-                }
-                else
-                {
-                    await sender.WriteAsync(Encoding.UTF8.GetBytes(state.ToString())).ConfigureAwait(false);
-                }
-
-                Interlocked.Exchange(ref flag, 0);
-
-                //await sender.FlushAsync(CancellationToken.None).ConfigureAwait(false);
-                //await sender.WriteAsync(bytes);
-            });
-
-
-
-        }
+       
 
         public static async void Output(ConnectionContext connection)
         {
@@ -290,9 +139,6 @@ namespace console_netcore31_newsocket
                 {
                     var buffer = Encoding.UTF8.GetBytes(temp);
                     await connection.Transport.Output.WriteAsync(buffer);
-                    //connection.Transport.Output.Advance(result.);
-                    //Console.WriteLine("发送数据！");
-                    //connection.Transport.Output.Complete();
                 }
 
             }
@@ -338,178 +184,25 @@ namespace console_netcore31_newsocket
                     Console.Write("Send:");
                 }
 
-
-
-                //await result.Buffer.
-                //connection.Transport.Input.Complete();
-
             }
-
-        }
-
-        private static readonly Stopwatch sw = new Stopwatch();
-        private const int frequence = 20000;
-        private static int count = 0;
-
-        #region newSocket
-
-        public static async void NewSocketTest(IPEndPoint endpoit)
-        {
-            //ResultDict = new ConcurrentDictionary<string, string>();
-            SocketConnectionFactory client = new SocketConnectionFactory(new SocketTransportOptions());
-            var connection = client.ConnectAsync(endpoit).Result;
-            connection.Transport.Output.WriteAsync(Encoding.UTF8.GetBytes($"AUTH {pwd}\r\n"));
-            var result = connection.Transport.Output.WriteAsync(Encoding.UTF8.GetBytes("SELECT 15\r\n")).Result;
-            Thread.Sleep(3000);
-            var readResult = connection.Transport.Input.ReadAsync().Result;
-            var data = Encoding.UTF8.GetString(readResult.Buffer.FirstSpan);
-            Console.WriteLine(data);
-            connection.Transport.Input.AdvanceTo(readResult.Buffer.End);
-            SendPing(connection);
-            GetPong(connection);
-            while (count != frequence)
-            {
-                Thread.Sleep(1000);
-            }
-            SendPing(connection);
-            while (count != frequence)
-            {
-                Thread.Sleep(1000);
-            }
-            SendPing(connection);
-        }
-        public static async void SendPing(ConnectionContext connection)
-        {
-            count = 0;
-            sw.Restart();
-            int index = 0;
-            while (index < frequence)
-            {
-                await connection.Transport.Output.WriteAsync(Encoding.UTF8.GetBytes("PING\r\n"));
-                index += 1;
-            }
-        }
-        public static async void GetPong(ConnectionContext connection)
-        {
-            while (true)
-            {
-
-                var result = await connection.Transport.Input.ReadAsync();
-                AddCount(result.Buffer.ToArray());
-                //connection.Transport.Input.AsStream().Flush();
-                connection.Transport.Input.AdvanceTo(result.Buffer.End);
-
-            }
-
-        }
-        public static async void AddCount(byte[] buffer)
-        {
-            var data = Encoding.UTF8.GetString(buffer);
-            Interlocked.Add(ref count, data.Split('+').Length - 1);
-            if (count == frequence)
-            {
-                sw.Stop();
-                Console.WriteLine("NewSocketRedis:" + sw.ElapsedMilliseconds + "ms");
-            }
-        }
-
-        private ConcurrentDictionary<string, string> ResultDict;
-
-        #endregion
-
-
-        #region CSRedis
-        public static async void FreeRedisTest()
-        {
-
-            var client = new RedisClient($"{ip}:{port},password={pwd},database=15,asyncPipeline=true");
-            SendPing(client);
-            while (count != frequence)
-            {
-                Thread.Sleep(1000);
-            }
-            SendPing(client);
-            while (count != frequence)
-            {
-                Thread.Sleep(1000);
-            }
-            SendPing(client);
-        }
-        public static async void SendPing(RedisClient client)
-        {
-            count = 0;
-            sw.Restart();
-            Parallel.For(0, frequence, (state) =>
-            {
-                var data = client.Ping();
-                //Console.WriteLine(data);
-                Interlocked.Add(ref count, data.Split('N').Length - 1);
-                if (count == frequence)
-                {
-                    sw.Stop();
-                    Console.WriteLine("FreeRedis:" + sw.ElapsedMilliseconds + "ms");
-                }
-            });
 
         }
         #endregion
 
-        #region NewSocketRedis - SET
-        public static void SendFromNewSocketRedis(NewRedisClient client, IDatabase sedb)
-        {
-            var tasks = new Task[10000];
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
-            for (var a = 0; a < 10000; a += 1)
-            {
-                tasks[a] = Task.Run(async () =>
-                {
-                    var tmp = Guid.NewGuid().ToString();
-                    await client.Set(tmp, "Natasha\r\nNatasha");
-                    var val = await sedb.StringGetAsync(tmp); //valid
-                    if (val != "Natasha\r\nNatasha") throw new Exception("not equal");
-                });
-            }
-            Task.WaitAll(tasks);
-            sw.Stop();
-            Console.WriteLine("NewRedisClient(0-10000): " + sw.ElapsedMilliseconds + "ms");
-        }
-        #endregion
-
-        #region NewSocketRedis2 - SET
-        public static void SendFromNewSocketRedis2(NewRedisClient2 client, IDatabase sedb)
-        {
-            var tasks = new Task[10000];
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
-            for (var a = 0; a < 10000; a += 1)
-            {
-                tasks[a] = Task.Run(async () =>
-                {
-                    var key = a.ToString();
-                    await client.SetAsync(key, key);
-                    var val = await sedb.StringGetAsync(key); //valid
-                    if (val != key) throw new Exception("not equal");
-                });
-            }
-            Task.WaitAll(tasks);
-            sw.Stop();
-            Console.WriteLine("NewRedisClient2(0-10000): " + sw.ElapsedMilliseconds + "ms");
-        }
-        #endregion
+        #region RedisTest
 
         #region NewSocketRedis3 - SET
-        public static void SendFromNewSocketRedis3(NewRedisClient3 client, IDatabase sedb)
+        public static void NewSocketRedis3SetTest()
         {
-            var tasks = new Task[100000];
+            var tasks = new Task[frequence];
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            for (var a = 0; a < 100000; a += 1)
+            for (var a = 0; a < frequence; a += 1)
             {
                 tasks[a] = Task.Run(async () =>
                 {
                     var key = a.ToString();
-                    var result = await client.SetAsync(key, key);
+                    var result = await _redisClient3.SetAsync(key, key);
                     if (!result)
                     {
                         throw new Exception("not equal");
@@ -520,100 +213,83 @@ namespace console_netcore31_newsocket
             }
             Task.WaitAll(tasks);
             sw.Stop();
-            Console.WriteLine("NewRedisClient3(0-100000): " + sw.ElapsedMilliseconds + "ms");
-            //client.Dispose();
+            Console.WriteLine($"NewRedis3(0-{frequence}): {sw.ElapsedMilliseconds}ms");
         }
         #endregion
 
-        #region NewSocketRedis3 - SET
-        public static void SendFromNewSocketRedis4(NewRedisClient4 client, IDatabase sedb)
+        #region NewSocketRedis4 - SET
+        public static void NewSocketRedis4SetTest()
         {
-            var tasks = new Task[100000];
+            var tasks = new Task[frequence];
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            for (var a = 0; a < 100000; a += 1)
+            for (var a = 0; a < frequence; a += 1)
             {
                 tasks[a] = Task.Run(async () =>
                 {
                     var key = a.ToString();
-                    var result = await client.SetAsync(key, key);
+                    var result = await _redisClient4.SetAsync(key, key);
                     if (!result)
                     {
                         throw new Exception("not equal");
                     }
-                    //var val = await sedb.StringGetAsync(key); //valid
-                    //if (val != key) throw new Exception("not equal");
                 });
             }
             Task.WaitAll(tasks);
             sw.Stop();
-            Console.WriteLine("NewRedisClient4(0-100000): " + sw.ElapsedMilliseconds + "ms");
-            //client.Dispose();
+            Console.WriteLine($"NewRedis4(0-{frequence}): {sw.ElapsedMilliseconds}ms");
         }
         #endregion
 
         #region FreeRedis - SET
-        public static void SendFromFreeRedis(RedisClient client)
+        public static void FreeRedisSetTest()
         {
-            var tasks = new Task[100000];
+            var tasks = new Task[frequence];
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            for (var a = 0; a < 100000; a += 1)
+            for (var a = 0; a < frequence; a += 1)
             {
                 tasks[a] = Task.Run(async () =>
                 {
                     var key = a.ToString();
-                    await client.SetAsync(key, key);
-                    //var val = await client.GetAsync(key); //valid
-                    //if (val != key) throw new Exception("not equal");
+                    await _freeRedisClient.SetAsync(key, key);
                 });
             }
             Task.WaitAll(tasks);
             sw.Stop();
-            Console.WriteLine("FreeRedisClient(0-100000): " + sw.ElapsedMilliseconds + "ms");
+            Console.WriteLine($"FreeRedis(0-{frequence}): {sw.ElapsedMilliseconds}ms");
         }
         #endregion
 
         #region StackExchangeRedis - SET
-        public static void SendFromStackExchangeRedis(IDatabase sedb)
+        public static void StackExchangeRedisSetTest()
         {
-            var tasks = new Task[100000];
+            var tasks = new Task[frequence];
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            for (var a = 0; a < 100000; a += 1)
+            for (var a = 0; a < frequence; a += 1)
             {
                 tasks[a] = Task.Run(async () =>
                 {
                     var key = a.ToString();
-                    var result = await sedb.StringSetAsync(key, key);
+                    var result = await _stackExnchangeClient.StringSetAsync(key, key);
                     if (!result)
                     {
                         throw new Exception("not equal");
                     }
-                    //var val = await sedb.StringGetAsync(key); //valid
-                    //if (val != key) throw new Exception("not equal");
                 });
             }
             Task.WaitAll(tasks);
             sw.Stop();
-            Console.WriteLine("StackExchangeAsync(0-100000): " + sw.ElapsedMilliseconds + "ms");
+            Console.WriteLine($"StackExchange(0-{frequence}): {sw.ElapsedMilliseconds}ms");
         }
-        
+
         #endregion
 
 
+        #endregion
 
-    }
 
-    public class TaskWithBytes
-    {
-        public readonly byte[] Bytes;
-        public readonly TaskCompletionSource<bool> Task;
-        public TaskWithBytes(byte[] bytes, TaskCompletionSource<bool> task)
-        {
-            Bytes = bytes;
-            Task = task;
-        }
     }
 
 }
