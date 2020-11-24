@@ -207,8 +207,6 @@ namespace console_netcore31_newsocket
                     {
                         throw new Exception("not equal");
                     }
-                    //var val = await sedb.StringGetAsync(key); //valid
-                    //if (val != key) throw new Exception("not equal");
                 });
             }
             Task.WaitAll(tasks);
