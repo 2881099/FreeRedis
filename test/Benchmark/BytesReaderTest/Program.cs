@@ -7,7 +7,7 @@ namespace BytesReaderTest
     {
         static void Main(string[] args)
         {
-            BenchmarkRunner.Run<OnceTest>();
+            BenchmarkRunner.Run<UnBoxTest>();
             Console.ReadKey();
         }
     }
