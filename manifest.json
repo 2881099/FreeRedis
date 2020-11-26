@@ -65,6 +65,54 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "docs/api/FreeRedis.Build.Cli.Template.TemplateClass.yml",
+      "output": {
+        ".html": {
+          "relative_path": "docs/api/FreeRedis.Build.Cli.Template.TemplateClass.html",
+          "hash": "YqAg+tkqZXqVnAmymvSkcg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "docs/api/FreeRedis.Build.Cli.Template.yml",
+      "output": {
+        ".html": {
+          "relative_path": "docs/api/FreeRedis.Build.Cli.Template.html",
+          "hash": "7quN2yurPye6TeOv/M4WCw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "docs/api/FreeRedis.Build.Cli.TemplateHelper.yml",
+      "output": {
+        ".html": {
+          "relative_path": "docs/api/FreeRedis.Build.Cli.TemplateHelper.html",
+          "hash": "CVI2/LOYt01vpWZOB6UmRA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "docs/api/FreeRedis.Build.Cli.yml",
+      "output": {
+        ".html": {
+          "relative_path": "docs/api/FreeRedis.Build.Cli.html",
+          "hash": "Jvvb1PL6DYBfaFw46w3F2Q=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "docs/api/FreeRedis.ClientReplyType.yml",
       "output": {
         ".html": {
@@ -1185,7 +1233,7 @@
       "output": {
         ".html": {
           "relative_path": "docs/api/toc.html",
-          "hash": "MZdfaAYLuDfGLAABmXwvdw=="
+          "hash": "OMgEgNBFErJq7WUn7mMv5Q=="
         }
       },
       "is_incremental": false,
@@ -1260,7 +1308,7 @@
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 95,
+          "total_file_count": 99,
           "skipped_file_count": 0
         },
         "TocDocumentProcessor": {
