@@ -1,0 +1,60 @@
+﻿@using FreeRedis.Build.Cli.Template
+@model TemplateClass
+@{
+    Layout = null;
+}
+
+using System;
+using System.Linq;
+
+namespace FreeRedis.Extension
+{
+    public class ProxyContext
+    {
+        public IServiceProvider ServiceProvider { get; }
+
+        public ProxyContext(IServiceProvider serviceProvider)
+        {
+            ServiceProvider = serviceProvider;
+        }
+
+        public object Before(MethodInfo methodInfo)
+        {
+            throw new NotImplementedException();
+        }
+
+        public object After(MethodInfo methodInfo)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task BeforeTask(MethodInfo methodInfo)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task AfterAsync(MethodInfo methodInfo)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class FreeRedisContext
+    {
+        private ProxyContext _context;
+        private RedisClient _redisClient;
+
+        public FreeRedisContext(ProxyContext context, RedisClient redisClient)
+        {
+            _context = context;
+            _redisClient = redisClient;
+        }
+
+@{
+    foreach (var apiMethod in Model.Methods)
+    {
+        @apiMethod;
+    }
+}
+    }
+}
