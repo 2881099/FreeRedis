@@ -30,7 +30,7 @@ FreeRedis is a redis client based on .NET, supports .NET Core 2.1+, .NET Framewo
 
 QQ Groups：4336577(full)、**8578575(available)**、**52508226(available)**
 
-#### 🌈 Single machine redis
+## 🚀 Quick start
 
 ```csharp
 public static RedisClient cli = new RedisClient("127.0.0.1:6379,password=123,defaultDatabase=13");
@@ -66,9 +66,7 @@ string[] vals = cli.MGet("key1", "key2");
 
 > IPv6: [fe80::b164:55b3:4b4f:7ce6%15]:6379
 
------
-
-#### 🎣 Master-Slave
+### 🎣 Master-Slave
 
 ```csharp
 public static RedisClient cli = new RedisClient(
@@ -82,7 +80,7 @@ var value = cli.Get("key1");
 
 > Write data at 127.0.0.1:6379; randomly read data from port 6380 or 6381.
 
-#### ⛳ Redis Sentinel
+### ⛳ Redis Sentinel
 
 ```csharp
 public static RedisClient cli = new RedisClient(
@@ -92,7 +90,7 @@ public static RedisClient cli = new RedisClient(
     );
 ```
 
-#### 🌌 Redis Cluster
+### 🌌 Redis Cluster
 
 Suppose, a Redis cluster has three master nodes (7001-7003) and three slave nodes (7004-7006), then use the following code to connect to the cluster:
 
@@ -102,9 +100,7 @@ public static RedisClient cli = new RedisClient(
     );
 ```
 
------
-
-#### ⚡ Client-side-cahing
+### ⚡ Client-side-cahing
 
 > requires redis-server 6.0 and above
 
@@ -120,7 +116,7 @@ cli.UseClientSideCaching(new ClientSideCachingOptions
 });
 ```
 
-#### 📡 Subscribe
+### 📡 Subscribe
 
 ```csharp
 using (cli.Subscribe("abc", ondata)) //wait .Dispose()
@@ -132,7 +128,7 @@ void ondata(string channel, string data) =>
     Console.WriteLine($"{channel} -> {data}");
 ```
 
-#### 📃 Scripting
+### 📃 Scripting
 
 ```csharp
 var r1 = cli.Eval("return {KEYS[1],KEYS[2],ARGV[1],ARGV[2]}", 
@@ -144,7 +140,7 @@ cli.Eval("return redis.call('set',KEYS[1],'bar')",
     new[] { Guid.NewGuid().ToString() })
 ```
 
-#### 💻 Pipeline
+### 💻 Pipeline
 
 ```csharp
 using (var pipe = cli.StartPipe())
@@ -176,7 +172,7 @@ using (var pipe = cli.StartPipe())
 }
 ```
 
-#### 📰 Transaction
+### 📰 Transaction
 
 ```csharp
 using (var tran = cli.Multi())
@@ -208,7 +204,7 @@ using (var tran = cli.Multi())
 }
 ```
 
-#### 📯 GetDatabase: switch database
+### 📯 GetDatabase: switch database
 
 ```csharp
 using (var db = cli.GetDatabase(10))
@@ -218,7 +214,7 @@ using (var db = cli.GetDatabase(10))
 }
 ```
 
-#### 🔍 Scan
+### 🔍 Scan
 
 > Support cluster mode
 
@@ -229,16 +225,20 @@ foreach (var keys in cli.Scan("*", 10, null))
 }
 ```
 
-#### 👯 Contributors
+## 👯 Contributors
 
 <a href="https://github.com/2881099/FreeRedis/graphs/contributors">
   <img src="https://contributors-img.web.app/image?repo=2881099/FreeRedis" />
 </a>
 
-#### 💕 Donation
+## 💕 Donation
 
 > Thank you for your donation
 
 - [Alipay](https://www.cnblogs.com/FreeSql/gallery/image/338860.html)
 
 - [WeChat](https://www.cnblogs.com/FreeSql/gallery/image/338859.html)
+
+## 🗄 License
+
+[MIT](LICENSE)
