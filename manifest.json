@@ -4,24 +4,30 @@
   "xrefmap": "xrefmap.yml",
   "files": [
     {
+      "log_codes": [
+        "InvalidFileLink"
+      ],
       "type": "Conceptual",
       "source_relative_path": "README.md",
       "output": {
         ".html": {
           "relative_path": "README.html",
-          "hash": "sGmXzFGFequpprwXGzbniw=="
+          "hash": "TiAESKfzfXs4jwIJdVgSrw=="
         }
       },
       "is_incremental": false,
       "version": ""
     },
     {
+      "log_codes": [
+        "InvalidFileLink"
+      ],
       "type": "Conceptual",
       "source_relative_path": "README.zh-CN.md",
       "output": {
         ".html": {
           "relative_path": "README.zh-CN.html",
-          "hash": "Fhy/M7WD/l357C40v3NOxA=="
+          "hash": "4okZtQoGydRs9Mlw9+aCcQ=="
         }
       },
       "is_incremental": false,

@@ -87,7 +87,7 @@
 <li>🌳 Support Redis 6 RESP3 Protocol</li>
 </ul>
 <p>QQ Groups：4336577(full)、<strong>8578575(available)</strong>、<strong>52508226(available)</strong></p>
-<h4 id="-single-machine-redis">🌈 Single machine redis</h4>
+<h2 id="-quick-start">🚀 Quick start</h2>
 <pre><code class="lang-csharp">public static RedisClient cli = new RedisClient(&quot;127.0.0.1:6379,password=123,defaultDatabase=13&quot;);
 //cli.Serialize = obj =&gt; JsonConvert.SerializeObject(obj);
 //cli.Deserialize = (json, type) =&gt; JsonConvert.DeserializeObject(json, type);
@@ -186,8 +186,7 @@ string[] vals = cli.MGet(&quot;key1&quot;, &quot;key2&quot;);
 <blockquote>
 <p>IPv6: [fe80::b164:55b3:4b4f:7ce6%15]:6379</p>
 </blockquote>
-<hr>
-<h4 id="-master-slave">🎣 Master-Slave</h4>
+<h3 id="-master-slave">🎣 Master-Slave</h3>
 <pre><code class="lang-csharp">public static RedisClient cli = new RedisClient(
     &quot;127.0.0.1:6379,password=123,defaultDatabase=13&quot;,
     &quot;127.0.0.1:6380,password=123,defaultDatabase=13&quot;,
@@ -199,21 +198,20 @@ var value = cli.Get(&quot;key1&quot;);
 <blockquote>
 <p>Write data at 127.0.0.1:6379; randomly read data from port 6380 or 6381.</p>
 </blockquote>
-<h4 id="-redis-sentinel">⛳ Redis Sentinel</h4>
+<h3 id="-redis-sentinel">⛳ Redis Sentinel</h3>
 <pre><code class="lang-csharp">public static RedisClient cli = new RedisClient(
     &quot;mymaster,password=123&quot;, 
     new [] { &quot;192.169.1.10:26379&quot;, &quot;192.169.1.11:26379&quot;, &quot;192.169.1.12:26379&quot; },
     true //This variable indicates whether to use the read-write separation mode.
     );
 </code></pre>
-<h4 id="-redis-cluster">🌌 Redis Cluster</h4>
+<h3 id="-redis-cluster">🌌 Redis Cluster</h3>
 <p>Suppose, a Redis cluster has three master nodes (7001-7003) and three slave nodes (7004-7006), then use the following code to connect to the cluster:</p>
 <pre><code class="lang-csharp">public static RedisClient cli = new RedisClient(
     new ConnectionStringBuilder[] { &quot;192.168.0.2:7001&quot;, &quot;192.168.0.2:7001&quot;, &quot;192.168.0.2:7003&quot; }
     );
 </code></pre>
-<hr>
-<h4 id="-client-side-cahing">⚡ Client-side-cahing</h4>
+<h3 id="-client-side-cahing">⚡ Client-side-cahing</h3>
 <blockquote>
 <p>requires redis-server 6.0 and above</p>
 </blockquote>
@@ -227,7 +225,7 @@ var value = cli.Get(&quot;key1&quot;);
     CheckExpired = (key, dt) =&gt; DateTime.Now.Subtract(dt) &gt; TimeSpan.FromSeconds(2)
 });
 </code></pre>
-<h4 id="-subscribe">📡 Subscribe</h4>
+<h3 id="-subscribe">📡 Subscribe</h3>
 <pre><code class="lang-csharp">using (cli.Subscribe(&quot;abc&quot;, ondata)) //wait .Dispose()
 {
     Console.ReadKey();
@@ -236,7 +234,7 @@ var value = cli.Get(&quot;key1&quot;);
 void ondata(string channel, string data) =&gt;
     Console.WriteLine($&quot;{channel} -&gt; {data}&quot;);
 </code></pre>
-<h4 id="-scripting">📃 Scripting</h4>
+<h3 id="-scripting">📃 Scripting</h3>
 <pre><code class="lang-csharp">var r1 = cli.Eval(&quot;return {KEYS[1],KEYS[2],ARGV[1],ARGV[2]}&quot;, 
     new[] { &quot;key1&quot;, &quot;key2&quot; }, &quot;first&quot;, &quot;second&quot;) as object[];
 
@@ -245,7 +243,7 @@ var r2 = cli.Eval(&quot;return {1,2,{3,'Hello World!'}}&quot;) as object[];
 cli.Eval(&quot;return redis.call('set',KEYS[1],'bar')&quot;, 
     new[] { Guid.NewGuid().ToString() })
 </code></pre>
-<h4 id="-pipeline">💻 Pipeline</h4>
+<h3 id="-pipeline">💻 Pipeline</h3>
 <pre><code class="lang-csharp">using (var pipe = cli.StartPipe())
 {
     pipe.IncrBy(&quot;key1&quot;, 10);
@@ -274,7 +272,7 @@ using (var pipe = cli.StartPipe())
     Console.WriteLine(t0 + &quot;, &quot; + t2);
 }
 </code></pre>
-<h4 id="-transaction">📰 Transaction</h4>
+<h3 id="-transaction">📰 Transaction</h3>
 <pre><code class="lang-csharp">using (var tran = cli.Multi())
 {
     tran.IncrBy(&quot;key1&quot;, 10);
@@ -303,14 +301,14 @@ using (var tran = cli.Multi())
     Console.WriteLine(t0 + &quot;, &quot; + t2);
 }
 </code></pre>
-<h4 id="-getdatabase-switch-database">📯 GetDatabase: switch database</h4>
+<h3 id="-getdatabase-switch-database">📯 GetDatabase: switch database</h3>
 <pre><code class="lang-csharp">using (var db = cli.GetDatabase(10))
 {
     db.Set(&quot;key1&quot;, 10);
     var val1 = db.Get(&quot;key1&quot;);
 }
 </code></pre>
-<h4 id="-scan">🔍 Scan</h4>
+<h3 id="-scan">🔍 Scan</h3>
 <blockquote>
 <p>Support cluster mode</p>
 </blockquote>
@@ -319,11 +317,11 @@ using (var tran = cli.Multi())
     Console.WriteLine(string.Join(&quot;, &quot;, keys));
 }
 </code></pre>
-<h4 id="-contributors">👯 Contributors</h4>
+<h2 id="-contributors">👯 Contributors</h2>
 <a href="https://github.com/2881099/FreeRedis/graphs/contributors">
   <img src="https://contributors-img.web.app/image?repo=2881099/FreeRedis">
 </a>
-<h4 id="-donation">💕 Donation</h4>
+<h2 id="-donation">💕 Donation</h2>
 <blockquote>
 <p>Thank you for your donation</p>
 </blockquote>
@@ -333,6 +331,8 @@ using (var tran = cli.Multi())
 <li><p><a href="https://www.cnblogs.com/FreeSql/gallery/image/338859.html">WeChat</a></p>
 </li>
 </ul>
+<h2 id="-license">🗄 License</h2>
+<p><a href="LICENSE">MIT</a></p>
 </article>
           </div>
           
