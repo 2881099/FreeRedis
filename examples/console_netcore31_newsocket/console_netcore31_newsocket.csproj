@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <OutputType>Exe</OutputType>
   </PropertyGroup>
 
@@ -9,6 +9,7 @@
     <PackageReference Include="BeetleX.Redis" Version="1.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Connections.Abstractions" Version="5.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel.Transport.Abstractions" Version="2.2.0" />
+    <PackageReference Include="NewLife.Redis" Version="3.8.2020.1101" />
     <PackageReference Include="StackExchange.Redis" Version="2.2.4" />
     <PackageReference Include="System.IO.Pipelines" Version="5.0.0" />
   </ItemGroup>

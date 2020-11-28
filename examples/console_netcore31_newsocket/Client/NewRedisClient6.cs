@@ -6,6 +6,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Pipelines;
 using System.Net;
+using System.Reflection;
+using System.Reflection.Emit;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,21 +17,50 @@ using System.Threading.Tasks.Sources;
 namespace console_netcore31_newsocket
 {
 
-    public class NewRedisClient2
+    public class NewRedisClient6
     {
+        private readonly static Func<Task<bool>, bool, bool> _setResult;
+        private readonly static Func<Task<bool>> _getTask;
+        static NewRedisClient6()
+        {
+            _setResult = typeof(Task<bool>)
+                .GetMethod("TrySetResult",
+                BindingFlags.Instance | BindingFlags.NonPublic,
+                null,
+                new Type[] { typeof(bool) }, null)
+                .CreateDelegate<Func<Task<bool>, bool, bool>>();
 
-        private readonly Queue<TaskCompletionSource<bool>> _receiverQueue;
+
+            var ctor = typeof(Task<bool>).GetConstructor(BindingFlags.Instance | BindingFlags.NonPublic, null, new Type[0], null);
+
+            DynamicMethod dynamicMethod = new DynamicMethod("GETTASK", typeof(Task<bool>), new Type[0]);
+            var iLGenerator = dynamicMethod.GetILGenerator();
+            iLGenerator.Emit(OpCodes.Newobj, ctor);
+            iLGenerator.Emit(OpCodes.Ret);
+            _getTask = (Func<Task<bool>>)dynamicMethod.CreateDelegate(typeof(Func<Task<bool>>));
+        }
+
+        private const int TASK_BUFFER_LENGTH = 1024;
+        private const int TASK_BUFFER_PRELENGTH = TASK_BUFFER_LENGTH - 1;
+        
         private readonly byte _protocalStart;
         private readonly ConnectionContext _connection;
         public readonly PipeWriter _sender;
         private readonly PipeReader _reciver;
-        public NewRedisClient2(string ip, int port) : this(new IPEndPoint(IPAddress.Parse(ip), port))
+        private readonly Task<bool>[] _array;
+
+
+        public NewRedisClient6(string ip, int port) : this(new IPEndPoint(IPAddress.Parse(ip), port))
         {
         }
-        public NewRedisClient2(IPEndPoint point)
+        public NewRedisClient6(IPEndPoint point)
         {
             _protocalStart = (byte)43;
-            _receiverQueue = new Queue<TaskCompletionSource<bool>>();
+            _array = new Task<bool>[TASK_BUFFER_LENGTH];
+            for (int i = 0; i < TASK_BUFFER_LENGTH; i++)
+            {
+                _array[i] = _getTask();
+            }
             SocketConnectionFactory client = new SocketConnectionFactory(new SocketTransportOptions());
             _connection = client.ConnectAsync(point).Result;
             _sender = _connection.Transport.Output;
@@ -52,17 +84,37 @@ namespace console_netcore31_newsocket
         private readonly object _lock = new object();
         private int _taskCount;
         long total = 0;
+        //volatile int _locked = 0;
+        long _taget = 0;
+        private int _fetch = -1;
+        private volatile int _sendIndex = -1;
+        private long _receiverIndex = 0;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void Wait()
+        {
+            SpinWait wait = default;
+            while (Interlocked.CompareExchange(ref _sendIndex, _fetch + 1, _fetch) != _fetch)
+            {
+                wait.SpinOnce();
+            }
+        }
         public Task<bool> SetAsync(string key, string value)
         {
+            
             var bytes = Encoding.UTF8.GetBytes($"SET {key} {value}\r\n");
-            var taskSource = new TaskCompletionSource<bool>();
-            lock (_lock)
+            //var taskSource = new TaskCompletionSource<bool>(null, TaskCreationOptions.None);
+            Wait();
+            //_receiverQueue.Enqueue(taskSource);
+            if (_sendIndex == TASK_BUFFER_LENGTH)
             {
-                _sender.WriteAsync(bytes);
-                _receiverQueue.Enqueue(taskSource);
-
+                _sendIndex = -1;
+                _fetch = -1;
             }
-            return taskSource.Task;
+            _fetch += 1;
+            _sender.WriteAsync(bytes);
+            return _array[_sendIndex];
+
         }
         private async void RunReciver()
         {
@@ -107,11 +159,19 @@ namespace console_netcore31_newsocket
             //{
             while (reader.TryReadTo(out ReadOnlySpan<byte> _, 43, advancePastDelimiter: true))
             {
-                lock (_lock)
+                Wait();
+                _setResult(_array[_receiverIndex],true);
+                _array[_receiverIndex] = _getTask();
+                if (_receiverIndex == TASK_BUFFER_PRELENGTH)
                 {
-                    _receiverQueue.Dequeue().SetResult(true);
+                    _receiverIndex = 0;
                 }
-
+                else
+                {
+                    _receiverIndex += 1;
+                }
+                //_receiverQueue.Dequeue().SetResult(true);
+                //_locked = 0;
                 //_deal += 1;
                 //Interlocked.Decrement(ref _taskCount);
 
@@ -135,7 +195,7 @@ namespace console_netcore31_newsocket
             {
 
                 tempSpan = tempSpan.Slice(offset + 1, tempSpan.Length - offset - 1);
-                while (!_receiverQueue.TryDequeue(out task)) { }
+                //while (!_receiverQueue.TryDequeue(out task)) { }
 
                 //if (task != default)
                 //{

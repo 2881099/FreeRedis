@@ -13,7 +13,44 @@ using System.Threading.Tasks.Sources;
 
 namespace console_netcore31_newsocket
 {
-    
+    public class NewPool4
+    {
+        private readonly NewRedisClient3 _lastestClient;
+        private readonly ConcurrentStack<NewRedisClient3> _pool;
+        private readonly string _ip;
+        private readonly int _port;
+        public NewPool4(string ip, int port)
+        {
+            _ip = ip;
+            _port = port;
+            _pool = new ConcurrentStack<NewRedisClient3>();
+            _lastestClient = new NewRedisClient3(ip, port, _pool);
+        }
+
+        public int Count { get { return _pool.Count; } }
+
+        public long MaxConnections = 20;
+        private long _count = 0;
+        public Task<bool> SetAsync(string key, string value)
+        {
+
+            if (_pool.TryPop(out var host))
+            {
+                return host.SetAsync(key, value);
+            }
+            else
+            {
+                if (_count < MaxConnections)
+                {
+                    Interlocked.Increment(ref _count);
+                    var client = new NewRedisClient3(_ip, _port, _pool);
+                    return client.SetAsync(key, value);
+                }
+                return _lastestClient.SetAsync(key, value);
+            }
+        }
+
+    }
     public class NewRedisClient4
     {
         private readonly SourceConcurrentQueue2<TaskCompletionSource<bool>> _receiverQueue;
@@ -38,6 +75,13 @@ namespace console_netcore31_newsocket
         }
 
         private TaskCompletionSource<bool> _sendTask;
+        public Task<bool> FlushDBAsync()
+        {
+            var bytes = Encoding.UTF8.GetBytes($"flushdb\r\n");
+            var taskSource = new TaskCompletionSource<bool>();
+            _receiverQueue.Enqueue(taskSource, bytes);
+            return taskSource.Task;
+        }
         public Task<bool> SetAsync(string key,string value)
         {
             var bytes = Encoding.UTF8.GetBytes($"SET {key} {value}\r\n");

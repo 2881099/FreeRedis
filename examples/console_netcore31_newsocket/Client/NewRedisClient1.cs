@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Pipelines;
 using System.Net;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,20 +15,27 @@ using System.Threading.Tasks.Sources;
 namespace console_netcore31_newsocket
 {
 
-    public class NewRedisClient2
+    public class NewRedisClient1
     {
-
+        private const int TASK_BUFFER_LENGTH = 2048;
+        private const int TASK_BUFFER_PRELENGTH = TASK_BUFFER_LENGTH - 1;
         private readonly Queue<TaskCompletionSource<bool>> _receiverQueue;
         private readonly byte _protocalStart;
         private readonly ConnectionContext _connection;
         public readonly PipeWriter _sender;
         private readonly PipeReader _reciver;
-        public NewRedisClient2(string ip, int port) : this(new IPEndPoint(IPAddress.Parse(ip), port))
+        private readonly TaskCompletionSource<bool>[] _array;
+        public NewRedisClient1(string ip, int port) : this(new IPEndPoint(IPAddress.Parse(ip), port))
         {
         }
-        public NewRedisClient2(IPEndPoint point)
+        public NewRedisClient1(IPEndPoint point)
         {
             _protocalStart = (byte)43;
+            _array = new TaskCompletionSource<bool>[TASK_BUFFER_LENGTH];
+            for (int i = 0; i < TASK_BUFFER_LENGTH; i++)
+            {
+                _array[i] = new TaskCompletionSource<bool>();
+            }
             _receiverQueue = new Queue<TaskCompletionSource<bool>>();
             SocketConnectionFactory client = new SocketConnectionFactory(new SocketTransportOptions());
             _connection = client.ConnectAsync(point).Result;
@@ -52,17 +60,41 @@ namespace console_netcore31_newsocket
         private readonly object _lock = new object();
         private int _taskCount;
         long total = 0;
+        long _locked = 0;
+        long _taget = 0;
+
+        private long _sendIndex = 1;
+        private long _receiverIndex = 1;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void Wait()
+        {
+            SpinWait wait = default;
+            while (Interlocked.CompareExchange(ref _locked, 1, 0) != 0)
+            {
+                wait.SpinOnce();
+            }
+        }
         public Task<bool> SetAsync(string key, string value)
         {
+            
             var bytes = Encoding.UTF8.GetBytes($"SET {key} {value}\r\n");
-            var taskSource = new TaskCompletionSource<bool>();
-            lock (_lock)
+            //var taskSource = new TaskCompletionSource<bool>(null, TaskCreationOptions.None);
+            Wait();
+            //_receiverQueue.Enqueue(taskSource);
+            var temp = _sendIndex;
+            if (_sendIndex == TASK_BUFFER_PRELENGTH)
             {
-                _sender.WriteAsync(bytes);
-                _receiverQueue.Enqueue(taskSource);
-
+                _sendIndex = 0;
             }
-            return taskSource.Task;
+            else
+            {
+                _sendIndex += 1;
+            }
+            _locked = 0;
+            _sender.WriteAsync(bytes);
+            return _array[temp].Task;
+
         }
         private async void RunReciver()
         {
@@ -107,11 +139,19 @@ namespace console_netcore31_newsocket
             //{
             while (reader.TryReadTo(out ReadOnlySpan<byte> _, 43, advancePastDelimiter: true))
             {
-                lock (_lock)
+                Wait();
+                _array[_receiverIndex].SetResult(true);
+                _array[_receiverIndex] = new TaskCompletionSource<bool>();
+                if (_receiverIndex == TASK_BUFFER_PRELENGTH)
                 {
-                    _receiverQueue.Dequeue().SetResult(true);
+                    _receiverIndex = 0;
                 }
-
+                else
+                {
+                    _receiverIndex += 1;
+                }
+                //_receiverQueue.Dequeue().SetResult(true);
+                _locked = 0;
                 //_deal += 1;
                 //Interlocked.Decrement(ref _taskCount);
 

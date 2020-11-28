@@ -6,6 +6,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Pipelines;
 using System.Net;
+using System.Reflection;
+using System.Reflection.Emit;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,21 +17,31 @@ using System.Threading.Tasks.Sources;
 namespace console_netcore31_newsocket
 {
 
-    public class NewRedisClient2
+    public class NewRedisClient0
     {
-
-        private readonly Queue<TaskCompletionSource<bool>> _receiverQueue;
+        //private readonly LinkedList<TaskCompletionSource<bool>> _receiverQueue;
+        private TaskLink<bool> _taskLink;
+        private TaskLink<bool> _store;
+        private TaskLink<bool> _head;
         private readonly byte _protocalStart;
         private readonly ConnectionContext _connection;
         public readonly PipeWriter _sender;
         private readonly PipeReader _reciver;
-        public NewRedisClient2(string ip, int port) : this(new IPEndPoint(IPAddress.Parse(ip), port))
+
+        static NewRedisClient0()
+        {
+           
+
+        }
+        public NewRedisClient0(string ip, int port) : this(new IPEndPoint(IPAddress.Parse(ip), port))
         {
         }
-        public NewRedisClient2(IPEndPoint point)
+        public NewRedisClient0(IPEndPoint point)
         {
             _protocalStart = (byte)43;
-            _receiverQueue = new Queue<TaskCompletionSource<bool>>();
+            _store = new TaskLink<bool>();
+            _taskLink = _store;
+            _head = _taskLink;
             SocketConnectionFactory client = new SocketConnectionFactory(new SocketTransportOptions());
             _connection = client.ConnectAsync(point).Result;
             _sender = _connection.Transport.Output;
@@ -50,19 +63,36 @@ namespace console_netcore31_newsocket
 
 
         private readonly object _lock = new object();
-        private int _taskCount;
         long total = 0;
+        long _locked = 0;
+        long _taget = 0;
+
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void Wait()
+        {
+            SpinWait wait = default;
+            while (Interlocked.CompareExchange(ref _locked, 1, 0) != 0)
+            {
+                wait.SpinOnce();
+            }
+        }
         public Task<bool> SetAsync(string key, string value)
         {
+            
             var bytes = Encoding.UTF8.GetBytes($"SET {key} {value}\r\n");
-            var taskSource = new TaskCompletionSource<bool>();
-            lock (_lock)
+            var taskSource = new TaskLink<bool>();
+            Wait();
+            if (_taskLink == null)
             {
-                _sender.WriteAsync(bytes);
-                _receiverQueue.Enqueue(taskSource);
-
+                _taskLink = _store;
+                _head = _store;
             }
-            return taskSource.Task;
+            _taskLink.Next = taskSource;
+            _taskLink = _taskLink.Next;
+            _sender.WriteAsync(bytes);
+            return taskSource._task;
+
         }
         private async void RunReciver()
         {
@@ -107,11 +137,12 @@ namespace console_netcore31_newsocket
             //{
             while (reader.TryReadTo(out ReadOnlySpan<byte> _, 43, advancePastDelimiter: true))
             {
-                lock (_lock)
-                {
-                    _receiverQueue.Dequeue().SetResult(true);
-                }
-
+                //Wait();
+                var temp = _head;
+                _head = _head.Next;
+                _head.TrySetResult(true);
+                temp = null;
+                _locked = 0;
                 //_deal += 1;
                 //Interlocked.Decrement(ref _taskCount);
 
@@ -121,35 +152,54 @@ namespace console_netcore31_newsocket
             //Interlocked.Increment(ref count);
             //task.SetResult(Encoding.UTF8.GetString(sequence.Slice(reader.Position, sequence.End).ToArray()).Contains("OK"));
         }
-        private int count;
-        private void Handler(in ReadOnlySpan<byte> span)
+
+        internal class TaskLink<T>
         {
-
-            var tempSpan = span;
-            TaskCompletionSource<bool> task = default;
-            //var reader = new SequenceReader<byte>(new ReadOnlySequence<byte>(span));
-            //var offset = tempSpan.IndexOf(_protocalStart);
-            int offset;
-            //int _deal = 0;
-            while ((offset = tempSpan.IndexOf(_protocalStart)) != -1)
+            //public readonly Task<T> _task;
+            private readonly static Func<Task<T>, T, bool> _setResult;
+            private readonly static Func<Task<T>> _getTask;
+            static TaskLink()
             {
+                _setResult = typeof(Task<T>)
+                    .GetMethod("TrySetResult",
+                    BindingFlags.Instance | BindingFlags.NonPublic,
+                    null,
+                    new Type[] { typeof(T) },null)
+                    .CreateDelegate<Func<Task<T>, T, bool>>();
 
-                tempSpan = tempSpan.Slice(offset + 1, tempSpan.Length - offset - 1);
-                while (!_receiverQueue.TryDequeue(out task)) { }
+               
+                var ctor = typeof(Task<T>).GetConstructor(BindingFlags.Instance | BindingFlags.NonPublic,null, new Type[0], null);
 
-                //if (task != default)
-                //{
-
-                //_deal += 1;
-                //Interlocked.Decrement(ref _taskCount);
-                task.SetResult(true);
-                //task = default;
-                //}
-
+                DynamicMethod dynamicMethod = new DynamicMethod("GETTASK", typeof(Task<T>), new Type[0]);
+                var iLGenerator = dynamicMethod.GetILGenerator();
+                iLGenerator.Emit(OpCodes.Newobj, ctor);
+                iLGenerator.Emit(OpCodes.Ret);
+                _getTask = (Func<Task<T>>)dynamicMethod.CreateDelegate(typeof(Func<Task<T>>));
             }
-            //Console.WriteLine($"本次完成 {_deal} 个任务! 剩余 {_taskCount} 个任务！");
-        }
 
+            public readonly Task<T> _task;
+            public TaskLink(TaskCreationOptions options = TaskCreationOptions.None)
+            {
+                _task = _getTask();
+            }
+            public TaskLink<T> Next;
+
+            public bool TrySetResult(T result)
+            {
+                bool rval = _setResult(_task, result);
+                if (!rval)
+                {
+                    SpinWait sw = default;
+                    while (!_task.IsCompleted)
+                    {
+                        sw.SpinOnce();
+                    }
+                }
+
+                return rval;
+            }
+
+        } 
 
     }
 }

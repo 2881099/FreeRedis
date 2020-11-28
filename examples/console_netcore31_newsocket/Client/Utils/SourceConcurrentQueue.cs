@@ -527,7 +527,7 @@ internal class SourceConcurrentQueue<T> : IProducerConsumerCollection<T>
             Segment tail = _tail;
             if (tail.TryAppend(item))
             {
-                _sender.WriteAsync(bytes);
+                _sender.WriteAsync(bytes).ConfigureAwait(false);
                 return;
             }
             spin.SpinOnce();

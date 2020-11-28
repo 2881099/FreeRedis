@@ -8,6 +8,7 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace console_netcore31_newsocket
@@ -19,19 +20,29 @@ namespace console_netcore31_newsocket
     /// </summary>
     class Program
     {
-
+        private static bool _useDelay;
+        private static int _delayCount;
         private static int port;
         private static string ip;
         private static string pwd;
-        private const int frequence = 20000;
+        private const int frequence = 1000000;
 
         private static RedisClient _freeRedisClient;
-        private static NewRedisClient3 _redisClient3;
+        private static BeetleX.Redis.RedisDB _beetleClient;
+        private static NewRedisClient0 _redisClient0;
+        private static NewRedisClient1 _redisClient1;
+        private static NewRedisClient2 _redisClient2;
+        private static NewRedisClient5 _redisClient5;
+        private static NewPool3 _redisClient3;
         private static NewRedisClient4 _redisClient4;
+        private static NewLife.Caching.Redis _newLifeRedis;
+
         private static IDatabase _stackExnchangeClient;
        
         private static void InitClient()
         {
+            _useDelay = true;
+            _delayCount = 1000;
             //Notice : Please use "//" comment "/*".
 
             ///*
@@ -45,33 +56,56 @@ namespace console_netcore31_newsocket
             ip = "127.0.0.1";
             port = 6379;
             //*/
-            _freeRedisClient = new RedisClient($"{ip}:{port},database=15,min pool size=100");
-            _redisClient3 = new NewRedisClient3(ip, port);
+
+            // NewLife.Redis
+           // _newLifeRedis = new NewLife.Caching.Redis($"{ip}:{port}",null, 1);
+            //var result = newLifeRedis.Set("1", "1");
+            //Console.WriteLine(result);
+            //Console.ReadKey();
+            //_beetleClient = new BeetleX.Redis.RedisDB(0);
+            //var host = _beetleClient.Host.AddWriteHost(ip, port);
+            //host.MaxConnections = 1000;
+            //host.QueueMaxLength = 512;
+            //_freeRedisClient = new RedisClient($"{ip}:{port},database=0,min pool size=100");
+            _redisClient0 = new NewRedisClient0(ip, port);
+            _redisClient1 = new NewRedisClient1(ip, port);
+            _redisClient2 = new NewRedisClient2(ip, port);
+            _redisClient3 = new NewPool3(ip, port);
             _redisClient4 = new NewRedisClient4(ip, port);
-            ConnectionMultiplexer seredis = ConnectionMultiplexer.Connect("127.0.0.1:6379");
-            _stackExnchangeClient = seredis.GetDatabase(1);
+            _redisClient5 = new NewRedisClient5(ip,port);
+            ConnectionMultiplexer seredis = ConnectionMultiplexer.Connect($"{ip}:{port}");
+            _stackExnchangeClient = seredis.GetDatabase(0);
 
         }
 
         
         static void Main(string[] args)
         {
-
-            InitClient();
-            FreeRedisSetTest();
-            StackExchangeRedisSetTest();
-            NewSocketRedis3SetTest();
-            NewSocketRedis4SetTest();
             
-            Console.WriteLine("====== 以上预热 =======");
+            InitClient();
 
-            FreeRedisSetTest();
-            StackExchangeRedisSetTest();
-            NewSocketRedis3SetTest();
-            NewSocketRedis4SetTest();
+            //_redisClient5.SetAsync("a", "a");
+
+            RunTest();
+            Console.WriteLine("====== 以上预热 =======");
+            RunTest();
 
             Console.ReadKey();
 
+        }
+
+        public static void RunTest()
+        {
+            //FreeRedisSetTest();
+            StackExchangeRedisSetTest();
+            //NewSocketRedis0SetTest();
+            NewSocketRedis1SetTest();
+            //NewSocketRedis2SetTest();
+            //NewSocketRedis3SetTest();
+            //NewSocketRedis4SetTest();
+            NewSocketRedis5SetTest();
+            //BeetleXRedisSetTest();
+            //NewLifeRedisSetTest();
         }
 
 
@@ -197,8 +231,65 @@ namespace console_netcore31_newsocket
 
         #region RedisTest
 
-        #region NewSocketRedis3 - SET
-        public static void NewSocketRedis3SetTest()
+        private static void RunAction(Func<string,Task> action,string title)
+        {
+            int count = 0;
+            Console.WriteLine("=========================");
+            var result = _redisClient4.FlushDBAsync().Result;
+            Console.WriteLine($"Clear DB 0 - [{(result?"SUCCEED":"FAILED")}]!");
+            if (_useDelay)
+            {
+                Thread.Sleep(_delayCount);
+            }
+            var tasks = new Task[frequence];
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+            for (var a = 0; a < frequence; a += 1)
+            {
+                tasks[a] = action(a.ToString());
+            }
+            Task.WaitAll(tasks);
+            sw.Stop();
+            Thread.Sleep(1000);
+            for (var a = 0; a < frequence; a += 1)
+            {
+                var key = a.ToString();
+                tasks[a] = Task.Run(() =>
+                {
+                    var result = _stackExnchangeClient.StringGet(key);
+                    if (result != key)
+                    {
+                        Interlocked.Increment(ref count);
+                    }
+                });
+            }
+            Task.WaitAll(tasks);
+            Console.Write($"{title} (0-{frequence / 10000}W) : {sw.ElapsedMilliseconds}ms! ");
+            Console.WriteLine($"Errors : {count} !");
+            if (count>0)
+            {
+                Thread.Sleep(1000);
+                for (var a = 0; a < frequence; a += 1)
+                {
+                    var key = a.ToString();
+                    tasks[a] = Task.Run(() =>
+                    {
+                        var result = _stackExnchangeClient.StringGet(key);
+                        if (result != key)
+                        {
+                            Interlocked.Increment(ref count);
+                        }
+                    });
+                }
+                Task.WaitAll(tasks);
+                Console.WriteLine($"Rechecking Errors : {count} !");
+            }
+            Console.WriteLine("=========================\r\n");
+        }
+
+
+        #region BeetleXRedis - SET
+        public static void BeetleXRedisSetTest()
         {
             var tasks = new Task[frequence];
             Stopwatch sw = new Stopwatch();
@@ -208,8 +299,8 @@ namespace console_netcore31_newsocket
                 tasks[a] = Task.Run(async () =>
                 {
                     var key = a.ToString();
-                    var result = await _redisClient3.SetAsync(key, key);
-                    if (!result)
+                    var result =await _beetleClient.Set(key, key);
+                    if (result != "OK")
                     {
                         throw new Exception("not equal");
                     }
@@ -217,56 +308,117 @@ namespace console_netcore31_newsocket
             }
             Task.WaitAll(tasks);
             sw.Stop();
-            Console.WriteLine($"NewRedis3(0-{frequence}): {sw.ElapsedMilliseconds}ms");
+            Console.WriteLine($"BeetleXRedis(0-{frequence}): {sw.ElapsedMilliseconds}ms");
+        }
+        #endregion
+
+        #region NewSocketRedis0 - SET
+        public static void NewSocketRedis0SetTest()
+        {
+            RunAction((key) =>
+            {
+
+                return _redisClient0.SetAsync(key, key);
+
+            }, "NewRedis0");
+
+        }
+        #endregion
+
+        #region NewSocketRedis1 - SET
+        public static void NewSocketRedis1SetTest()
+        {
+            RunAction((key) =>
+            {
+
+                return _redisClient1.SetAsync(key, key);
+
+            }, "NewRedis1");
+
+        }
+        #endregion
+
+        #region NewSocketRedis2 - SET
+        public static void NewSocketRedis2SetTest()
+        {
+            RunAction((key) =>
+            {
+
+                return _redisClient2.SetAsync(key, key);
+
+            }, "NewRedis2");
+            
+        }
+        #endregion
+
+        #region NewSocketRedis3 - SET
+        public static void NewSocketRedis3SetTest()
+        {
+            RunAction((key) =>
+            {
+
+                return _redisClient3.SetAsync(key, key);
+
+            }, "NewRedis3");
+
         }
         #endregion
 
         #region NewSocketRedis4 - SET
         public static void NewSocketRedis4SetTest()
         {
-            var tasks = new Task[frequence];
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
-            for (var a = 0; a < frequence; a += 1)
+            RunAction((key) =>
             {
-                tasks[a] = Task.Run(async () =>
-                {
-                    var key = a.ToString();
-                    var result = await _redisClient4.SetAsync(key, key);
-                    if (!result)
-                    {
-                        throw new Exception("not equal");
-                    }
-                });
-            }
-            Task.WaitAll(tasks);
-            sw.Stop();
-            Console.WriteLine($"NewRedis4(0-{frequence}): {sw.ElapsedMilliseconds}ms");
+
+                return _redisClient4.SetAsync(key, key);
+
+            }, "NewRedis4");
+        }
+        #endregion
+
+        #region NewSocketRedis5 - SET
+        public static void NewSocketRedis5SetTest()
+        {
+            RunAction((key) =>
+            {
+
+                return _redisClient5.SetAsync(key, key);
+
+            }, "NewRedis5");
+
         }
         #endregion
 
         #region FreeRedis - SET
         public static void FreeRedisSetTest()
         {
-            var tasks = new Task[frequence];
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
-            for (var a = 0; a < frequence; a += 1)
+            RunAction((key) =>
             {
-                tasks[a] = Task.Run(async () =>
-                {
-                    var key = a.ToString();
-                    await _freeRedisClient.SetAsync(key, key);
-                });
-            }
-            Task.WaitAll(tasks);
-            sw.Stop();
-            Console.WriteLine($"FreeRedis(0-{frequence}): {sw.ElapsedMilliseconds}ms");
+
+                return _freeRedisClient.SetAsync(key, key);
+
+            }, "FreeRedisClient");
+            
         }
         #endregion
 
         #region StackExchangeRedis - SET
         public static void StackExchangeRedisSetTest()
+        {
+
+            RunAction((key) =>
+            {
+
+                return _stackExnchangeClient.StringSetAsync(key, key);
+
+            }, "StackExchange");
+            
+        }
+
+        #endregion
+
+        #region NewlifeRedis - SET
+        public static void NewLifeRedisSetTest()
         {
             var tasks = new Task[frequence];
             Stopwatch sw = new Stopwatch();
@@ -276,7 +428,7 @@ namespace console_netcore31_newsocket
                 tasks[a] = Task.Run(async () =>
                 {
                     var key = a.ToString();
-                    var result = await _stackExnchangeClient.StringSetAsync(key, key);
+                    var result = _newLifeRedis.Set(key, key);
                     if (!result)
                     {
                         throw new Exception("not equal");
@@ -285,11 +437,11 @@ namespace console_netcore31_newsocket
             }
             Task.WaitAll(tasks);
             sw.Stop();
-            Console.WriteLine($"StackExchange(0-{frequence}): {sw.ElapsedMilliseconds}ms");
+            Console.WriteLine($"NewlifeRedis(0-{frequence}): {sw.ElapsedMilliseconds}ms");
         }
-
         #endregion
 
+        
 
         #endregion
 

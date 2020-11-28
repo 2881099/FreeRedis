@@ -5,7 +5,7 @@ using System.IO.Pipelines;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
-
+using System.Threading.Tasks;
 
 /// <summary>
 /// Provides a multi-producer, multi-consumer thread-safe bounded segment.  When the queue is full,
@@ -286,6 +286,7 @@ internal sealed class ConcurrentQueueSegment<T>
                     slots[slotsIndex].Item = item;
                     Volatile.Write(ref slots[slotsIndex].SequenceNumber, currentTail + 1);
                     _sender.WriteAsync(bytes);
+
                     return true;
                 }
             }
