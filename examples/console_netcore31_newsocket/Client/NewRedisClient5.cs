@@ -61,6 +61,7 @@ namespace console_netcore31_newsocket
             {
                 _array[i] = _getTask();
             }
+            Console.WriteLine(_array[0].IsCompleted);
             SocketConnectionFactory client = new SocketConnectionFactory(new SocketTransportOptions());
             _connection = client.ConnectAsync(point).Result;
             _sender = _connection.Transport.Output;
@@ -90,16 +91,24 @@ namespace console_netcore31_newsocket
 
         private long _sendIndex = 0;
         private long _receiverIndex = 0;
-
+        private long _topIndex = TASK_BUFFER_PRELENGTH;
+        private volatile int _step = TASK_BUFFER_LENGTH;
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void WaitSend()
         {
+
             SpinWait wait = default;
             while (Interlocked.CompareExchange(ref _send_locked, 1, 0) != 0)
             {
                 wait.SpinOnce();
             }
+            while (_step == 0)
+            {
+                wait.SpinOnce();
+            }
+
         }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void WaitHandler()
         {
@@ -109,16 +118,19 @@ namespace console_netcore31_newsocket
                 wait.SpinOnce();
             }
         }
+
         public Task<bool> SetAsync(string key, string value)
         {
             
             var bytes = Encoding.UTF8.GetBytes($"SET {key} {value}\r\n");
             //var taskSource = new TaskCompletionSource<bool>(null, TaskCreationOptions.None);
             WaitSend();
+            Interlocked.Decrement(ref _step);
             //_receiverQueue.Enqueue(taskSource);
             var temp = _sendIndex;
-            if (_sendIndex == TASK_BUFFER_PRELENGTH)
+            if (_sendIndex == _topIndex)
             {
+
                 _sendIndex = 0;
             }
             else
@@ -177,6 +189,7 @@ namespace console_netcore31_newsocket
 
                 _setResult(_array[_receiverIndex],true);
                 _array[_receiverIndex] = _getTask();
+                Interlocked.Increment(ref _step);
                 if (_receiverIndex == TASK_BUFFER_PRELENGTH)
                 {
                     _receiverIndex = 0;

@@ -8,6 +8,7 @@ using System.IO.Pipelines;
 using System.Net;
 using System.Reflection;
 using System.Reflection.Emit;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,51 +17,11 @@ using System.Threading.Tasks.Sources;
 namespace console_netcore31_newsocket
 {
 
-    //public class NewPool3 
-    //{
-    //    private readonly NewRedisClient3 _lastestClient;
-    //    private readonly ConcurrentStack<NewRedisClient3> _pool;
-    //    private readonly string _ip;
-    //    private readonly int _port;
-    //    public NewPool3(string ip, int port)
-    //    {
-    //        _ip = ip;
-    //        _port = port;
-    //        _pool = new ConcurrentStack<NewRedisClient3>();
-    //        _lastestClient = new NewRedisClient3(ip, port, _pool);
-    //    }
-
-    //    public int Count { get { return _pool.Count; } }
-
-    //    public long MaxConnections = 4;
-    //    private long _count = 0;
-    //    public Task<bool> SetAsync(string key, string value)
-    //    {
-
-    //        if (_pool.TryPop(out var host))
-    //        {
-    //            return host.SetAsync(key, value);
-    //        }
-    //        else
-    //        {
-    //            if (_count < MaxConnections)
-    //            {
-    //                 Interlocked.Increment(ref _count);
-    //                var client = new NewRedisClient3(_ip, _port, _pool);
-    //                return client.SetAsync(key, value);
-    //            }
-    //            return _lastestClient.SetAsync(key, value);
-    //        }
-    //    }
-
-    //}
-
-
-    public class NewRedisClient3
+    public class NewRedisClient7
     {
         private readonly static Func<Task<bool>, bool, bool> _setResult;
         private readonly static Func<Task<bool>> _getTask;
-        static NewRedisClient3()
+        static NewRedisClient7()
         {
             _setResult = typeof(Task<bool>)
                 .GetMethod("TrySetResult",
@@ -79,37 +40,49 @@ namespace console_netcore31_newsocket
             _getTask = (Func<Task<bool>>)dynamicMethod.CreateDelegate(typeof(Func<Task<bool>>));
         }
 
-        private readonly SourceConcurrentQueue<Task<bool>> _receiverQueue;
+        private readonly Queue<Task<bool>> _receiverQueue;
         private readonly byte _protocalStart;
         private readonly ConnectionContext _connection;
         public readonly PipeWriter _sender;
         private readonly PipeReader _reciver;
-        //private readonly ConcurrentStack<NewRedisClient3> _pool;
-
-
-        public NewRedisClient3(string ip, int port) : this(new IPEndPoint(IPAddress.Parse(ip), port))//, ConcurrentStack<NewRedisClient3> pool) : this(new IPEndPoint(IPAddress.Parse(ip), port), pool)
+        public NewRedisClient7(string ip, int port) : this(new IPEndPoint(IPAddress.Parse(ip), port))
         {
         }
-        public NewRedisClient3(IPEndPoint point)//, ConcurrentStack<NewRedisClient3> pool)
+        public NewRedisClient7(IPEndPoint point)
         {
+
             _protocalStart = (byte)43;
-            //_pool = pool;
+            _receiverQueue = new Queue<Task<bool>>();
             SocketConnectionFactory client = new SocketConnectionFactory(new SocketTransportOptions());
             _connection = client.ConnectAsync(point).Result;
             _sender = _connection.Transport.Output;
             _reciver = _connection.Transport.Input;
-            _receiverQueue = new SourceConcurrentQueue<Task<bool>>(_sender);
             RunReciver();
+
+        }
+
+        private long _locked = 0;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void Wait()
+        {
+            SpinWait wait = default;
+            while (Interlocked.CompareExchange(ref _locked, 1, 0) != 0)
+            {
+                wait.SpinOnce();
+            }
         }
 
         public Task<bool> SetAsync(string key, string value)
         {
             var bytes = Encoding.UTF8.GetBytes($"SET {key} {value}\r\n");
             var taskSource = _getTask();
-            _receiverQueue.Enqueue(taskSource, bytes);
+            Wait();
+            _receiverQueue.Enqueue(taskSource);
+            _sender.WriteAsync(bytes);
+            _locked = 0;
             return taskSource;
         }
-
         private async void RunReciver()
         {
 
@@ -118,7 +91,6 @@ namespace console_netcore31_newsocket
 
                 var result = await _reciver.ReadAsync().ConfigureAwait(false);
                 var buffer = result.Buffer;
-
                 Handler(buffer);
                 //if (buffer.IsSingleSegment)
                 //{
@@ -146,19 +118,28 @@ namespace console_netcore31_newsocket
 
         private void Handler(in ReadOnlySequence<byte> sequence)
         {
-            Task<bool> task;
-            var reader = new SequenceReader<byte>(sequence);
 
+            var reader = new SequenceReader<byte>(sequence);
+            //int _deal = 0;
+            //79 75
+            //if (reader.TryReadTo(out ReadOnlySpan<byte> result, 43, advancePastDelimiter: true))
+            //{
+            Wait();
             while (reader.TryReadTo(out ReadOnlySpan<byte> _, 43, advancePastDelimiter: true))
             {
-
-                while (!_receiverQueue.TryDequeue(out task)) { }
+                
+                TrySetResult(_receiverQueue.Dequeue(), true);
+               
                 //_deal += 1;
                 //Interlocked.Decrement(ref _taskCount);
-                TrySetResult(task, true);
-            }
-        }
 
+            }
+            _locked = 0;
+            // }
+            //while (!_receiverQueue.TryDequeue(out task)) { }
+            //Interlocked.Increment(ref count);
+            //task.SetResult(Encoding.UTF8.GetString(sequence.Slice(reader.Position, sequence.End).ToArray()).Contains("OK"));
+        }
         public bool TrySetResult(Task<bool> task, bool result)
         {
             bool rval = _setResult(task, result);
@@ -173,7 +154,6 @@ namespace console_netcore31_newsocket
 
             return rval;
         }
-
 
     }
 }

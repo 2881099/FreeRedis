@@ -33,8 +33,10 @@ namespace console_netcore31_newsocket
         private static NewRedisClient1 _redisClient1;
         private static NewRedisClient2 _redisClient2;
         private static NewRedisClient5 _redisClient5;
-        private static NewPool3 _redisClient3;
+        private static NewRedisClient7 _redisClient7;
+        private static NewRedisClient3 _redisClient3;
         private static NewRedisClient4 _redisClient4;
+        private static NewRedisClient8 _redisClient8;
         private static NewLife.Caching.Redis _newLifeRedis;
 
         private static IDatabase _stackExnchangeClient;
@@ -42,7 +44,7 @@ namespace console_netcore31_newsocket
         private static void InitClient()
         {
             _useDelay = true;
-            _delayCount = 1000;
+            _delayCount = 3000;
             //Notice : Please use "//" comment "/*".
 
             ///*
@@ -70,9 +72,12 @@ namespace console_netcore31_newsocket
             _redisClient0 = new NewRedisClient0(ip, port);
             _redisClient1 = new NewRedisClient1(ip, port);
             _redisClient2 = new NewRedisClient2(ip, port);
-            _redisClient3 = new NewPool3(ip, port);
+            _redisClient3 = new NewRedisClient3(ip, port);
             _redisClient4 = new NewRedisClient4(ip, port);
             _redisClient5 = new NewRedisClient5(ip,port);
+            _redisClient7 = new NewRedisClient7(ip, port);
+            _redisClient8 = new NewRedisClient8(ip, port);
+            //_redisClient5.SetAsync("a", "a");
             ConnectionMultiplexer seredis = ConnectionMultiplexer.Connect($"{ip}:{port}");
             _stackExnchangeClient = seredis.GetDatabase(0);
 
@@ -83,8 +88,6 @@ namespace console_netcore31_newsocket
         {
             
             InitClient();
-
-            //_redisClient5.SetAsync("a", "a");
 
             RunTest();
             Console.WriteLine("====== 以上预热 =======");
@@ -98,12 +101,15 @@ namespace console_netcore31_newsocket
         {
             //FreeRedisSetTest();
             StackExchangeRedisSetTest();
+            NewSocketRedis8SetTest();
             //NewSocketRedis0SetTest();
-            NewSocketRedis1SetTest();
+            //NewSocketRedis1SetTest();
             //NewSocketRedis2SetTest();
             //NewSocketRedis3SetTest();
-            //NewSocketRedis4SetTest();
-            NewSocketRedis5SetTest();
+            NewSocketRedis4SetTest();
+            NewSocketRedis7SetTest();
+            
+            //NewSocketRedis5SetTest();
             //BeetleXRedisSetTest();
             //NewLifeRedisSetTest();
         }
@@ -250,7 +256,6 @@ namespace console_netcore31_newsocket
             }
             Task.WaitAll(tasks);
             sw.Stop();
-            Thread.Sleep(1000);
             for (var a = 0; a < frequence; a += 1)
             {
                 var key = a.ToString();
@@ -385,6 +390,32 @@ namespace console_netcore31_newsocket
                 return _redisClient5.SetAsync(key, key);
 
             }, "NewRedis5");
+
+        }
+        #endregion
+
+        #region NewSocketRedis7 - SET
+        public static void NewSocketRedis7SetTest()
+        {
+            RunAction((key) =>
+            {
+
+                return _redisClient7.SetAsync(key, key);
+
+            }, "NewRedis7");
+
+        }
+        #endregion
+
+        #region NewSocketRedis8 - SET
+        public static void NewSocketRedis8SetTest()
+        {
+            RunAction((key) =>
+            {
+
+                return _redisClient8.SetAsync(key, key);
+
+            }, "NewRedis8");
 
         }
         #endregion

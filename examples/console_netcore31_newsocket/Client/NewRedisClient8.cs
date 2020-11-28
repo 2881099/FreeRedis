@@ -8,6 +8,7 @@ using System.IO.Pipelines;
 using System.Net;
 using System.Reflection;
 using System.Reflection.Emit;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,12 +17,11 @@ using System.Threading.Tasks.Sources;
 namespace console_netcore31_newsocket
 {
 
-    public class NewRedisClient4
+    public class NewRedisClient8
     {
-
         private readonly static Func<Task<bool>, bool, bool> _setResult;
         private readonly static Func<Task<bool>> _getTask;
-        static NewRedisClient4()
+        static NewRedisClient8()
         {
             _setResult = typeof(Task<bool>)
                 .GetMethod("TrySetResult",
@@ -39,92 +39,120 @@ namespace console_netcore31_newsocket
             iLGenerator.Emit(OpCodes.Ret);
             _getTask = (Func<Task<bool>>)dynamicMethod.CreateDelegate(typeof(Func<Task<bool>>));
         }
-
-        private readonly SourceConcurrentQueue2<Task<bool>> _receiverQueue;
+        private List<Task<bool>> _currentTaskBuffer;
         private readonly byte _protocalStart;
         private readonly ConnectionContext _connection;
         public readonly PipeWriter _sender;
         private readonly PipeReader _reciver;
-
-
-        public NewRedisClient4(string ip, int port) : this(new IPEndPoint(IPAddress.Parse(ip), port))
+        public NewRedisClient8(string ip, int port) : this(new IPEndPoint(IPAddress.Parse(ip), port))
         {
         }
-        public NewRedisClient4(IPEndPoint point)
+        public NewRedisClient8(IPEndPoint point)
         {
+            taskBuffer = new Queue<Task<bool>[]>();
             _protocalStart = (byte)43;
             SocketConnectionFactory client = new SocketConnectionFactory(new SocketTransportOptions());
             _connection = client.ConnectAsync(point).Result;
             _sender = _connection.Transport.Output;
             _reciver = _connection.Transport.Input;
-            _receiverQueue = new SourceConcurrentQueue2<Task<bool>>(_sender);
+            _currentTaskBuffer = new List<Task<bool>>(3000);
             RunReciver();
+
         }
 
-        private Task<bool> _sendTask;
-        public Task<bool> FlushDBAsync()
+        private long _locked = 0;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void WaitSend()
         {
-            var bytes = Encoding.UTF8.GetBytes($"flushdb\r\n");
-            var taskSource = _getTask();
-            _receiverQueue.Enqueue(taskSource, bytes);
-            return taskSource;
+            SpinWait wait = default;
+            while (Interlocked.CompareExchange(ref _locked, 1, 0) != 0)
+            {
+                wait.SpinOnce();
+            }
         }
+
+        private long _remainBuffer = 0;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void WaitBuffer()
+        {
+            SpinWait wait = default;
+            while (Interlocked.CompareExchange(ref _remainBuffer, 1, 0) != 0)
+            {
+                wait.SpinOnce(8);
+            }
+        }
+
+
+
         public Task<bool> SetAsync(string key, string value)
         {
             var bytes = Encoding.UTF8.GetBytes($"SET {key} {value}\r\n");
             var taskSource = _getTask();
-            _receiverQueue.Enqueue(taskSource, bytes);
+            WaitSend();
+            _currentTaskBuffer.Add(taskSource);
+            _sender.WriteAsync(bytes);
+            _locked = 0;
             return taskSource;
         }
-        private readonly object _lock = new object();
-        private int _taskCount;
-        long total = 0;
 
-        private async void RunReciver()
+
+        private bool GetTaskSpan()
         {
 
-            while (true)
+            WaitSend();
+            if (_currentTaskBuffer.Count != 0)
             {
 
-                var result = await _reciver.ReadAsync().ConfigureAwait(false);
-                var buffer = result.Buffer;
-
-                //if (buffer.IsSingleSegment)
-                //{
-
-                    //total += buffer.Length;
-                    //Console.WriteLine($"当前剩余 {_taskCount} 个任务未完成,队列中有 {_receiverQueue.Count} 个任务！缓冲区长 {buffer.Length} .");
-                    Handler(buffer);
-                //}
-               // else
-                //{
-
-                    //total += buffer.Length;
-                    //Console.WriteLine($"当前剩余 {_taskCount} 个任务未完成,队列中有 {_receiverQueue.Count} 个任务！缓冲区长 {buffer.Length} .");
-                ///    Handler(buffer);
-                //}
-                _reciver.AdvanceTo(buffer.End);
-                if (result.IsCompleted)
-                {
-                    return;
-                }
+                taskBuffer.Enqueue(_currentTaskBuffer.ToArray());
+                _currentTaskBuffer = new List<Task<bool>>(3000);
+                _locked = 0;
+                return true;
 
             }
+            _locked = 0;
+            return false;
+            
+
+
         }
-
-
+        private int taskBufferIndex = 0;
+        private readonly Queue<Task<bool>[]> taskBuffer;
+        
         private void Handler(in ReadOnlySequence<byte> sequence)
         {
-            Task<bool> task;
+
+            WaitBuffer();
+            GetTaskSpan();
+            var temp = taskBuffer.Peek();
             var reader = new SequenceReader<byte>(sequence);
+
 
             while (reader.TryReadTo(out ReadOnlySpan<byte> _, 43, advancePastDelimiter: true))
             {
 
-                while (!_receiverQueue.TryDequeue(out task)) { }
+                if (taskBufferIndex == temp.Length)
+                {
+                    taskBuffer.Dequeue();
+                    temp = taskBuffer.Peek();
+                    taskBufferIndex = 0;
 
-                TrySetResult(task, true);
+                    if (temp.Length == 0)
+                    {
+                        SpinWait wait = default;
+                        while (!GetTaskSpan())
+                        {
+                            wait.SpinOnce(8);
+                        }
+                    }
+                }
+
+                TrySetResult(temp[taskBufferIndex], true);
+                taskBufferIndex += 1;
+
             }
+            _remainBuffer = 0;
 
         }
 
@@ -142,6 +170,22 @@ namespace console_netcore31_newsocket
 
             return rval;
         }
+        private async void RunReciver()
+        {
 
+            while (true)
+            {
+
+                var result = await _reciver.ReadAsync().ConfigureAwait(false);
+                var buffer = result.Buffer;
+                Handler(buffer);
+                _reciver.AdvanceTo(buffer.End);
+                if (result.IsCompleted)
+                {
+                    return;
+                }
+
+            }
+        }
     }
 }
