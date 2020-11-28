@@ -80,7 +80,7 @@ namespace console_netcore31_newsocket
             SpinWait wait = default;
             while (Interlocked.CompareExchange(ref _remainBuffer, 1, 0) != 0)
             {
-                wait.SpinOnce(8);
+                wait.SpinOnce();
             }
         }
 
@@ -98,7 +98,7 @@ namespace console_netcore31_newsocket
         }
 
 
-        private bool GetTaskSpan()
+        private void GetTaskSpan()
         {
 
             WaitSend();
@@ -107,52 +107,53 @@ namespace console_netcore31_newsocket
 
                 taskBuffer.Enqueue(_currentTaskBuffer.ToArray());
                 _currentTaskBuffer = new List<Task<bool>>(3000);
-                _locked = 0;
-                return true;
 
             }
             _locked = 0;
-            return false;
             
 
 
         }
         private int taskBufferIndex = 0;
+        private int _currentReceiverBufferLength;
+        private Task<bool>[] _currentReceiverBuffer;
         private readonly Queue<Task<bool>[]> taskBuffer;
         
         private void Handler(in ReadOnlySequence<byte> sequence)
         {
-
-            WaitBuffer();
+            //WaitBuffer();
             GetTaskSpan();
-            var temp = taskBuffer.Peek();
+
+            if (_currentReceiverBuffer == null)
+            {
+                _currentReceiverBuffer = taskBuffer.Dequeue();
+                _currentReceiverBufferLength = _currentReceiverBuffer.Length;
+            }
+
             var reader = new SequenceReader<byte>(sequence);
 
 
             while (reader.TryReadTo(out ReadOnlySpan<byte> _, 43, advancePastDelimiter: true))
             {
 
-                if (taskBufferIndex == temp.Length)
-                {
-                    taskBuffer.Dequeue();
-                    temp = taskBuffer.Peek();
-                    taskBufferIndex = 0;
-
-                    if (temp.Length == 0)
-                    {
-                        SpinWait wait = default;
-                        while (!GetTaskSpan())
-                        {
-                            wait.SpinOnce(8);
-                        }
-                    }
-                }
-
-                TrySetResult(temp[taskBufferIndex], true);
+                TrySetResult(_currentReceiverBuffer[taskBufferIndex], true);
                 taskBufferIndex += 1;
 
+                if (taskBufferIndex == _currentReceiverBufferLength)
+                {
+                    SpinWait wait = default;
+                    while (taskBuffer.Count == 0)
+                    {
+                        GetTaskSpan();
+                        wait.SpinOnce(8);
+                    }
+                    _currentReceiverBuffer = taskBuffer.Dequeue();
+                    _currentReceiverBufferLength = _currentReceiverBuffer.Length;
+                    taskBufferIndex = 0;
+                }
+
             }
-            _remainBuffer = 0;
+            //_remainBuffer = 0;
 
         }
 

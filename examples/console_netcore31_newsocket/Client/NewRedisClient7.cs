@@ -17,143 +17,48 @@ using System.Threading.Tasks.Sources;
 namespace console_netcore31_newsocket
 {
 
-    public class NewRedisClient7
+    public class NewRedisClient7 : RedisClientBase
     {
-        private readonly static Func<Task<bool>, bool, bool> _setResult;
-        private readonly static Func<Task<bool>> _getTask;
-        static NewRedisClient7()
+
+        private byte _protocalStart;
+        private readonly Queue<Task<bool>>_tasks;
+        public NewRedisClient7()
         {
-            _setResult = typeof(Task<bool>)
-                .GetMethod("TrySetResult",
-                BindingFlags.Instance | BindingFlags.NonPublic,
-                null,
-                new Type[] { typeof(bool) }, null)
-                .CreateDelegate<Func<Task<bool>, bool, bool>>();
-
-
-            var ctor = typeof(Task<bool>).GetConstructor(BindingFlags.Instance | BindingFlags.NonPublic, null, new Type[0], null);
-
-            DynamicMethod dynamicMethod = new DynamicMethod("GETTASK", typeof(Task<bool>), new Type[0]);
-            var iLGenerator = dynamicMethod.GetILGenerator();
-            iLGenerator.Emit(OpCodes.Newobj, ctor);
-            iLGenerator.Emit(OpCodes.Ret);
-            _getTask = (Func<Task<bool>>)dynamicMethod.CreateDelegate(typeof(Func<Task<bool>>));
+            _protocalStart = 43;
+            _tasks = new Queue<Task<bool>>();
         }
 
-        private readonly Queue<Task<bool>> _receiverQueue;
-        private readonly byte _protocalStart;
-        private readonly ConnectionContext _connection;
-        public readonly PipeWriter _sender;
-        private readonly PipeReader _reciver;
-        public NewRedisClient7(string ip, int port) : this(new IPEndPoint(IPAddress.Parse(ip), port))
-        {
-        }
-        public NewRedisClient7(IPEndPoint point)
-        {
 
-            _protocalStart = (byte)43;
-            _receiverQueue = new Queue<Task<bool>>();
-            SocketConnectionFactory client = new SocketConnectionFactory(new SocketTransportOptions());
-            _connection = client.ConnectAsync(point).Result;
-            _sender = _connection.Transport.Output;
-            _reciver = _connection.Transport.Input;
-            RunReciver();
-
-        }
-
-        private long _locked = 0;
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void Wait()
-        {
-            SpinWait wait = default;
-            while (Interlocked.CompareExchange(ref _locked, 1, 0) != 0)
-            {
-                wait.SpinOnce();
-            }
-        }
-
-        public Task<bool> SetAsync(string key, string value)
+        public override Task<bool> SetAsync(string key, string value)
         {
             var bytes = Encoding.UTF8.GetBytes($"SET {key} {value}\r\n");
-            var taskSource = _getTask();
-            Wait();
-            _receiverQueue.Enqueue(taskSource);
+            var taskSource = CreateTask();
+            LockSend();
+            _tasks.Enqueue(taskSource);
             _sender.WriteAsync(bytes);
-            _locked = 0;
+            ReleaseSend();
             return taskSource;
         }
-        private async void RunReciver()
-        {
-
-            while (true)
-            {
-
-                var result = await _reciver.ReadAsync().ConfigureAwait(false);
-                var buffer = result.Buffer;
-                Handler(buffer);
-                //if (buffer.IsSingleSegment)
-                //{
-
-                //    //total += buffer.Length;
-                //    //Console.WriteLine($"当前剩余 {_taskCount} 个任务未完成,队列中有 {_receiverQueue.Count} 个任务！缓冲区长 {buffer.Length} .");
-                //    Handler(buffer);
-                //}
-                //else
-                //{
-
-                //    //total += buffer.Length;
-                //    //Console.WriteLine($"当前剩余 {_taskCount} 个任务未完成,队列中有 {_receiverQueue.Count} 个任务！缓冲区长 {buffer.Length} .");
-                //    Handler(buffer);
-                //}
-                _reciver.AdvanceTo(buffer.End);
-                if (result.IsCompleted)
-                {
-                    return;
-                }
-
-            }
-        }
 
 
-        private void Handler(in ReadOnlySequence<byte> sequence)
+
+
+        protected internal override void Handler(in ReadOnlySequence<byte> sequence)
         {
 
             var reader = new SequenceReader<byte>(sequence);
-            //int _deal = 0;
-            //79 75
-            //if (reader.TryReadTo(out ReadOnlySpan<byte> result, 43, advancePastDelimiter: true))
-            //{
-            Wait();
+            LockSend();
             while (reader.TryReadTo(out ReadOnlySpan<byte> _, 43, advancePastDelimiter: true))
             {
                 
-                TrySetResult(_receiverQueue.Dequeue(), true);
-               
-                //_deal += 1;
-                //Interlocked.Decrement(ref _taskCount);
+                TrySetResult(_tasks.Dequeue(), true);
+
 
             }
-            _locked = 0;
-            // }
-            //while (!_receiverQueue.TryDequeue(out task)) { }
-            //Interlocked.Increment(ref count);
-            //task.SetResult(Encoding.UTF8.GetString(sequence.Slice(reader.Position, sequence.End).ToArray()).Contains("OK"));
-        }
-        public bool TrySetResult(Task<bool> task, bool result)
-        {
-            bool rval = _setResult(task, result);
-            if (!rval)
-            {
-                SpinWait sw = default;
-                while (!task.IsCompleted)
-                {
-                    sw.SpinOnce();
-                }
-            }
+            ReleaseSend();
 
-            return rval;
         }
+        
 
     }
 }
