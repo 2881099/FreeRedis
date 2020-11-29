@@ -21,7 +21,7 @@ namespace console_netcore31_newsocket
     {
         
 
-        private const int TASK_BUFFER_LENGTH = 202400;
+        private const int TASK_BUFFER_LENGTH = 502400;
         private const int TASK_BUFFER_PRELENGTH = TASK_BUFFER_LENGTH - 1;
         
 
@@ -74,22 +74,43 @@ namespace console_netcore31_newsocket
 
         protected internal override void Handler(in ReadOnlySequence<byte> sequence)
         {
-            var reader = new SequenceReader<byte>(sequence);
-            WaitHandler();
-            while (reader.TryReadTo(out ReadOnlySpan<byte> _, 43, advancePastDelimiter: true))
+            LockReceiver();
+            foreach (ReadOnlyMemory<byte> segment in sequence)
             {
-
-                TrySetResult(_tasks[_receiverIndex], true);
-                if (_receiverIndex == TASK_BUFFER_PRELENGTH)
+                var span = segment.Span;
+                var position = span.IndexOf((byte)43);
+                if (position == 0)
                 {
-                    _receiverIndex = 0;
+                    position = 1;
                 }
-                else
+                while (position != -1)
                 {
-                    _receiverIndex += 1;
+                    LockSend();
+                    try
+                    {
+                        TrySetResult(_tasks[_receiverIndex], true);
+                    }
+                    catch (Exception)
+                    {
+                        Console.WriteLine(_receiverIndex);
+                        Console.ReadKey();
+                    }
+
+                    ReleaseSend();
+                    if (_receiverIndex == TASK_BUFFER_PRELENGTH)
+                    {
+                        _receiverIndex = 0;
+                    }
+                    else
+                    {
+                        _receiverIndex += 1;
+                    }
+
+                    span = span.Slice(position);
+                    position = span.IndexOf((byte)43);
                 }
             }
-            _receiver_locked = 0;
+            ReleaseReceiver();
         }
     }
 }

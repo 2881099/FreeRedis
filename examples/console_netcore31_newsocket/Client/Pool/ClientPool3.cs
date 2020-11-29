@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace console_netcore31_newsocket
 {
-    public class ClientPool2<T> where T: RedisClientBase,new()
+    public class ClientPool3<T> where T: RedisClientBase,new()
     {
         private string _ip;
         private int _port;
         private T[] _clients;
         private const int _length = 5;
         public int[] CallCounter;
-        public ClientPool2(string ip,int port)
+        public ClientPool3(string ip,int port)
         {
             _ip = ip;
             _port = port;

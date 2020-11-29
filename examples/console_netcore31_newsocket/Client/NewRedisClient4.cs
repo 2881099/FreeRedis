@@ -55,14 +55,19 @@ namespace console_netcore31_newsocket
         protected internal override void Handler(in ReadOnlySequence<byte> sequence)
         {
             Task<bool> task;
-            var reader = new SequenceReader<byte>(sequence);
-
-            while (reader.TryReadTo(out ReadOnlySpan<byte> _, 43, advancePastDelimiter: true))
+            foreach (ReadOnlyMemory<byte> segment in sequence)
             {
+                var span = segment.Span;
+                var position = span.IndexOf(_protocalStart);
+                SpinWait wait = default;
+                while (position != -1)
+                {
+                    while (!_receiverQueue.TryDequeue(out task)) { wait.SpinOnce(); }
+                    TrySetResult(task, true);
+                    span = span.Slice(position+1);
+                    position = span.IndexOf(_protocalStart);
 
-                while (!_receiverQueue.TryDequeue(out task)) { }
-
-                TrySetResult(task, true);
+                }
             }
         }
 

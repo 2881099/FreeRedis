@@ -61,7 +61,26 @@ namespace console_netcore31_newsocket
 
                 var result = await _reciver.ReadAsync().ConfigureAwait(false);
                 var buffer = result.Buffer;
-                Handler(buffer);
+                //if (buffer.IsSingleSegment)
+                //{
+                  //  Handler(buffer.FirstSpan);
+                //}
+               // else
+               // {
+                    Handler(buffer);
+                    //SequencePosition _nextPosition = buffer.Start;
+                    //while (buffer.TryGet(ref _nextPosition, out ReadOnlyMemory<byte> memory, advance: true))
+                    //{
+
+                    //    if (memory.Length > 0)
+                    //    {
+                    //        Handler(memory.Span);
+                    //        break;
+                    //    }
+                    //}
+                    
+                //}
+                
                 _reciver.AdvanceTo(buffer.End);
                 if (result.IsCompleted)
                 {
@@ -112,7 +131,28 @@ namespace console_netcore31_newsocket
 
         }
 
+        private long _receiver_lock_flag;
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        protected void LockReceiver()
+        {
+
+            SpinWait wait = default;
+            while (Interlocked.CompareExchange(ref _receiver_lock_flag, 1, 0) != 0)
+            {
+                Console.WriteLine("1");
+                wait.SpinOnce();
+            }
+
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        protected void ReleaseReceiver()
+        {
+
+            _receiver_lock_flag = 0;
+
+        }
         public abstract Task<bool> SetAsync(string key,string value);
 
         public bool TrySetResult(Task<bool> task, bool result)

@@ -25,7 +25,7 @@ namespace console_netcore31_newsocket
         private static int port;
         private static string ip;
         private static string pwd;
-        private const int frequence = 100000;
+        private const int frequence = 500000;
 
         private static RedisClient _freeRedisClient;
         private static BeetleX.Redis.RedisDB _beetleClient;
@@ -92,7 +92,8 @@ namespace console_netcore31_newsocket
             _redisClient4 = _pool4._node;
             _redisClient5 = _pool5._node;
             _redisClient7 = _pool7._node;
-            _redisClient8 = new NewRedisClient8(ip, port);
+            _redisClient8 = new NewRedisClient8();
+            _redisClient8.CreateConnection(ip, port);
             //_redisClient5.SetAsync("a", "a");
             ConnectionMultiplexer seredis = ConnectionMultiplexer.Connect($"{ip}:{port}");
             _stackExnchangeClient = seredis.GetDatabase(0);
@@ -106,10 +107,39 @@ namespace console_netcore31_newsocket
             InitClient();
 
             RunTest();
-            Console.WriteLine("====== 以上预热 =======");
-            RunTest();
+            //Console.WriteLine("====== 以上预热 =======");
+            //RunTest();
+
+            CheckPool();
 
             Console.ReadKey();
+
+        }
+
+        public static void CheckPool()
+        {
+            CheckPool(_pool4);
+            CheckPool(_pool7);
+            CheckPool(_pool24);
+            CheckPool(_pool27);
+        }
+
+        public static void CheckPool<T>(ClientPool1<T> value) where T: RedisClientBase,new()
+        {
+            Console.WriteLine($"===========Poo1 : {typeof(T).Name}==========");
+            for (int i = 0; i < value.CallCounter.Length; i++)
+            {
+                Console.WriteLine($"No.{i} used {value.CallCounter[i]}");
+            }
+
+        }
+        public static void CheckPool<T>(ClientPool2<T> value) where T : RedisClientBase, new()
+        {
+            Console.WriteLine($"===========Poo1 : {typeof(T).Name}==========");
+            for (int i = 0; i < value.CallCounter.Length; i++)
+            {
+                Console.WriteLine($"No.{i} used {value.CallCounter[i]}");
+            }
 
         }
 
@@ -117,20 +147,20 @@ namespace console_netcore31_newsocket
         {
             //FreeRedisSetTest();
             StackExchangeRedisSetTest();
-            //NewSocketRedis8SetTest();
+            NewSocketRedis8SetTest();
             //NewSocketRedis0SetTest();
             //NewSocketRedis1SetTest();
             //NewSocketRedis2SetTest();
             //NewSocketRedis3SetTest();
             NewSocketRedis4SetTest();
-            NewSocketRedis7SetTest();
-            NewSocketRedis5SetTest();
-            Pool14SetTest();
-            Pool15SetTest();
-            Pool17SetTest();
-            Pool24SetTest();
-            Pool25SetTest();
-            Pool27SetTest();
+            //NewSocketRedis7SetTest();
+            //NewSocketRedis5SetTest();
+            //Pool14SetTest();
+            //Pool15SetTest();
+            //Pool17SetTest();
+            //Pool24SetTest();
+            //Pool25SetTest();
+            //Pool27SetTest();
             //BeetleXRedisSetTest();
             //NewLifeRedisSetTest();
         }

@@ -17,16 +17,34 @@ using System.Threading.Tasks.Sources;
 namespace console_netcore31_newsocket
 {
 
-    public class NewRedisClient7 : RedisClientBase
+    public class NewRedisClient9 : RedisClientBase
     {
 
         private byte _protocalStart;
         private readonly Queue<Task<bool>>_tasks;
-        public NewRedisClient7()
+        private readonly Queue<bool> _results;
+        public NewRedisClient9()
         {
             _protocalStart = 43;
             _tasks = new Queue<Task<bool>>();
+            _results = new Queue<bool>();
         }
+
+
+
+
+        public Task<bool> _getResultTask;
+
+        public async void HandlerResult()
+        {
+            while (true)
+            {
+                await _getResultTask;
+                LockReceiver();
+
+            }
+        }
+
 
         private int se;
         public override Task<bool> SetAsync(string key, string value)
