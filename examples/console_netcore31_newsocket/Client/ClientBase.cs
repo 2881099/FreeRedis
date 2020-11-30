@@ -140,10 +140,16 @@ namespace console_netcore31_newsocket
             SpinWait wait = default;
             while (Interlocked.CompareExchange(ref _receiver_lock_flag, 1, 0) != 0)
             {
-                Console.WriteLine("1");
                 wait.SpinOnce();
             }
 
+        }
+
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        protected bool TryGetReceiverLock()
+        {
+            return Interlocked.CompareExchange(ref _receiver_lock_flag, 1, 0) == 0;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

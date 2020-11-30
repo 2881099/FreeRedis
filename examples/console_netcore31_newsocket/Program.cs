@@ -25,7 +25,7 @@ namespace console_netcore31_newsocket
         private static int port;
         private static string ip;
         private static string pwd;
-        private const int frequence = 500000;
+        private const int frequence = 100000;
 
         private static RedisClient _freeRedisClient;
         private static BeetleX.Redis.RedisDB _beetleClient;
@@ -37,6 +37,8 @@ namespace console_netcore31_newsocket
         private static NewRedisClient3 _redisClient3;
         private static NewRedisClient4 _redisClient4;
         private static NewRedisClient8 _redisClient8;
+        private static NewRedisClient9 _redisClient9;
+        
         private static NewLife.Caching.Redis _newLifeRedis;
 
         private static IDatabase _stackExnchangeClient;
@@ -94,6 +96,8 @@ namespace console_netcore31_newsocket
             _redisClient7 = _pool7._node;
             _redisClient8 = new NewRedisClient8();
             _redisClient8.CreateConnection(ip, port);
+            _redisClient9 = new NewRedisClient9();
+            _redisClient9.CreateConnection(ip, port);
             //_redisClient5.SetAsync("a", "a");
             ConnectionMultiplexer seredis = ConnectionMultiplexer.Connect($"{ip}:{port}");
             _stackExnchangeClient = seredis.GetDatabase(0);
@@ -110,7 +114,7 @@ namespace console_netcore31_newsocket
             //Console.WriteLine("====== 以上预热 =======");
             //RunTest();
 
-            CheckPool();
+            //CheckPool();
 
             Console.ReadKey();
 
@@ -147,12 +151,12 @@ namespace console_netcore31_newsocket
         {
             //FreeRedisSetTest();
             StackExchangeRedisSetTest();
-            NewSocketRedis8SetTest();
+            NewSocketRedis9SetTest();
             //NewSocketRedis0SetTest();
             //NewSocketRedis1SetTest();
             //NewSocketRedis2SetTest();
             //NewSocketRedis3SetTest();
-            NewSocketRedis4SetTest();
+            //NewSocketRedis4SetTest();
             //NewSocketRedis7SetTest();
             //NewSocketRedis5SetTest();
             //Pool14SetTest();
@@ -467,6 +471,19 @@ namespace console_netcore31_newsocket
                 return _redisClient8.SetAsync(key, key);
 
             }, "NewRedis8");
+
+        }
+        #endregion
+
+        #region NewSocketRedis9 - SET
+        public static void NewSocketRedis9SetTest()
+        {
+            RunAction((key) =>
+            {
+
+                return _redisClient9.SetAsync(key, key);
+
+            }, "NewRedis9");
 
         }
         #endregion
