@@ -190,15 +190,15 @@ namespace console_netcore31_newsocket
             var input = Input;
             while (true)
             {
-                if (_waitForData)
-                {
-                    // Wait for data before allocating a buffer.
-                    // 此时 GetResult 无用
-                    // 自动机封装了后续代码
-                    //Console.WriteLine("Receiver - Method : Run WaitForData!");
-                    await _receiver.WaitForDataAsync();
-                    //Console.WriteLine("Receiver - Method : Run WaitForData Completed!");
-                }
+                //if (_waitForData)
+                //{
+                //    // Wait for data before allocating a buffer.
+                //    // 此时 GetResult 无用
+                //    // 自动机封装了后续代码
+                //    //Console.WriteLine("Receiver - Method : Run WaitForData!");
+                //    await _receiver.WaitForDataAsync();
+                //    //Console.WriteLine("Receiver - Method : Run WaitForData Completed!");
+                //}
 
                 // Ensure we have some reasonable amount of buffer space
                 var buffer = input.GetMemory(MinAllocBufferSize);
@@ -290,15 +290,13 @@ namespace console_netcore31_newsocket
                 }
 
                 var buffer = result.Buffer;
-                var end = buffer.End;
-                var isCompleted = result.IsCompleted;
                 if (!buffer.IsEmpty)
                 {
                     await _sender.SendAsync(buffer);
                 }
 
-                output.AdvanceTo(end);
-                if (isCompleted)
+                output.AdvanceTo(buffer.End);
+                if (result.IsCompleted)
                 {
                     break;
                 }

@@ -17,7 +17,7 @@ using System.Threading.Tasks.Sources;
 namespace console_netcore31_newsocket
 {
 
-    public class NewRedisClient0
+    public class NewRedisClient0 : RedisClientBase
     {
         //private readonly LinkedList<TaskCompletionSource<bool>> _receiverQueue;
         private TaskLink<bool> _taskLink;
@@ -62,27 +62,12 @@ namespace console_netcore31_newsocket
         }
 
 
-        private readonly object _lock = new object();
-        long total = 0;
-        long _locked = 0;
-        long _taget = 0;
-
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void Wait()
-        {
-            SpinWait wait = default;
-            while (Interlocked.CompareExchange(ref _locked, 1, 0) != 0)
-            {
-                wait.SpinOnce();
-            }
-        }
-        public Task<bool> SetAsync(string key, string value)
+        public override Task<bool> SetAsync(string key, string value)
         {
             
             var bytes = Encoding.UTF8.GetBytes($"SET {key} {value}\r\n");
             var taskSource = new TaskLink<bool>();
-            Wait();
+            WaitSend();
             if (_taskLink == null)
             {
                 _taskLink = _store;
@@ -183,21 +168,6 @@ namespace console_netcore31_newsocket
                 _task = _getTask();
             }
             public TaskLink<T> Next;
-
-            public bool TrySetResult(T result)
-            {
-                bool rval = _setResult(_task, result);
-                if (!rval)
-                {
-                    SpinWait sw = default;
-                    while (!_task.IsCompleted)
-                    {
-                        sw.SpinOnce();
-                    }
-                }
-
-                return rval;
-            }
 
         } 
 

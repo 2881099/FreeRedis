@@ -20,10 +20,10 @@ namespace console_netcore31_newsocket
                 //Console.WriteLine("Receiver Post Succeed！");
                 _awaitableEventArgs.Complete();
             }
-            else
-            {
-                //Console.WriteLine("Receiver Post has been exist！");
-            }
+            //else
+            //{
+            //    //Console.WriteLine("Receiver Post has been exist！");
+            //}
 
             return _awaitableEventArgs;
         }
@@ -37,10 +37,10 @@ namespace console_netcore31_newsocket
                 //Console.WriteLine("Receiver Post Succeed！");
                 _awaitableEventArgs.Complete();
             }
-            else
-            {
-                //Console.WriteLine("Receiver Post has been exist！");
-            }
+            //else
+            //{
+            //    //Console.WriteLine("Receiver Post has been exist！");
+            //}
 
 
             return _awaitableEventArgs;

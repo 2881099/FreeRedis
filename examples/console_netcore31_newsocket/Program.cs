@@ -25,24 +25,37 @@ namespace console_netcore31_newsocket
         private static int port;
         private static string ip;
         private static string pwd;
-        private const int frequence = 1000000;
+        private const int frequence = 100000;
 
         private static RedisClient _freeRedisClient;
         private static BeetleX.Redis.RedisDB _beetleClient;
-        private static NewRedisClient0 _redisClient0;
+        //private static NewRedisClient0 _redisClient0;
         private static NewRedisClient1 _redisClient1;
         private static NewRedisClient2 _redisClient2;
         private static NewRedisClient5 _redisClient5;
-        private static NewPool3 _redisClient3;
+        private static NewRedisClient7 _redisClient7;
+        private static NewRedisClient3 _redisClient3;
         private static NewRedisClient4 _redisClient4;
+        private static NewRedisClient8 _redisClient8;
+        private static NewRedisClient9 _redisClient9;
+        
         private static NewLife.Caching.Redis _newLifeRedis;
 
         private static IDatabase _stackExnchangeClient;
-       
+
+
+        private static ClientPool1<NewRedisClient7> _pool7;
+        private static ClientPool1<NewRedisClient4> _pool4;
+        private static ClientPool1<NewRedisClient5> _pool5;
+
+        private static ClientPool2<NewRedisClient7> _pool27;
+        private static ClientPool2<NewRedisClient4> _pool24;
+        private static ClientPool2<NewRedisClient5> _pool25;
+
         private static void InitClient()
         {
-            _useDelay = true;
-            _delayCount = 1000;
+            //_useDelay = true;
+            _delayCount = 3000;
             //Notice : Please use "//" comment "/*".
 
             ///*
@@ -58,7 +71,7 @@ namespace console_netcore31_newsocket
             //*/
 
             // NewLife.Redis
-           // _newLifeRedis = new NewLife.Caching.Redis($"{ip}:{port}",null, 1);
+            // _newLifeRedis = new NewLife.Caching.Redis($"{ip}:{port}",null, 1);
             //var result = newLifeRedis.Set("1", "1");
             //Console.WriteLine(result);
             //Console.ReadKey();
@@ -67,12 +80,25 @@ namespace console_netcore31_newsocket
             //host.MaxConnections = 1000;
             //host.QueueMaxLength = 512;
             //_freeRedisClient = new RedisClient($"{ip}:{port},database=0,min pool size=100");
-            _redisClient0 = new NewRedisClient0(ip, port);
+            //_redisClient0 = new NewRedisClient0(ip, port);
+
+            _pool4 = new ClientPool1<NewRedisClient4>(ip, port);
+            _pool5 = new ClientPool1<NewRedisClient5>(ip, port);
+            _pool7 = new ClientPool1<NewRedisClient7>(ip, port);
+            _pool27 = new ClientPool2<NewRedisClient7>(ip, port);
+            _pool25 = new ClientPool2<NewRedisClient5>(ip, port);
+            _pool24 = new ClientPool2<NewRedisClient4>(ip, port);
             _redisClient1 = new NewRedisClient1(ip, port);
             _redisClient2 = new NewRedisClient2(ip, port);
-            _redisClient3 = new NewPool3(ip, port);
-            _redisClient4 = new NewRedisClient4(ip, port);
-            _redisClient5 = new NewRedisClient5(ip,port);
+            _redisClient3 = new NewRedisClient3(ip, port);
+            _redisClient4 = _pool4._node;
+            _redisClient5 = _pool5._node;
+            _redisClient7 = _pool7._node;
+            _redisClient8 = new NewRedisClient8();
+            _redisClient8.CreateConnection(ip, port);
+            _redisClient9 = new NewRedisClient9();
+            _redisClient9.CreateConnection(ip, port);
+            //_redisClient5.SetAsync("a", "a");
             ConnectionMultiplexer seredis = ConnectionMultiplexer.Connect($"{ip}:{port}");
             _stackExnchangeClient = seredis.GetDatabase(0);
 
@@ -84,13 +110,40 @@ namespace console_netcore31_newsocket
             
             InitClient();
 
-            //_redisClient5.SetAsync("a", "a");
+            RunTest();
+            //Console.WriteLine("====== 以上预热 =======");
+            //RunTest();
 
-            RunTest();
-            Console.WriteLine("====== 以上预热 =======");
-            RunTest();
+            //CheckPool();
 
             Console.ReadKey();
+
+        }
+
+        public static void CheckPool()
+        {
+            CheckPool(_pool4);
+            CheckPool(_pool7);
+            CheckPool(_pool24);
+            CheckPool(_pool27);
+        }
+
+        public static void CheckPool<T>(ClientPool1<T> value) where T: RedisClientBase,new()
+        {
+            Console.WriteLine($"===========Poo1 : {typeof(T).Name}==========");
+            for (int i = 0; i < value.CallCounter.Length; i++)
+            {
+                Console.WriteLine($"No.{i} used {value.CallCounter[i]}");
+            }
+
+        }
+        public static void CheckPool<T>(ClientPool2<T> value) where T : RedisClientBase, new()
+        {
+            Console.WriteLine($"===========Poo1 : {typeof(T).Name}==========");
+            for (int i = 0; i < value.CallCounter.Length; i++)
+            {
+                Console.WriteLine($"No.{i} used {value.CallCounter[i]}");
+            }
 
         }
 
@@ -98,12 +151,20 @@ namespace console_netcore31_newsocket
         {
             //FreeRedisSetTest();
             StackExchangeRedisSetTest();
+            NewSocketRedis9SetTest();
             //NewSocketRedis0SetTest();
-            NewSocketRedis1SetTest();
+            //NewSocketRedis1SetTest();
             //NewSocketRedis2SetTest();
             //NewSocketRedis3SetTest();
             //NewSocketRedis4SetTest();
-            NewSocketRedis5SetTest();
+            //NewSocketRedis7SetTest();
+            //NewSocketRedis5SetTest();
+            //Pool14SetTest();
+            //Pool15SetTest();
+            //Pool17SetTest();
+            //Pool24SetTest();
+            //Pool25SetTest();
+            //Pool27SetTest();
             //BeetleXRedisSetTest();
             //NewLifeRedisSetTest();
         }
@@ -250,7 +311,6 @@ namespace console_netcore31_newsocket
             }
             Task.WaitAll(tasks);
             sw.Stop();
-            Thread.Sleep(1000);
             for (var a = 0; a < frequence; a += 1)
             {
                 var key = a.ToString();
@@ -312,18 +372,18 @@ namespace console_netcore31_newsocket
         }
         #endregion
 
-        #region NewSocketRedis0 - SET
-        public static void NewSocketRedis0SetTest()
-        {
-            RunAction((key) =>
-            {
+        //#region NewSocketRedis0 - SET
+        //public static void NewSocketRedis0SetTest()
+        //{
+        //    RunAction((key) =>
+        //    {
 
-                return _redisClient0.SetAsync(key, key);
+        //        return _redisClient0.SetAsync(key, key);
 
-            }, "NewRedis0");
+        //    }, "NewRedis0");
 
-        }
-        #endregion
+        //}
+        //#endregion
 
         #region NewSocketRedis1 - SET
         public static void NewSocketRedis1SetTest()
@@ -389,6 +449,45 @@ namespace console_netcore31_newsocket
         }
         #endregion
 
+        #region NewSocketRedis7 - SET
+        public static void NewSocketRedis7SetTest()
+        {
+            RunAction((key) =>
+            {
+
+                return _redisClient7.SetAsync(key, key);
+
+            }, "NewRedis7");
+
+        }
+        #endregion
+
+        #region NewSocketRedis8 - SET
+        public static void NewSocketRedis8SetTest()
+        {
+            RunAction((key) =>
+            {
+
+                return _redisClient8.SetAsync(key, key);
+
+            }, "NewRedis8");
+
+        }
+        #endregion
+
+        #region NewSocketRedis9 - SET
+        public static void NewSocketRedis9SetTest()
+        {
+            RunAction((key) =>
+            {
+
+                return _redisClient9.SetAsync(key, key);
+
+            }, "NewRedis9");
+
+        }
+        #endregion
+
         #region FreeRedis - SET
         public static void FreeRedisSetTest()
         {
@@ -441,11 +540,87 @@ namespace console_netcore31_newsocket
         }
         #endregion
 
-        
+
 
         #endregion
 
+        #region PoolTest
+        #region Pool1-4 - SET
+        public static void Pool14SetTest()
+        {
+            RunAction((key) =>
+            {
 
+                return _pool4.SetAsync(key, key);
+
+            }, "NewRedisWithPool1-4");
+        }
+        #endregion
+
+        #region Pool1-5 - SET
+        public static void Pool15SetTest()
+        {
+            RunAction((key) =>
+            {
+
+                return _pool5.SetAsync(key, key);
+
+            }, "NewRedisWithPool1-5");
+
+        }
+        #endregion
+
+        #region Pool1-7 - SET
+        public static void Pool17SetTest()
+        {
+            RunAction((key) =>
+            {
+
+                return _pool7.SetAsync(key, key);
+
+            }, "NewRedisWithPool1-7");
+
+        }
+        #endregion
+
+        #region Pool2-4 - SET
+        public static void Pool24SetTest()
+        {
+            RunAction((key) =>
+            {
+
+                return _pool24.SetAsync(key, key);
+
+            }, "NewRedisWithPool2-4");
+        }
+        #endregion
+
+        #region Pool2-5 - SET
+        public static void Pool25SetTest()
+        {
+            RunAction((key) =>
+            {
+
+                return _pool25.SetAsync(key, key);
+
+            }, "NewRedisWithPool2-5");
+
+        }
+        #endregion
+
+        #region Pool2-7 - SET
+        public static void Pool27SetTest()
+        {
+            RunAction((key) =>
+            {
+
+                return _pool27.SetAsync(key, key);
+
+            }, "NewRedisWithPool2-7");
+
+        }
+        #endregion
+        #endregion
     }
 
 }

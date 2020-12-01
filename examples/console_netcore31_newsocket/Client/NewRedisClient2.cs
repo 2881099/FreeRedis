@@ -70,23 +70,24 @@ namespace console_netcore31_newsocket
             while (true)
             {
 
-                var result = await _reciver.ReadAsync();
+                var result = await _reciver.ReadAsync().ConfigureAwait(false);
                 var buffer = result.Buffer;
 
-                if (buffer.IsSingleSegment)
-                {
+                Handler(buffer);
+                //if (buffer.IsSingleSegment)
+                //{
 
-                    //total += buffer.Length;
-                    //Console.WriteLine($"当前剩余 {_taskCount} 个任务未完成,队列中有 {_receiverQueue.Count} 个任务！缓冲区长 {buffer.Length} .");
-                    Handler(buffer);
-                }
-                else
-                {
+                //    //total += buffer.Length;
+                //    //Console.WriteLine($"当前剩余 {_taskCount} 个任务未完成,队列中有 {_receiverQueue.Count} 个任务！缓冲区长 {buffer.Length} .");
+                //    Handler(buffer);
+                //}
+                //else
+                //{
 
-                    //total += buffer.Length;
-                    //Console.WriteLine($"当前剩余 {_taskCount} 个任务未完成,队列中有 {_receiverQueue.Count} 个任务！缓冲区长 {buffer.Length} .");
-                    Handler(buffer);
-                }
+                //    //total += buffer.Length;
+                //    //Console.WriteLine($"当前剩余 {_taskCount} 个任务未完成,队列中有 {_receiverQueue.Count} 个任务！缓冲区长 {buffer.Length} .");
+                //    Handler(buffer);
+                //}
                 _reciver.AdvanceTo(buffer.End);
                 if (result.IsCompleted)
                 {
