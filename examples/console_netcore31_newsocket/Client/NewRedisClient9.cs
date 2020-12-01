@@ -17,9 +17,9 @@ using System.Threading.Tasks.Sources;
 namespace console_netcore31_newsocket
 {
 
-    public class NewRedisClient9 :RedisClientBase
+    public class NewRedisClient9 : RedisClientBase
     {
-        
+
         private SingleLinks<Task<bool>> _currentTaskBuffer;
         private readonly byte _protocalStart;
         private readonly SingleLinks<Task<bool>> _taskBuffer;
@@ -44,7 +44,6 @@ namespace console_netcore31_newsocket
             var bytes = Encoding.UTF8.GetBytes($"SET {key} {value}\r\n");
             var taskSource = CreateTask();
             LockSend();
-            sendCount += 1;
             _currentTaskBuffer.Append(taskSource);
             _sender.WriteAsync(bytes);
             ReleaseSend();
@@ -62,7 +61,7 @@ namespace console_netcore31_newsocket
                 _currentTaskBuffer = new SingleLinks<Task<bool>>();
             }
             ReleaseSend();
-            
+
         }
 
         private TaskCompletionSource<int> _handlerResultTask;
@@ -80,17 +79,16 @@ namespace console_netcore31_newsocket
                 while (position != -1)
                 {
                     result.Append(true);
-                    //TrySetResult(_currentReceiverBuffer[taskBufferIndex],true);
                     span = span.Slice(position + 1);
                     position = span.IndexOf(_protocalStart);
                 }
             }
-           
+
             if (TryGetReceiverLock())
             {
-                if (_tempResultLink.Count>0)
+                if (_tempResultLink.Count > 0)
                 {
-                    
+
                     _tempResultLink.Append(result);
                     _resultBuffer.Append(_tempResultLink);
                     _tempResultLink = new SingleLinks<bool>();
@@ -103,15 +101,14 @@ namespace console_netcore31_newsocket
                     _handlerResultTask.SetResult(result.Count);
 
                 }
-               
+
             }
             else
             {
                 _tempResultLink.Append(result);
             }
-            
-        }
 
+        }
 
         public async void ResultDispatcher()
         {
@@ -120,27 +117,21 @@ namespace console_netcore31_newsocket
                 var last = await _handlerResultTask.Task;
                 var firstResult = _resultBuffer.Head;
                 var firstTask = _taskBuffer.Head;
-                //var pre = firstTask;
-                LockSend();
-                for (int i = 0; i < last; i+=1)
+                for (int i = 0; i < last; i += 1)
                 {
-                    
+
                     firstResult = firstResult.Next;
                     firstTask = firstTask.Next;
-                    if (firstTask == null)
-                    {
-                        Console.WriteLine("chushi:"+i);
-                        //Console.WriteLine(_taskBuffer.Count);
-                    }
-
                     TrySetResult(firstTask.Value, firstResult.Value);
+
                 }
-                Console.WriteLine("need handle : " + last);
-                _taskBuffer.ClearBefore(_taskBuffer.Head,firstTask);
+                LockSend();
+                _taskBuffer.ClearBefore(firstTask);
                 ReleaseSend();
+                _resultBuffer.Clear();
                 _handlerResultTask = new TaskCompletionSource<int>();
                 ReleaseReceiver();
-                
+
             }
 
         }
@@ -167,19 +158,15 @@ namespace console_netcore31_newsocket
         }
         public void Append(SingleLinks<T> node)
         {
-            //Console.WriteLine("process in Append!");
+            //Console.WriteLine("In Append!");
             if (node._first.Next != null)
             {
-                //var temp = node.Head;
-                //while (temp.Next!=null)
-                //{
-                //    Count += 1;
-                //    temp = temp.Next;
-                    
-                //}
+
                 Count += node.Count;
                 Tail.Next = node._first.Next;
-                Tail = Tail.Next;
+                Tail = node.Tail;
+                node._first.Next = null;
+
             }
         }
 
@@ -189,30 +176,18 @@ namespace console_netcore31_newsocket
             Tail = _first;
         }
 
-        public void ClearBefore(SingleLinkNode<T> head,SingleLinkNode<T> node)
+        public void ClearBefore(SingleLinkNode<T> node)
         {
-            var count = 1;
-            head = head.Next;
-            while (head != node)
-            {
-                count += 1;
-                head = head.Next;
-
-            }
-            Console.WriteLine("ClearBefore :" + count);
-            //Console.WriteLine("process in ClearBefore!");
+            //Console.WriteLine("In Clear!");
             _first.Next = node.Next;
-            Head = _first;
             if (node.Next == null)
             {
+
                 Tail = _first;
-            }
-            else
-            {
-               
-                Tail = node.Next;
+                
             }
             
+
         }
 
     }

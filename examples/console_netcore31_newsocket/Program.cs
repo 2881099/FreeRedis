@@ -150,7 +150,10 @@ namespace console_netcore31_newsocket
         public static void RunTest()
         {
             //FreeRedisSetTest();
-            StackExchangeRedisSetTest();
+            //StackExchangeRedisSetTest();
+            NewSocketRedis9SetTest();
+            NewSocketRedis9SetTest();
+            NewSocketRedis9SetTest();
             NewSocketRedis9SetTest();
             //NewSocketRedis0SetTest();
             //NewSocketRedis1SetTest();
