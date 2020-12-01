@@ -178,7 +178,10 @@ namespace FreeRedis.Internal
         public void Connect()
         {
             ResetHost(Host);
-            var endpoint = new IPEndPoint(IPAddress.Parse(_ip), _port);
+
+            IPEndPoint endpoint = IPAddress.TryParse(_ip, out var tryip) ?
+                new IPEndPoint(tryip, _port) :
+                new IPEndPoint(Dns.GetHostAddresses(_ip).FirstOrDefault() ?? IPAddress.Parse(_ip), _port);
             var localSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
             var asyncResult = localSocket.BeginConnect(endpoint, null, null);
