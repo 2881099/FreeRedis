@@ -88,7 +88,11 @@ namespace FreeRedis.Internal
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public bool Exists(TKey key) => _dic.ContainsKey(key);
+        public bool Exists(TKey key)
+        {
+            if (key == null) return false;
+            return _dic.ContainsKey(key);
+        }
 
         /// <summary>
         /// 注册【实例】
