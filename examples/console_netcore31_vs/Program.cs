@@ -209,7 +209,7 @@ namespace console_netcore31_vs
                     var val = pipe.Get(tmp);
                 }
                 var vals = pipe.EndPipe();
-                for (var a = 0; a < 100000; a ++)
+                for (var a = 1; a < 200000; a += 2)
                 {
                     var val = vals[a].ToString();
                     if (val != String) throw new Exception("not equal");
