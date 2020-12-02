@@ -5,9 +5,6 @@
     <OutputType>Exe</OutputType>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="Client\NewRedisClient0.cs" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="BeetleX.Redis" Version="1.0.1" />
@@ -18,9 +15,11 @@
     <PackageReference Include="System.IO.Pipelines" Version="5.0.0" />
   </ItemGroup>
 
+
   <ItemGroup>
     <ProjectReference Include="..\..\src\FreeRedis\FreeRedis.csproj" />
   </ItemGroup>
+
 
   <ItemGroup>
     <None Update="Redis.rsf">

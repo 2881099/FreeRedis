@@ -22,12 +22,19 @@ namespace console_netcore31_newsocket
        
         private SourceConcurrentQueue2<Task<bool>> _receiverQueue;
         private readonly byte _protocalStart;
-
+        private readonly NewRedisClient9 newRedisClient9;
 
         public NewRedisClient4()
         {
             _protocalStart = (byte)43;
-            
+            newRedisClient9 = new NewRedisClient9();
+
+
+        }
+        public override void CreateConnection(string ip, int port)
+        {
+            newRedisClient9.CreateConnection(ip, port);
+            base.CreateConnection(ip, port);
         }
 
         protected override void Init()
@@ -39,17 +46,28 @@ namespace console_netcore31_newsocket
         public Task<bool> FlushDBAsync()
         {
             var bytes = Encoding.UTF8.GetBytes($"flushdb\r\n");
-            var taskSource = CreateTask();
+            var taskSource = CreateTask(null, TaskCreationOptions.RunContinuationsAsynchronously);
             _receiverQueue.Enqueue(taskSource, bytes);
             return taskSource;
         }
 
         public override Task<bool> SetAsync(string key, string value)
         {
-            var bytes = Encoding.UTF8.GetBytes($"SET {key} {value}\r\n");
-            var taskSource = CreateTask();
-            _receiverQueue.Enqueue(taskSource, bytes);
-            return taskSource;
+            var bytes = Encoding.UTF8.GetBytes($"*3\r\n$3\r\nSET\r\n${key.Length}\r\n{key}\r\n${value.Length}\r\n{value}\r\n");
+            var taskSource = new TaskCompletionSource<bool>(null, TaskCreationOptions.RunContinuationsAsynchronously).Task;
+            if (TryGetSendLock())
+            {
+                _receiverQueue.Enqueue(taskSource, bytes);
+                ReleaseSend();
+                return taskSource;
+            }
+            else
+            {
+                return newRedisClient9.SetAsync(key, value);
+            }
+            
+            
+            
         }
 
         protected internal override void Handler(in ReadOnlySequence<byte> sequence)

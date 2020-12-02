@@ -17,7 +17,7 @@ using System.Threading.Tasks.Sources;
 namespace console_netcore31_newsocket
 {
 
-    public class NewRedisClient9 : RedisClientBase
+    public class NewRedisClient11 : RedisClientBase
     {
 
         protected SingleLinks<Task<bool>> _currentTaskBuffer;
@@ -25,7 +25,7 @@ namespace console_netcore31_newsocket
         private readonly SingleLinks<Task<bool>> _taskBuffer;
         private readonly SingleLinks<bool> _resultBuffer;
 
-        public NewRedisClient9()
+        public NewRedisClient11()
         {
             _currentTaskBuffer = new SingleLinks<Task<bool>>();
             _taskBuffer = new SingleLinks<Task<bool>>();
@@ -147,77 +147,6 @@ namespace console_netcore31_newsocket
 
             }
 
-        }
-
-    }
-
-    public class SingleLinks<T>
-    {
-        public readonly SingleLinkNode<T> Head;
-        public SingleLinkNode<T> Tail;
-        private readonly SingleLinkNode<T> _first;
-        public SingleLinks()
-        {
-            _first = new SingleLinkNode<T>(default);
-            Head = _first;
-            Tail = _first;
-        }
-        //public int Count;
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void Append(T value)
-        {
-            //Count += 1;
-            Tail.Next = new SingleLinkNode<T>(value);
-            Tail = Tail.Next;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void Append(SingleLinks<T> node)
-        {
-            //Console.WriteLine("In Append!");
-            if (node._first.Next != null)
-            {
-
-                //Count += node.Count;
-                Tail.Next = node._first.Next;
-                Tail = node.Tail;
-                node._first.Next = null;
-
-            }
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void Clear()
-        {
-            _first.Next = null;
-            Tail = _first;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void ClearBefore(SingleLinkNode<T> node)
-        {
-            //Console.WriteLine("In Clear!");
-            _first.Next = node.Next;
-            if (node.Next == null)
-            {
-
-                Tail = _first;
-                
-            }
-            
-
-        }
-
-    }
-
-    public class SingleLinkNode<T>
-    {
-        public readonly T Value;
-        public SingleLinkNode<T> Next;
-        public SingleLinkNode(T value)
-        {
-            Value = value;
         }
 
     }

@@ -51,7 +51,7 @@ namespace console_netcore31_newsocket
 
         public override Task<bool> SetAsync(string key, string value)
         {
-            var task = CreateTask();
+            var task = CreateTask(null, TaskCreationOptions.RunContinuationsAsynchronously);
             var bytes = Encoding.UTF8.GetBytes($"SET {key} {value}\r\n");
             LockSend();
             _tasks[_sendIndex] = task;
@@ -95,7 +95,6 @@ namespace console_netcore31_newsocket
                         Console.WriteLine(_receiverIndex);
                         Console.ReadKey();
                     }
-
                     ReleaseSend();
                     if (_receiverIndex == TASK_BUFFER_PRELENGTH)
                     {

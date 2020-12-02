@@ -17,15 +17,16 @@ using System.Threading.Tasks.Sources;
 namespace console_netcore31_newsocket
 {
 
-    public class NewRedisClient9 : RedisClientBase
+
+
+    public class NewRedisClient10 : RedisClientBase
     {
 
         protected SingleLinks<Task<bool>> _currentTaskBuffer;
         private readonly byte _protocalStart;
         private readonly SingleLinks<Task<bool>> _taskBuffer;
         private readonly SingleLinks<bool> _resultBuffer;
-
-        public NewRedisClient9()
+        public NewRedisClient10()
         {
             _currentTaskBuffer = new SingleLinks<Task<bool>>();
             _taskBuffer = new SingleLinks<Task<bool>>();
@@ -36,30 +37,25 @@ namespace console_netcore31_newsocket
             ResultDispatcher();
         }
 
-
-
-        private int sendCount;
         public override Task<bool> SetAsync(string key, string value)
         {
-            var bytes = Encoding.UTF8.GetBytes($"*3\r\n$3\r\nSET\r\n${key.Length}\r\n{key}\r\n${value.Length}\r\n{value}\r\n");
-            var taskSource = CreateTask(null, TaskCreationOptions.RunContinuationsAsynchronously);
-            LockSend();
-            _currentTaskBuffer.Append(taskSource);
-            _sender.WriteAsync(bytes);
-            ReleaseSend();
-            return taskSource;
+            throw new NotImplementedException();
         }
-
-        public virtual Task<bool> SetAsync(byte[] bytes)
+        public void SetAsync(byte[] bytes,Task<bool> task)
         {
-            var taskSource = CreateTask(null, TaskCreationOptions.RunContinuationsAsynchronously);
+            _currentTaskBuffer.Append(task);
+            _sender.WriteAsync(bytes);
+            //ReleaseSend();
+        }
+        public void SetAndWaitAsync(byte[] bytes, Task<bool> task)
+        {
+
             LockSend();
-            _currentTaskBuffer.Append(taskSource);
+            _currentTaskBuffer.Append(task);
             _sender.WriteAsync(bytes);
             ReleaseSend();
-            return taskSource;
-        }
 
+        }
 
         private void GetTaskSpan()
         {
@@ -76,10 +72,11 @@ namespace console_netcore31_newsocket
 
         private TaskCompletionSource<long> _handlerResultTask;
         private SingleLinks<bool> _tempResultLink;
+        public long HandlerCount = 0;
         private long _handlerCount = 0;
         protected internal override void Handler(in ReadOnlySequence<byte> sequence)
         {
-
+            HandlerCount += 1;
             GetTaskSpan();
             SingleLinks<bool> result = new SingleLinks<bool>();
 
@@ -151,75 +148,6 @@ namespace console_netcore31_newsocket
 
     }
 
-    public class SingleLinks<T>
-    {
-        public readonly SingleLinkNode<T> Head;
-        public SingleLinkNode<T> Tail;
-        private readonly SingleLinkNode<T> _first;
-        public SingleLinks()
-        {
-            _first = new SingleLinkNode<T>(default);
-            Head = _first;
-            Tail = _first;
-        }
-        //public int Count;
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void Append(T value)
-        {
-            //Count += 1;
-            Tail.Next = new SingleLinkNode<T>(value);
-            Tail = Tail.Next;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void Append(SingleLinks<T> node)
-        {
-            //Console.WriteLine("In Append!");
-            if (node._first.Next != null)
-            {
-
-                //Count += node.Count;
-                Tail.Next = node._first.Next;
-                Tail = node.Tail;
-                node._first.Next = null;
-
-            }
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void Clear()
-        {
-            _first.Next = null;
-            Tail = _first;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void ClearBefore(SingleLinkNode<T> node)
-        {
-            //Console.WriteLine("In Clear!");
-            _first.Next = node.Next;
-            if (node.Next == null)
-            {
-
-                Tail = _first;
-                
-            }
-            
-
-        }
-
-    }
-
-    public class SingleLinkNode<T>
-    {
-        public readonly T Value;
-        public SingleLinkNode<T> Next;
-        public SingleLinkNode(T value)
-        {
-            Value = value;
-        }
-
-    }
 
 }

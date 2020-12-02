@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace console_netcore31_newsocket
 {
-    public class ClientPool1<T> where T: RedisClientBase,new()
+    public class ClientPool1<T> where T : RedisClientBase, new()
     {
         private string _ip;
         private int _port;
@@ -16,7 +16,7 @@ namespace console_netcore31_newsocket
         public int[] CallCounter;
         private long[] _locks;
         private int _length;
-        public ClientPool1(string ip,int port)
+        public ClientPool1(string ip, int port)
         {
             _ip = ip;
             _port = port;
@@ -36,25 +36,22 @@ namespace console_netcore31_newsocket
         }
 
         private volatile int _index;
-        public Task<bool> SetAsync(string key,string value)
+        public Task<bool> SetAsync(string key, string value)
         {
-            for (int i = _index; i < _length; i+=1)
-            {
 
-                if (Interlocked.CompareExchange(ref _locks[i], 1, 0) == 0)
+
+            if (Interlocked.CompareExchange(ref _locks[_index], 1, 0) == 0)
+            {
+                _index += 1;
+                if (_index == _length)
                 {
-                    _index = i + 1;
-                    if (_index == _length)
-                    {
-                        _index = 0;
-                    }
-                    //Interlocked.Increment(ref CallCounter[i]);
-                    var task = _clients[i].SetAsync(key, value);
-                    _locks[i] = 0;
-                    return task;
+                    _index = 0;
                 }
-                
+                //Interlocked.Increment(ref CallCounter[i]);
+                _locks[_index] = 0;
+                return _clients[_index].SetAsync(key, value);
             }
+
             return _node.SetAsync(key, value);
         }
 

@@ -32,7 +32,7 @@ namespace console_netcore31_newsocket
         public override Task<bool> SetAsync(string key, string value)
         {
             var bytes = Encoding.UTF8.GetBytes($"SET {key} {value}\r\n");
-            var taskSource = CreateTask();
+            var taskSource = CreateTask(null, TaskCreationOptions.RunContinuationsAsynchronously);
             LockSend();
             _tasks.Enqueue(taskSource);
             _sender.WriteAsync(bytes);
