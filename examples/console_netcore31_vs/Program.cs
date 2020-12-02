@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Text;
 using System.Threading;
@@ -35,7 +36,7 @@ namespace console_netcore31_vs
             ThreadPool.SetMinThreads(10001, 10001);
             Stopwatch sw = new Stopwatch();
             var tasks = new List<Task>();
-            var results = new List<string>();
+            var results = new ConcurrentQueue<string>();
 
             cli.FlushDb();
             results.Clear();
@@ -47,7 +48,7 @@ namespace console_netcore31_vs
                 sedb.StringSet(tmp, String);
                 var val = sedb.StringGet(tmp);
                 if (val != String) throw new Exception("not equal");
-                results.Add(val);
+                results.Enqueue(val);
             }
             sw.Stop();
             Console.WriteLine("StackExchange(0-100000): " + sw.ElapsedMilliseconds + "ms results: " + results.Count);
@@ -66,7 +67,7 @@ namespace console_netcore31_vs
                     sedb.StringSet(tmp, String);
                     var val = sedb.StringGet(tmp);
                     if (val != String) throw new Exception("not equal");
-                    results.Add(val);
+                    results.Enqueue(val);
                 }));
             }
             Task.WaitAll(tasks.ToArray());
@@ -86,7 +87,7 @@ namespace console_netcore31_vs
                     await sedb.StringSetAsync(tmp, String);
                     var val = await sedb.StringGetAsync(tmp);
                     if (val != String) throw new Exception("not equal");
-                    results.Add(val);
+                    results.Enqueue(val);
                 }
             }).Wait();
             sw.Stop();
@@ -106,7 +107,7 @@ namespace console_netcore31_vs
                     await sedb.StringSetAsync(tmp, String);
                     var val = await sedb.StringGetAsync(tmp);
                     if (val != String) throw new Exception("not equal");
-                    results.Add(val);
+                    results.Enqueue(val);
                 }));
             }
             Task.WaitAll(tasks.ToArray());
@@ -125,7 +126,7 @@ namespace console_netcore31_vs
                 cli.Set(tmp, String);
                 var val = cli.Get(tmp);
                 if (val != String) throw new Exception("not equal");
-                results.Add(val);
+                results.Enqueue(val);
             }
             sw.Stop();
             Console.WriteLine("FreeRedis(0-100000): " + sw.ElapsedMilliseconds + "ms results: " + results.Count);
@@ -144,7 +145,7 @@ namespace console_netcore31_vs
                     cli.Set(tmp, String);
                     var val = cli.Get(tmp);
                     if (val != String) throw new Exception("not equal");
-                    results.Add(val);
+                    results.Enqueue(val);
                 }));
             }
             Task.WaitAll(tasks.ToArray());
@@ -164,7 +165,7 @@ namespace console_netcore31_vs
                     await cli.SetAsync(tmp, String);
                     var val = await cli.GetAsync(tmp);
                     if (val != String) throw new Exception("not equal");
-                    results.Add(val);
+                    results.Enqueue(val);
                 }
             }).Wait();
             sw.Stop();
@@ -186,7 +187,7 @@ namespace console_netcore31_vs
                     await cli.SetAsync(tmp, String);
                     var val = await cli.GetAsync(tmp);
                     if (val != String) throw new Exception("not equal");
-                    results.Add(val);
+                    results.Enqueue(val);
                 }));
             }
             Task.WaitAll(tasks.ToArray());
@@ -213,7 +214,7 @@ namespace console_netcore31_vs
                 {
                     var val = vals[a].ToString();
                     if (val != String) throw new Exception("not equal");
-                    results.Add(val);
+                    results.Enqueue(val);
                 }
             }
             sw.Stop();
@@ -258,7 +259,7 @@ namespace console_netcore31_vs
                 RedisHelper.Set(tmp, String);
                 var val = RedisHelper.Get(tmp);
                 if (val != String) throw new Exception("not equal");
-                results.Add(val);
+                results.Enqueue(val);
             }
             sw.Stop();
             Console.WriteLine("CSRedisCore(0-100000): " + sw.ElapsedMilliseconds + "ms results: " + results.Count);
@@ -277,7 +278,7 @@ namespace console_netcore31_vs
                     RedisHelper.Set(tmp, String);
                     var val = RedisHelper.Get(tmp);
                     if (val != String) throw new Exception("not equal");
-                    results.Add(val);
+                    results.Enqueue(val);
                 }));
             }
             Task.WaitAll(tasks.ToArray());
@@ -297,7 +298,7 @@ namespace console_netcore31_vs
                     await RedisHelper.SetAsync(tmp, String);
                     var val = await RedisHelper.GetAsync(tmp);
                     if (val != String) throw new Exception("not equal");
-                    results.Add(val);
+                    results.Enqueue(val);
                 }
             }).Wait();
             sw.Stop();
@@ -317,7 +318,7 @@ namespace console_netcore31_vs
                     await RedisHelper.SetAsync(tmp, String);
                     var val = await RedisHelper.GetAsync(tmp);
                     //if (val != String) throw new Exception("not equal");
-                    results.Add(val);
+                    results.Enqueue(val);
                 }));
             }
             Task.WaitAll(tasks.ToArray());
