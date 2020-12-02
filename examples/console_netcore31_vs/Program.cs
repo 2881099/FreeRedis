@@ -14,7 +14,7 @@ namespace console_netcore31_vs
         static Lazy<RedisClient> _cliLazy = new Lazy<RedisClient>(() =>
         {
             //var r = new RedisClient("127.0.0.1:6379", false); //redis 3.2 Single test
-            var r = new RedisClient("127.0.0.1:6379,database=1,min pool size=500,max pool size=500"); //redis 3.2
+            var r = new RedisClient("127.0.0.1:6379,min pool size=500,max pool size=500"); //redis 3.2
             //var r = new RedisClient("127.0.0.1:6379,database=1", "127.0.0.1:6379,database=1");
             //var r = new RedisClient("192.168.164.10:6379,database=1"); //redis 6.0
             r.Serialize = obj => JsonConvert.SerializeObject(obj);
@@ -28,17 +28,17 @@ namespace console_netcore31_vs
 
         static void Main(string[] args)
         {
-            RedisHelper.Initialization(new CSRedis.CSRedisClient("127.0.0.1:6379,database=1,asyncPipeline=true,preheat=100,poolsize=100"));
+            RedisHelper.Initialization(new CSRedis.CSRedisClient("127.0.0.1:6379,asyncPipeline=true,preheat=100,poolsize=100"));
             cli.Set("TestMGet_null1", "");
             RedisHelper.Set("TestMGet_null1", "");
             sedb.StringSet("TestMGet_string1", String);
             ThreadPool.SetMinThreads(10001, 10001);
             Stopwatch sw = new Stopwatch();
             var tasks = new List<Task>();
+            var results = new List<string>();
 
-            cli.FlushAll();
-
-
+            cli.FlushDb();
+            results.Clear();
             sw.Reset();
             sw.Start();
             for (var a = 0; a < 100000; a++)
@@ -47,9 +47,13 @@ namespace console_netcore31_vs
                 sedb.StringSet(tmp, String);
                 var val = sedb.StringGet(tmp);
                 if (val != String) throw new Exception("not equal");
+                results.Add(val);
             }
             sw.Stop();
-            Console.WriteLine("StackExchange(0-100000): " + sw.ElapsedMilliseconds + "ms");
+            Console.WriteLine("StackExchange(0-100000): " + sw.ElapsedMilliseconds + "ms results: " + results.Count);
+            tasks.Clear();
+            results.Clear();
+            cli.FlushDb();
 
             sw.Reset();
             sw.Start();
@@ -62,12 +66,15 @@ namespace console_netcore31_vs
                     sedb.StringSet(tmp, String);
                     var val = sedb.StringGet(tmp);
                     if (val != String) throw new Exception("not equal");
+                    results.Add(val);
                 }));
             }
             Task.WaitAll(tasks.ToArray());
             sw.Stop();
-            Console.WriteLine("StackExchange(Task.WaitAll 100000): " + sw.ElapsedMilliseconds + "ms");
+            Console.WriteLine("StackExchange(Task.WaitAll 100000): " + sw.ElapsedMilliseconds + "ms results: " + results.Count);
             tasks.Clear();
+            results.Clear();
+            cli.FlushDb();
 
             sw.Reset();
             sw.Start();
@@ -79,10 +86,14 @@ namespace console_netcore31_vs
                     await sedb.StringSetAsync(tmp, String);
                     var val = await sedb.StringGetAsync(tmp);
                     if (val != String) throw new Exception("not equal");
+                    results.Add(val);
                 }
             }).Wait();
             sw.Stop();
-            Console.WriteLine("StackExchangeAsync(0-100000): " + sw.ElapsedMilliseconds + "ms");
+            Console.WriteLine("StackExchangeAsync(0-100000): " + sw.ElapsedMilliseconds + "ms results: " + results.Count);
+            tasks.Clear();
+            results.Clear();
+            cli.FlushDb();
 
             sw.Reset();
             sw.Start();
@@ -95,12 +106,15 @@ namespace console_netcore31_vs
                     await sedb.StringSetAsync(tmp, String);
                     var val = await sedb.StringGetAsync(tmp);
                     if (val != String) throw new Exception("not equal");
+                    results.Add(val);
                 }));
             }
             Task.WaitAll(tasks.ToArray());
             sw.Stop();
-            Console.WriteLine("StackExchangeAsync(Task.WaitAll 100000): " + sw.ElapsedMilliseconds + "ms\r\n");
+            Console.WriteLine("StackExchangeAsync(Task.WaitAll 100000): " + sw.ElapsedMilliseconds + "ms results: " + results.Count + "\r\n");
             tasks.Clear();
+            results.Clear();
+            cli.FlushDb();
 
 
             sw.Reset();
@@ -111,9 +125,13 @@ namespace console_netcore31_vs
                 cli.Set(tmp, String);
                 var val = cli.Get(tmp);
                 if (val != String) throw new Exception("not equal");
+                results.Add(val);
             }
             sw.Stop();
-            Console.WriteLine("FreeRedis(0-100000): " + sw.ElapsedMilliseconds + "ms");
+            Console.WriteLine("FreeRedis(0-100000): " + sw.ElapsedMilliseconds + "ms results: " + results.Count);
+            tasks.Clear();
+            results.Clear();
+            cli.FlushDb();
 
             sw.Reset();
             sw.Start();
@@ -126,12 +144,15 @@ namespace console_netcore31_vs
                     cli.Set(tmp, String);
                     var val = cli.Get(tmp);
                     if (val != String) throw new Exception("not equal");
+                    results.Add(val);
                 }));
             }
             Task.WaitAll(tasks.ToArray());
             sw.Stop();
-            Console.WriteLine("FreeRedis(Task.WaitAll 100000): " + sw.ElapsedMilliseconds + "ms");
+            Console.WriteLine("FreeRedis(Task.WaitAll 100000): " + sw.ElapsedMilliseconds + "ms results: " + results.Count);
             tasks.Clear();
+            results.Clear();
+            cli.FlushDb();
 
             sw.Reset();
             sw.Start();
@@ -143,10 +164,14 @@ namespace console_netcore31_vs
                     await cli.SetAsync(tmp, String);
                     var val = await cli.GetAsync(tmp);
                     if (val != String) throw new Exception("not equal");
+                    results.Add(val);
                 }
             }).Wait();
             sw.Stop();
-            Console.WriteLine("FreeRedisAsync(0-100000): " + sw.ElapsedMilliseconds + "ms");
+            Console.WriteLine("FreeRedisAsync(0-100000): " + sw.ElapsedMilliseconds + "ms results: " + results.Count);
+            tasks.Clear();
+            results.Clear();
+            cli.FlushDb();
 
             //FreeRedis.Internal.AsyncRedisSocket.sb.Clear();
             //FreeRedis.Internal.AsyncRedisSocket.sw.Start();
@@ -161,14 +186,17 @@ namespace console_netcore31_vs
                     await cli.SetAsync(tmp, String);
                     var val = await cli.GetAsync(tmp);
                     if (val != String) throw new Exception("not equal");
+                    results.Add(val);
                 }));
             }
             Task.WaitAll(tasks.ToArray());
             sw.Stop();
             //var sbstr = FreeRedis.Internal.AsyncRedisSocket.sb.ToString()
             //sbstr = sbstr + sbstr.Split("\r\n").Length + "条消息 ;
-            Console.WriteLine("FreeRedisAsync(Task.WaitAll 100000): " + sw.ElapsedMilliseconds + "ms");
+            Console.WriteLine("FreeRedisAsync(Task.WaitAll 100000): " + sw.ElapsedMilliseconds + "ms results: " + results.Count);
             tasks.Clear();
+            results.Clear();
+            cli.FlushDb();
 
             sw.Reset();
             sw.Start();
@@ -183,11 +211,16 @@ namespace console_netcore31_vs
                 var vals = pipe.EndPipe();
                 for (var a = 1; a < 100000; a += 2)
                 {
-                    if (vals[a].ToString() != String) throw new Exception("not equal");
+                    var val = vals[a].ToString();
+                    if (val != String) throw new Exception("not equal");
+                    results.Add(val);
                 }
             }
             sw.Stop();
-            Console.WriteLine("FreeRedisPipeline(0-100000): " + sw.ElapsedMilliseconds + "ms\r\n");
+            Console.WriteLine("FreeRedisPipeline(0-100000): " + sw.ElapsedMilliseconds + "ms results: " + results.Count + "\r\n");
+            tasks.Clear();
+            results.Clear();
+            cli.FlushDb();
 
             //sw.Reset();
             //sw.Start();
@@ -195,6 +228,9 @@ namespace console_netcore31_vs
             //    cli.Call(new CommandPacket("SET").Input("TestMGet_string1").InputRaw(String));
             //sw.Stop();
             //Console.WriteLine("FreeRedis2: " + sw.ElapsedMilliseconds + "ms");
+            tasks.Clear();
+            results.Clear();
+            cli.FlushDb();
 
             //sw.Reset();
             //sw.Start();
@@ -209,7 +245,9 @@ namespace console_netcore31_vs
             //}
             //sw.Stop();
             //Console.WriteLine("FreeRedis4: " + sw.ElapsedMilliseconds + "ms");
-
+            tasks.Clear();
+            results.Clear();
+            cli.FlushDb();
 
 
             sw.Reset();
@@ -220,9 +258,13 @@ namespace console_netcore31_vs
                 RedisHelper.Set(tmp, String);
                 var val = RedisHelper.Get(tmp);
                 if (val != String) throw new Exception("not equal");
+                results.Add(val);
             }
             sw.Stop();
-            Console.WriteLine("CSRedisCore(0-100000): " + sw.ElapsedMilliseconds + "ms");
+            Console.WriteLine("CSRedisCore(0-100000): " + sw.ElapsedMilliseconds + "ms results: " + results.Count);
+            tasks.Clear();
+            results.Clear();
+            cli.FlushDb();
 
             sw.Reset();
             sw.Start();
@@ -235,12 +277,15 @@ namespace console_netcore31_vs
                     RedisHelper.Set(tmp, String);
                     var val = RedisHelper.Get(tmp);
                     if (val != String) throw new Exception("not equal");
+                    results.Add(val);
                 }));
             }
             Task.WaitAll(tasks.ToArray());
             sw.Stop();
-            Console.WriteLine("CSRedisCore(Task.WaitAll 100000): " + sw.ElapsedMilliseconds + "ms");
+            Console.WriteLine("CSRedisCore(Task.WaitAll 100000): " + sw.ElapsedMilliseconds + "ms results: " + results.Count);
             tasks.Clear();
+            results.Clear();
+            cli.FlushDb();
 
             sw.Reset();
             sw.Start();
@@ -252,10 +297,14 @@ namespace console_netcore31_vs
                     await RedisHelper.SetAsync(tmp, String);
                     var val = await RedisHelper.GetAsync(tmp);
                     if (val != String) throw new Exception("not equal");
+                    results.Add(val);
                 }
             }).Wait();
             sw.Stop();
-            Console.WriteLine("CSRedisCoreAsync(0-100000): " + sw.ElapsedMilliseconds + "ms");
+            Console.WriteLine("CSRedisCoreAsync(0-100000): " + sw.ElapsedMilliseconds + "ms results: " + results.Count);
+            tasks.Clear();
+            results.Clear();
+            cli.FlushDb();
 
             sw.Reset();
             sw.Start();
@@ -268,12 +317,15 @@ namespace console_netcore31_vs
                     await RedisHelper.SetAsync(tmp, String);
                     var val = await RedisHelper.GetAsync(tmp);
                     //if (val != String) throw new Exception("not equal");
+                    results.Add(val);
                 }));
             }
             Task.WaitAll(tasks.ToArray());
             sw.Stop();
-            Console.WriteLine("CSRedisCoreAsync(Task.WaitAll 100000): " + sw.ElapsedMilliseconds + "ms\r\n");
+            Console.WriteLine("CSRedisCoreAsync(Task.WaitAll 100000): " + sw.ElapsedMilliseconds + "ms results: " + results.Count + "\r\n");
             tasks.Clear();
+            results.Clear();
+            cli.FlushDb();
         }
 
         static readonly string String = "我是中国人";
