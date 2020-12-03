@@ -120,7 +120,7 @@ namespace console_netcore31_newsocket
             while (Interlocked.CompareExchange(ref _analysis_lock_flag, 1, 0) != 0)
             {
                 //Interlocked.Increment(ref LockCount);
-                wait.SpinOnce();
+                wait.SpinOnce(8);
             }
 
         }
@@ -160,7 +160,7 @@ namespace console_netcore31_newsocket
             while (Interlocked.CompareExchange(ref _send_lock_flag, 1, 0) != 0)
             {
                 //Interlocked.Increment(ref LockCount);
-                wait.SpinOnce(8);
+                wait.SpinOnce();
             }
 
         }

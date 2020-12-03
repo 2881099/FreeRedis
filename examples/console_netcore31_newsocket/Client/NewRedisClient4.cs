@@ -50,7 +50,13 @@ namespace console_netcore31_newsocket
             _receiverQueue.Enqueue(taskSource, bytes);
             return taskSource;
         }
-
+        public Task<bool> AuthAsync(string password)
+        {
+            var bytes = Encoding.UTF8.GetBytes($"AUTH {password}\r\n");
+            var taskSource = CreateTask(null, TaskCreationOptions.RunContinuationsAsynchronously);
+            _receiverQueue.Enqueue(taskSource, bytes);
+            return taskSource;
+        }
         public override Task<bool> SetAsync(string key, string value)
         {
             var bytes = Encoding.UTF8.GetBytes($"*3\r\n$3\r\nSET\r\n${key.Length}\r\n{key}\r\n${value.Length}\r\n{value}\r\n");

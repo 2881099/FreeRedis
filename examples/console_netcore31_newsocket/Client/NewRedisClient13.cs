@@ -19,14 +19,14 @@ namespace console_netcore31_newsocket
 
 
 
-    public class NewRedisClient10 : RedisClientBase
+    public class NewRedisClient13 : RedisClientBase
     {
 
         protected SingleLinks<Task<bool>> _currentTaskBuffer;
         private readonly byte _protocalStart;
         private readonly SingleLinks<Task<bool>> _taskBuffer;
         private readonly SingleLinks<bool> _resultBuffer;
-        public NewRedisClient10()
+        public NewRedisClient13()
         {
             _currentTaskBuffer = new SingleLinks<Task<bool>>();
             _taskBuffer = new SingleLinks<Task<bool>>();
@@ -60,18 +60,16 @@ namespace console_netcore31_newsocket
         private void GetTaskSpan()
         {
 
-            LockSend();
             if (_currentTaskBuffer.Head.Next!=null)
             {
                 _taskBuffer.Append(_currentTaskBuffer);
                 _currentTaskBuffer = new SingleLinks<Task<bool>>();
             }
-            ReleaseSend();
 
         }
 
         private TaskCompletionSource<long> _handlerResultTask;
-        private SingleLinks<bool> _tempResultLink;
+        private volatile SingleLinks<bool> _tempResultLink;
         //public long HandlerCount = 0;
         private long _handlerCount = 0;
         protected internal override void Handler(in ReadOnlySequence<byte> sequence)

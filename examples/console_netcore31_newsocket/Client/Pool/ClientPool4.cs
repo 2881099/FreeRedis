@@ -11,13 +11,13 @@ using System.Threading.Tasks;
 
 namespace console_netcore31_newsocket
 {
-    public class ClientPool3
+    public class ClientPool4
     {
 
         private readonly static Func<Task<bool>, bool, bool> _setResult;
         protected readonly static Func<object, TaskCreationOptions, Task<bool>> CreateTask;
         protected readonly static Func<Task<bool>> CreateTaskWithoutParameters;
-        static ClientPool3()
+        static ClientPool4()
         {
             _setResult = typeof(Task<bool>)
                 .GetMethod("TrySetResult",
@@ -48,23 +48,23 @@ namespace console_netcore31_newsocket
 
         private string _ip;
         private int _port;
-        private NewRedisClient10 _node1;
-        private NewRedisClient10 _node2;
-        private NewRedisClient10 _node3;
+        private NewRedisClient13 _node1;
+        private NewRedisClient13 _node2;
+        private NewRedisClient13 _node3;
         private const int _length = 2;
         public int[] CallCounter;
-        public ClientPool3(string ip, int port)
+        public ClientPool4(string ip, int port)
         {
             _ip = ip;
             _port = port;
 
-            _node1 = new NewRedisClient10();
+            _node1 = new NewRedisClient13();
             _node1.CreateConnection(ip, port);
 
-            _node2 = new NewRedisClient10();
+            _node2 = new NewRedisClient13();
             _node2.CreateConnection(ip, port);
 
-            _node3 = new NewRedisClient10();
+            _node3 = new NewRedisClient13();
             _node3.CreateConnection(ip, port);
 
         }
