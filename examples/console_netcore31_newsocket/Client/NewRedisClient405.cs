@@ -16,18 +16,18 @@ using System.Threading.Tasks.Sources;
 namespace console_netcore31_newsocket
 {
 
-    public class NewRedisClient4 : RedisClientBase
+    public class NewRedisClient405 : RedisClientBase
     {
 
        
         private SourceConcurrentQueue2<Task<bool>> _receiverQueue;
         private readonly byte _protocalStart;
-        private readonly NewRedisClient405 newRedisClient9;
+        private readonly NewRedisClient9 newRedisClient9;
 
-        public NewRedisClient4()
+        public NewRedisClient405()
         {
             _protocalStart = (byte)43;
-            newRedisClient9 = new NewRedisClient405();
+            newRedisClient9 = new NewRedisClient9();
 
 
         }

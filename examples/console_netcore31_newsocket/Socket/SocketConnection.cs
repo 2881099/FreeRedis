@@ -15,7 +15,7 @@ namespace console_netcore31_newsocket
     internal sealed class SocketConnection : TransportConnection
     {
         private static readonly int MinAllocBufferSize = SlabMemoryPool.BlockSize / 2;
-        private static readonly bool IsWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+        private static readonly bool IsWindows = OperatingSystem.IsWindows();
 
         private readonly Socket _socket;
         private readonly SocketReceiver _receiver;
@@ -190,15 +190,15 @@ namespace console_netcore31_newsocket
             var input = Input;
             while (true)
             {
-                //if (_waitForData)
-                //{
-                //    // Wait for data before allocating a buffer.
-                //    // 此时 GetResult 无用
-                //    // 自动机封装了后续代码
-                //    //Console.WriteLine("Receiver - Method : Run WaitForData!");
-                //    await _receiver.WaitForDataAsync();
-                //    //Console.WriteLine("Receiver - Method : Run WaitForData Completed!");
-                //}
+                if (_waitForData)
+                {
+                    // Wait for data before allocating a buffer.
+                    // 此时 GetResult 无用
+                    // 自动机封装了后续代码
+                    //Console.WriteLine("Receiver - Method : Run WaitForData!");
+                    await _receiver.WaitForDataAsync();
+                    //Console.WriteLine("Receiver - Method : Run WaitForData Completed!");
+                }
 
                 // Ensure we have some reasonable amount of buffer space
                 var buffer = input.GetMemory(MinAllocBufferSize);

@@ -128,8 +128,8 @@ namespace console_netcore31_newsocket
             //_redisClient7 = _pool7._node;
             //_redisClient8 = new NewRedisClient8();
             //_redisClient8.CreateConnection(ip, port);
-            //_redisClient9 = new NewRedisClient9();
-            //_redisClient9.CreateConnection(ip, port);
+            _redisClient9 = new NewRedisClient9();
+            _redisClient9.CreateConnection(ip, port);
             _pool13 = new ClientPool4(ip, port);
             _pool13.AuthAsync(pwd);
             _pool10 = new ClientPool3(ip, port);
@@ -154,9 +154,10 @@ namespace console_netcore31_newsocket
         public static void RunTest()
         {
             //FreeRedisSetTest();
-            StackExchangeRedisSetTest();
+            //StackExchangeRedisSetTest();
+            //StackExchangeRedisSetTest();
             NewSocketRedis4SetTest();
-            //NewSocketRedis9SetTest();
+            NewSocketRedis9SetTest();
             //NewSocketRedis12SetTest();
             Pool310SetTest();
             //NewSocketRedis0SetTest();
