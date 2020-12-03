@@ -20,7 +20,7 @@ namespace console_netcore31_newsocket
         }
         //public int Count;
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public void Append(T value)
         {
             //Count += 1;
@@ -28,7 +28,7 @@ namespace console_netcore31_newsocket
             Tail = Tail.Next;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public void Append(SingleLinks<T> node)
         {
             //Console.WriteLine("In Append!");
@@ -43,14 +43,14 @@ namespace console_netcore31_newsocket
             }
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public void Clear()
         {
             _first.Next = null;
             Tail = _first;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public void ClearBefore(SingleLinkNode<T> node)
         {
 

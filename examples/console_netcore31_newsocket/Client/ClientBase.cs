@@ -152,7 +152,7 @@ namespace console_netcore31_newsocket
             }
         }
         public int LockCount;
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         protected void LockSend()
         {
 
@@ -164,13 +164,13 @@ namespace console_netcore31_newsocket
             }
 
         }
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public bool TryGetSendLock()
         {
             return Interlocked.CompareExchange(ref _send_lock_flag, 1, 0) == 0;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public void ReleaseSend()
         {
 
@@ -180,7 +180,7 @@ namespace console_netcore31_newsocket
 
         private long _receiver_lock_flag;
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         protected void LockReceiver()
         {
 

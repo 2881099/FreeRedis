@@ -88,7 +88,7 @@ namespace console_netcore31_newsocket
             //stopwatch.Start();
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public Task<bool> SetAsync(byte[] bytes)
         {
             var taskSource = CreateTask(null, TaskCreationOptions.RunContinuationsAsynchronously);

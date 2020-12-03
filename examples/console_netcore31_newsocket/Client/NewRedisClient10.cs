@@ -36,11 +36,12 @@ namespace console_netcore31_newsocket
             _tempResultLink = new SingleLinks<bool>();
             ResultDispatcher();
         }
-
+        
         public override Task<bool> SetAsync(string key, string value)
         {
             throw new NotImplementedException();
         }
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public void SetAsync(byte[] bytes,Task<bool> task)
         {
             _currentTaskBuffer.Append(task);
@@ -56,7 +57,7 @@ namespace console_netcore31_newsocket
             ReleaseSend();
 
         }
-
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         private void GetTaskSpan()
         {
 
@@ -74,6 +75,8 @@ namespace console_netcore31_newsocket
         private SingleLinks<bool> _tempResultLink;
         //public long HandlerCount = 0;
         private long _handlerCount = 0;
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         protected internal override void Handler(in ReadOnlySequence<byte> sequence)
         {
             //HandlerCount += 1;
@@ -119,7 +122,7 @@ namespace console_netcore31_newsocket
             }
 
         }
-
+        
         public async void ResultDispatcher()
         {
             while (true)

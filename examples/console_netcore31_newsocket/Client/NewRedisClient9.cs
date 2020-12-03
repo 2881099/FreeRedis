@@ -37,8 +37,7 @@ namespace console_netcore31_newsocket
         }
 
 
-
-        private int sendCount;
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public override Task<bool> SetAsync(string key, string value)
         {
             var bytes = Encoding.UTF8.GetBytes($"*3\r\n$3\r\nSET\r\n${key.Length}\r\n{key}\r\n${value.Length}\r\n{value}\r\n");
@@ -49,7 +48,7 @@ namespace console_netcore31_newsocket
             ReleaseSend();
             return taskSource;
         }
-
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public virtual Task<bool> SetAsync(byte[] bytes)
         {
             var taskSource = CreateTask(null, TaskCreationOptions.RunContinuationsAsynchronously);
@@ -60,7 +59,7 @@ namespace console_netcore31_newsocket
             return taskSource;
         }
 
-
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         private void GetTaskSpan()
         {
 
@@ -77,6 +76,8 @@ namespace console_netcore31_newsocket
         private TaskCompletionSource<long> _handlerResultTask;
         private SingleLinks<bool> _tempResultLink;
         private long _handlerCount = 0;
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         protected internal override void Handler(in ReadOnlySequence<byte> sequence)
         {
 

@@ -81,8 +81,8 @@ namespace console_netcore31_newsocket
         private static void InitClient()
         {
 
-            //_useDelay = true;
-            //_delayCount = 5000;
+            _useDelay = true;
+            _delayCount = 5000;
             //Notice : Please use "//" comment "/*".
 
             ///*
@@ -123,7 +123,7 @@ namespace console_netcore31_newsocket
             //_redisClient12.CreateConnection(ip, port);
             _redisClient4 = new NewRedisClient4();
             _redisClient4.CreateConnection(ip, port);
-            _redisClient4.AuthAsync(pwd);
+            //_redisClient4.AuthAsync(pwd);
             //_redisClient5 = _pool5._node;
             //_redisClient7 = _pool7._node;
             //_redisClient8 = new NewRedisClient8();
@@ -131,11 +131,11 @@ namespace console_netcore31_newsocket
             _redisClient9 = new NewRedisClient9();
             _redisClient9.CreateConnection(ip, port);
             _pool13 = new ClientPool4(ip, port);
-            _pool13.AuthAsync(pwd);
+            //_pool13.AuthAsync(pwd);
             _pool10 = new ClientPool3(ip, port);
-            _pool10.AuthAsync(pwd);
+            //_pool10.AuthAsync(pwd);
             //_redisClient5.SetAsync("a", "a");
-            ConnectionMultiplexer seredis = ConnectionMultiplexer.Connect($"{ip}:{port},password={pwd}");
+            ConnectionMultiplexer seredis = ConnectionMultiplexer.Connect($"{ip}:{port}");
             _stackExnchangeClient = seredis.GetDatabase(0);
 
 
@@ -154,8 +154,8 @@ namespace console_netcore31_newsocket
         public static void RunTest()
         {
             //FreeRedisSetTest();
-            //StackExchangeRedisSetTest();
-            //StackExchangeRedisSetTest();
+            StackExchangeRedisSetTest();
+            StackExchangeRedisSetTest();
             NewSocketRedis4SetTest();
             NewSocketRedis9SetTest();
             //NewSocketRedis12SetTest();
