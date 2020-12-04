@@ -36,6 +36,16 @@ namespace console_netcore31_newsocket
             ResultDispatcher();
         }
 
+        public Task<bool> AuthAsync(string password)
+        {
+            var bytes = Encoding.UTF8.GetBytes($"AUTH {password}\r\n");
+            var task = CreateTask(null, TaskCreationOptions.RunContinuationsAsynchronously);
+            LockSend();
+            _currentTaskBuffer.Append(task);
+            _sender.WriteAsync(bytes);
+            ReleaseSend();
+            return task;
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public override Task<bool> SetAsync(string key, string value)
@@ -59,7 +69,7 @@ namespace console_netcore31_newsocket
             return taskSource;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void GetTaskSpan()
         {
 
@@ -77,7 +87,7 @@ namespace console_netcore31_newsocket
         private SingleLinks<bool> _tempResultLink;
         private long _handlerCount = 0;
 
-        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected internal override void Handler(in ReadOnlySequence<byte> sequence)
         {
 

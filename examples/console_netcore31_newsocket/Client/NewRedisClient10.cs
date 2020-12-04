@@ -48,6 +48,7 @@ namespace console_netcore31_newsocket
             _sender.WriteAsync(bytes);
             //ReleaseSend();
         }
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public void SetAndWaitAsync(byte[] bytes, Task<bool> task)
         {
 
@@ -57,7 +58,7 @@ namespace console_netcore31_newsocket
             ReleaseSend();
 
         }
-        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void GetTaskSpan()
         {
 
