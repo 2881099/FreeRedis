@@ -22,14 +22,9 @@ namespace FreeRedis
         public Task<long> SInterStoreAsync(string destination, params string[] keys) => CallAsync("SINTERSTORE".InputKey(destination).InputKey(keys), rt => rt.ThrowOrValue<long>());
 
         public Task<bool> SIsMemberAsync<T>(string key, T member) => CallAsync("SISMEMBER".InputKey(key).InputRaw(SerializeRedisValue(member)), rt => rt.ThrowOrValue<bool>());
-
         public Task<string[]> SMembersAsync(string key) => CallAsync("SMEMBERS".InputKey(key), rt => rt.ThrowOrValue<string[]>());
-
         public Task<T[]> SMembersAsync<T>(string key) => SReadArrayAsync<T>("SMEMBERS".InputKey(key));
-
-        public Task<string[]> SMeMembersAsync(string key) => CallAsync("SMEMBERS".InputKey(key), rt => rt.ThrowOrValue<string[]>());
-
-        public Task<T[]> SMeMembersAsync<T>(string key) => SReadArrayAsync<T>("SMEMBERS".InputKey(key));
+        public Task<bool[]> SMIsMemberAsync<T>(string key, params object[] members) => CallAsync("SMISMEMBER".InputKey(key).Input(members.Select(a => SerializeRedisValue(a)).ToArray()), rt => rt.ThrowOrValue<bool[]>());
 
         public Task<bool> SMoveAsync<T>(string source, string destination, T member) => CallAsync("SMOVE"
             .InputKey(source)
@@ -73,8 +68,9 @@ namespace FreeRedis
         public long SInterStore(string destination, params string[] keys) => Call("SINTERSTORE".InputKey(destination).InputKey(keys), rt => rt.ThrowOrValue<long>());
 
         public bool SIsMember<T>(string key, T member) => Call("SISMEMBER".InputKey(key).InputRaw(SerializeRedisValue(member)), rt => rt.ThrowOrValue<bool>());
-        public string[] SMeMembers(string key) => Call("SMEMBERS".InputKey(key), rt => rt.ThrowOrValue<string[]>());
-        public T[] SMeMembers<T>(string key) => SReadArray<T>("SMISMEMBER".InputKey(key));
+        public string[] SMembers(string key) => Call("SMEMBERS".InputKey(key), rt => rt.ThrowOrValue<string[]>());
+        public T[] SMembers<T>(string key) => SReadArray<T>("SMEMBERS".InputKey(key));
+        public bool[] SMIsMember<T>(string key, params object[] members) => Call("SMISMEMBER".InputKey(key).Input(members.Select(a => SerializeRedisValue(a)).ToArray()), rt => rt.ThrowOrValue<bool[]>());
 
         public bool SMove<T>(string source, string destination, T member) => Call("SMOVE"
             .InputKey(source)

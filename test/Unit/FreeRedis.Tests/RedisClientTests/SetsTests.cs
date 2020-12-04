@@ -81,11 +81,11 @@ namespace FreeRedis.Tests.RedisClientTests
         }
 
         [Fact]
-        public void SMeMembers()
+        public void SMembers()
         {
             cli.Del("TestSMeMembers1");
             Assert.Equal(4, cli.SAdd("TestSMeMembers1", Null, Class, String, Bytes));
-            Assert.Equal(4, cli.SMeMembers("TestSMeMembers1").Length);
+            Assert.Equal(4, cli.SMembers("TestSMeMembers1").Length);
         }
 
         [Fact]
