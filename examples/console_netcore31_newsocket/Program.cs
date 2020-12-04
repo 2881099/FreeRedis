@@ -167,11 +167,13 @@ namespace console_netcore31_newsocket
             //FreeRedisSetTest();
             StackExchangeRedisSetTest();
             StackExchangeRedisSetTest();
+            StackExchangeRedisSetTest();
             //StackExchangeRedisSetTest();
             //StackExchangeRedisSetTest();
             //StackExchangeRedisSetTest();
             //StackExchangeRedisSetTest();
             //StackExchangeRedisSetTest();
+            NewSocketRedis14SetTest();
             NewSocketRedis14SetTest();
             NewSocketRedis14SetTest();
             //NewSocketRedis14SetTest();

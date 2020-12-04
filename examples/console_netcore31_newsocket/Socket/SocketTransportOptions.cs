@@ -30,7 +30,7 @@ namespace console_netcore31_newsocket
         /// <remarks>
         /// Defaults to true.
         /// </remarks>
-        public bool NoDelay { get; set; } = true;
+        public bool NoDelay { get; set; } = false;
 
         /// <summary>
         /// The maximum length of the pending connection queue.
@@ -43,12 +43,12 @@ namespace console_netcore31_newsocket
         /// <summary>
         /// Gets or sets the maximum unconsumed incoming bytes the transport will buffer.
         /// </summary>
-        public long? MaxReadBufferSize { get; set; } = 1024 * 1024;
+        public long? MaxReadBufferSize { get; set; } = 2L * 1024 * 1024 * 1024;
 
         /// <summary>
         /// Gets or sets the maximum outgoing bytes the transport will buffer before applying write backpressure.
         /// </summary>
-        public long? MaxWriteBufferSize { get; set; } = 64 * 1024;
+        public long? MaxWriteBufferSize { get; set; } = 512 * 1024;
 
         /// <summary>
         /// Inline application and transport continuations instead of dispatching to the threadpool.
