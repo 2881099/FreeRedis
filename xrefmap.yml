@@ -8648,28 +8648,44 @@ references:
   isSpec: "True"
   fullName: FreeRedis.RedisClient.SlowLog
   nameWithType: RedisClient.SlowLog
-- uid: FreeRedis.RedisClient.SMeMembers(System.String)
-  name: SMeMembers(String)
-  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_SMeMembers_System_String_
-  commentId: M:FreeRedis.RedisClient.SMeMembers(System.String)
-  fullName: FreeRedis.RedisClient.SMeMembers(System.String)
-  nameWithType: RedisClient.SMeMembers(String)
-- uid: FreeRedis.RedisClient.SMeMembers*
-  name: SMeMembers
-  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_SMeMembers_
-  commentId: Overload:FreeRedis.RedisClient.SMeMembers
+- uid: FreeRedis.RedisClient.SMembers(System.String)
+  name: SMembers(String)
+  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_SMembers_System_String_
+  commentId: M:FreeRedis.RedisClient.SMembers(System.String)
+  fullName: FreeRedis.RedisClient.SMembers(System.String)
+  nameWithType: RedisClient.SMembers(String)
+- uid: FreeRedis.RedisClient.SMembers*
+  name: SMembers
+  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_SMembers_
+  commentId: Overload:FreeRedis.RedisClient.SMembers
   isSpec: "True"
-  fullName: FreeRedis.RedisClient.SMeMembers
-  nameWithType: RedisClient.SMeMembers
-- uid: FreeRedis.RedisClient.SMeMembers``1(System.String)
-  name: SMeMembers<T>(String)
-  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_SMeMembers__1_System_String_
-  commentId: M:FreeRedis.RedisClient.SMeMembers``1(System.String)
-  name.vb: SMeMembers(Of T)(String)
-  fullName: FreeRedis.RedisClient.SMeMembers<T>(System.String)
-  fullName.vb: FreeRedis.RedisClient.SMeMembers(Of T)(System.String)
-  nameWithType: RedisClient.SMeMembers<T>(String)
-  nameWithType.vb: RedisClient.SMeMembers(Of T)(String)
+  fullName: FreeRedis.RedisClient.SMembers
+  nameWithType: RedisClient.SMembers
+- uid: FreeRedis.RedisClient.SMembers``1(System.String)
+  name: SMembers<T>(String)
+  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_SMembers__1_System_String_
+  commentId: M:FreeRedis.RedisClient.SMembers``1(System.String)
+  name.vb: SMembers(Of T)(String)
+  fullName: FreeRedis.RedisClient.SMembers<T>(System.String)
+  fullName.vb: FreeRedis.RedisClient.SMembers(Of T)(System.String)
+  nameWithType: RedisClient.SMembers<T>(String)
+  nameWithType.vb: RedisClient.SMembers(Of T)(String)
+- uid: FreeRedis.RedisClient.SMIsMember*
+  name: SMIsMember
+  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_SMIsMember_
+  commentId: Overload:FreeRedis.RedisClient.SMIsMember
+  isSpec: "True"
+  fullName: FreeRedis.RedisClient.SMIsMember
+  nameWithType: RedisClient.SMIsMember
+- uid: FreeRedis.RedisClient.SMIsMember``1(System.String,System.Object[])
+  name: SMIsMember<T>(String, Object[])
+  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_SMIsMember__1_System_String_System_Object___
+  commentId: M:FreeRedis.RedisClient.SMIsMember``1(System.String,System.Object[])
+  name.vb: SMIsMember(Of T)(String, Object())
+  fullName: FreeRedis.RedisClient.SMIsMember<T>(System.String, System.Object[])
+  fullName.vb: FreeRedis.RedisClient.SMIsMember(Of T)(System.String, System.Object())
+  nameWithType: RedisClient.SMIsMember<T>(String, Object[])
+  nameWithType.vb: RedisClient.SMIsMember(Of T)(String, Object())
 - uid: FreeRedis.RedisClient.SMove*
   name: SMove
   href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_SMove_
