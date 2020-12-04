@@ -22,8 +22,14 @@ namespace FreeRedis
         public Task<long> SInterStoreAsync(string destination, params string[] keys) => CallAsync("SINTERSTORE".InputKey(destination).InputKey(keys), rt => rt.ThrowOrValue<long>());
 
         public Task<bool> SIsMemberAsync<T>(string key, T member) => CallAsync("SISMEMBER".InputKey(key).InputRaw(SerializeRedisValue(member)), rt => rt.ThrowOrValue<bool>());
+
+        public Task<string[]> SMembersAsync(string key) => CallAsync("SMEMBERS".InputKey(key), rt => rt.ThrowOrValue<string[]>());
+
+        public Task<T[]> SMembersAsync<T>(string key) => SReadArrayAsync<T>("SMEMBERS".InputKey(key));
+
         public Task<string[]> SMeMembersAsync(string key) => CallAsync("SMEMBERS".InputKey(key), rt => rt.ThrowOrValue<string[]>());
-        public Task<T[]> SMeMembersAsync<T>(string key) => SReadArrayAsync<T>("SMISMEMBER".InputKey(key));
+
+        public Task<T[]> SMeMembersAsync<T>(string key) => SReadArrayAsync<T>("SMEMBERS".InputKey(key));
 
         public Task<bool> SMoveAsync<T>(string source, string destination, T member) => CallAsync("SMOVE"
             .InputKey(source)
