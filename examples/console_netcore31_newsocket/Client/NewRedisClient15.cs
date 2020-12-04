@@ -19,13 +19,13 @@ namespace console_netcore31_newsocket
 
 
 
-    public class NewRedisClient14 : RedisClientBase
+    public class NewRedisClient15 : RedisClientBase
     {
 
         protected SingleLinks2<bool> _currentTaskBuffer;
         private readonly byte _protocalStart;
         private readonly SingleLinks2<bool> _taskBuffer;
-        public NewRedisClient14()
+        public NewRedisClient15()
         {
             _currentTaskBuffer = new SingleLinks2<bool>();
             _taskBuffer = new SingleLinks2<bool>();

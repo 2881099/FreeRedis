@@ -61,7 +61,8 @@ namespace console_netcore31_newsocket
         public static ConnectionMultiplexer seredis;
         static void Main(string[] args)
         {
-            
+            Console.WriteLine("按键开始！");
+            Console.ReadKey();
             Configuration();
             Thread.Sleep(3000);
             //var result = _redisClient4.FlushDBAsync().Result;
@@ -84,7 +85,7 @@ namespace console_netcore31_newsocket
         {
 
             _useDelay = true;
-            _delayCount = 15000;
+            _delayCount = 20000;
             //Notice : Please use "//" comment "/*".
 
             ///*
@@ -134,9 +135,9 @@ namespace console_netcore31_newsocket
             //_redisClient7 = _pool7._node;
             //_redisClient8 = new NewRedisClient8();
             //_redisClient8.CreateConnection(ip, port);
-            _redisClient9 = new NewRedisClient9();
-            _redisClient9.CreateConnection(ip, port);
-            _redisClient9.AuthAsync(pwd);
+            //_redisClient9 = new NewRedisClient9();
+            //_redisClient9.CreateConnection(ip, port);
+            //_redisClient9.AuthAsync(pwd);
             ///_pool13 = new ClientPool4(ip, port);
             //_pool13.AuthAsync(pwd);
             _pool10 = new ClientPool3(ip, port);
@@ -166,16 +167,44 @@ namespace console_netcore31_newsocket
             //FreeRedisSetTest();
             StackExchangeRedisSetTest();
             StackExchangeRedisSetTest();
-            seredis.Close();
-            seredis.Dispose();
+            //StackExchangeRedisSetTest();
+            //StackExchangeRedisSetTest();
+            //StackExchangeRedisSetTest();
+            //StackExchangeRedisSetTest();
+            //StackExchangeRedisSetTest();
+            NewSocketRedis14SetTest();
+            NewSocketRedis14SetTest();
+            //NewSocketRedis14SetTest();
+            //NewSocketRedis14SetTest();
+            //NewSocketRedis14SetTest();
+            //NewSocketRedis14SetTest();
+            //Pool514SetTest();
+            //Pool514SetTest();
+            //Pool514SetTest();
+            //Pool514SetTest();
+            //Pool514SetTest();
+            //Pool514SetTest();
+            //Pool310SetTest();
+            //Pool310SetTest();
+            //Pool310SetTest();
+            //Pool310SetTest();
+            //Pool310SetTest();
+            //Pool310SetTest();
+            //seredis.Close();
+            //seredis.Dispose();
             //NewSocketRedis4SetTest();
-            NewSocketRedis9SetTest();
-            NewSocketRedis9SetTest();
-            NewSocketRedis14SetTest();
-            NewSocketRedis14SetTest();
-            Pool514SetTest(); Pool514SetTest();
+            //NewSocketRedis4SetTest();
+            //NewSocketRedis4SetTest();
+            //NewSocketRedis4SetTest();
+            //NewSocketRedis4SetTest();
+            //NewSocketRedis4SetTest();
+            //NewSocketRedis9SetTest();
+            //NewSocketRedis9SetTest();
+            //NewSocketRedis14SetTest();
+            //NewSocketRedis14SetTest();
+            //Pool514SetTest(); Pool514SetTest();
             //NewSocketRedis12SetTest();
-            Pool310SetTest(); Pool310SetTest();
+            //Pool310SetTest(); Pool310SetTest();
             //NewSocketRedis0SetTest();
             //NewSocketRedis1SetTest();
             //NewSocketRedis2SetTest();
@@ -358,7 +387,7 @@ namespace console_netcore31_newsocket
             }
             var tasks = new Task[frequence];
             Stopwatch sw = new Stopwatch();
-            _beforeSw?.Invoke(title);
+            //_beforeSw?.Invoke(title);
             Console.WriteLine("Start Run:");
             Thread.Sleep(0);
             Thread.Sleep(1000);
@@ -382,7 +411,7 @@ namespace console_netcore31_newsocket
             //    });
             //}
             //Task.WaitAll(tasks);
-            Console.WriteLine($"{title} (0-{frequence / 10000}W) : {sw.ElapsedTicks} SPAN! ");
+            //Console.WriteLine($"{title} (0-{frequence / 10000}W) : {sw.ElapsedTicks} SPAN! ");
             Console.WriteLine($"{title} (0-{frequence / 10000}W) : {sw.ElapsedMilliseconds}ms! ");
             //Console.WriteLine($"Errors : {count} !");
             //if (count>0)

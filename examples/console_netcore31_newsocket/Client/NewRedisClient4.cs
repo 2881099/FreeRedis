@@ -27,13 +27,13 @@ namespace console_netcore31_newsocket
         public NewRedisClient4()
         {
             _protocalStart = (byte)43;
-            newRedisClient9 = new NewRedisClient405();
+           // newRedisClient9 = new NewRedisClient405();
 
 
         }
         public override void CreateConnection(string ip, int port)
         {
-            newRedisClient9.CreateConnection(ip, port);
+           // newRedisClient9.CreateConnection(ip, port);
             base.CreateConnection(ip, port);
         }
 
@@ -52,6 +52,7 @@ namespace console_netcore31_newsocket
         }
         public Task<bool> AuthAsync(string password)
         {
+           // newRedisClient9.AuthAsync(password);
             var bytes = Encoding.UTF8.GetBytes($"AUTH {password}\r\n");
             var taskSource = CreateTask(null, TaskCreationOptions.RunContinuationsAsynchronously);
             _receiverQueue.Enqueue(taskSource, bytes);
@@ -61,16 +62,17 @@ namespace console_netcore31_newsocket
         {
             var bytes = Encoding.UTF8.GetBytes($"*3\r\n$3\r\nSET\r\n${key.Length}\r\n{key}\r\n${value.Length}\r\n{value}\r\n");
             var taskSource = new TaskCompletionSource<bool>(null, TaskCreationOptions.RunContinuationsAsynchronously).Task;
-            if (TryGetSendLock())
-            {
+            LockSend();
+            //if (TryGetSendLock())
+            //{
                 _receiverQueue.Enqueue(taskSource, bytes);
                 ReleaseSend();
                 return taskSource;
-            }
-            else
-            {
-                return newRedisClient9.SetAsync(key, value);
-            }
+           // }
+            //else
+           // {
+           //     return newRedisClient9.SetAsync(key, value);
+           // }
             
             
             
