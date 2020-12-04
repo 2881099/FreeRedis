@@ -25,7 +25,7 @@ namespace console_netcore31_newsocket
         private static int port;
         private static string ip;
         private static string pwd;
-        private const int frequence = 100000;
+        private const int frequence = 1000000;
 
         private static RedisClient _freeRedisClient;
         private static BeetleX.Redis.RedisDB _beetleClient;
@@ -84,8 +84,8 @@ namespace console_netcore31_newsocket
         private static void Configuration()
         {
 
-            _useDelay = true;
-            _delayCount = 20000;
+            //_useDelay = true;
+            //_delayCount = 20000;
             //Notice : Please use "//" comment "/*".
 
             ///*
@@ -126,10 +126,10 @@ namespace console_netcore31_newsocket
             //_redisClient12.CreateConnection(ip, port);
             _redisClient14 = new NewRedisClient14();
             _redisClient14.CreateConnection(ip, port);
-            _redisClient14.AuthAsync(pwd);
+            //_redisClient14.AuthAsync(pwd);
             _redisClient4 = new NewRedisClient4();
             _redisClient4.CreateConnection(ip, port);
-            _redisClient4.AuthAsync(pwd);
+            //_redisClient4.AuthAsync(pwd);
             //_redisClient4.AuthAsync(pwd);
             //_redisClient5 = _pool5._node;
             //_redisClient7 = _pool7._node;
@@ -141,11 +141,11 @@ namespace console_netcore31_newsocket
             ///_pool13 = new ClientPool4(ip, port);
             //_pool13.AuthAsync(pwd);
             _pool10 = new ClientPool3(ip, port);
-            _pool10.AuthAsync(pwd);
+            //_pool10.AuthAsync(pwd);
             _pool14 = new ClientPool5(ip, port);
-            _pool14.AuthAsync(pwd);
+            //_pool14.AuthAsync(pwd);
             //_redisClient5.SetAsync("a", "a");
-            seredis = ConnectionMultiplexer.Connect($"{ip}:{port},password={pwd}");
+            seredis = ConnectionMultiplexer.Connect($"{ip}:{port}");
             _stackExnchangeClient = seredis.GetDatabase(0);
 
 
@@ -167,7 +167,7 @@ namespace console_netcore31_newsocket
             //FreeRedisSetTest();
             StackExchangeRedisSetTest();
             StackExchangeRedisSetTest();
-            StackExchangeRedisSetTest();
+            //StackExchangeRedisSetTest();
             //StackExchangeRedisSetTest();
             //StackExchangeRedisSetTest();
             //StackExchangeRedisSetTest();
@@ -175,7 +175,7 @@ namespace console_netcore31_newsocket
             //StackExchangeRedisSetTest();
             NewSocketRedis14SetTest();
             NewSocketRedis14SetTest();
-            NewSocketRedis14SetTest();
+            //NewSocketRedis14SetTest();
             //NewSocketRedis14SetTest();
             //NewSocketRedis14SetTest();
             //NewSocketRedis14SetTest();
@@ -399,23 +399,23 @@ namespace console_netcore31_newsocket
                 tasks[a] = action(a.ToString());
             }
             Task.WaitAll(tasks);
-            //sw.Stop();
-            //for (var a = 0; a < frequence; a += 1)
-            //{
-            //    var key = a.ToString();
-            //    tasks[a] = Task.Run(() =>
-            //    {
-            //        var result = _stackExnchangeClient.StringGet(key);
-            //        if (result != key)
-            //        {
-            //            Interlocked.Increment(ref count);
-            //        }
-            //    });
-            //}
-            //Task.WaitAll(tasks);
+            sw.Stop();
+            for (var a = 0; a < frequence; a += 1)
+            {
+                var key = a.ToString();
+                tasks[a] = Task.Run(() =>
+                {
+                    var result = _stackExnchangeClient.StringGet(key);
+                    if (result != key)
+                    {
+                        Interlocked.Increment(ref count);
+                    }
+                });
+            }
+            Task.WaitAll(tasks);
             //Console.WriteLine($"{title} (0-{frequence / 10000}W) : {sw.ElapsedTicks} SPAN! ");
             Console.WriteLine($"{title} (0-{frequence / 10000}W) : {sw.ElapsedMilliseconds}ms! ");
-            //Console.WriteLine($"Errors : {count} !");
+            Console.WriteLine($"Errors : {count} !");
             //if (count>0)
             //{
             //    Thread.Sleep(1000);
