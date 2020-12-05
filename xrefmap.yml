@@ -7394,6 +7394,77 @@ references:
   isSpec: "True"
   fullName: FreeRedis.RedisClient.LLen
   nameWithType: RedisClient.LLen
+- uid: FreeRedis.RedisClient.Lock(System.String,System.Int32,System.Boolean)
+  name: Lock(String, Int32, Boolean)
+  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_Lock_System_String_System_Int32_System_Boolean_
+  commentId: M:FreeRedis.RedisClient.Lock(System.String,System.Int32,System.Boolean)
+  fullName: FreeRedis.RedisClient.Lock(System.String, System.Int32, System.Boolean)
+  nameWithType: RedisClient.Lock(String, Int32, Boolean)
+- uid: FreeRedis.RedisClient.Lock*
+  name: Lock
+  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_Lock_
+  commentId: Overload:FreeRedis.RedisClient.Lock
+  isSpec: "True"
+  fullName: FreeRedis.RedisClient.Lock
+  nameWithType: RedisClient.Lock
+- uid: FreeRedis.RedisClient.LockController
+  name: RedisClient.LockController
+  href: docs/api/FreeRedis.RedisClient.LockController.html
+  commentId: T:FreeRedis.RedisClient.LockController
+  fullName: FreeRedis.RedisClient.LockController
+  nameWithType: RedisClient.LockController
+- uid: FreeRedis.RedisClient.LockController.Delay(System.Int32)
+  name: Delay(Int32)
+  href: docs/api/FreeRedis.RedisClient.LockController.html#FreeRedis_RedisClient_LockController_Delay_System_Int32_
+  commentId: M:FreeRedis.RedisClient.LockController.Delay(System.Int32)
+  fullName: FreeRedis.RedisClient.LockController.Delay(System.Int32)
+  nameWithType: RedisClient.LockController.Delay(Int32)
+- uid: FreeRedis.RedisClient.LockController.Delay*
+  name: Delay
+  href: docs/api/FreeRedis.RedisClient.LockController.html#FreeRedis_RedisClient_LockController_Delay_
+  commentId: Overload:FreeRedis.RedisClient.LockController.Delay
+  isSpec: "True"
+  fullName: FreeRedis.RedisClient.LockController.Delay
+  nameWithType: RedisClient.LockController.Delay
+- uid: FreeRedis.RedisClient.LockController.Dispose
+  name: Dispose()
+  href: docs/api/FreeRedis.RedisClient.LockController.html#FreeRedis_RedisClient_LockController_Dispose
+  commentId: M:FreeRedis.RedisClient.LockController.Dispose
+  fullName: FreeRedis.RedisClient.LockController.Dispose()
+  nameWithType: RedisClient.LockController.Dispose()
+- uid: FreeRedis.RedisClient.LockController.Dispose*
+  name: Dispose
+  href: docs/api/FreeRedis.RedisClient.LockController.html#FreeRedis_RedisClient_LockController_Dispose_
+  commentId: Overload:FreeRedis.RedisClient.LockController.Dispose
+  isSpec: "True"
+  fullName: FreeRedis.RedisClient.LockController.Dispose
+  nameWithType: RedisClient.LockController.Dispose
+- uid: FreeRedis.RedisClient.LockController.Refresh(System.Int32)
+  name: Refresh(Int32)
+  href: docs/api/FreeRedis.RedisClient.LockController.html#FreeRedis_RedisClient_LockController_Refresh_System_Int32_
+  commentId: M:FreeRedis.RedisClient.LockController.Refresh(System.Int32)
+  fullName: FreeRedis.RedisClient.LockController.Refresh(System.Int32)
+  nameWithType: RedisClient.LockController.Refresh(Int32)
+- uid: FreeRedis.RedisClient.LockController.Refresh*
+  name: Refresh
+  href: docs/api/FreeRedis.RedisClient.LockController.html#FreeRedis_RedisClient_LockController_Refresh_
+  commentId: Overload:FreeRedis.RedisClient.LockController.Refresh
+  isSpec: "True"
+  fullName: FreeRedis.RedisClient.LockController.Refresh
+  nameWithType: RedisClient.LockController.Refresh
+- uid: FreeRedis.RedisClient.LockController.Unlock
+  name: Unlock()
+  href: docs/api/FreeRedis.RedisClient.LockController.html#FreeRedis_RedisClient_LockController_Unlock
+  commentId: M:FreeRedis.RedisClient.LockController.Unlock
+  fullName: FreeRedis.RedisClient.LockController.Unlock()
+  nameWithType: RedisClient.LockController.Unlock()
+- uid: FreeRedis.RedisClient.LockController.Unlock*
+  name: Unlock
+  href: docs/api/FreeRedis.RedisClient.LockController.html#FreeRedis_RedisClient_LockController_Unlock_
+  commentId: Overload:FreeRedis.RedisClient.LockController.Unlock
+  isSpec: "True"
+  fullName: FreeRedis.RedisClient.LockController.Unlock
+  nameWithType: RedisClient.LockController.Unlock
 - uid: FreeRedis.RedisClient.LogCall*
   name: LogCall
   href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_LogCall_

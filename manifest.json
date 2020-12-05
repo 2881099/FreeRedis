@@ -723,7 +723,19 @@
       "output": {
         ".html": {
           "relative_path": "docs/api/FreeRedis.RedisClient.DatabaseHook.html",
-          "hash": "nCaaoW2PT/ZyxOT6IiFYzw=="
+          "hash": "sEKfCHf6iW6ivI0DaJfUog=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "docs/api/FreeRedis.RedisClient.LockController.yml",
+      "output": {
+        ".html": {
+          "relative_path": "docs/api/FreeRedis.RedisClient.LockController.html",
+          "hash": "hbqpvgCkXw9LAF9Ab/RZjg=="
         }
       },
       "is_incremental": false,
@@ -735,7 +747,7 @@
       "output": {
         ".html": {
           "relative_path": "docs/api/FreeRedis.RedisClient.PipelineHook.html",
-          "hash": "FzMUmlUOdhNSZCqj1Yy2DQ=="
+          "hash": "sOpfWoXRRPm/KtbZS36+tg=="
         }
       },
       "is_incremental": false,
@@ -747,7 +759,7 @@
       "output": {
         ".html": {
           "relative_path": "docs/api/FreeRedis.RedisClient.TransactionHook.html",
-          "hash": "/29vi5vXkdoaEmb6x9JNmQ=="
+          "hash": "ohsObTqYa1mtcvG38QPgqg=="
         }
       },
       "is_incremental": false,
@@ -771,7 +783,7 @@
       "output": {
         ".html": {
           "relative_path": "docs/api/FreeRedis.RedisClient.html",
-          "hash": "59KTaKh39NgAhiwOZplccg=="
+          "hash": "I3j/zDq1wA6LAhLvoXSC+A=="
         }
       },
       "is_incremental": false,
@@ -1215,7 +1227,7 @@
       "output": {
         ".html": {
           "relative_path": "docs/api/FreeRedis.html",
-          "hash": "yK5il+CS/yx7FSpzrRB08Q=="
+          "hash": "/jEW/qEbZW3o4I1tnXgbeQ=="
         }
       },
       "is_incremental": false,
@@ -1239,7 +1251,7 @@
       "output": {
         ".html": {
           "relative_path": "docs/api/toc.html",
-          "hash": "OMgEgNBFErJq7WUn7mMv5Q=="
+          "hash": "e48K9I7Y2MwhiRVsgzeffA=="
         }
       },
       "is_incremental": false,
@@ -1314,7 +1326,7 @@
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 99,
+          "total_file_count": 100,
           "skipped_file_count": 0
         },
         "TocDocumentProcessor": {
