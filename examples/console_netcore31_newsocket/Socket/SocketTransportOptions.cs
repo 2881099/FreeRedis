@@ -43,7 +43,7 @@ namespace console_netcore31_newsocket
         /// <summary>
         /// Gets or sets the maximum unconsumed incoming bytes the transport will buffer.
         /// </summary>
-        public long? MaxReadBufferSize { get; set; } = 2L * 1024 * 1024 * 1024;
+        public long? MaxReadBufferSize { get; set; } = 4L * 1024 * 1024 * 1024;
 
         /// <summary>
         /// Gets or sets the maximum outgoing bytes the transport will buffer before applying write backpressure.

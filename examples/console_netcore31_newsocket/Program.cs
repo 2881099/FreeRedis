@@ -25,7 +25,7 @@ namespace console_netcore31_newsocket
         private static int port;
         private static string ip;
         private static string pwd;
-        private const int frequence = 1000000;
+        private const int frequence = 300000;
 
         private static RedisClient _freeRedisClient;
         private static BeetleX.Redis.RedisDB _beetleClient;
@@ -62,16 +62,19 @@ namespace console_netcore31_newsocket
         static void Main(string[] args)
         {
             Console.WriteLine("按键开始！");
-            Console.ReadKey();
+            //Console.ReadKey();
             Configuration();
-            Thread.Sleep(3000);
-            //var result = _redisClient4.FlushDBAsync().Result;
-            //_stackExnchangeClient.StringSetAsync("1", "1");
+            //Thread.Sleep(3000);
+
+            //for (int i = 0; i < 100; i++)
+            //{
+            //    RunTest();
+            //}
             RunTest();
             //Console.WriteLine("====== 以上预热 =======");
             //RunTest();
-            
-            _pool10.ShowHandlerCount();
+
+            //_pool10.ShowHandlerCount();
             //CheckPool();
             //Console.WriteLine(_pool10.GetLockCount1());
             //Console.WriteLine(_pool10.GetLockCount2());
@@ -126,6 +129,16 @@ namespace console_netcore31_newsocket
             //_redisClient12.CreateConnection(ip, port);
             _redisClient14 = new NewRedisClient14();
             _redisClient14.CreateConnection(ip, port);
+            //for (int i = 0; i < 100; i++)
+            //{
+            //    Parallel.For(0, 10, (i) =>
+            //    {
+            //        var key = i.ToString();
+            //        _redisClient14.SetAsync(key, key);
+            //    });
+            //}
+            
+           
             //_redisClient14.AuthAsync(pwd);
             _redisClient4 = new NewRedisClient4();
             _redisClient4.CreateConnection(ip, port);
@@ -140,9 +153,9 @@ namespace console_netcore31_newsocket
             //_redisClient9.AuthAsync(pwd);
             ///_pool13 = new ClientPool4(ip, port);
             //_pool13.AuthAsync(pwd);
-            _pool10 = new ClientPool3(ip, port);
+            //_pool10 = new ClientPool3(ip, port);
             //_pool10.AuthAsync(pwd);
-            _pool14 = new ClientPool5(ip, port);
+            //_pool14 = new ClientPool5(ip, port);
             //_pool14.AuthAsync(pwd);
             //_redisClient5.SetAsync("a", "a");
             seredis = ConnectionMultiplexer.Connect($"{ip}:{port}");
@@ -163,16 +176,16 @@ namespace console_netcore31_newsocket
 
         public static void RunTest()
         {
-            Thread.Sleep(3000);
+            //Thread.Sleep(3000);
             //FreeRedisSetTest();
+            //StackExchangeRedisSetTest();
+            //StackExchangeRedisSetTest();
+            //StackExchangeRedisSetTest();
+            //StackExchangeRedisSetTest();
+            //StackExchangeRedisSetTest();
+            //StackExchangeRedisSetTest();
             StackExchangeRedisSetTest();
             StackExchangeRedisSetTest();
-            //StackExchangeRedisSetTest();
-            //StackExchangeRedisSetTest();
-            //StackExchangeRedisSetTest();
-            //StackExchangeRedisSetTest();
-            //StackExchangeRedisSetTest();
-            //StackExchangeRedisSetTest();
             NewSocketRedis14SetTest();
             NewSocketRedis14SetTest();
             //NewSocketRedis14SetTest();
@@ -400,22 +413,22 @@ namespace console_netcore31_newsocket
             }
             Task.WaitAll(tasks);
             sw.Stop();
-            for (var a = 0; a < frequence; a += 1)
-            {
-                var key = a.ToString();
-                tasks[a] = Task.Run(() =>
-                {
-                    var result = _stackExnchangeClient.StringGet(key);
-                    if (result != key)
-                    {
-                        Interlocked.Increment(ref count);
-                    }
-                });
-            }
-            Task.WaitAll(tasks);
+            //for (var a = 0; a < frequence; a += 1)
+            //{
+            //    var key = a.ToString();
+            //    tasks[a] = Task.Run(() =>
+            //    {
+            //        var result = _stackExnchangeClient.StringGet(key);
+            //        if (result != key)
+            //        {
+            //            Interlocked.Increment(ref count);
+            //        }
+            //    });
+            //}
+            //Task.WaitAll(tasks);
             //Console.WriteLine($"{title} (0-{frequence / 10000}W) : {sw.ElapsedTicks} SPAN! ");
             Console.WriteLine($"{title} (0-{frequence / 10000}W) : {sw.ElapsedMilliseconds}ms! ");
-            Console.WriteLine($"Errors : {count} !");
+            //Console.WriteLine($"Errors : {count} !");
             //if (count>0)
             //{
             //    Thread.Sleep(1000);
