@@ -40,11 +40,19 @@ namespace console_netcore31_newsocket
                 throw new NotSupportedException("The SocketConnectionFactory only supports IPEndPoints for now.");
             }
 
-            var socket = new Socket(ipEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp)
+           
+
+            var addressFamily = endpoint.AddressFamily;
+            if (addressFamily == AddressFamily.Unspecified && endpoint is DnsEndPoint)
+            {   // default DNS to ipv4 if not specified explicitly
+                addressFamily = AddressFamily.InterNetwork;
+            }
+
+            var protocolType = addressFamily == AddressFamily.Unix ? ProtocolType.Unspecified : ProtocolType.Tcp;
+            var socket = new Socket(ipEndPoint.AddressFamily, SocketType.Stream, protocolType)
             {
                 NoDelay = _options.NoDelay
             };
-
             await socket.ConnectAsync(ipEndPoint);
 
             var socketConnection = new SocketConnection(

@@ -22,30 +22,21 @@ namespace console_netcore31_newsocket
     public class NewRedisClient14 : RedisClientBase
     {
 
-        protected SingleLinks2<bool> _currentTaskBuffer;
         private readonly byte _protocalStart;
         private readonly SingleLinks2<bool> _taskBuffer;
+        private readonly SingleLinkNode2<bool> _head;
         public NewRedisClient14()
         {
-            _currentTaskBuffer = new SingleLinks2<bool>();
             _taskBuffer = new SingleLinks2<bool>();
+            _head = _taskBuffer.Head;
             _protocalStart = (byte)43;
-            //Task.Run(() =>
-            //{
-            //    for (int i = 0; i < 20; i++)
-            //    {
-            //        Thread.Sleep(3000);
-            //        Console.WriteLine(count);
-            //        Console.WriteLine("Deal Times:"+ dealCount);
-            //    }
-            //});
         }
         public Task<bool> AuthAsync(string password)
         {
             var bytes = Encoding.UTF8.GetBytes($"AUTH {password}\r\n");
             var task = CreateTask(null, TaskCreationOptions.RunContinuationsAsynchronously);
             LockSend();
-            _currentTaskBuffer.Append(task);
+            _taskBuffer.Append(task);
             _sender.WriteAsync(bytes);
             ReleaseSend();
             return task;
@@ -56,7 +47,7 @@ namespace console_netcore31_newsocket
             var bytes = Encoding.UTF8.GetBytes($"*3\r\n$3\r\nSET\r\n${key.Length}\r\n{key}\r\n${value.Length}\r\n{value}\r\n");
             var task = CreateTask(null, TaskCreationOptions.RunContinuationsAsynchronously);
             LockSend();
-            _currentTaskBuffer.Append(task);
+            _taskBuffer.Append(task);
             _sender.WriteAsync(bytes);
             ReleaseSend();
             return task;
@@ -64,7 +55,7 @@ namespace console_netcore31_newsocket
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public void SetAsync(byte[] bytes,Task<bool> task)
         {
-            _currentTaskBuffer.Append(task);
+            _taskBuffer.Append(task);
             _sender.WriteAsync(bytes);
             ReleaseSend();
         }
@@ -73,24 +64,12 @@ namespace console_netcore31_newsocket
         {
 
             LockSend();
-            _currentTaskBuffer.Append(task);
+            _taskBuffer.Append(task);
             _sender.WriteAsync(bytes);
             ReleaseSend();
 
         }
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void GetTaskSpan()
-        {
 
-            LockSend();
-            if (_currentTaskBuffer.Head.Next!=null)
-            {
-                _taskBuffer.Append(_currentTaskBuffer);
-                _currentTaskBuffer = new SingleLinks2<bool>();
-            }
-            ReleaseSend();
-
-        }
         private int count =-1;
         private int dealCount =-1;
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
@@ -98,33 +77,46 @@ namespace console_netcore31_newsocket
         {
             //Interlocked.Increment(ref dealCount);
             //HandlerCount += 1;
-            GetTaskSpan();
+            //GetTaskSpan();
+
             int step = 0;
             //第一个节点是有用的节点
-            SingleLinkNode2<bool> tempHead = _taskBuffer.Head;
-            var tempParameters = tempHead.Next;
-            var tempTail = tempHead;
+            var tempParameters = _head.Next;
+            var tempTail = _head;
             foreach (ReadOnlyMemory<byte> segment in sequence)
             {
                 var span = segment.Span;
                 var position = span.IndexOf(_protocalStart);
                 while (position != -1)
                 {
+
                     step += 1;
                     tempTail = tempTail.Next;
                     tempTail.Result = true;
+
+
                     span = span.Slice(position + 1);
                     position = span.IndexOf(_protocalStart);
+
                 }
             }
-            
+
             LockSend();
             _taskBuffer.ClearBefore(tempTail);
             ReleaseSend();
 
-            if (step == 1)
+            if (step < 4)
             {
+
                 tempParameters.Completed();
+                step -= 1;
+                while (step!=0)
+                {
+                    tempParameters = tempParameters.Next;
+                    tempParameters.Completed();
+                    step -= 1;
+                }
+
             }
             else
             {

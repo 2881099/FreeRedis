@@ -71,10 +71,10 @@ namespace console_netcore31_newsocket
 
         public override IMemoryOwner<byte> Rent(int size = AnySize)
         {
-            if (size > _blockSize)
-            {
+            //if (size > _blockSize)
+            //{
                 // MemoryPoolThrowHelper.ThrowArgumentOutOfRangeException_BufferRequestTooLarge(_blockSize);
-            }
+            //}
 
             var block = Lease();
             return block;
@@ -86,10 +86,10 @@ namespace console_netcore31_newsocket
         /// <returns>The block that is reserved for the called. It must be passed to Return when it is no longer being used.</returns>
         private MemoryPoolBlock Lease()
         {
-            if (_isDisposed)
-            {
+            //if (_isDisposed)
+            //{
                 //MemoryPoolThrowHelper.ThrowObjectDisposedException(MemoryPoolThrowHelper.ExceptionArgument.MemoryPool);
-            }
+            //}
 
             if (_blocks.TryDequeue(out MemoryPoolBlock block))
             {

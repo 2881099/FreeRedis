@@ -69,8 +69,18 @@ namespace console_netcore31_newsocket
             maxReadBufferSize ??= 0;
             maxWriteBufferSize ??= 0;
 
-            var inputOptions = new PipeOptions(MemoryPool, applicationScheduler, transportScheduler, maxReadBufferSize.Value, maxReadBufferSize.Value / 2, useSynchronizationContext: false);
-            var outputOptions = new PipeOptions(MemoryPool, transportScheduler, applicationScheduler, maxWriteBufferSize.Value, maxWriteBufferSize.Value / 2, useSynchronizationContext: false);
+            var inputOptions = new PipeOptions(MemoryPool
+                , applicationScheduler
+                , transportScheduler
+                , maxReadBufferSize.Value
+                , maxReadBufferSize.Value / 2
+                , useSynchronizationContext: false);
+            var outputOptions = new PipeOptions(MemoryPool
+                , transportScheduler
+                , applicationScheduler
+                , maxWriteBufferSize.Value
+                , maxWriteBufferSize.Value / 2
+                , useSynchronizationContext: false);
 
             var pair = DuplexPipe.CreateConnectionPair(inputOptions, outputOptions);
 
