@@ -29,27 +29,7 @@ namespace console_netcore31_newsocket
             Tail = Tail.Next;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-        public void Append(SingleLinks2<T> node)
-        {
-            //Console.WriteLine("In Append!");
-            if (node.Head.Next != null)
-            {
 
-                //Count += node.Count;
-                Tail.Next = node.Head.Next;
-                Tail = node.Tail;
-                node.Head.Next = null;
-
-            }
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-        public void Clear()
-        {
-            Head.Next = null;
-            Tail = Head;
-        }
 
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public void ClearBefore(SingleLinkNode2<T> node)
