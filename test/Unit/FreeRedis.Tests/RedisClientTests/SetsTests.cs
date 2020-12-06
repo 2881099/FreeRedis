@@ -20,6 +20,12 @@ namespace FreeRedis.Tests.RedisClientTests
             Assert.Equal(4, cli.SAdd("TestSAdd1", Null, Class, String, Bytes));
             cli.SPop("TestSAdd1");
             Assert.Equal(3, cli.SCard("TestSAdd1"));
+
+            cli.Del("TestSAdd2");
+            Assert.Equal(1, cli.SAdd("TestSAdd2", Class));
+            Assert.Equal(JsonConvert.SerializeObject(Class), JsonConvert.SerializeObject(cli.SPop<TestClass>("TestSAdd2")));
+            Assert.Equal(1, cli.SAdd("TestSAdd2", Class));
+            Assert.Equal(JsonConvert.SerializeObject(Class), cli.SPop("TestSAdd2"));
         }
 
         [Fact]

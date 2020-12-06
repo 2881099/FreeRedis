@@ -54,7 +54,7 @@ namespace FreeRedis.Tests.RedisClientTests
             Assert.Equal(4, cli.HGetAll("TestHGetAll").Count);
             Assert.Equal(base.String, cli.HGetAll("TestHGetAll")["string1"]);
             Assert.Equal(Encoding.UTF8.GetString(base.Bytes), cli.HGetAll("TestHGetAll")["bytes1"]);
-            Assert.Equal(base.Class.ToString(), cli.HGetAll("TestHGetAll")["class1"]);
+            Assert.Equal(JsonConvert.SerializeObject(base.Class), cli.HGetAll("TestHGetAll")["class1"]);
         }
 
         [Fact]
@@ -124,7 +124,7 @@ namespace FreeRedis.Tests.RedisClientTests
             Assert.Equal(4, cli.HMGet("TestHMSet", "string1", "bytes1", "class1", "class1array").Length);
             Assert.Contains(base.String, cli.HMGet("TestHMSet", "string1", "bytes1", "class1", "class1array"));
             Assert.Contains(Encoding.UTF8.GetString(base.Bytes), cli.HMGet("TestHMSet", "string1", "bytes1", "class1", "class1array"));
-            Assert.Contains(base.Class.ToString(), cli.HMGet("TestHMSet", "string1", "bytes1", "class1", "class1array"));
+            Assert.Contains(JsonConvert.SerializeObject(base.Class), cli.HMGet("TestHMSet", "string1", "bytes1", "class1", "class1array"));
         }
 
         [Fact]

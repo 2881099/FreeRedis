@@ -181,18 +181,18 @@ namespace FreeRedis.Tests.RedisClientTests
             Assert.Equal("", cli.MGet("TestMGet_null1", "TestMGet_string1", "TestMGet_bytes1", "TestMGet_class1")[0]);
             Assert.Equal(String, cli.MGet("TestMGet_null1", "TestMGet_string1", "TestMGet_bytes1", "TestMGet_class1")[1]);
             Assert.Equal(Encoding.UTF8.GetString(Bytes), cli.MGet("TestMGet_null1", "TestMGet_string1", "TestMGet_bytes1", "TestMGet_class1")[2]);
-            Assert.Equal(Class.ToString(), cli.MGet("TestMGet_null1", "TestMGet_string1", "TestMGet_bytes1", "TestMGet_class1")[3]);
+            Assert.Equal(JsonConvert.SerializeObject(Class), cli.MGet("TestMGet_null1", "TestMGet_string1", "TestMGet_bytes1", "TestMGet_class1")[3]);
 
             Assert.Equal(4, cli.MGet<byte[]>("TestMGet_null1", "TestMGet_string1", "TestMGet_bytes1", "TestMGet_class1").Length);
             Assert.Equal(new byte[0], cli.MGet<byte[]>("TestMGet_null1", "TestMGet_string1", "TestMGet_bytes1", "TestMGet_class1")[0]);
             Assert.Equal(Encoding.UTF8.GetBytes(String), cli.MGet<byte[]>("TestMGet_null1", "TestMGet_string1", "TestMGet_bytes1", "TestMGet_class1")[1]);
             Assert.Equal(Bytes, cli.MGet<byte[]>("TestMGet_null1", "TestMGet_string1", "TestMGet_bytes1", "TestMGet_class1")[2]);
-            Assert.Equal(Encoding.UTF8.GetBytes(Class.ToString()), cli.MGet<byte[]>("TestMGet_null1", "TestMGet_string1", "TestMGet_bytes1", "TestMGet_class1")[3]);
+            Assert.Equal(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(Class)), cli.MGet<byte[]>("TestMGet_null1", "TestMGet_string1", "TestMGet_bytes1", "TestMGet_class1")[3]);
 
             Assert.Equal(3, cli.MGet<TestClass>("TestMGet_class1", "TestMGet_class2", "TestMGet_class3").Length);
-            Assert.Equal(Class.ToString(), cli.MGet<TestClass>("TestMGet_class1", "TestMGet_class2", "TestMGet_class3")[0]?.ToString());
-            Assert.Equal(Class.ToString(), cli.MGet<TestClass>("TestMGet_class1", "TestMGet_class2", "TestMGet_class3")[1]?.ToString());
-            Assert.Equal(Class.ToString(), cli.MGet<TestClass>("TestMGet_class1", "TestMGet_class2", "TestMGet_class3")[2]?.ToString());
+            Assert.Equal(JsonConvert.SerializeObject(Class), JsonConvert.SerializeObject(cli.MGet<TestClass>("TestMGet_class1", "TestMGet_class2", "TestMGet_class3")[0]));
+            Assert.Equal(JsonConvert.SerializeObject(Class), JsonConvert.SerializeObject(cli.MGet<TestClass>("TestMGet_class1", "TestMGet_class2", "TestMGet_class3")[1]));
+            Assert.Equal(JsonConvert.SerializeObject(Class), JsonConvert.SerializeObject(cli.MGet<TestClass>("TestMGet_class1", "TestMGet_class2", "TestMGet_class3")[2]));
         }
 
         [Fact]
