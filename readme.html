@@ -253,24 +253,6 @@ cli.Eval(&quot;return redis.call('set',KEYS[1],'bar')&quot;,
     object[] ret = pipe.EndPipe();
     Console.WriteLine(ret[0] + &quot;, &quot; + ret[2]);
 }
-
-// or Async Callback
-
-using (var pipe = cli.StartPipe())
-{
-    var tasks = new List&lt;Task&gt;();
-    long t0 = 0;
-    task.Add(pipe.IncrByAsync(&quot;key1&quot;, 10).ContinueWith(t =&gt; t0 = t.Result)); //callback
-
-    pipe.SetAsync(&quot;key2&quot;, Null);
-
-    string t2 = null;
-    task.Add(pipe.GetAsync(&quot;key1&quot;).ContinueWith(t =&gt; t2 = t.Result)); //callback
-
-    pipe.EndPipe();
-    Task.WaitAll(tasks.ToArray()); //wait all callback
-    Console.WriteLine(t0 + &quot;, &quot; + t2);
-}
 </code></pre>
 <h3 id="-transaction">📰 Transaction</h3>
 <pre><code class="lang-csharp">using (var tran = cli.Multi())
@@ -281,24 +263,6 @@ using (var pipe = cli.StartPipe())
 
     object[] ret = tran.Exec();
     Console.WriteLine(ret[0] + &quot;, &quot; + ret[2]);
-}
-
-// or Async Callback
-
-using (var tran = cli.Multi())
-{
-    var tasks = new List&lt;Task&gt;();
-    long t0 = 0;
-    task.Add(tran.IncrByAsync(&quot;key1&quot;, 10).ContinueWith(t =&gt; t0 = t.Result)); //callback
-
-    tran.SetAsync(&quot;key2&quot;, Null);
-
-    string t2 = null;
-    task.Add(tran.GetAsync(&quot;key1&quot;).ContinueWith(t =&gt; t2 = t.Result)); //callback
-
-    tran.Exec();
-    Task.WaitAll(tasks.ToArray()); //wait all callback
-    Console.WriteLine(t0 + &quot;, &quot; + t2);
 }
 </code></pre>
 <h3 id="-getdatabase-switch-database">📯 GetDatabase: switch database</h3>
