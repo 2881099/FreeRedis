@@ -155,7 +155,7 @@ namespace console_netcore31_newsocket
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected void LockSend()
         {
-
+            
             SpinWait wait = default;
             while (Interlocked.CompareExchange(ref _send_lock_flag, 1, 0) != 0)
             {
