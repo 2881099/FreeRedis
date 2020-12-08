@@ -151,24 +151,6 @@ using (var pipe = cli.StartPipe())
     object[] ret = pipe.EndPipe();
     Console.WriteLine(ret[0] + ", " + ret[2]);
 }
-
-// 或异步回调
-
-using (var pipe = cli.StartPipe())
-{
-    var tasks = new List<Task>();
-    long t0 = 0;
-    task.Add(pipe.IncrByAsync("key1", 10).ContinueWith(t => t0 = t.Result)); //回调
-
-    pipe.SetAsync("key2", Null);
-
-    string t2 = null;
-    task.Add(pipe.GetAsync("key1").ContinueWith(t => t2 = t.Result)); //回调
-
-    pipe.EndPipe();
-    Task.WaitAll(tasks.ToArray()); //等待所有回调完成
-    Console.WriteLine(t0 + ", " + t2);
-}
 ```
 
 ### 📰 Transaction (事务)
@@ -182,24 +164,6 @@ using (var tran = cli.Multi())
 
     object[] ret = tran.Exec();
     Console.WriteLine(ret[0] + ", " + ret[2]);
-}
-
-// or Async Callback
-
-using (var tran = cli.Multi())
-{
-    var tasks = new List<Task>();
-    long t0 = 0;
-    task.Add(tran.IncrByAsync("key1", 10).ContinueWith(t => t0 = t.Result)); //回调
-
-    tran.SetAsync("key2", Null);
-
-    string t2 = null;
-    task.Add(tran.GetAsync("key1").ContinueWith(t => t2 = t.Result)); //回调
-
-    tran.Exec();
-    Task.WaitAll(tasks.ToArray()); //等待所有回调完成
-    Console.WriteLine(t0 + ", " + t2);
 }
 ```
 
