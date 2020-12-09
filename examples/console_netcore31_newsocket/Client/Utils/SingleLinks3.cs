@@ -78,5 +78,11 @@ namespace console_netcore31_newsocket
             _setResult(Value, Result);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public void Completed(T result)
+        {
+            _setResult(Value, result);
+        }
+
     }
 }
