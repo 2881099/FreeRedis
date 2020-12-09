@@ -211,7 +211,11 @@ namespace FreeRedis
                                     var valueArrElementType = args.ValueType.GetElementType();
                                     var sourceArrLen = valueArr.Length;
                                     for (var a = 0; a < sourceArrLen; a++)
-                                        _cscc.SetCacheValue("GET", args.Command.GetKey(a), valueArrElementType, valueArr.GetValue(a));
+                                    {
+                                        var getkey = args.Command.GetKey(a);
+                                        if (_cscc._options.KeyFilter?.Invoke(getkey) != false)
+                                            _cscc.SetCacheValue("GET", getkey, valueArrElementType, valueArr.GetValue(a));
+                                    }
                                 }
                             }
                             break;
