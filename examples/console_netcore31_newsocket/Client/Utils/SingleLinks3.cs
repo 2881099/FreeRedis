@@ -10,29 +10,29 @@ using System.Threading.Tasks;
 
 namespace console_netcore31_newsocket
 {
-    public class SingleLinks2<T>
+    public class SingleLink3<T>
     {
-        public readonly SingleLinkNode2<T> Head;
-        public SingleLinkNode2<T> Tail;
-        public SingleLinks2()
+        public readonly SingleLinkNode3<T> Head;
+        public SingleLinkNode3<T> Tail;
+        public SingleLink3()
         {
-            Head = new SingleLinkNode2<T>(default);
+            Head = new SingleLinkNode3<T>(default);
             Tail = Head;
         }
         //public int Count;
 
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-        public void Append(Task<T> value)
+        public void Append(TaskCompletionSource<T> value)
         {
             //Count += 1;
-            Tail.Next = new SingleLinkNode2<T>(value);
+            Tail.Next = new SingleLinkNode3<T>(value);
             Tail = Tail.Next;
         }
 
 
 
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-        public void ClearBefore(SingleLinkNode2<T> node)
+        public void ClearBefore(SingleLinkNode3<T> node)
         {
 
             Head.Next = node.Next;
@@ -52,36 +52,20 @@ namespace console_netcore31_newsocket
 
     }
 
-    public class SingleLinkNode2<T>
+    public class SingleLinkNode3<T>
     {
 
-        private readonly static Func<Task<T>, T, T> _setResult;
-        static SingleLinkNode2()
-        {
-            _setResult = typeof(Task<T>)
-                .GetMethod("TrySetResult",
-                BindingFlags.Instance | BindingFlags.NonPublic,
-                null,
-                new Type[] { typeof(T) }, null)
-                .CreateDelegate<Func<Task<T>, T, T>>();
-        }
-        public readonly Task<T> Value;
+        public readonly TaskCompletionSource<T> Value;
         public T Result;
-        public SingleLinkNode2<T> Next;
-        public SingleLinkNode2(Task<T> value)
+        public SingleLinkNode3<T> Next;
+        public SingleLinkNode3(TaskCompletionSource<T> value)
         {
             Value = value;
         }
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public void Completed()
         {
-            _setResult(Value, Result);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-        public void Completed(T result)
-        {
-            _setResult(Value, result);
+            Value.SetResult(Result);
         }
 
     }

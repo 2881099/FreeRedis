@@ -14,12 +14,12 @@ using System.Threading.Tasks;
 
 namespace console_netcore31_newsocket
 {
-    public abstract class RedisClientBase2
+    public abstract class RedisClientBase3
     {
         private readonly static Func<Task<bool>, bool, bool> _setResult;
         protected readonly static Func<object, TaskCreationOptions, Task<bool>> CreateTask;
         protected readonly static Func<Task<bool>> CreateTaskWithoutParameters;
-        static RedisClientBase2()
+        static RedisClientBase3()
         {
             _setResult = typeof(Task<bool>)
                 .GetMethod("TrySetResult",
@@ -198,7 +198,7 @@ namespace console_netcore31_newsocket
             _receiver_lock_flag = 0;
 
         }
-        public abstract Task<bool> SetAsync(string key,string value);
+        public abstract ValueTask<bool> SetAsync(string key,string value);
 
         public bool TrySetResult(Task<bool> task, bool result)
         {

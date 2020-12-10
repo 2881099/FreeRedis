@@ -3,15 +3,14 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks.Sources;
 
-namespace console_netcore31_taskcompletesource
-{
+
     public sealed class ManualResetValueTaskSource<T> : IValueTaskSource<T>, IValueTaskSource
     {
         private ManualResetValueTaskSourceCore<T> _core; // mutable struct; do not make this readonly
 
         public bool RunContinuationsAsynchronously { get => _core.RunContinuationsAsynchronously; set => _core.RunContinuationsAsynchronously = value; }
         public short Version => _core.Version;
-        public void Reset() =>  _core.Reset();
+        public void Reset() => _core.Reset();
         public void SetResult(T result) => _core.SetResult(result);
         public void SetException(Exception error) => _core.SetException(error);
 
@@ -20,4 +19,4 @@ namespace console_netcore31_taskcompletesource
         public ValueTaskSourceStatus GetStatus(short token) => _core.GetStatus(token);
         public void OnCompleted(Action<object> continuation, object state, short token, ValueTaskSourceOnCompletedFlags flags) => _core.OnCompleted(continuation, state, token, flags);
     }
-}
+

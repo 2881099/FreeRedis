@@ -14,12 +14,12 @@ using System.Threading.Tasks;
 
 namespace console_netcore31_newsocket
 {
-    public abstract class RedisClientBase2
+    public abstract class RedisClientBase4
     {
         private readonly static Func<Task<bool>, bool, bool> _setResult;
         protected readonly static Func<object, TaskCreationOptions, Task<bool>> CreateTask;
         protected readonly static Func<Task<bool>> CreateTaskWithoutParameters;
-        static RedisClientBase2()
+        static RedisClientBase4()
         {
             _setResult = typeof(Task<bool>)
                 .GetMethod("TrySetResult",
@@ -62,7 +62,7 @@ namespace console_netcore31_newsocket
             RunReciver();
 
         }
-
+        protected volatile bool IsHanding;
         private async void RunReciver()
         {
 
@@ -70,6 +70,7 @@ namespace console_netcore31_newsocket
             {
 
                 var result = await _reciver.ReadAsync().ConfigureAwait(false);
+                IsHanding = true;
                 var buffer = result.Buffer;
                 if (buffer.IsSingleSegment)
                 {
@@ -80,7 +81,7 @@ namespace console_netcore31_newsocket
                     Handler(buffer);
 
                 }
-
+                IsHanding = false;
                 _reciver.AdvanceTo(buffer.End);
                 if (result.IsCompleted)
                 {
