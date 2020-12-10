@@ -6575,6 +6575,12 @@ references:
   commentId: F:FreeRedis.RedisClient.Deserialize
   fullName: FreeRedis.RedisClient.Deserialize
   nameWithType: RedisClient.Deserialize
+- uid: FreeRedis.RedisClient.DeserializeRaw
+  name: DeserializeRaw
+  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_DeserializeRaw
+  commentId: F:FreeRedis.RedisClient.DeserializeRaw
+  fullName: FreeRedis.RedisClient.DeserializeRaw
+  nameWithType: RedisClient.DeserializeRaw
 - uid: FreeRedis.RedisClient.Dispose
   name: Dispose()
   href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_Dispose
