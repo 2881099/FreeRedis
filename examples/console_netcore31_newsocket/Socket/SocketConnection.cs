@@ -138,7 +138,7 @@ namespace console_netcore31_newsocket
 
             if (_processingTask != null)
             {
-                await _processingTask;
+                await _processingTask.ConfigureAwait(false);
             }
 
             _connectionClosedTokenSource.Dispose();
