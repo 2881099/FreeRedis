@@ -25,7 +25,7 @@ namespace console_netcore31_newsocket
         private static int port;
         private static string ip;
         private static string pwd;
-        private const int frequence = 1000000;
+        private const int frequence = 30000;
 
         private static RedisClient _freeRedisClient;
         private static BeetleX.Redis.RedisDB _beetleClient;
@@ -41,6 +41,10 @@ namespace console_netcore31_newsocket
         private static NewRedisClient12 _redisClient12;
         private static NewRedisClient14 _redisClient14;
         private static NewRedisClient15 _redisClient15;
+        private static NewRedisClient16 _redisClient16;
+        private static NewRedisClient161 _redisClient161;
+        private static NewRedisClient162 _redisClient162;
+        private static NewRedisClient18 _redisClient18;
         private static ClientPool3 _pool10;
         private static ClientPool4 _pool13;
         private static ClientPool5 _pool14;
@@ -62,7 +66,7 @@ namespace console_netcore31_newsocket
         public static ConnectionMultiplexer seredis;
         static void Main(string[] args)
         {
-            Console.WriteLine("按键开始！");
+            //Console.WriteLine("按键开始！");
             //Console.ReadKey();
             Configuration();
             //Thread.Sleep(3000);
@@ -89,7 +93,7 @@ namespace console_netcore31_newsocket
         {
 
             _useDelay = true;
-            _delayCount = 6000;
+            _delayCount = 10000;
             //Notice : Please use "//" comment "/*".
 
             ///*
@@ -128,10 +132,26 @@ namespace console_netcore31_newsocket
             //_redisClient3 = new NewRedisClient3(ip, port);
             //_redisClient12 = new NewRedisClient12();
             //_redisClient12.CreateConnection(ip, port);
+
+            _redisClient18 = new NewRedisClient18();
+            _redisClient18.CreateConnection(ip, port);
+            _redisClient18.AuthAsync(pwd);
             _redisClient14 = new NewRedisClient14();
             _redisClient14.CreateConnection(ip, port);
-            _redisClient15 = new NewRedisClient15();
-            _redisClient15.CreateConnection(ip, port);
+            _redisClient14.AuthAsync(pwd);
+            //_redisClient15 = new NewRedisClient15();
+            //_redisClient15.CreateConnection(ip, port);
+            //_redisClient15.AuthAsync(pwd);
+            _redisClient16 = new NewRedisClient16();
+            _redisClient16.CreateConnection(ip, port);
+            _redisClient16.AuthAsync(pwd);
+            _redisClient161 = new NewRedisClient161();
+            _redisClient161.CreateConnection(ip, port);
+            _redisClient161.AuthAsync(pwd);
+
+            _redisClient162 = new NewRedisClient162();
+            _redisClient162.CreateConnection(ip, port);
+            _redisClient162.AuthAsync(pwd);
             //for (int i = 0; i < 100; i++)
             //{
             //    Parallel.For(0, 10, (i) =>
@@ -145,7 +165,7 @@ namespace console_netcore31_newsocket
             //_redisClient14.AuthAsync(pwd);
             _redisClient4 = new NewRedisClient4();
             _redisClient4.CreateConnection(ip, port);
-            //_redisClient4.AuthAsync(pwd);
+            _redisClient4.AuthAsync(pwd);
             //_redisClient4.AuthAsync(pwd);
             //_redisClient5 = _pool5._node;
             //_redisClient7 = _pool7._node;
@@ -161,8 +181,8 @@ namespace console_netcore31_newsocket
             //_pool14 = new ClientPool5(ip, port);
             //_pool14.AuthAsync(pwd);
             //_redisClient5.SetAsync("a", "a");
-            //seredis = ConnectionMultiplexer.Connect($"{ip}:{port}");
-            //_stackExnchangeClient = seredis.GetDatabase(0);
+            seredis = ConnectionMultiplexer.Connect($"{ip}:{port},password={pwd}");
+            _stackExnchangeClient = seredis.GetDatabase(0);
 
 
             //_beforeSw = (str) =>
@@ -189,10 +209,18 @@ namespace console_netcore31_newsocket
             //StackExchangeRedisSetTest();
             //StackExchangeRedisSetTest();
             //StackExchangeRedisSetTest();
-            NewSocketRedis14SetTest();
-            NewSocketRedis14SetTest();
-            NewSocketRedis15SetTest();
-            NewSocketRedis15SetTest();
+            //NewSocketRedis14SetTest();
+            //NewSocketRedis14SetTest();
+            //NewSocketRedis15SetTest();
+            //NewSocketRedis15SetTest();
+            NewSocketRedis16SetTest();
+            NewSocketRedis16SetTest();
+            NewSocketRedis161SetTest();
+            NewSocketRedis161SetTest();
+            NewSocketRedis162SetTest();
+            NewSocketRedis162SetTest();
+            //NewSocketRedis18SetTest();
+            //NewSocketRedis18SetTest();
             //NewSocketRedis14SetTest();
             //NewSocketRedis14SetTest();
             //NewSocketRedis14SetTest();
@@ -409,8 +437,8 @@ namespace console_netcore31_newsocket
             Stopwatch sw = new Stopwatch();
             //_beforeSw?.Invoke(title);
             Console.WriteLine("Start Run:");
-            Thread.Sleep(0);
-            Thread.Sleep(1000);
+            //Thread.Sleep(0);
+            //Thread.Sleep(1000);
             sw.Start();
             for (var a = 0; a < frequence; a += 1)
             {
@@ -631,6 +659,57 @@ namespace console_netcore31_newsocket
                 return _redisClient15.SetAsync(key, key);
 
             }, "NewRedis15");
+
+        }
+        #endregion
+
+        #region NewSocketRedis16 - SET
+        public static void NewSocketRedis16SetTest()
+        {
+            RunAction((key) =>
+            {
+
+                return _redisClient16.SetAsync(key, key);
+
+            }, "NewRedis16");
+
+        }
+        #endregion
+
+        #region NewSocketRedis161 - SET
+        public static void NewSocketRedis161SetTest()
+        {
+            RunAction((key) =>
+            {
+
+                return _redisClient161.SetAsync(key, key);
+
+            }, "NewRedis161");
+
+        }
+        #endregion
+
+        #region NewSocketRedis162 - SET
+        public static void NewSocketRedis162SetTest()
+        {
+            RunAction((key) =>
+            {
+
+                return _redisClient162.SetAsync(key, key);
+
+            }, "NewRedis162");
+
+        }
+        #endregion
+        #region NewSocketRedis18 - SET
+        public static void NewSocketRedis18SetTest()
+        {
+            RunAction((key) =>
+            {
+
+                return _redisClient18.SetAsync(key, key);
+
+            }, "NewRedis18");
 
         }
         #endregion

@@ -138,7 +138,7 @@ namespace console_netcore31_newsocket
 
             if (_processingTask != null)
             {
-                await _processingTask;
+                await _processingTask.ConfigureAwait(false);
             }
 
             _connectionClosedTokenSource.Dispose();
@@ -293,7 +293,7 @@ namespace console_netcore31_newsocket
             while (true)
             {
 
-                var result = await output.ReadAsync();
+                var result = await output.ReadAsync().ConfigureAwait(false);
                 if (result.IsCanceled)
                 {
                     break;
