@@ -11,8 +11,11 @@ namespace FreeRedis.Tests.RedisClientTests.Other
         [Fact]
         public void Auth()
         {
-            cli.Auth("123456");
-            cli.Auth("default", "123456");
+            using (var db = cli.GetDatabase())
+            {
+                db.Auth("123456");
+                db.Auth("default", "123456");
+            }
         }
 
         [Fact]
@@ -25,9 +28,12 @@ namespace FreeRedis.Tests.RedisClientTests.Other
         [Fact]
         public void ClientGetName()
         {
-            Assert.Null(cli.ClientGetName());
-            cli.ClientSetName("xxx-test001");
-            Assert.Equal("xxx-test001", cli.ClientGetName());
+            using (var db = cli.GetDatabase())
+            {
+                Assert.Null(db.ClientGetName());
+                db.ClientSetName("xxx-test001");
+                Assert.Equal("xxx-test001", db.ClientGetName());
+            }
         }
 
         [Fact]
@@ -78,34 +84,43 @@ namespace FreeRedis.Tests.RedisClientTests.Other
         [Fact]
         public void ClientReply()
         {
-            //cli.ClientReply(ClientReplyType.On);
-            cli.ClientReply(ClientReplyType.off);
-            cli.ClientReply(ClientReplyType.skip);
-            cli.ClientReply(ClientReplyType.on);
-            cli.SetGetTest();
+            using (var db = cli.GetDatabase())
+            {
+                //db.ClientReply(ClientReplyType.On);
+                db.ClientReply(ClientReplyType.off);
+                db.ClientReply(ClientReplyType.skip);
+                db.ClientReply(ClientReplyType.on);
+                db.SetGetTest();
 
-            cli.ClientReply(ClientReplyType.off);
-            var key = Guid.NewGuid().ToString();
-            cli.Set(key, key);
-            Assert.Null(cli.Get(key));
+                db.ClientReply(ClientReplyType.off);
+                var key = Guid.NewGuid().ToString();
+                db.Set(key, key);
+                Assert.Null(db.Get(key));
 
-            cli.ClientReply(ClientReplyType.on);
-            cli.SetGetTest();
+                db.ClientReply(ClientReplyType.on);
+                db.SetGetTest();
+            }
         }
 
         [Fact]
         public void ClientSetName()
         {
-            Assert.Null(cli.ClientGetName());
-            cli.ClientSetName("xxx-test002");
-            Assert.Equal("xxx-test002", cli.ClientGetName());
+            using (var db = cli.GetDatabase())
+            {
+                Assert.Null(db.ClientGetName());
+                db.ClientSetName("xxx-test002");
+                Assert.Equal("xxx-test002", db.ClientGetName());
+            }
         }
 
         [Fact]
         public void ClientTracking()
         {
-            cli.ClientTracking(true, null, null, false, false, false, false);
-            cli.ClientTracking(false, null, null, false, false, false, false);
+            using (var db = cli.GetDatabase())
+            {
+                db.ClientTracking(true, null, null, false, false, false, false);
+                db.ClientTracking(false, null, null, false, false, false, false);
+            }
         }
 
         [Fact]
@@ -146,22 +161,25 @@ namespace FreeRedis.Tests.RedisClientTests.Other
         [Fact]
         public void Select()
         {
-            cli.Select(1);
-            cli.SetGetTest();
-            Assert.Equal("PONG", cli.Ping());
+            using (var db = cli.GetDatabase())
+            {
+                db.Select(1);
+                db.SetGetTest();
+                Assert.Equal("PONG", db.Ping());
 
-            var key = Guid.NewGuid().ToString();
-            cli.Set(key, key);
-            Assert.Equal(key, cli.Get(key));
+                var key = Guid.NewGuid().ToString();
+                db.Set(key, key);
+                Assert.Equal(key, db.Get(key));
 
 
-            cli.Select(1);
-            cli.SetGetTest();
-            Assert.Equal("PONG", cli.Ping());
+                db.Select(1);
+                db.SetGetTest();
+                Assert.Equal("PONG", db.Ping());
 
-            Assert.NotEqual(key, cli.Get(key));
-            cli.Set(key, key);
-            Assert.Equal(key, cli.Get(key));
+                Assert.NotEqual(key, db.Get(key));
+                db.Set(key, key);
+                Assert.Equal(key, db.Get(key));
+            }
         }
     }
 }

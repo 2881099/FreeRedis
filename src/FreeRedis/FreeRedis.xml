@@ -1,0 +1,2754 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>FreeRedis</name>
+    </assembly>
+    <members>
+        <member name="P:FreeRedis.ClientSideCachingOptions.KeyFilter">
+            <summary>
+            true: cache
+            </summary>
+        </member>
+        <member name="P:FreeRedis.ClientSideCachingOptions.CheckExpired">
+            <summary>
+            true: expired
+            </summary>
+        </member>
+        <member name="F:FreeRedis.ClientSideCachingExtensions.ClientSideCachingContext._dict">
+            <summary>
+            key -> Type(string|byte[]|class) -> value
+            </summary>
+        </member>
+        <member name="M:FreeRedis.CommandPacket.FlagReadbytes(System.Boolean)">
+            <summary>
+            read byte[]
+            </summary>
+            <param name="isReadbytes"></param>
+            <returns></returns>
+        </member>
+        <member name="F:FreeRedis.CommandSets.ServerFlag.write">
+            <summary>
+            command may result in modifications
+            </summary>
+        </member>
+        <member name="F:FreeRedis.CommandSets.ServerFlag.readonly">
+            <summary>
+            command will never modify keys
+            </summary>
+        </member>
+        <member name="F:FreeRedis.CommandSets.ServerFlag.denyoom">
+            <summary>
+            reject command if currently out of memory
+            </summary>
+        </member>
+        <member name="F:FreeRedis.CommandSets.ServerFlag.admin">
+            <summary>
+            server admin command
+            </summary>
+        </member>
+        <member name="F:FreeRedis.CommandSets.ServerFlag.pubsub">
+            <summary>
+            pubsub-related command
+            </summary>
+        </member>
+        <member name="F:FreeRedis.CommandSets.ServerFlag.noscript">
+            <summary>
+            deny this command from scripts
+            </summary>
+        </member>
+        <member name="F:FreeRedis.CommandSets.ServerFlag.random">
+            <summary>
+            command has random results, dangerous for scripts
+            </summary>
+        </member>
+        <member name="F:FreeRedis.CommandSets.ServerFlag.sort_for_script">
+            <summary>
+            if called from script, sort output
+            </summary>
+        </member>
+        <member name="F:FreeRedis.CommandSets.ServerFlag.loading">
+            <summary>
+            allow command while database is loading
+            </summary>
+        </member>
+        <member name="F:FreeRedis.CommandSets.ServerFlag.stale">
+            <summary>
+            allow command while replica has stale data
+            </summary>
+        </member>
+        <member name="F:FreeRedis.CommandSets.ServerFlag.skip_monitor">
+            <summary>
+            do not show this command in MONITOR
+            </summary>
+        </member>
+        <member name="F:FreeRedis.CommandSets.ServerFlag.asking">
+            <summary>
+            cluster related - accept even if importing
+            </summary>
+        </member>
+        <member name="F:FreeRedis.CommandSets.ServerFlag.fast">
+            <summary>
+            command operates in constant or log(N) time. Used for latency monitoring.
+            </summary>
+        </member>
+        <member name="F:FreeRedis.CommandSets.ServerFlag.movablekeys">
+            <summary>
+            keys have no pre-determined position. You must discover keys yourself.
+            </summary>
+        </member>
+        <member name="F:FreeRedis.CommandSets.ServerFlag.skip_slowlog">
+            <summary>
+            do not show this command in SLOWLOG
+            </summary>
+        </member>
+        <member name="T:FreeRedis.Internal.IdleBus">
+            <summary>
+            空闲对象容器管理，可实现自动创建、销毁、扩张收缩，解决【实例】长时间占用问题
+            </summary>
+        </member>
+        <member name="M:FreeRedis.Internal.IdleBus.#ctor">
+            <summary>
+            按空闲时间1分钟，创建空闲容器
+            </summary>
+        </member>
+        <member name="M:FreeRedis.Internal.IdleBus.#ctor(System.TimeSpan)">
+            <summary>
+            指定空闲时间、创建空闲容器
+            </summary>
+            <param name="idle">空闲时间</param>
+        </member>
+        <member name="T:FreeRedis.Internal.IdleBus`1">
+            <summary>
+            空闲对象容器管理，可实现自动创建、销毁、扩张收缩，解决【实例】长时间占用问题
+            </summary>
+        </member>
+        <member name="M:FreeRedis.Internal.IdleBus`1.#ctor">
+            <summary>
+            按空闲时间1分钟，创建空闲容器
+            </summary>
+        </member>
+        <member name="M:FreeRedis.Internal.IdleBus`1.#ctor(System.TimeSpan)">
+            <summary>
+            指定空闲时间、创建空闲容器
+            </summary>
+            <param name="idle">空闲时间</param>
+        </member>
+        <member name="T:FreeRedis.Internal.IdleBus`2">
+            <summary>
+            空闲对象容器管理，可实现自动创建、销毁、扩张收缩，解决【实例】长时间占用问题
+            </summary>
+        </member>
+        <member name="M:FreeRedis.Internal.IdleBus`2.#ctor">
+            <summary>
+            按空闲时间1分钟，创建空闲容器
+            </summary>
+        </member>
+        <member name="M:FreeRedis.Internal.IdleBus`2.#ctor(System.TimeSpan)">
+            <summary>
+            指定空闲时间、创建空闲容器
+            </summary>
+            <param name="idle">空闲时间</param>
+        </member>
+        <member name="M:FreeRedis.Internal.IdleBus`2.Get(`0)">
+            <summary>
+            根据 key 获得或创建【实例】（线程安全）<para></para>
+            key 未注册时，抛出异常
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FreeRedis.Internal.IdleBus`2.GetAll">
+            <summary>
+            获得或创建所有【实例】（线程安全）
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:FreeRedis.Internal.IdleBus`2.GetKeys(System.Func{`1,System.Boolean})">
+            <summary>
+            获得所有已注册的 key（线程安全）
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:FreeRedis.Internal.IdleBus`2.Exists(`0)">
+            <summary>
+            判断 key 是否注册
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FreeRedis.Internal.IdleBus`2.Register(`0,System.Func{`1})">
+            <summary>
+            注册【实例】
+            </summary>
+            <param name="key"></param>
+            <param name="create">实例创建方法</param>
+            <returns></returns>
+        </member>
+        <member name="P:FreeRedis.Internal.IdleBus`2.UsageQuantity">
+            <summary>
+            已创建【实例】数量
+            </summary>
+        </member>
+        <member name="P:FreeRedis.Internal.IdleBus`2.Quantity">
+            <summary>
+            注册数量
+            </summary>
+        </member>
+        <member name="E:FreeRedis.Internal.IdleBus`2.Notice">
+            <summary>
+            通知事件
+            </summary>
+        </member>
+        <member name="F:FreeRedis.Internal.IdleBus`2.NoticeType.Register">
+            <summary>
+            执行 Register 方法的时候
+            </summary>
+        </member>
+        <member name="F:FreeRedis.Internal.IdleBus`2.NoticeType.Remove">
+            <summary>
+            执行 Remove 方法的时候，注意：实际会延时释放【实例】
+            </summary>
+        </member>
+        <member name="F:FreeRedis.Internal.IdleBus`2.NoticeType.AutoCreate">
+            <summary>
+            自动创建【实例】的时候
+            </summary>
+        </member>
+        <member name="F:FreeRedis.Internal.IdleBus`2.NoticeType.AutoRelease">
+            <summary>
+            自动释放不活跃【实例】的时候
+            </summary>
+        </member>
+        <member name="F:FreeRedis.Internal.IdleBus`2.NoticeType.Get">
+            <summary>
+            获取【实例】的时候
+            </summary>
+        </member>
+        <member name="P:FreeRedis.Internal.IdleBus`2.TimeoutScanOptions.Interval">
+            <summary>
+            扫描线程间隔（默认值：2秒）
+            </summary>
+        </member>
+        <member name="P:FreeRedis.Internal.IdleBus`2.TimeoutScanOptions.QuitWaitSeconds">
+            <summary>
+            扫描线程空闲多少秒退出（默认值：10秒）
+            </summary>
+        </member>
+        <member name="P:FreeRedis.Internal.IdleBus`2.TimeoutScanOptions.BatchQuantity">
+            <summary>
+            扫描的每批数量（默认值：512）<para></para>
+            可防止注册数量太多时导致 CPU 占用过高
+            </summary>
+        </member>
+        <member name="P:FreeRedis.Internal.IdleBus`2.TimeoutScanOptions.BatchQuantityWait">
+            <summary>
+            达到扫描的每批数量时，线程等待（默认值：1秒）
+            </summary>
+        </member>
+        <member name="P:FreeRedis.Internal.IdleBus`2.ScanOptions">
+            <summary>
+            扫描过期对象的设置<para></para>
+            机制：当窗口里有存活对象时，扫描线程才会开启（只开启一个线程）。<para></para>
+            连续多少秒都没存活的对象时，才退出扫描。
+            </summary>
+        </member>
+        <member name="P:FreeRedis.Internal.ObjectPool.IObjectPool`1.IsAvailable">
+            <summary>
+            是否可用
+            </summary>
+        </member>
+        <member name="P:FreeRedis.Internal.ObjectPool.IObjectPool`1.UnavailableException">
+            <summary>
+            不可用错误
+            </summary>
+        </member>
+        <member name="P:FreeRedis.Internal.ObjectPool.IObjectPool`1.UnavailableTime">
+            <summary>
+            不可用时间
+            </summary>
+        </member>
+        <member name="M:FreeRedis.Internal.ObjectPool.IObjectPool`1.SetUnavailable(System.Exception)">
+            <summary>
+            将对象池设置为不可用，后续 Get/GetAsync 均会报错，同时启动后台定时检查服务恢复可用
+            </summary>
+            <param name="exception"></param>
+            <returns>由【可用】变成【不可用】时返回true，否则返回false</returns>
+        </member>
+        <member name="P:FreeRedis.Internal.ObjectPool.IObjectPool`1.Statistics">
+            <summary>
+            统计对象池中的对象
+            </summary>
+        </member>
+        <member name="P:FreeRedis.Internal.ObjectPool.IObjectPool`1.StatisticsFullily">
+            <summary>
+            统计对象池中的对象（完整)
+            </summary>
+        </member>
+        <member name="M:FreeRedis.Internal.ObjectPool.IObjectPool`1.Get(System.Nullable{System.TimeSpan})">
+            <summary>
+            获取资源
+            </summary>
+            <param name="timeout">超时</param>
+            <returns></returns>
+        </member>
+        <member name="M:FreeRedis.Internal.ObjectPool.IObjectPool`1.GetAsync">
+            <summary>
+            获取资源
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:FreeRedis.Internal.ObjectPool.IObjectPool`1.Return(FreeRedis.Internal.ObjectPool.Object{`0},System.Boolean)">
+            <summary>
+            使用完毕后，归还资源
+            </summary>
+            <param name="obj">对象</param>
+            <param name="isReset">是否重新创建</param>
+        </member>
+        <member name="P:FreeRedis.Internal.ObjectPool.IPolicy`1.Name">
+            <summary>
+            名称
+            </summary>
+        </member>
+        <member name="P:FreeRedis.Internal.ObjectPool.IPolicy`1.PoolSize">
+            <summary>
+            池容量
+            </summary>
+        </member>
+        <member name="P:FreeRedis.Internal.ObjectPool.IPolicy`1.SyncGetTimeout">
+            <summary>
+            默认获取超时设置
+            </summary>
+        </member>
+        <member name="P:FreeRedis.Internal.ObjectPool.IPolicy`1.IdleTimeout">
+            <summary>
+            空闲时间，获取时若超出，则重新创建
+            </summary>
+        </member>
+        <member name="P:FreeRedis.Internal.ObjectPool.IPolicy`1.AsyncGetCapacity">
+            <summary>
+            异步获取排队队列大小，小于等于0不生效
+            </summary>
+        </member>
+        <member name="P:FreeRedis.Internal.ObjectPool.IPolicy`1.IsThrowGetTimeoutException">
+            <summary>
+            获取超时后，是否抛出异常
+            </summary>
+        </member>
+        <member name="P:FreeRedis.Internal.ObjectPool.IPolicy`1.IsAutoDisposeWithSystem">
+            <summary>
+            监听 AppDomain.CurrentDomain.ProcessExit/Console.CancelKeyPress 事件自动释放
+            </summary>
+        </member>
+        <member name="P:FreeRedis.Internal.ObjectPool.IPolicy`1.CheckAvailableInterval">
+            <summary>
+            后台定时检查可用性间隔秒数
+            </summary>
+        </member>
+        <member name="M:FreeRedis.Internal.ObjectPool.IPolicy`1.OnCreate">
+            <summary>
+            对象池的对象被创建时
+            </summary>
+            <returns>返回被创建的对象</returns>
+        </member>
+        <member name="M:FreeRedis.Internal.ObjectPool.IPolicy`1.OnDestroy(`0)">
+            <summary>
+            销毁对象
+            </summary>
+            <param name="obj">资源对象</param>
+        </member>
+        <member name="M:FreeRedis.Internal.ObjectPool.IPolicy`1.OnGetTimeout">
+            <summary>
+            从对象池获取对象超时的时候触发，通过该方法统计
+            </summary>
+        </member>
+        <member name="M:FreeRedis.Internal.ObjectPool.IPolicy`1.OnGet(FreeRedis.Internal.ObjectPool.Object{`0})">
+            <summary>
+            从对象池获取对象成功的时候触发，通过该方法统计或初始化对象
+            </summary>
+            <param name="obj">资源对象</param>
+        </member>
+        <member name="M:FreeRedis.Internal.ObjectPool.IPolicy`1.OnGetAsync(FreeRedis.Internal.ObjectPool.Object{`0})">
+            <summary>
+            从对象池获取对象成功的时候触发，通过该方法统计或初始化对象
+            </summary>
+            <param name="obj">资源对象</param>
+        </member>
+        <member name="M:FreeRedis.Internal.ObjectPool.IPolicy`1.OnReturn(FreeRedis.Internal.ObjectPool.Object{`0})">
+            <summary>
+            归还对象给对象池的时候触发
+            </summary>
+            <param name="obj">资源对象</param>
+        </member>
+        <member name="M:FreeRedis.Internal.ObjectPool.IPolicy`1.OnCheckAvailable(FreeRedis.Internal.ObjectPool.Object{`0})">
+            <summary>
+            检查可用性
+            </summary>
+            <param name="obj">资源对象</param>
+            <returns></returns>
+        </member>
+        <member name="M:FreeRedis.Internal.ObjectPool.IPolicy`1.OnAvailable">
+            <summary>
+            事件：可用时触发
+            </summary>
+        </member>
+        <member name="M:FreeRedis.Internal.ObjectPool.IPolicy`1.OnUnavailable">
+            <summary>
+            事件：不可用时触发
+            </summary>
+        </member>
+        <member name="P:FreeRedis.Internal.ObjectPool.Object`1.Pool">
+            <summary>
+            所属对象池
+            </summary>
+        </member>
+        <member name="P:FreeRedis.Internal.ObjectPool.Object`1.Id">
+            <summary>
+            在对象池中的唯一标识
+            </summary>
+        </member>
+        <member name="P:FreeRedis.Internal.ObjectPool.Object`1.Value">
+            <summary>
+            资源对象
+            </summary>
+        </member>
+        <member name="P:FreeRedis.Internal.ObjectPool.Object`1.GetTimes">
+            <summary>
+            被获取的总次数
+            </summary>
+        </member>
+        <member name="P:FreeRedis.Internal.ObjectPool.Object`1.LastGetTime">
+            最后获取时的时间
+        </member>
+        <member name="P:FreeRedis.Internal.ObjectPool.Object`1.LastReturnTime">
+            <summary>
+            最后归还时的时间
+            </summary>
+        </member>
+        <member name="P:FreeRedis.Internal.ObjectPool.Object`1.CreateTime">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:FreeRedis.Internal.ObjectPool.Object`1.LastGetThreadId">
+            <summary>
+            最后获取时的线程id
+            </summary>
+        </member>
+        <member name="P:FreeRedis.Internal.ObjectPool.Object`1.LastReturnThreadId">
+            <summary>
+            最后归还时的线程id
+            </summary>
+        </member>
+        <member name="M:FreeRedis.Internal.ObjectPool.Object`1.ResetValue">
+            <summary>
+            重置 Value 值
+            </summary>
+        </member>
+        <member name="T:FreeRedis.Internal.ObjectPool.ObjectPool`1">
+            <summary>
+            对象池管理类
+            </summary>
+            <typeparam name="T">对象类型</typeparam>
+        </member>
+        <member name="M:FreeRedis.Internal.ObjectPool.ObjectPool`1.CheckAvailable(System.Int32)">
+            <summary>
+            后台定时检查可用性
+            </summary>
+            <param name="interval"></param>
+        </member>
+        <member name="M:FreeRedis.Internal.ObjectPool.ObjectPool`1.#ctor(System.Int32,System.Func{`0},System.Action{FreeRedis.Internal.ObjectPool.Object{`0}})">
+            <summary>
+            创建对象池
+            </summary>
+            <param name="poolsize">池大小</param>
+            <param name="createObject">池内对象的创建委托</param>
+            <param name="onGetObject">获取池内对象成功后，进行使用前操作</param>
+        </member>
+        <member name="M:FreeRedis.Internal.ObjectPool.ObjectPool`1.#ctor(FreeRedis.Internal.ObjectPool.IPolicy{`0})">
+            <summary>
+            创建对象池
+            </summary>
+            <param name="policy">策略</param>
+        </member>
+        <member name="M:FreeRedis.Internal.ObjectPool.ObjectPool`1.GetFree(System.Boolean)">
+            <summary>
+            获取可用资源，或创建资源
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="F:FreeRedis.RedisMessageType.BlobString">
+            <summary>
+            $11\r\nhelloworld\r\n
+            </summary>
+        </member>
+        <member name="F:FreeRedis.RedisMessageType.SimpleString">
+            <summary>
+            +hello world\r\n
+            </summary>
+        </member>
+        <member name="F:FreeRedis.RedisMessageType.VerbatimString">
+            <summary>
+            =15\r\ntxt:Some string\r\n
+            </summary>
+        </member>
+        <member name="F:FreeRedis.RedisMessageType.SimpleError">
+            <summary>
+            -ERR this is the error description\r\n<para></para>
+            The first word in the error is in upper case and describes the error code.
+            </summary>
+        </member>
+        <member name="F:FreeRedis.RedisMessageType.BlobError">
+            <summary>
+            !21\r\nSYNTAX invalid syntax\r\n<para></para>
+            The first word in the error is in upper case and describes the error code.
+            </summary>
+        </member>
+        <member name="F:FreeRedis.RedisMessageType.Number">
+            <summary>
+            :1234\r\n
+            </summary>
+        </member>
+        <member name="F:FreeRedis.RedisMessageType.BigNumber">
+            <summary>
+            (3492890328409238509324850943850943825024385\r\n
+            </summary>
+        </member>
+        <member name="F:FreeRedis.RedisMessageType.Null">
+            <summary>
+            _\r\n
+            </summary>
+        </member>
+        <member name="F:FreeRedis.RedisMessageType.Double">
+            <summary>
+            ,1.23\r\n<para></para>
+            ,inf\r\n<para></para>
+            ,-inf\r\n
+            </summary>
+        </member>
+        <member name="F:FreeRedis.RedisMessageType.Boolean">
+            <summary>
+            #t\r\n<para></para>
+            #f\r\n
+            </summary>
+        </member>
+        <member name="F:FreeRedis.RedisMessageType.Array">
+            <summary>
+            *3\r\n:1\r\n:2\r\n:3\r\n<para></para>
+            [1, 2, 3]
+            </summary>
+        </member>
+        <member name="F:FreeRedis.RedisMessageType.Set">
+            <summary>
+            ~5\r\n+orange\r\n+apple\r\n#t\r\n:100\r\n:999\r\n
+            </summary>
+        </member>
+        <member name="F:FreeRedis.RedisMessageType.Push">
+            <summary>
+            >4\r\n+pubsub\r\n+message\r\n+somechannel\r\n+this is the message\r\n
+            </summary>
+        </member>
+        <member name="F:FreeRedis.RedisMessageType.Map">
+            <summary>
+            %2\r\n+first\r\n:1\r\n+second\r\n:2\r\n<para></para>
+            { "first": 1, "second": 2 }
+            </summary>
+        </member>
+        <member name="F:FreeRedis.RedisMessageType.Attribute">
+            <summary>
+            |2\r\n+first\r\n:1\r\n+second\r\n:2\r\n<para></para>
+            { "first": 1, "second": 2 }
+            </summary>
+        </member>
+        <member name="M:FreeRedis.RedisClient.#ctor(FreeRedis.ConnectionStringBuilder,FreeRedis.ConnectionStringBuilder[])">
+            <summary>
+            Pooling RedisClient
+            </summary>
+        </member>
+        <member name="M:FreeRedis.RedisClient.#ctor(FreeRedis.ConnectionStringBuilder[])">
+            <summary>
+            Cluster RedisClient
+            </summary>
+        </member>
+        <member name="M:FreeRedis.RedisClient.#ctor(FreeRedis.ConnectionStringBuilder[],System.Func{System.String,System.String})">
+            <summary>
+            Norman RedisClient
+            </summary>
+        </member>
+        <member name="M:FreeRedis.RedisClient.#ctor(FreeRedis.ConnectionStringBuilder,System.String[],System.Boolean)">
+            <summary>
+            Sentinel RedisClient
+            </summary>
+        </member>
+        <member name="M:FreeRedis.RedisClient.#ctor(FreeRedis.RedisClient,System.String,System.Boolean,System.TimeSpan,System.TimeSpan,System.TimeSpan,System.Action{FreeRedis.RedisClient})">
+            <summary>
+            Single inside RedisClient
+            </summary>
+        </member>
+        <member name="M:FreeRedis.RedisClient.DelAsync(System.String[])">
+            <summary>
+            DEL command (An Asynchronous Version) <br /><br />
+            <br />
+            Removes the specified keys. A key is ignored if it does not exist.<br /><br />
+            <br />
+            移除指定的键。如果键不存在，则忽略之。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/del <br />
+            Available since 2.6.0. 
+            </summary>
+            <param name="keys">Keys</param>
+            <returns>The number of keys that were removed.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.DumpAsync(System.String)">
+            <summary>
+            DUMP command (An Asynchronous Version) <br /><br />
+            <br />
+            Serialize the value stored at key in a Redis-specific format and return it to the user. The returned value can be synthesized back into a Redis key using the RESTORE command.<br /><br />
+            <br />
+            以 Redis 特有格式序列化指定的键值，并返回给用户。可结合 RESTORE 命令将序列化的结果重新写回 Redis。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/dump <br />
+            Available since 2.6.0. 
+            </summary>
+            <param name="key">Key</param>
+            <returns>The serialized value.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.ExistsAsync(System.String)">
+            <summary>
+            EXISTS command (An Asynchronous Version) <br /><br />
+            <br />
+            Returns if key exists.<br /><br />
+            <br />
+            返回键是否存在。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/exists <br />
+            Available since 1.0.0. 
+            </summary>
+            <param name="key">Key</param>
+            <returns>Specifically: True if the key exists. False if the key does not exist.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.ExistsAsync(System.String[])">
+            <summary>
+            EXISTS command (An Asynchronous Version) <br /><br />
+            <br />
+            Returns if key exists.<br /><br />
+            <br />
+            返回键是否存在。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/exists <br />
+            Available since 3.0.3. 
+            </summary>
+            <param name="keys">Keys</param>
+            <returns>The number of keys existing among the ones specified as arguments. Keys mentioned multiple times and existing are counted multiple times.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.ExpireAsync(System.String,System.Int32)">
+            <summary>
+            EXPIRE command (An Asynchronous Version) <br /><br />
+            <br />
+            Set a timeout on key. After the timeout has expired, the key will automatically be deleted. A key with an associated timeout is often said to be volatile in Redis terminology.<br /><br />
+            <br />
+            设置键的超时时间。到期后，键将被自动删除。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/expire <br />
+            Available since 1.0.0. 
+            </summary>
+            <param name="key">Key</param>
+            <param name="seconds">Expires time (seconds)</param>
+            <returns>Specifically: True if the timeout was set.False if key does not exist.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.ExpireAtAsync(System.String,System.DateTime)">
+            <summary>
+            EXPIREAT command (An Asynchronous Version) <br /><br />
+            <br />
+            EXPIREAT has the same effect and semantic as EXPIRE, but instead of specifying the number of seconds representing the TTL (time to live), it takes an absolute Unix timestamp (seconds since January 1, 1970). A timestamp in the past will delete the key immediately.<br /><br />
+            <br />
+            EXPIREAT 具有与 EXPIRE 相同的作用和语义，但是它没有指定表示 TTL（生存时间）的秒数，而是使用了绝对的 Unix 时间戳（自1970年1月1日以来的秒数）。时间戳一旦过期就会被删除。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/expireat <br />
+            Available since 1.2.0. 
+            </summary>
+            <param name="key">Key</param>
+            <param name="timestamp">UNIX Timestamp</param>
+            <returns>Specifically: True if the timeout was set.False if key does not exist.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.KeysAsync(System.String)">
+            <summary>
+            KEYS command (An Asynchronous Version) <br /><br />
+            <br />
+            Returns all keys matching pattern.<br /><br />
+            <br />
+            返回所有与模式匹配的键。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/keys <br />
+            Available since 1.0.0. 
+            </summary>
+            <param name="pattern">Pattern</param>
+            <returns>List of keys matching pattern.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.MigrateAsync(System.String,System.Int32,System.String,System.Int32,System.Int64,System.Boolean,System.Boolean,System.String,System.String,System.String,System.String[])">
+            <summary>
+            MIGRATE command (An Asynchronous Version) <br /><br />
+            <br />
+            Atomically transfer a key from a source Redis instance to a destination Redis instance. On success the key is deleted from the original instance and is guaranteed to exist in the target instance.<br /><br />
+            <br />
+            原子地将键从 Redis 源实例转移到目标实例。转移成功后，Key 将从源实例中删除，并确保保存在目标实例之中。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/migrate <br />
+            Available since 2.6.0. 
+            </summary>
+            <param name="host">Destination Instance's Host</param>
+            <param name="port">Destination Instance's Port</param>
+            <param name="key">Key</param>
+            <param name="destinationDb">Destination Instance's Database</param>
+            <param name="timeoutMilliseconds">Timeout milliseconds</param>
+            <param name="copy">Do not remove the key from the local instance. Available since 3.0.0. </param>
+            <param name="replace">Replace existing key on the remote instance. Available since 3.0.0. </param>
+            <param name="authPassword">Authenticate with the given password to the remote instance. Available since 4.0.7. </param>
+            <param name="auth2Username">Authenticate with the given username (Redis 6 or greater ACL auth style).</param>
+            <param name="auth2Password">Authenticate with the given password (Redis 6 or greater ACL auth style).</param>
+            <param name="keys">If the key argument is an empty string, the command will instead migrate all the keys that follow the KEYS option (see the above section for more info). Available since 3.0.6. </param>
+        </member>
+        <member name="M:FreeRedis.RedisClient.MoveAsync(System.String,System.Int32)">
+            <summary>
+            MOVE command (An Asynchronous Version) <br /><br />
+            <br />
+            Move key from the currently selected database (see SELECT) to the specified destination database. When key already exists in the destination database, or it does not exist in the source database, it does nothing. It is possible to use MOVE as a locking primitive because of this. <br /><br />
+            <br />
+            将指定的 Key 从当前数据库移动到目标数据库。<br />
+            如果目标数据库中已存在该键，或源数据库中不存在该键，则什么都不做。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/move <br />
+            Available since 1.0.0.
+            </summary>
+            <param name="key">Key</param>
+            <param name="db">Database</param>
+            <returns>Specifically: True if key was moved. False if key was not moved.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.ObjectRefCountAsync(System.String)">
+            <summary>
+            OBJECT REFCOUNT command (An Asynchronous Version) <br /><br />
+            <br />
+            Returns the number of references of the value associated with the specified key. This command is mainly useful for debugging.<br /><br />
+            <br />
+            返回与指定键关联的值的引用数。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/object <br />
+            Available since 2.2.3. 
+            </summary>
+            <param name="key">Key</param>
+            <returns>Returns the number of references of the value associated with the specified key.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.ObjectIdleTimeAsync(System.String)">
+            <summary>
+            OBJECT IDLETIME command (An Asynchronous Version) <br /><br />
+            <br />
+            returns the number of seconds since the object stored at the specified key is idle (not requested by read or write operations). While the value is returned in seconds the actual resolution of this timer is 10 seconds, but may vary in future implementations. This subcommand is available when maxmemory-policy is set to an LRU policy or noeviction and maxmemory is set. <br /><br />
+            <br />
+            返回指定键值的空闲时间，单位为秒。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/object <br />
+            Available since 2.2.3. 
+            </summary>
+            <param name="key">Key</param>
+            <returns>Returns the number of seconds since the object stored at the specified key is idle</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.ObjectEncodingAsync(System.String)">
+            <summary>
+            OBJECT ENCODING command (An Asynchronous Version) <br /><br />
+            <br />
+            Returns the kind of internal representation used in order to store the value associated with a key.<br /><br />
+            <br />
+            返回用于存储与键关联的值的内部表示形式的类型。
+            <br />
+            Document link: https://redis.io/commands/object <br />
+            Available since 2.2.3. 
+            </summary>
+            <param name="key">Key</param>
+            <returns>Returns the kind of internal representation used in order to store the value associated with a key.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.ObjectFreqAsync(System.String)">
+            <summary>
+            OBJECT FREQ command (An Asynchronous Version) <br /><br />
+            <br />
+            Returns the logarithmic access frequency counter of the object stored at the specified key. This subcommand is available when maxmemory-policy is set to an LFU policy.<br /><br />
+            <br />
+            返回存储在指定键处的对象的对数访问频率计数器。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/object <br />
+            Available since 2.2.3. 
+            </summary>
+            <param name="key">Key</param>
+            <returns>Returns the logarithmic access frequency counter of the object stored at the specified key.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.PersistAsync(System.String)">
+            <summary>
+            PERSIST command (An Asynchronous Version) <br /><br />
+            <br />
+            Remove the existing timeout on key, turning the key from volatile (a key with an expire set) to persistent (a key that will never expire as no timeout is associated).<br /><br />
+            <br />
+            将指定键的超时设置移除，将键从可变键转换为持久键。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/persist <br />
+            Available since 2.2.0. 
+            </summary>
+            <param name="key">Key</param>
+            <returns>Specifically: True if the timeout was removed. False if key does not exist or does not have an associated timeout.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.PExpireAsync(System.String,System.Int32)">
+            <summary>
+            PEXPIRE command (An Asynchronous Version) <br /><br />
+            <br />
+            This command works exactly like EXPIRE but the time to live of the key is specified in milliseconds instead of seconds.<br /><br />
+            <br />
+            此命令与 EXPIRE 相同，区别仅仅在于时间单位是毫秒，不是秒。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/expire <br />
+            Available since 1.0.0. 
+            </summary>
+            <param name="key">Key</param>
+            <param name="milliseconds">Expires time (milliseconds)</param>
+            <returns>Specifically: True if the timeout was set.False if key does not exist.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.PExpireAtAsync(System.String,System.DateTime)">
+            <summary>
+            PEXPIREAT command (An Asynchronous Version) <br /><br />
+            <br />
+            PEXPIREAT has the same effect and semantic as EXPIREAT, but the Unix time at which the key will expire is specified in milliseconds instead of seconds.<br /><br />
+            <br />
+            PEXPIREAT 具有与 EXPIREAT 相同的作用和语义，但 Key 的时间戳使用的是毫秒，而不是秒。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/pexpireat <br />
+            Available since 2.6.0. 
+            </summary>
+            <param name="key">Key</param>
+            <param name="timestamp">UNIX Timestamp</param>
+            <returns>Specifically: True if the timeout was set.False if key does not exist.</returns>
+            <returns></returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.PTtlAsync(System.String)">
+            <summary>
+            PTTL command (An Asynchronous Version) <br /><br />
+            <br />
+            Like TTL this command returns the remaining time to live of a key that has an expire set, with the sole difference that TTL returns the amount of remaining time in seconds while PTTL returns it in milliseconds.<br />
+            In Redis 2.6 or older the command returns -1 if the key does not exist or if the key exist but has no associated expire. <br />
+            Starting with Redis 2.8 the return value in case of error changed: <br />
+             - The command returns -2 if the key does not exist.<br />
+             - The command returns -1 if the key exists but has no associated expire.<br /><br />
+            <br />
+            与 TTL 命令一样，返回键的剩余生存时间，唯一的区别是 TTL 以秒为单位返回剩余时间，而 PTTL 以毫秒为单位返回。<br />
+            在 Redis 2.6 之前，如果 Key 不存在或 Key 未设置过期时间，则返回 -1<br />
+            从 Redis 2.8 开始，将针对不同的错误情况返回不同的值：<br />
+             - 如果 Key 不存在，则返回 -2 <br />
+             - 如果 Key 存在，但没有设置过过期时间，则返回 -1 <br /><br />
+            <br />
+            Document link: https://redis.io/commands/pttl <br />
+            Available since 2.6.0. 
+            </summary>
+            <param name="key">Key</param>
+            <returns>TTL in milliseconds, or a negative value in order to signal an error (see the description above).</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.RandomKeyAsync">
+            <summary>
+            RANDOMKEY command (An Asynchronous Version) <br /><br />
+            <br />
+            Return a random key from the currently selected database. <br /><br />
+            <br />
+            从当前选择的数据库返回一个随机密钥。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/randomkey <br />
+            Available since 1.0.0. 
+            </summary>
+            <returns>The random key, or nil when the database is empty.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.RenameAsync(System.String,System.String)">
+            <summary>
+            RENAME command (An Asynchronous Version) <br /><br />
+            <br />
+            Renames key to newkey. It returns an error when key does not exist. If newkey already exists it is overwritten, when this happens RENAME executes an implicit DEL operation, so if the deleted key contains a very big value it may cause high latency even if RENAME itself is usually a constant-time operation.<br />
+             - Before Redis 3.2.0, an error is returned if source and destination names are the same.<br /><br />
+            <br />
+            将 Key 重命名为 New Key。如果键不存在，返回错误。<br />
+            如果 New Key 已存在，则将被覆盖，此时类似 DEL 命令，由于 RENAME 是 constant-time operation，因此当删除的键有很大的值时会有较大的延迟。<br />
+             - 在 Redis 3.2 之前，如果 Key 和 New Key 名字一样，将返回错误。<br /><br /> 
+            <br />
+            Document link: https://redis.io/commands/rename <br />
+            Available since 1.0.0. 
+            </summary>
+            <param name="key">Key</param>
+            <param name="newkey">New key</param>
+        </member>
+        <member name="M:FreeRedis.RedisClient.RenameNxAsync(System.String,System.String)">
+            <summary>
+            RENAMENX command (An Asynchronous Version) <br /><br />
+            <br />
+            Renames key to newkey. It returns an error when key does not exist. If newkey already exists it is overwritten, when this happens RENAME executes an implicit DEL operation, so if the deleted key contains a very big value it may cause high latency even if RENAME itself is usually a constant-time operation.<br />
+             - Before Redis 3.2.0, an error is returned if source and destination names are the same.<br /><br />
+            <br />
+            将 Key 重命名为 New Key。如果键不存在，返回错误。<br />
+            如果 New Key 已存在，则将被覆盖，此时类似 DEL 命令，由于 RENAME 是 constant-time operation，因此当删除的键有很大的值时会有较大的延迟。<br />
+             - 在 Redis 3.2 之前，如果 Key 和 New Key 名字一样，将返回错误。<br /><br /> 
+            <br />
+            Document link: https://redis.io/commands/renamenx <br />
+            Available since 1.0.0. 
+            </summary>
+            <param name="key">Key</param>
+            <param name="newkey">New key</param>
+            <returns>specifically: True if key was renamed to newkey. False if newkey already exists.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.RestoreAsync(System.String,System.Byte[])">
+            <summary>
+            RESTORE command (An Asynchronous Version) <br /><br />
+            <br />
+            Create a key associated with a value that is obtained by deserializing the provided serialized value (obtained via DUMP).<br /><br />
+            <br />
+            将经由 DUMP 命令序列化的值反序列化后，作为给定键的值进行保存。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/restore <br />
+            Available since 2.6.0. 
+            </summary>
+            <param name="key">Key</param>
+            <param name="serializedValue">Serialized value</param>
+        </member>
+        <member name="M:FreeRedis.RedisClient.RestoreAsync(System.String,System.Int32,System.Byte[],System.Boolean,System.Boolean,System.Nullable{System.Int32},System.Nullable{System.Decimal})">
+            <summary>
+            RESTORE command (An Asynchronous Version) <br /><br />
+            <br />
+            Create a key associated with a value that is obtained by deserializing the provided serialized value (obtained via DUMP).<br /><br />
+            <br />
+            将经由 DUMP 命令序列化的值反序列化后，作为给定键的值进行保存。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/restore <br />
+            Available since 2.6.0. 
+            </summary>
+            <param name="key">Key</param>
+            <param name="ttl">If ttl is 0 the key is created without any expire, otherwise the specified expire time (in milliseconds) is set.</param>
+            <param name="serializedValue">Serialized value</param>
+            <param name="replace">REPLACE modifier: If the Key already exists, replace it. Available since 3.0.0.</param>
+            <param name="absTtl">Absolute Unix timestamp (in milliseconds) in which the key will expire. Available since 5.0.0.</param>
+            <param name="idleTimeSeconds">IDLETIME modifier. Available since 5.0.0.</param>
+            <param name="frequency">FREQ modifier. Available since 5.0.0.</param>
+        </member>
+        <member name="M:FreeRedis.RedisClient.ScanAsync(System.Int64,System.String,System.Int64,System.String)">
+            <summary>
+            SCAN command (An Asynchronous Version) <br /><br />
+            <br />
+            The SCAN command and the closely related commands SSCAN, HSCAN and ZSCAN are used in order to incrementally iterate over a collection of elements.<br /><br />
+            <br />
+            使用 SCAN 命令及其关联的 SSCAN、HSCAN、ZSCAN 等命令来迭代返回元素集合。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/scan <br />
+            Available since 2.8.0. 
+            </summary>
+            <param name="cursor">Cursor</param>
+            <param name="pattern">MATCH option</param>
+            <param name="count">COUNT option: while SCAN does not provide guarantees about the number of elements returned at every iteration, it is possible to empirically adjust the behavior of SCAN using the COUNT option, default is 10</param>
+            <param name="type">TYPE option: the type argument is the same string name that the TYPE command returns. Available since 6.0</param>
+            <returns>Return a two elements multi-bulk reply, where the first element is a string representing an unsigned 64 bit number (the cursor), and the second element is a multi-bulk with an array of elements.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.SortAsync(System.String,System.String,System.Int64,System.Int64,System.String[],System.Nullable{FreeRedis.Collation},System.Boolean)">
+            <summary>
+            SORT command (An Asynchronous Version) <br /><br />
+            <br />
+            Returns or stores the elements contained in the list, set or sorted set at key. By default, sorting is numeric and elements are compared by their value interpreted as double precision floating point number. <br /><br />
+            <br />
+            返回含在 LIST、SET、ZSET 中的元素。默认情况下，排序是数字形式的，并且将元素的值进行比较以解释为双精度浮点数。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/sort <br />
+            Available since 1.0.0. 
+            </summary>
+            <param name="key">Keys</param>
+            <param name="byPattern">BY modifier</param>
+            <param name="offset">The number of elements to skip.</param>
+            <param name="count">Specifying the number of elements to return from starting at offset.</param>
+            <param name="getPatterns">GET modifier</param>
+            <param name="collation">ASC | DESC modifier</param>
+            <param name="alpha">ALPHA modifier, sort by lexicographically.</param>
+            <returns>A list of sorted elements</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.SortStoreAsync(System.String,System.String,System.String,System.Int64,System.Int64,System.String[],System.Nullable{FreeRedis.Collation},System.Boolean)">
+            <summary>
+            SORT command (An Asynchronous Version) <br /><br />
+            <br />
+            Stores the elements contained in the list, set or sorted set at key. By default, sorting is numeric and elements are compared by their value interpreted as double precision floating point number. <br /><br />
+            <br />
+            存储包含在 LIST、SET、ZSET 中的元素。默认情况下，排序是数字形式的，并且将元素的值进行比较以解释为双精度浮点数。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/sort <br />
+            Available since 1.0.0. 
+            </summary>
+            <param name="storeDestination">Storing the result of a SORT operation to the destination key.</param>
+            <param name="key">Keys</param>
+            <param name="byPattern">BY modifier</param>
+            <param name="offset">The number of elements to skip.</param>
+            <param name="count">Specifying the number of elements to return from starting at offset.</param>
+            <param name="getPatterns">GET modifier</param>
+            <param name="collation">ASC | DESC modifier</param>
+            <param name="alpha">ALPHA modifier, sort by lexicographically.</param>
+            <returns>The number of sorted elements in the destination list.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.TouchAsync(System.String[])">
+            <summary>
+            TOUCH command (An Asynchronous Version) <br /><br />
+            <br />
+            Alters the last access time of a key(s). A key is ignored if it does not exist.<br /><br />
+            <br />
+            更改 Key(s) 最后访问时间。如果键不存在，则忽略之。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/touch <br />
+            Available since 3.2.1. 
+            </summary>
+            <param name="keys">Keys</param>
+            <returns>The number of keys that were touched.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.TtlAsync(System.String)">
+            <summary>
+            TTL command (An Asynchronous Version) <br /><br />
+            <br />
+            Returns the remaining time to live of a key that has a timeout. This introspection capability allows a Redis client to check how many seconds a given key will continue to be part of the dataset.<br />
+            In Redis 2.6 or older the command returns -1 if the key does not exist or if the key exist but has no associated expire. <br />
+            Starting with Redis 2.8 the return value in case of error changed: <br />
+             - The command returns -2 if the key does not exist.<br />
+             - The command returns -1 if the key exists but has no associated expire.<br /><br />
+            <br />
+            返回键的剩余生存时间。这种自省能力允许 Redis 客户端检查指定键还能再数据集中生存多少秒。<br />
+            在 Redis 2.6 之前，如果 Key 不存在或 Key 未设置过期时间，则返回 -1<br />
+            从 Redis 2.8 开始，将针对不同的错误情况返回不同的值：<br />
+             - 如果 Key 不存在，则返回 -2 <br />
+             - 如果 Key 存在，但没有设置过过期时间，则返回 -1 <br /><br />
+            <br />
+            Document link: https://redis.io/commands/ttl <br />
+            Available since 1.0.0. 
+            </summary>
+            <param name="key">Key</param>
+            <returns>TTL in seconds, or a negative value in order to signal an error (see the description above).</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.TypeAsync(System.String)">
+            <summary>
+            TYPE command (An Asynchronous Version) <br /><br />
+            <br />
+            Returns the string representation of the type of the value stored at key. The different types that can be returned are: string, list, set, zset, hash and stream.<br /><br />
+            <br />
+            获取键对应值的类型的字符串表达形式。可以返回的类型是：string，list，set，zset，hash 以及 stream。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/type <br />
+            Available since 1.0.0. 
+            </summary>
+            <param name="key">Key</param>
+            <returns>The type of key, or none when key does not exist.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.UnLinkAsync(System.String[])">
+            <summary>
+            UNLINK command (An Asynchronous Version) <br /><br />
+            <br />
+            This command is very similar to DEL: it removes the specified keys. Just like DEL a key is ignored if it does not exist. However the command performs the actual memory reclaiming in a different thread, so it is not blocking, while DEL is. <br /><br />
+            <br />
+            本命令与 DEL 相似，能删除指定的键值；如果键不存在，则忽略。与 DEL 不同的是，本命令将在另一个线程中执行实际的内存回收，因此是非阻塞的。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/unlink <br />
+            Available since 4.0.0. 
+            </summary>
+            <param name="keys">Keys</param>
+            <returns>The number of keys that were unlinked.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.WaitAsync(System.Int64,System.Int64)">
+            <summary>
+            WAIT command (An Asynchronous Version) <br /><br />
+            <br />
+            This command blocks the current client until all the previous write commands are successfully transferred and acknowledged by at least the specified number of replicas. If the timeout, specified in milliseconds, is reached, the command returns even if the specified number of replicas were not yet reached. <br /><br />
+            <br />
+            本命令将阻塞当前客户端，直到所有写命令成功发送、且大于等于指定数量的副本进行了确认。<br />
+            如果超时（单位为毫秒），即便没能获得指定数量副本的确认，命令也会返回。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/wait <br />
+            Available since 3.0.0. 
+            </summary>
+            <param name="numreplicas">The number of replicas</param>
+            <param name="timeoutMilliseconds">Timeout milliseconds</param>
+            <returns>The command returns the number of replicas reached by all the writes performed in the context of the current connection.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.Del(System.String[])">
+            <summary>
+            DEL command (A Synchronized Version) <br /><br />
+            <br />
+            Removes the specified keys. A key is ignored if it does not exist.<br /><br />
+            <br />
+            移除指定的键。如果键不存在，则忽略之。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/del <br />
+            Available since 2.6.0. 
+            </summary>
+            <param name="keys">Keys</param>
+            <returns>The number of keys that were removed.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.Dump(System.String)">
+            <summary>
+            DUMP command (A Synchronized Version) <br /><br />
+            <br />
+            Serialize the value stored at key in a Redis-specific format and return it to the user. The returned value can be synthesized back into a Redis key using the RESTORE command.<br /><br />
+            <br />
+            以 Redis 特有格式序列化指定的键值，并返回给用户。可结合 RESTORE 命令将序列化的结果重新写回 Redis。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/dump <br />
+            Available since 2.6.0. 
+            </summary>
+            <param name="key">Key</param>
+            <returns>The serialized value.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.Exists(System.String)">
+            <summary>
+            EXISTS command (A Synchronized Version) <br /><br />
+            <br />
+            Returns if key exists.<br /><br />
+            <br />
+            返回键是否存在。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/exists <br />
+            Available since 1.0.0. 
+            </summary>
+            <param name="key">Key</param>
+            <returns>Specifically: True if the key exists. False if the key does not exist.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.Exists(System.String[])">
+            <summary>
+            EXISTS command (A Synchronized Version) <br /><br />
+            <br />
+            Returns if key exists.<br /><br />
+            <br />
+            返回键是否存在。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/exists <br />
+            Available since 3.0.3. 
+            </summary>
+            <param name="keys">Keys</param>
+            <returns>The number of keys existing among the ones specified as arguments. Keys mentioned multiple times and existing are counted multiple times.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.Expire(System.String,System.Int32)">
+            <summary>
+            EXPIRE command (A Synchronized Version) <br /><br />
+            <br />
+            Set a timeout on key. After the timeout has expired, the key will automatically be deleted. A key with an associated timeout is often said to be volatile in Redis terminology.<br /><br />
+            <br />
+            设置键的超时时间。到期后，键将被自动删除。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/expire <br />
+            Available since 1.0.0. 
+            </summary>
+            <param name="key">Key</param>
+            <param name="seconds">Expires time (seconds)</param>
+            <returns>Specifically: True if the timeout was set.False if key does not exist.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.ExpireAt(System.String,System.DateTime)">
+            <summary>
+            EXPIREAT command (A Synchronized Version) <br /><br />
+            <br />
+            EXPIREAT has the same effect and semantic as EXPIRE, but instead of specifying the number of seconds representing the TTL (time to live), it takes an absolute Unix timestamp (seconds since January 1, 1970). A timestamp in the past will delete the key immediately.<br /><br />
+            <br />
+            EXPIREAT 具有与 EXPIRE 相同的作用和语义，但是它没有指定表示 TTL（生存时间）的秒数，而是使用了绝对的 Unix 时间戳（自1970年1月1日以来的秒数）。时间戳一旦过期就会被删除。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/expireat <br />
+            Available since 1.2.0. 
+            </summary>
+            <param name="key">Key</param>
+            <param name="timestamp">UNIX Timestamp</param>
+            <returns>Specifically: True if the timeout was set.False if key does not exist.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.Keys(System.String)">
+            <summary>
+            KEYS command (A Synchronized Version) <br /><br />
+            <br />
+            Returns all keys matching pattern.<br /><br />
+            <br />
+            返回所有与模式匹配的键。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/keys <br />
+            Available since 1.0.0. 
+            </summary>
+            <param name="pattern">Pattern</param>
+            <returns>List of keys matching pattern.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.Migrate(System.String,System.Int32,System.String,System.Int32,System.Int64,System.Boolean,System.Boolean,System.String,System.String,System.String,System.String[])">
+            <summary>
+            MIGRATE command (A Synchronized Version) <br /><br />
+            <br />
+            Atomically transfer a key from a source Redis instance to a destination Redis instance. On success the key is deleted from the original instance and is guaranteed to exist in the target instance.<br /><br />
+            <br />
+            原子地将键从 Redis 源实例转移到目标实例。转移成功后，Key 将从源实例中删除，并确保保存在目标实例之中。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/migrate <br />
+            Available since 2.6.0. 
+            </summary>
+            <param name="host">Destination Instance's Host</param>
+            <param name="port">Destination Instance's Port</param>
+            <param name="key">Key</param>
+            <param name="destinationDb">Destination Instance's Database</param>
+            <param name="timeoutMilliseconds">Timeout milliseconds</param>
+            <param name="copy">Do not remove the key from the local instance. Available since 3.0.0. </param>
+            <param name="replace">Replace existing key on the remote instance. Available since 3.0.0. </param>
+            <param name="authPassword">Authenticate with the given password to the remote instance. Available since 4.0.7. </param>
+            <param name="auth2Username">Authenticate with the given username (Redis 6 or greater ACL auth style).</param>
+            <param name="auth2Password">Authenticate with the given password (Redis 6 or greater ACL auth style).</param>
+            <param name="keys">If the key argument is an empty string, the command will instead migrate all the keys that follow the KEYS option (see the above section for more info). Available since 3.0.6. </param>
+        </member>
+        <member name="M:FreeRedis.RedisClient.Move(System.String,System.Int32)">
+            <summary>
+            MOVE command (A Synchronized Version) <br /><br />
+            <br />
+            Move key from the currently selected database (see SELECT) to the specified destination database. When key already exists in the destination database, or it does not exist in the source database, it does nothing. It is possible to use MOVE as a locking primitive because of this. <br /><br />
+            <br />
+            将指定的 Key 从当前数据库移动到目标数据库。<br />
+            如果目标数据库中已存在该键，或源数据库中不存在该键，则什么都不做。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/move <br />
+            Available since 1.0.0.
+            </summary>
+            <param name="key">Key</param>
+            <param name="db">Database</param>
+            <returns>Specifically: True if key was moved. False if key was not moved.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.ObjectRefCount(System.String)">
+            <summary>
+            OBJECT REFCOUNT command (A Synchronized Version) <br /><br />
+            <br />
+            Returns the number of references of the value associated with the specified key. This command is mainly useful for debugging.<br /><br />
+            <br />
+            返回与指定键关联的值的引用数。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/object <br />
+            Available since 2.2.3. 
+            </summary>
+            <param name="key">Key</param>
+            <returns>Returns the number of references of the value associated with the specified key.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.ObjectIdleTime(System.String)">
+            <summary>
+            OBJECT IDLETIME command (A Synchronized Version) <br /><br />
+            <br />
+            returns the number of seconds since the object stored at the specified key is idle (not requested by read or write operations). While the value is returned in seconds the actual resolution of this timer is 10 seconds, but may vary in future implementations. This subcommand is available when maxmemory-policy is set to an LRU policy or noeviction and maxmemory is set. <br /><br />
+            <br />
+            返回指定键值的空闲时间，单位为秒。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/object <br />
+            Available since 2.2.3. 
+            </summary>
+            <param name="key">Key</param>
+            <returns>Returns the number of seconds since the object stored at the specified key is idle</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.ObjectEncoding(System.String)">
+            <summary>
+            OBJECT ENCODING command (A Synchronized Version) <br /><br />
+            <br />
+            Returns the kind of internal representation used in order to store the value associated with a key.<br /><br />
+            <br />
+            返回用于存储与键关联的值的内部表示形式的类型。
+            <br />
+            Document link: https://redis.io/commands/object <br />
+            Available since 2.2.3. 
+            </summary>
+            <param name="key">Key</param>
+            <returns>Returns the kind of internal representation used in order to store the value associated with a key.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.ObjectFreq(System.String)">
+            <summary>
+            OBJECT FREQ command (A Synchronized Version) <br /><br />
+            <br />
+            Returns the logarithmic access frequency counter of the object stored at the specified key. This subcommand is available when maxmemory-policy is set to an LFU policy.<br /><br />
+            <br />
+            返回存储在指定键处的对象的对数访问频率计数器。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/object <br />
+            Available since 2.2.3. 
+            </summary>
+            <param name="key">Key</param>
+            <returns>Returns the logarithmic access frequency counter of the object stored at the specified key.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.Persist(System.String)">
+            <summary>
+            PERSIST command (A Synchronized Version) <br /><br />
+            <br />
+            Remove the existing timeout on key, turning the key from volatile (a key with an expire set) to persistent (a key that will never expire as no timeout is associated).<br /><br />
+            <br />
+            将指定键的超时设置移除，将键从可变键转换为持久键。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/persist <br />
+            Available since 2.2.0. 
+            </summary>
+            <param name="key">Key</param>
+            <returns>Specifically: True if the timeout was removed. False if key does not exist or does not have an associated timeout.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.PExpire(System.String,System.Int32)">
+            <summary>
+            PEXPIRE command (A Synchronized Version) <br /><br />
+            <br />
+            This command works exactly like EXPIRE but the time to live of the key is specified in milliseconds instead of seconds.<br /><br />
+            <br />
+            此命令与 EXPIRE 相同，区别仅仅在于时间单位是毫秒，不是秒。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/expire <br />
+            Available since 1.0.0. 
+            </summary>
+            <param name="key">Key</param>
+            <param name="milliseconds">Expires time (milliseconds)</param>
+            <returns>Specifically: True if the timeout was set.False if key does not exist.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.PExpireAt(System.String,System.DateTime)">
+            <summary>
+            PEXPIREAT command (A Synchronized Version) <br /><br />
+            <br />
+            PEXPIREAT has the same effect and semantic as EXPIREAT, but the Unix time at which the key will expire is specified in milliseconds instead of seconds.<br /><br />
+            <br />
+            PEXPIREAT 具有与 EXPIREAT 相同的作用和语义，但 Key 的时间戳使用的是毫秒，而不是秒。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/pexpireat <br />
+            Available since 2.6.0. 
+            </summary>
+            <param name="key">Key</param>
+            <param name="timestamp">UNIX Timestamp</param>
+            <returns>Specifically: True if the timeout was set.False if key does not exist.</returns>
+            <returns></returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.PTtl(System.String)">
+            <summary>
+            PTTL command (A Synchronized Version) <br /><br />
+            <br />
+            Like TTL this command returns the remaining time to live of a key that has an expire set, with the sole difference that TTL returns the amount of remaining time in seconds while PTTL returns it in milliseconds.<br />
+            In Redis 2.6 or older the command returns -1 if the key does not exist or if the key exist but has no associated expire. <br />
+            Starting with Redis 2.8 the return value in case of error changed: <br />
+             - The command returns -2 if the key does not exist.<br />
+             - The command returns -1 if the key exists but has no associated expire.<br /><br />
+            <br />
+            与 TTL 命令一样，返回键的剩余生存时间，唯一的区别是 TTL 以秒为单位返回剩余时间，而 PTTL 以毫秒为单位返回。<br />
+            在 Redis 2.6 之前，如果 Key 不存在或 Key 未设置过期时间，则返回 -1<br />
+            从 Redis 2.8 开始，将针对不同的错误情况返回不同的值：<br />
+             - 如果 Key 不存在，则返回 -2 <br />
+             - 如果 Key 存在，但没有设置过过期时间，则返回 -1 <br /><br />
+            <br />
+            Document link: https://redis.io/commands/pttl <br />
+            Available since 2.6.0. 
+            </summary>
+            <param name="key">Key</param>
+            <returns>TTL in milliseconds, or a negative value in order to signal an error (see the description above).</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.RandomKey">
+            <summary>
+            RANDOMKEY command (A Synchronized Version) <br /><br />
+            <br />
+            Return a random key from the currently selected database. <br /><br />
+            <br />
+            从当前选择的数据库返回一个随机密钥。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/randomkey <br />
+            Available since 1.0.0. 
+            </summary>
+            <returns>The random key, or nil when the database is empty.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.Rename(System.String,System.String)">
+            <summary>
+            RENAME command (A Synchronized Version) <br /><br />
+            <br />
+            Renames key to newkey. It returns an error when key does not exist. If newkey already exists it is overwritten, when this happens RENAME executes an implicit DEL operation, so if the deleted key contains a very big value it may cause high latency even if RENAME itself is usually a constant-time operation.<br />
+             - Before Redis 3.2.0, an error is returned if source and destination names are the same.<br /><br />
+            <br />
+            将 Key 重命名为 New Key。如果键不存在，返回错误。<br />
+            如果 New Key 已存在，则将被覆盖，此时类似 DEL 命令，由于 RENAME 是 constant-time operation，因此当删除的键有很大的值时会有较大的延迟。<br />
+             - 在 Redis 3.2 之前，如果 Key 和 New Key 名字一样，将返回错误。<br /><br /> 
+            <br />
+            Document link: https://redis.io/commands/rename <br />
+            Available since 1.0.0. 
+            </summary>
+            <param name="key">Key</param>
+            <param name="newkey">New key</param>
+        </member>
+        <member name="M:FreeRedis.RedisClient.RenameNx(System.String,System.String)">
+            <summary>
+            RENAMENX command (A Synchronized Version) <br /><br />
+            <br />
+            Renames key to newkey. It returns an error when key does not exist. If newkey already exists it is overwritten, when this happens RENAME executes an implicit DEL operation, so if the deleted key contains a very big value it may cause high latency even if RENAME itself is usually a constant-time operation.<br />
+             - Before Redis 3.2.0, an error is returned if source and destination names are the same.<br /><br />
+            <br />
+            将 Key 重命名为 New Key。如果键不存在，返回错误。<br />
+            如果 New Key 已存在，则将被覆盖，此时类似 DEL 命令，由于 RENAME 是 constant-time operation，因此当删除的键有很大的值时会有较大的延迟。<br />
+             - 在 Redis 3.2 之前，如果 Key 和 New Key 名字一样，将返回错误。<br /><br /> 
+            <br />
+            Document link: https://redis.io/commands/renamenx <br />
+            Available since 1.0.0. 
+            </summary>
+            <param name="key">Key</param>
+            <param name="newkey">New key</param>
+            <returns>specifically: True if key was renamed to newkey. False if newkey already exists.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.Restore(System.String,System.Byte[])">
+            <summary>
+            RESTORE command (A Synchronized Version) <br /><br />
+            <br />
+            Create a key associated with a value that is obtained by deserializing the provided serialized value (obtained via DUMP).<br /><br />
+            <br />
+            将经由 DUMP 命令序列化的值反序列化后，作为给定键的值进行保存。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/restore <br />
+            Available since 2.6.0. 
+            </summary>
+            <param name="key">Key</param>
+            <param name="serializedValue">Serialized value</param>
+        </member>
+        <member name="M:FreeRedis.RedisClient.Restore(System.String,System.Int32,System.Byte[],System.Boolean,System.Boolean,System.Nullable{System.Int32},System.Nullable{System.Decimal})">
+            <summary>
+            RESTORE command (A Synchronized Version) <br /><br />
+            <br />
+            Create a key associated with a value that is obtained by deserializing the provided serialized value (obtained via DUMP).<br /><br />
+            <br />
+            将经由 DUMP 命令序列化的值反序列化后，作为给定键的值进行保存。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/restore <br />
+            Available since 2.6.0. 
+            </summary>
+            <param name="key">Key</param>
+            <param name="ttl">If ttl is 0 the key is created without any expire, otherwise the specified expire time (in milliseconds) is set.</param>
+            <param name="serializedValue">Serialized value</param>
+            <param name="replace">REPLACE modifier: If the Key already exists, replace it. Available since 3.0.0.</param>
+            <param name="absTtl">Absolute Unix timestamp (in milliseconds) in which the key will expire. Available since 5.0.0.</param>
+            <param name="idleTimeSeconds">IDLETIME modifier. Available since 5.0.0.</param>
+            <param name="frequency">FREQ modifier. Available since 5.0.0.</param>
+        </member>
+        <member name="M:FreeRedis.RedisClient.Scan(System.Int64,System.String,System.Int64,System.String)">
+            <summary>
+            SCAN command (A Synchronized Version) <br /><br />
+            <br />
+            The SCAN command and the closely related commands SSCAN, HSCAN and ZSCAN are used in order to incrementally iterate over a collection of elements.<br /><br />
+            <br />
+            使用 SCAN 命令及其关联的 SSCAN、HSCAN、ZSCAN 等命令来迭代返回元素集合。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/scan <br />
+            Available since 2.8.0. 
+            </summary>
+            <param name="cursor">Cursor</param>
+            <param name="pattern">MATCH option</param>
+            <param name="count">COUNT option: while SCAN does not provide guarantees about the number of elements returned at every iteration, it is possible to empirically adjust the behavior of SCAN using the COUNT option, default is 10</param>
+            <param name="type">TYPE option: the type argument is the same string name that the TYPE command returns. Available since 6.0</param>
+            <returns>Return a two elements multi-bulk reply, where the first element is a string representing an unsigned 64 bit number (the cursor), and the second element is a multi-bulk with an array of elements.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.Sort(System.String,System.String,System.Int64,System.Int64,System.String[],System.Nullable{FreeRedis.Collation},System.Boolean)">
+            <summary>
+            SORT command (A Synchronized Version) <br /><br />
+            <br />
+            Returns or stores the elements contained in the list, set or sorted set at key. By default, sorting is numeric and elements are compared by their value interpreted as double precision floating point number. <br /><br />
+            <br />
+            返回含在 LIST、SET、ZSET 中的元素。默认情况下，排序是数字形式的，并且将元素的值进行比较以解释为双精度浮点数。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/sort <br />
+            Available since 1.0.0. 
+            </summary>
+            <param name="key">Keys</param>
+            <param name="byPattern">BY modifier</param>
+            <param name="offset">The number of elements to skip.</param>
+            <param name="count">Specifying the number of elements to return from starting at offset.</param>
+            <param name="getPatterns">GET modifier</param>
+            <param name="collation">ASC | DESC modifier</param>
+            <param name="alpha">ALPHA modifier, sort by lexicographically.</param>
+            <returns>A list of sorted elements</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.SortStore(System.String,System.String,System.String,System.Int64,System.Int64,System.String[],System.Nullable{FreeRedis.Collation},System.Boolean)">
+            <summary>
+            SORT command (A Synchronized Version) <br /><br />
+            <br />
+            Stores the elements contained in the list, set or sorted set at key. By default, sorting is numeric and elements are compared by their value interpreted as double precision floating point number. <br /><br />
+            <br />
+            存储包含在 LIST、SET、ZSET 中的元素。默认情况下，排序是数字形式的，并且将元素的值进行比较以解释为双精度浮点数。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/sort <br />
+            Available since 1.0.0. 
+            </summary>
+            <param name="storeDestination">Storing the result of a SORT operation to the destination key.</param>
+            <param name="key">Keys</param>
+            <param name="byPattern">BY modifier</param>
+            <param name="offset">The number of elements to skip.</param>
+            <param name="count">Specifying the number of elements to return from starting at offset.</param>
+            <param name="getPatterns">GET modifier</param>
+            <param name="collation">ASC | DESC modifier</param>
+            <param name="alpha">ALPHA modifier, sort by lexicographically.</param>
+            <returns>The number of sorted elements in the destination list.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.Touch(System.String[])">
+            <summary>
+            TOUCH command (A Synchronized Version) <br /><br />
+            <br />
+            Alters the last access time of a key(s). A key is ignored if it does not exist.<br /><br />
+            <br />
+            更改 Key(s) 最后访问时间。如果键不存在，则忽略之。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/touch <br />
+            Available since 3.2.1. 
+            </summary>
+            <param name="keys">Keys</param>
+            <returns>The number of keys that were touched.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.Ttl(System.String)">
+            <summary>
+            TTL command (A Synchronized Version) <br /><br />
+            <br />
+            Returns the remaining time to live of a key that has a timeout. This introspection capability allows a Redis client to check how many seconds a given key will continue to be part of the dataset.<br />
+            In Redis 2.6 or older the command returns -1 if the key does not exist or if the key exist but has no associated expire. <br />
+            Starting with Redis 2.8 the return value in case of error changed: <br />
+             - The command returns -2 if the key does not exist.<br />
+             - The command returns -1 if the key exists but has no associated expire.<br /><br />
+            <br />
+            返回键的剩余生存时间。这种自省能力允许 Redis 客户端检查指定键还能再数据集中生存多少秒。<br />
+            在 Redis 2.6 之前，如果 Key 不存在或 Key 未设置过期时间，则返回 -1<br />
+            从 Redis 2.8 开始，将针对不同的错误情况返回不同的值：<br />
+             - 如果 Key 不存在，则返回 -2 <br />
+             - 如果 Key 存在，但没有设置过过期时间，则返回 -1 <br /><br />
+            <br />
+            Document link: https://redis.io/commands/ttl <br />
+            Available since 1.0.0. 
+            </summary>
+            <param name="key">Key</param>
+            <returns>TTL in seconds, or a negative value in order to signal an error (see the description above).</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.Type(System.String)">
+            <summary>
+            TYPE command (A Synchronized Version) <br /><br />
+            <br />
+            Returns the string representation of the type of the value stored at key. The different types that can be returned are: string, list, set, zset, hash and stream.<br /><br />
+            <br />
+            获取键对应值的类型的字符串表达形式。可以返回的类型是：string，list，set，zset，hash 以及 stream。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/type <br />
+            Available since 1.0.0. 
+            </summary>
+            <param name="key">Key</param>
+            <returns>The type of key, or none when key does not exist.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.UnLink(System.String[])">
+            <summary>
+            UNLINK command (A Synchronized Version) <br /><br />
+            <br />
+            This command is very similar to DEL: it removes the specified keys. Just like DEL a key is ignored if it does not exist. However the command performs the actual memory reclaiming in a different thread, so it is not blocking, while DEL is. <br /><br />
+            <br />
+            本命令与 DEL 相似，能删除指定的键值；如果键不存在，则忽略。与 DEL 不同的是，本命令将在另一个线程中执行实际的内存回收，因此是非阻塞的。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/unlink <br />
+            Available since 4.0.0. 
+            </summary>
+            <param name="keys">Keys</param>
+            <returns>The number of keys that were unlinked.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.Wait(System.Int64,System.Int64)">
+            <summary>
+            WAIT command (A Synchronized Version) <br /><br />
+            <br />
+            This command blocks the current client until all the previous write commands are successfully transferred and acknowledged by at least the specified number of replicas. If the timeout, specified in milliseconds, is reached, the command returns even if the specified number of replicas were not yet reached. <br /><br />
+            <br />
+            本命令将阻塞当前客户端，直到所有写命令成功发送、且大于等于指定数量的副本进行了确认。<br />
+            如果超时（单位为毫秒），即便没能获得指定数量副本的确认，命令也会返回。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/wait <br />
+            Available since 3.0.0. 
+            </summary>
+            <param name="numreplicas">The number of replicas</param>
+            <param name="timeoutMilliseconds">Timeout milliseconds</param>
+            <returns>The command returns the number of replicas reached by all the writes performed in the context of the current connection.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.Lock(System.String,System.Int32,System.Boolean)">
+            <summary>
+            开启分布式锁，若超时返回null
+            </summary>
+            <param name="name">锁名称</param>
+            <param name="timeoutSeconds">超时（秒）</param>
+            <param name="autoDelay">自动延长锁超时时间，看门狗线程的超时时间为timeoutSeconds/2 ， 在看门狗线程超时时间时自动延长锁的时间为timeoutSeconds。除非程序意外退出，否则永不超时。</param>
+            <returns></returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.LockController.Delay(System.Int32)">
+            <summary>
+            延长锁时间，锁在占用期内操作时返回true，若因锁超时被其他使用者占用则返回false
+            </summary>
+            <param name="milliseconds">延长的毫秒数</param>
+            <returns>成功/失败</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.LockController.Refresh(System.Int32)">
+            <summary>
+            刷新锁时间，把key的ttl重新设置为milliseconds，锁在占用期内操作时返回true，若因锁超时被其他使用者占用则返回false
+            </summary>
+            <param name="milliseconds">刷新的毫秒数</param>
+            <returns>成功/失败</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.LockController.Unlock">
+            <summary>
+            释放分布式锁
+            </summary>
+            <returns>成功/失败</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.AppendAsync``1(System.String,``0)">
+            <summary>
+            APPEND command (An Asynchronous Version)<br /><br />
+            <br />
+            If key already exists and is a string, this command appends the value at the end of the string. If key does not exist it is created and set as an empty string, so APPEND will be similar to SET in this special case. <br /><br />
+            <br />
+            若键值已存在且为字符串，则此命令将值附加在字符串的末尾；<br />
+            若键值不存在，则会先创建一个空字符串，并附加值（在此情况下，APPEND 类似 SET 命令）。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/append <br />
+            Available since 2.0.0.
+            </summary>
+            <param name="key">Key</param>
+            <param name="value">Value</param>
+            <typeparam name="T"></typeparam>
+            <returns>The length of the string after the append operation.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.BitCountAsync(System.String,System.Int64,System.Int64)">
+            <summary>
+            BITCOUNT command (An Asynchronous Version)<br /><br />
+            <br />
+            Count the number of set bits (population counting) in a string.<br /><br />
+            <br />
+            统计字符串中的位数。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/bitcount <br />
+            Available since 2.6.0.
+            </summary>
+            <param name="key">Key</param>
+            <param name="start">Index of the start. It can contain negative values in order to index bytes starting from the end of the string.</param>
+            <param name="end">Index of the end. It can contain negative values in order to index bytes starting from the end of the string.</param>
+            <returns>The number of set bits in the string. Non-existent keys are treated as empty strings and will return zero.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.BitOpAsync(FreeRedis.BitOpOperation,System.String,System.String[])">
+            <summary>
+            BITOP command (An Asynchronous Version) <br /><br />
+            <br />
+            Perform a bitwise operation between multiple keys (containing string values) and store the result in the destination key.<br /><br />
+            <br />
+            在（包括字符串值）的多键之间按位运算，并将结果保存在目标键中。<br />
+            目前支持 AND、OR、XOR 与 NOT 四种运算方式。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/bitop <br />
+            Available since 2.6.0.
+            </summary>
+            <param name="operation">Bit operation type: AND, OR, XOR or NOT</param>
+            <param name="destkey">Destination Key</param>
+            <param name="keys">Multiple keys (containing string values)</param>
+            <returns>The size of the string stored in the destination key, that is equal to the size of the longest input string.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.BitPosAsync(System.String,System.Boolean,System.Nullable{System.Int64},System.Nullable{System.Int64})">
+            <summary>
+            BITPOS command (An Asynchronous Version) <br /><br />
+            <br />
+            Return the position of the first bit set to 1 or 0 in a string.<br />
+            The position is returned, thinking of the string as an array of bits from left to right, where the first byte's most significant bit is at position 0, the second byte's most significant bit is at position 8, and so forth.<br /><br />
+            <br />
+            返回字符串中第一个 1 或 0 的位置。<br />
+            注意，本命令将字符串视作位数组，自左向右计算，第一个字节在位置 0，第二个字节在位置 8，以此类推。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/bitpos <br />
+            Available since 2.8.7.
+            </summary>
+            <param name="key">Key</param>
+            <param name="bit">Bit value, 1 is true, 0 is false.</param>
+            <param name="start">Index of the start. It can contain negative values in order to index bytes starting from the end of the string.</param>
+            <param name="end">Index of the end. It can contain negative values in order to index bytes starting from the end of the string.</param>
+            <returns>Returns the position of the first bit set to 1 or 0 according to the request.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.DecrAsync(System.String)">
+            <summary>
+            DECR command (An Asynchronous Version) <br /><br />
+            <br />
+            Decrements the number stored at key by one. <br />
+            If the key does not exist, it is set to 0 before performing the operation. An error is returned if the key contains a value of the wrong type or contains a string that can not be represented as integer. <br />
+            This operation is limited to 64 bit signed integers.<br /><br />
+            <br />
+            对该键的值减去 1。<br />
+            如果键值不存在，则在操作前先设置为 0。如果键对应的值是个错误类型或不能表达为整数的字符串，则返回错误。此操作仅限于 64 位有符号整数。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/decr <br />
+            Available since 1.0.0.
+            </summary>
+            <param name="key">Key</param>
+            <returns>the value of key after the decrement.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.DecrByAsync(System.String,System.Int64)">
+            <summary>
+            DECRBY command (An Asynchronous Version) <br /><br />
+            <br />
+            Decrements the number stored at key by decrement. <br />
+            If the key does not exist, it is set to 0 before performing the operation. An error is returned if the key contains a value of the wrong type or contains a string that can not be represented as integer. <br />
+            This operation is limited to 64 bit signed integers.<br /><br />
+            <br />
+            对该键的值减去给定的值。<br />
+            如果键值不存在，则在操作前先设置为 0。如果键对应的值是个错误类型或不能表达为整数的字符串，则返回错误。此操作仅限于 64 位有符号整数。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/decrby <br />
+            Available since 1.0.0.
+            </summary>
+            <param name="key">Key</param>
+            <param name="decrement">The given value to be decreased.</param>
+            <returns>the value of key after the decrement.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.GetAsync(System.String)">
+            <summary>
+            GET command (An Asynchronous Version) <br /><br />
+            <br />
+            Get the value of key. If the key does not exist the special value nil is returned. An error is returned if the value stored at key is not a string, because GET only handles string values.<br /><br />
+            <br />
+            获得给定键的值。若键不存在，则返回特殊的 nil 值。如果给定键的值不是字符串，则返回错误，因为 GET 指令只能处理字符串。 <br /><br />
+            <br />
+            Document link: https://redis.io/commands/get <br />
+            Available since 1.0.0.
+            </summary>
+            <param name="key">Key</param>
+            <returns>The value of key, or nil when key does not exist.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.GetAsync``1(System.String)">
+            <summary>
+            GET command (An Asynchronous Version) <br /><br />
+            <br />
+            Get the value of key. If the key does not exist the special value nil is returned. An error is returned if the value stored at key is not a string, because GET only handles string values.<br /><br />
+            <br />
+            获得给定键的值。若键不存在，则返回特殊的 nil 值。如果给定键的值不是字符串，则返回错误，因为 GET 指令只能处理字符串。 <br /><br />
+            <br />
+            Document link: https://redis.io/commands/get <br />
+            Available since 1.0.0.
+            </summary>
+            <param name="key">Key</param>
+            <typeparam name="T"></typeparam>
+            <returns>The value of key, or nil when key does not exist.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.GetBitAsync(System.String,System.Int64)">
+            <summary>
+            GETBIT command (An Asynchronous Version) <br /><br />
+            <br />
+            Returns the bit value at offset in the string value stored at key.<br /><br />
+            <br />
+            返回键所对应字符串值中偏移量的位值。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/getbit <br />
+            Available since 2.2.0.
+            </summary>
+            <param name="key">Key</param>
+            <param name="offset">Offset</param>
+            <returns>The bit value stored at offset.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.GetRangeAsync(System.String,System.Int64,System.Int64)">
+            <summary>
+            GETRANGE command (An Asynchronous Version) <br /><br />
+            <br />
+            Returns the substring of the string value stored at key, determined by the offsets start and end (both are inclusive).<br /><br />
+            <br />
+            返回键值的子字符串该字符串由偏移量 start 和 end 来确定（两端均闭包）。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/getrange <br />
+            Available since 2.0.0. It is called SUBSTR in Redis versions &lt;= 2.0.
+            </summary>
+            <param name="key">Key</param>
+            <param name="start">Start</param>
+            <param name="end">End</param>
+            <returns>The substring of the string value</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.GetRangeAsync``1(System.String,System.Int64,System.Int64)">
+            <summary>
+            GETRANGE command (An Asynchronous Version) <br /><br />
+            <br />
+            Returns the substring of the string value stored at key, determined by the offsets start and end (both are inclusive).<br /><br />
+            <br />
+            返回键值的子字符串该字符串由偏移量 start 和 end 来确定（两端均闭包）。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/getrange <br />
+            Available since 2.0.0. It is called SUBSTR in Redis versions &lt;= 2.0.
+            </summary>
+            <param name="key">Key</param>
+            <param name="start">Start</param>
+            <param name="end">End</param>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.GetSetAsync``1(System.String,``0)">
+            <summary>
+            GETSET command (An Asynchronous Version) <br /><br />
+            <br />
+            Atomically sets key to value and returns the old value stored at key. Returns an error when key exists but does not hold a string value.<br /><br />
+            <br />
+            以原子的方式将新值取代给定键的旧值，并返回旧值。如果该键存在但不包含字符串值时，返回错误。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/getset <br />
+            Available since 1.0.0.
+            </summary>
+            <param name="key">Key</param>
+            <param name="value">New value</param>
+            <typeparam name="T"></typeparam>
+            <returns>The old value stored at key, or nil when key did not exist.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.IncrAsync(System.String)">
+            <summary>
+            INCR command (An Asynchronous Version) <br /><br />
+            <br />
+            Increments the number stored at key by one. <br />
+            If the key does not exist, it is set to 0 before performing the operation. An error is returned if the key contains a value of the wrong type or contains a string that can not be represented as integer. <br />
+            This operation is limited to 64 bit signed integers.<br /><br />
+            <br />
+            对该键的值加上 1。<br />
+            如果键值不存在，则在操作前先设置为 0。如果键对应的值是个错误类型或不能表达为整数的字符串，则返回错误。此操作仅限于 64 位有符号整数。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/incr <br />
+            Available since 1.0.0.
+            </summary>
+            <param name="key">Key</param>
+            <returns>The value of key after the increment</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.IncrByAsync(System.String,System.Int64)">
+            <summary>
+            INCRBY command (An Asynchronous Version) <br /><br />
+            <br />
+            Decrements the number stored at key by increment. <br />
+            If the key does not exist, it is set to 0 before performing the operation. An error is returned if the key contains a value of the wrong type or contains a string that can not be represented as integer. <br />
+            This operation is limited to 64 bit signed integers.<br /><br />
+            <br />
+            对该键的值加上给定的值。<br />
+            如果键值不存在，则在操作前先设置为 0。如果键对应的值是个错误类型或不能表达为整数的字符串，则返回错误。此操作仅限于 64 位有符号整数。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/incrby <br />
+            Available since 1.0.0.
+            </summary>
+            <param name="key">Key</param>
+            <param name="increment">The given value to be increased.</param>
+            <returns>The value of key after the increment</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.IncrByFloatAsync(System.String,System.Decimal)">
+            <summary>
+            INCRBYFLOAT command (An Asynchronous Version) <br /><br />
+            <br />
+            Increment the string representing a floating point number stored at key by the specified increment. <br />
+            By using a negative increment value, the result is that the value stored at the key is decremented (by the obvious properties of addition). <br />
+            If the key does not exist, it is set to 0 before performing the operation. An error is returned if one of the following conditions occur:<br />
+            - The key contains a value of the wrong type (not a string).<br />
+            - The current key content or the specified increment are not parsable as a double precision floating point number.<br />
+            If the command is successful the new incremented value is stored as the new value of the key (replacing the old one), and returned to the caller as a string.<br /><br />
+            <br />
+            对该键的值加上给定的值，可以通过给定负值来减小对应键的值。<br />
+            如果键值不存在，则在操作前先设置为 0。如果发生以下情况，则返回错误：<br />
+            - 键所对应的值是错误的类型（不是字符串）；<br />
+            - 该键的内容不能被解析为双精度浮点数。<br />
+            如果命令执行成功，则将新值替换旧值，并返回给调用方。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/incrby <br />
+            Available since 2.6.0.
+            </summary>
+            <param name="key">Key</param>
+            <param name="increment">The given value to be increased.</param>
+            <returns>The value of key after the increment.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.MGetAsync(System.String[])">
+            <summary>
+            MGET command (An Asynchronous Version) <br /><br />
+            <br />
+            Returns the values of all specified keys. For every key that does not hold a string value or does not exist, the special value nil is returned. Because of this, the operation never fails.<br /><br />
+            <br />
+            返回所有给定键的值，对于其中个别键不存在，或其值不为字符串的，反悔特殊的 nil 值，因此 MGET 指令永远不会执行失败。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/mget <br />
+            Available since 1.0.0. 
+            </summary>
+            <param name="keys">Key list</param>
+            <returns>A list of values at the specified keys.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.MGetAsync``1(System.String[])">
+            <summary>
+            MGET command (An Asynchronous Version) <br /><br />
+            <br />
+            Returns the values of all specified keys. For every key that does not hold a string value or does not exist, the special value nil is returned. Because of this, the operation never fails.<br /><br />
+            <br />
+            返回所有给定键的值，对于其中个别键不存在，或其值不为字符串的，反悔特殊的 nil 值，因此 MGET 指令永远不会执行失败。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/mget <br />
+            Available since 1.0.0. 
+            </summary>
+            <param name="keys">Key list</param>
+            <typeparam name="T"></typeparam>
+            <returns>A list of values at the specified keys.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.MSetAsync(System.String,System.Object,System.Object[])">
+            <summary>
+            MSET command (An Asynchronous Version) <br /><br />
+            <br />
+            Sets the given keys to their respective values. MSET replaces existing values with new values, just as regular SET. <br /><br />
+            <br />
+            将给定键的值设置为对应的新值。 <br /><br />
+            <br />
+            Document link: https://redis.io/commands/mset <br />
+            Available since 1.0.1. 
+            </summary>
+            <param name="key">Key</param>
+            <param name="value">Value</param>
+            <param name="keyValues">Other key-value sets</param>
+        </member>
+        <member name="M:FreeRedis.RedisClient.MSetAsync``1(System.Collections.Generic.Dictionary{System.String,``0})">
+            <summary>
+            MSET command (An Asynchronous Version) <br /><br />
+            <br />
+            Sets the given keys to their respective values. MSET replaces existing values with new values, just as regular SET. <br /><br />
+            <br />
+            将给定键的值设置为对应的新值。 <br /><br />
+            <br />
+            Document link: https://redis.io/commands/mset <br />
+            Available since 1.0.1.  
+            </summary>
+            <param name="keyValues">Key-value sets</param>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:FreeRedis.RedisClient.MSetNxAsync(System.String,System.Object,System.Object[])">
+            <summary>
+            MSETNX command (An Asynchronous Version) <br /><br />
+            <br />
+            Sets the given keys to their respective values. MSETNX will not perform any operation at all even if just a single key already exists.<br /><br />
+            <br />
+            将给定键的值设置为对应的新值。只要有一个键已经存在，则整组键值都将不会被设置。 <br /><br />
+            <br />
+            Document link: https://redis.io/commands/msetnx <br />
+            Available since 1.0.1.  
+            </summary>
+            <param name="key">Key</param>
+            <param name="value">Value</param>
+            <param name="keyValues">Other key-value sets</param>
+            <returns>True if the all the keys were set. False if no key was set (at least one key already existed).</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.MSetNxAsync``1(System.Collections.Generic.Dictionary{System.String,``0})">
+            <summary>
+            MSETNX command (An Asynchronous Version) <br /><br />
+            <br />
+            Sets the given keys to their respective values. MSETNX will not perform any operation at all even if just a single key already exists.<br /><br />
+            <br />
+            将给定键的值设置为对应的新值。只要有一个键已经存在，则整组键值都将不会被设置。 <br /><br />
+            <br />
+            Document link: https://redis.io/commands/msetnx <br />
+            Available since 1.0.1. 
+            </summary>
+            <param name="keyValues">Key-value sets</param>
+            <typeparam name="T"></typeparam>
+            <returns>True if the all the keys were set. False if no key was set (at least one key already existed).</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.MSetAsync``1(System.Boolean,System.String,System.Object,System.Object[])">
+            <summary>
+            MSET key value [key value ...] command (An Asynchronous Version) <br /><br />
+            <br />
+            Sets the given keys to their respective values. MSET replaces existing values with new values, just as regular SET. See MSETNX if you don't want to overwrite existing values.<br /><br />
+            <br />
+            将给定键的值设置为对应的新值。如果不想覆盖现有的值，可以使用 MSETNX 指令。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/mset <br />
+            Available since 1.0.1. 
+            </summary>
+            <param name="nx">Mark whether it is NX mode. If it is, use the MSETNX command; otherwise, use the MSET command.</param>
+            <param name="key">Key</param>
+            <param name="value">Value</param>
+            <param name="keyValues">Other key-value sets</param>
+            <typeparam name="T"></typeparam>
+            <returns>Always OK since MSET can't fail.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.PSetExAsync``1(System.String,System.Int64,``0)">
+            <summary>
+            PSETEX command (An Asynchronous Version) <br /><br />
+            <br />
+            PSETEX works exactly like SETEX with the sole difference that the expire time is specified in milliseconds instead of seconds.<br /><br />
+            <br />
+            PSETEX 的工作方式与 SETEX 完全相同，唯一的区别是到期时间的单位是毫秒（ms），而不是秒（s）。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/psetex <br />
+            Available since 2.6.0. 
+            </summary>
+            <param name="key">Key</param>
+            <param name="milliseconds">Timeout milliseconds value</param>
+            <param name="value">Value</param>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:FreeRedis.RedisClient.SetAsync``1(System.String,``0,System.Int32)">
+            <summary>
+            SET key value EX seconds (An Asynchronous Version) <br /><br />
+            <br />
+            Set key to hold the string value.<br /><br />
+            <br />
+            设置键和值。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/set <br />
+            Available since 2.6.12. 
+            </summary>
+            <param name="key">Key</param>
+            <param name="value">Value</param>
+            <param name="timeoutSeconds">Timeout seconds</param>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:FreeRedis.RedisClient.SetAsync``1(System.String,``0,System.Boolean)">
+            <summary>
+            SET key value KEEPTTL command (An Asynchronous Version) <br /><br />
+            <br />
+            Set key to hold the string value. Retain the time to live associated with the key. <br /><br />
+            <br />
+            设置键和值。<br /><br />
+            Document link: https://redis.io/commands/set <br />
+            Available since 6.0.0.  
+            </summary>
+            <param name="key">Key</param>
+            <param name="value">Value</param>
+            <param name="keepTtl">Retain the time to live associated with the key</param>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:FreeRedis.RedisClient.SetNxAsync``1(System.String,``0,System.Int32)">
+            <summary>
+            SET key value EX seconds NX command (An Asynchronous Version) <br /><br />
+            <br />
+            Set key to hold the string value. Only set the key if it does not already exist.<br /><br />
+            <br />
+            设置键和值。当且仅当键值不存在时才执行命令。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/set <br />
+            Available since 2.6.12. 
+            </summary>
+            <param name="key">Key</param>
+            <param name="value">Value</param>
+            <param name="timeoutSeconds">Timeout seconds</param>
+            <typeparam name="T"></typeparam>
+            <returns>
+            Simple string reply: OK if SET was executed correctly.<br />
+            Bulk string reply: when GET option is set, the old value stored at key, or nil when key did not exist.<br />
+            Null reply: a Null Bulk Reply is returned if the SET operation was not performed because the user specified the NX or XX option but the condition was not met or if user specified the NX and GET options that do not met.
+            </returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.SetXxAsync``1(System.String,``0,System.Int32)">
+            <summary>
+            SET key value EX seconds XX command (An Asynchronous Version) <br /><br />
+            <br />
+            Set key to hold the string value. Only set the key if it already exist.<br /><br />
+            <br />
+            设置键和值。当且仅当键值已存在时才执行命令。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/set <br />
+            Available since 2.6.12. 
+            </summary>
+            <param name="key">Key</param>
+            <param name="value">Value</param>
+            <param name="timeoutSeconds">Timeout seconds</param>
+            <typeparam name="T"></typeparam>
+            <returns>
+            Simple string reply: OK if SET was executed correctly.<br />
+            Bulk string reply: when GET option is set, the old value stored at key, or nil when key did not exist.<br />
+            Null reply: a Null Bulk Reply is returned if the SET operation was not performed because the user specified the NX or XX option but the condition was not met or if user specified the NX and GET options that do not met.
+            </returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.SetXxAsync``1(System.String,``0,System.Boolean)">
+            <summary>
+            SET key value KEEPTTL XX command (An Asynchronous Version) <br /><br />
+            <br />
+            Set key to hold the string value. Only set the key if it already exist.<br /><br />
+            <br />
+            设置键和值。当且仅当键值已存在时才执行命令。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/set <br />
+            Available since 6.0.0. 
+            </summary>
+            <param name="key">Key</param>
+            <param name="value">Value</param>
+            <param name="keepTtl">Retain the time to live associated with the key</param>
+            <typeparam name="T"></typeparam>
+            <returns>
+            Simple string reply: OK if SET was executed correctly.<br />
+            Bulk string reply: when GET option is set, the old value stored at key, or nil when key did not exist.<br />
+            Null reply: a Null Bulk Reply is returned if the SET operation was not performed because the user specified the NX or XX option but the condition was not met or if user specified the NX and GET options that do not met.
+            </returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.SetAsync``1(System.String,``0,System.TimeSpan,System.Boolean,System.Boolean,System.Boolean,System.Boolean)">
+             <summary>
+             SET command (An Asynchronous Version) <br /><br />
+            <br />
+             Set key to hold the string value. If key already holds a value, it is overwritten, regardless of its type. <br /><br />
+             <br />
+             设置键和值。如果该键已存在，则覆盖之。<br /><br />
+             <br />
+             Document link: https://redis.io/commands/set <br />
+             Available since 1.0.0. 
+             </summary>
+             <param name="key">Key</param>
+             <param name="value">Value</param>
+             <param name="timeout">Timeout value</param>
+             <param name="keepTtl">Retain the time to live associated with the key</param>
+             <param name="nx">Only set the key if it does not already exist.</param>
+             <param name="xx">Only set the key if it already exist.</param>
+             <typeparam name="T"></typeparam>
+             <returns>
+             Simple string reply: OK if SET was executed correctly.<br />
+             Bulk string reply: when GET option is set, the old value stored at key, or nil when key did not exist.<br />
+             Null reply: a Null Bulk Reply is returned if the SET operation was not performed because the user specified the NX or XX option but the condition was not met or if user specified the NX and GET options that do not met.
+             </returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.SetBitAsync(System.String,System.Int64,System.Boolean)">
+             <summary>
+             SETBIT command (An Asynchronous Version) <br /><br />
+            <br />
+             Sets or clears the bit at offset in the string value stored at key.<br /><br />
+             <br />
+             设置或清除键值字符串指定偏移量的位（bit）。<br /><br />
+             <br />
+             Document link: https://redis.io/commands/setbit <br />
+             Available since 2.2.0.   
+             </summary>
+             <param name="key">Key</param>
+             <param name="offset">Offset value</param>
+             <param name="value">New value</param>
+             <returns>The original bit value stored at offset.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.SetExAsync``1(System.String,System.Int32,``0)">
+            <summary>
+            SETEX command (An Asynchronous Version) <br /><br />
+            <br />
+            Set key to hold the string value and set key to timeout after a given number of seconds.<br /><br />
+            <br />
+            设置键值在给定的秒数后超时。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/setex <br />
+            Available since 2.0.0.   
+            </summary>
+            <param name="key">Key</param>
+            <param name="seconds">Seconds</param>
+            <param name="value">Value</param>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:FreeRedis.RedisClient.SetNxAsync``1(System.String,``0)">
+            <summary>
+            SETNX command (An Asynchronous Version) <br /><br />
+            <br />
+            Set key to hold string value if key does not exist. In that case, it is equal to SET. When key already holds a value, no operation is performed. <br />
+            SETNX is short for "SET if Not eXists".<br /><br />
+            <br />
+            如果键值不存在，则设置该键值，在此情况下与 SET 指令相似。当键值已经存在时，不执行任何操作。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/setnx <br />
+            Available since 1.0.0.   
+            </summary>
+            <param name="key">Key</param>
+            <param name="value">Value</param>
+            <typeparam name="T"></typeparam>
+            <returns>Set result, specifically: 1 is if the key was set; 0 is if the key was not set.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.SetRangeAsync``1(System.String,System.Int64,``0)">
+            <summary>
+            SETRANGE command (An Asynchronous Version) <br /><br />
+            <br />
+            Overwrites part of the string stored at key, starting at the specified offset, for the entire length of value. If the offset is larger than the current length of the string at key, the string is padded with zero-bytes to make offset fit. Non-existing keys are considered as empty strings, so this command will make sure it holds a string large enough to be able to set value at offset.<br /><br />
+            <br />
+            从给定的偏移量开始覆盖键所对应的字符串值。如果偏移量大于值的长度，则为该字符串填充零字节（zero-bytes）以满足偏移量的要求。若键值不存在则视作空字符串值。故本指令将确保有足够长度的字符串以适应偏移量的要求。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/setrange <br />
+            Available since 2.2.0.  
+            </summary>
+            <param name="key">Key</param>
+            <param name="offset">Offset value</param>
+            <param name="value">The value to be filled.</param>
+            <typeparam name="T"></typeparam>
+            <returns>The length of the string after it was modified by the command.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.StrLenAsync(System.String)">
+            <summary>
+            STRLRN command (An Asynchronous Version) <br /><br />
+            <br />
+            Returns the length of the string value stored at key. An error is returned when key holds a non-string value.<br /><br />
+            <br />
+            返回键对应值字符串的长度。当该键对应的值不是字符串，则返回错误。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/strlen <br />
+            Available since 2.2.0. 
+            </summary>
+            <param name="key">Key</param>
+            <returns>The length of the string at key, or 0 when key does not exist.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.Append``1(System.String,``0)">
+            <summary>
+            APPEND command (A Synchronized Version)<br /><br />
+            <br />
+            If key already exists and is a string, this command appends the value at the end of the string. If key does not exist it is created and set as an empty string, so APPEND will be similar to SET in this special case. <br /><br />
+            <br />
+            若键值已存在且为字符串，则此命令将值附加在字符串的末尾；<br />
+            若键值不存在，则会先创建一个空字符串，并附加值（在此情况下，APPEND 类似 SET 命令）。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/append <br />
+            Available since 2.0.0.
+            </summary>
+            <param name="key">Key</param>
+            <param name="value">Value</param>
+            <typeparam name="T"></typeparam>
+            <returns>The length of the string after the append operation.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.BitCount(System.String,System.Int64,System.Int64)">
+            <summary>
+            BITCOUNT command (A Synchronized Version)<br /><br />
+            <br />
+            Count the number of set bits (population counting) in a string.<br /><br />
+            <br />
+            统计字符串中的位数。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/bitcount <br />
+            Available since 2.6.0.
+            </summary>
+            <param name="key">Key</param>
+            <param name="start">Index of the start. It can contain negative values in order to index bytes starting from the end of the string.</param>
+            <param name="end">Index of the end. It can contain negative values in order to index bytes starting from the end of the string.</param>
+            <returns>The number of set bits in the string. Non-existent keys are treated as empty strings and will return zero.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.BitOp(FreeRedis.BitOpOperation,System.String,System.String[])">
+            <summary>
+            BITOP command (A Synchronized Version) <br /><br />
+            <br />
+            Perform a bitwise operation between multiple keys (containing string values) and store the result in the destination key.<br /><br />
+            <br />
+            在（包括字符串值）的多键之间按位运算，并将结果保存在目标键中。<br />
+            目前支持 AND、OR、XOR 与 NOT 四种运算方式。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/bitop <br />
+            Available since 2.6.0.
+            </summary>
+            <param name="operation">Bit operation type: AND, OR, XOR or NOT</param>
+            <param name="destkey">Destination Key</param>
+            <param name="keys">Multiple keys (containing string values)</param>
+            <returns>The size of the string stored in the destination key, that is equal to the size of the longest input string.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.BitPos(System.String,System.Boolean,System.Nullable{System.Int64},System.Nullable{System.Int64})">
+            <summary>
+            BITPOS command (A Synchronized Version) <br /><br />
+            <br />
+            Return the position of the first bit set to 1 or 0 in a string.<br />
+            The position is returned, thinking of the string as an array of bits from left to right, where the first byte's most significant bit is at position 0, the second byte's most significant bit is at position 8, and so forth.<br /><br />
+            <br />
+            返回字符串中第一个 1 或 0 的位置。<br />
+            注意，本命令将字符串视作位数组，自左向右计算，第一个字节在位置 0，第二个字节在位置 8，以此类推。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/bitpos <br />
+            Available since 2.8.7.
+            </summary>
+            <param name="key">Key</param>
+            <param name="bit">Bit value, 1 is true, 0 is false.</param>
+            <param name="start">Index of the start. It can contain negative values in order to index bytes starting from the end of the string.</param>
+            <param name="end">Index of the end. It can contain negative values in order to index bytes starting from the end of the string.</param>
+            <returns>Returns the position of the first bit set to 1 or 0 according to the request.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.Decr(System.String)">
+            <summary>
+            DECR command (A Synchronized Version) <br /><br />
+            <br />
+            Decrements the number stored at key by one. <br />
+            If the key does not exist, it is set to 0 before performing the operation. An error is returned if the key contains a value of the wrong type or contains a string that can not be represented as integer. <br />
+            This operation is limited to 64 bit signed integers.<br /><br />
+            <br />
+            对该键的值减去 1。<br />
+            如果键值不存在，则在操作前先设置为 0。如果键对应的值是个错误类型或不能表达为整数的字符串，则返回错误。此操作仅限于 64 位有符号整数。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/decr <br />
+            Available since 1.0.0.
+            </summary>
+            <param name="key">Key</param>
+            <returns>the value of key after the decrement.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.DecrBy(System.String,System.Int64)">
+            <summary>
+            DECRBY command (A Synchronized Version) <br /><br />
+            <br />
+            Decrements the number stored at key by decrement. <br />
+            If the key does not exist, it is set to 0 before performing the operation. An error is returned if the key contains a value of the wrong type or contains a string that can not be represented as integer. <br />
+            This operation is limited to 64 bit signed integers.<br /><br />
+            <br />
+            对该键的值减去给定的值。<br />
+            如果键值不存在，则在操作前先设置为 0。如果键对应的值是个错误类型或不能表达为整数的字符串，则返回错误。此操作仅限于 64 位有符号整数。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/decrby <br />
+            Available since 1.0.0.
+            </summary>
+            <param name="key">Key</param>
+            <param name="decrement">The given value to be decreased.</param>
+            <returns>the value of key after the decrement.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.Get(System.String)">
+            <summary>
+            GET command (A Synchronized Version) <br /><br />
+            <br />
+            Get the value of key. If the key does not exist the special value nil is returned. An error is returned if the value stored at key is not a string, because GET only handles string values.<br /><br />
+            <br />
+            获得给定键的值。若键不存在，则返回特殊的 nil 值。如果给定键的值不是字符串，则返回错误，因为 GET 指令只能处理字符串。 <br /><br />
+            <br />
+            Document link: https://redis.io/commands/get <br />
+            Available since 1.0.0.
+            </summary>
+            <param name="key">Key</param>
+            <returns>The value of key, or nil when key does not exist.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.Get``1(System.String)">
+            <summary>
+            GET command (A Synchronized Version) <br /><br />
+            <br />
+            Get the value of key. If the key does not exist the special value nil is returned. An error is returned if the value stored at key is not a string, because GET only handles string values.<br /><br />
+            <br />
+            获得给定键的值。若键不存在，则返回特殊的 nil 值。如果给定键的值不是字符串，则返回错误，因为 GET 指令只能处理字符串。 <br /><br />
+            <br />
+            Document link: https://redis.io/commands/get <br />
+            Available since 1.0.0.
+            </summary>
+            <param name="key">Key</param>
+            <typeparam name="T"></typeparam>
+            <returns>The value of key, or nil when key does not exist.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.Get(System.String,System.IO.Stream,System.Int32)">
+            <summary>
+            GET command (A Synchronized Version) <br /><br />
+            <br />
+            Get the value of key and write to the stream.. If the key does not exist the special value nil is returned. An error is returned if the value stored at key is not a string, because GET only handles string values.<br /><br />
+            <br />
+            获得给定键的值并写入流中。若键不存在，则返回特殊的 nil 值。如果给定键的值不是字符串，则返回错误，因为 GET 指令只能处理字符串。 <br /><br />
+            <br />
+            Document link: https://redis.io/commands/get <br />
+            Available since 1.0.0.
+            </summary>
+            <param name="key">Key</param>
+            <param name="destination">Destination stream</param>
+            <param name="bufferSize">Size</param>
+        </member>
+        <member name="M:FreeRedis.RedisClient.GetBit(System.String,System.Int64)">
+            <summary>
+            GETBIT command (A Synchronized Version) <br /><br />
+            <br />
+            Returns the bit value at offset in the string value stored at key.<br /><br />
+            <br />
+            返回键所对应字符串值中偏移量的位值。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/getbit <br />
+            Available since 2.2.0.
+            </summary>
+            <param name="key">Key</param>
+            <param name="offset">Offset</param>
+            <returns>The bit value stored at offset.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.GetRange(System.String,System.Int64,System.Int64)">
+            <summary>
+            GETRANGE command (A Synchronized Version) <br /><br />
+            <br />
+            Returns the substring of the string value stored at key, determined by the offsets start and end (both are inclusive).<br /><br />
+            <br />
+            返回键值的子字符串该字符串由偏移量 start 和 end 来确定（两端均闭包）。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/getrange <br />
+            Available since 2.0.0. It is called SUBSTR in Redis versions &lt;= 2.0.
+            </summary>
+            <param name="key">Key</param>
+            <param name="start">Start</param>
+            <param name="end">End</param>
+            <returns>The substring of the string value</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.GetRange``1(System.String,System.Int64,System.Int64)">
+            <summary>
+            GETRANGE command (A Synchronized Version) <br /><br />
+            <br />
+            Returns the substring of the string value stored at key, determined by the offsets start and end (both are inclusive).<br /><br />
+            <br />
+            返回键值的子字符串该字符串由偏移量 start 和 end 来确定（两端均闭包）。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/getrange <br />
+            Available since 2.0.0. It is called SUBSTR in Redis versions &lt;= 2.0.
+            </summary>
+            <param name="key">Key</param>
+            <param name="start">Start</param>
+            <param name="end">End</param>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.GetSet``1(System.String,``0)">
+            <summary>
+            GETSET command (A Synchronized Version) <br /><br />
+            <br />
+            Atomically sets key to value and returns the old value stored at key. Returns an error when key exists but does not hold a string value.<br /><br />
+            <br />
+            以原子的方式将新值取代给定键的旧值，并返回旧值。如果该键存在但不包含字符串值时，返回错误。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/getset <br />
+            Available since 1.0.0.
+            </summary>
+            <param name="key">Key</param>
+            <param name="value">New value</param>
+            <typeparam name="T"></typeparam>
+            <returns>The old value stored at key, or nil when key did not exist.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.Incr(System.String)">
+            <summary>
+            INCR command (A Synchronized Version) <br /><br />
+            <br />
+            Increments the number stored at key by one. <br />
+            If the key does not exist, it is set to 0 before performing the operation. An error is returned if the key contains a value of the wrong type or contains a string that can not be represented as integer. <br />
+            This operation is limited to 64 bit signed integers.<br /><br />
+            <br />
+            对该键的值加上 1。<br />
+            如果键值不存在，则在操作前先设置为 0。如果键对应的值是个错误类型或不能表达为整数的字符串，则返回错误。此操作仅限于 64 位有符号整数。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/incr <br />
+            Available since 1.0.0.
+            </summary>
+            <param name="key">Key</param>
+            <returns>The value of key after the increment</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.IncrBy(System.String,System.Int64)">
+            <summary>
+            INCRBY command (A Synchronized Version) <br /><br />
+            <br />
+            Decrements the number stored at key by increment. <br />
+            If the key does not exist, it is set to 0 before performing the operation. An error is returned if the key contains a value of the wrong type or contains a string that can not be represented as integer. <br />
+            This operation is limited to 64 bit signed integers.<br /><br />
+            <br />
+            对该键的值加上给定的值。<br />
+            如果键值不存在，则在操作前先设置为 0。如果键对应的值是个错误类型或不能表达为整数的字符串，则返回错误。此操作仅限于 64 位有符号整数。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/incrby <br />
+            Available since 1.0.0.
+            </summary>
+            <param name="key">Key</param>
+            <param name="increment">The given value to be increased.</param>
+            <returns>The value of key after the increment</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.IncrByFloat(System.String,System.Decimal)">
+            <summary>
+            INCRBYFLOAT command (A Synchronized Version) <br /><br />
+            <br />
+            Increment the string representing a floating point number stored at key by the specified increment. <br />
+            By using a negative increment value, the result is that the value stored at the key is decremented (by the obvious properties of addition). <br />
+            If the key does not exist, it is set to 0 before performing the operation. An error is returned if one of the following conditions occur:<br />
+            - The key contains a value of the wrong type (not a string).<br />
+            - The current key content or the specified increment are not parsable as a double precision floating point number.<br />
+            If the command is successful the new incremented value is stored as the new value of the key (replacing the old one), and returned to the caller as a string.<br /><br />
+            <br />
+            对该键的值加上给定的值，可以通过给定负值来减小对应键的值。<br />
+            如果键值不存在，则在操作前先设置为 0。如果发生以下情况，则返回错误：<br />
+            - 键所对应的值是错误的类型（不是字符串）；<br />
+            - 该键的内容不能被解析为双精度浮点数。<br />
+            如果命令执行成功，则将新值替换旧值，并返回给调用方。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/incrby <br />
+            Available since 2.6.0.
+            </summary>
+            <param name="key">Key</param>
+            <param name="increment">The given value to be increased.</param>
+            <returns>The value of key after the increment.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.MGet(System.String[])">
+            <summary>
+            MGET command (A Synchronized Version) <br /><br />
+            <br />
+            Returns the values of all specified keys. For every key that does not hold a string value or does not exist, the special value nil is returned. Because of this, the operation never fails.<br /><br />
+            <br />
+            返回所有给定键的值，对于其中个别键不存在，或其值不为字符串的，反悔特殊的 nil 值，因此 MGET 指令永远不会执行失败。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/mget <br />
+            Available since 1.0.0. 
+            </summary>
+            <param name="keys">Key list</param>
+            <returns>A list of values at the specified keys.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.MGet``1(System.String[])">
+            <summary>
+            MGET command (A Synchronized Version) <br /><br />
+            <br />
+            Returns the values of all specified keys. For every key that does not hold a string value or does not exist, the special value nil is returned. Because of this, the operation never fails.<br /><br />
+            <br />
+            返回所有给定键的值，对于其中个别键不存在，或其值不为字符串的，反悔特殊的 nil 值，因此 MGET 指令永远不会执行失败。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/mget <br />
+            Available since 1.0.0. 
+            </summary>
+            <param name="keys">Key list</param>
+            <typeparam name="T"></typeparam>
+            <returns>A list of values at the specified keys.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.MSet(System.String,System.Object,System.Object[])">
+            <summary>
+            MSET command (A Synchronized Version) <br /><br />
+            <br />
+            Sets the given keys to their respective values. MSET replaces existing values with new values, just as regular SET. <br /><br />
+            <br />
+            将给定键的值设置为对应的新值。 <br /><br />
+            <br />
+            Document link: https://redis.io/commands/mset <br />
+            Available since 1.0.1. 
+            </summary>
+            <param name="key">Key</param>
+            <param name="value">Value</param>
+            <param name="keyValues">Other key-value sets</param>
+        </member>
+        <member name="M:FreeRedis.RedisClient.MSet``1(System.Collections.Generic.Dictionary{System.String,``0})">
+            <summary>
+            MSET command (A Synchronized Version) <br /><br />
+            <br />
+            Sets the given keys to their respective values. MSET replaces existing values with new values, just as regular SET. <br /><br />
+            <br />
+            将给定键的值设置为对应的新值。 <br /><br />
+            <br />
+            Document link: https://redis.io/commands/mset <br />
+            Available since 1.0.1.  
+            </summary>
+            <param name="keyValues">Key-value sets</param>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:FreeRedis.RedisClient.MSetNx(System.String,System.Object,System.Object[])">
+            <summary>
+            MSETNX command (A Synchronized Version) <br /><br />
+            <br />
+            Sets the given keys to their respective values. MSETNX will not perform any operation at all even if just a single key already exists.<br /><br />
+            <br />
+            将给定键的值设置为对应的新值。只要有一个键已经存在，则整组键值都将不会被设置。 <br /><br />
+            <br />
+            Document link: https://redis.io/commands/msetnx <br />
+            Available since 1.0.1.  
+            </summary>
+            <param name="key">Key</param>
+            <param name="value">Value</param>
+            <param name="keyValues">Other key-value sets</param>
+            <returns>True if the all the keys were set. False if no key was set (at least one key already existed).</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.MSetNx``1(System.Collections.Generic.Dictionary{System.String,``0})">
+            <summary>
+            MSETNX command (A Synchronized Version) <br /><br />
+            <br />
+            Sets the given keys to their respective values. MSETNX will not perform any operation at all even if just a single key already exists.<br /><br />
+            <br />
+            将给定键的值设置为对应的新值。只要有一个键已经存在，则整组键值都将不会被设置。 <br /><br />
+            <br />
+            Document link: https://redis.io/commands/msetnx <br />
+            Available since 1.0.1. 
+            </summary>
+            <param name="keyValues">Key-value sets</param>
+            <typeparam name="T"></typeparam>
+            <returns>True if the all the keys were set. False if no key was set (at least one key already existed).</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.MSet``1(System.Boolean,System.String,System.Object,System.Object[])">
+            <summary>
+            MSET key value [key value ...] command (A Synchronized Version) <br /><br />
+            <br />
+            Sets the given keys to their respective values. MSET replaces existing values with new values, just as regular SET. See MSETNX if you don't want to overwrite existing values.<br /><br />
+            <br />
+            将给定键的值设置为对应的新值。如果不想覆盖现有的值，可以使用 MSETNX 指令。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/mset <br />
+            Available since 1.0.1. 
+            </summary>
+            <param name="nx">Mark whether it is NX mode. If it is, use the MSETNX command; otherwise, use the MSET command.</param>
+            <param name="key">Key</param>
+            <param name="value">Value</param>
+            <param name="keyValues">Other key-value sets</param>
+            <typeparam name="T"></typeparam>
+            <returns>Always OK since MSET can't fail.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.PSetEx``1(System.String,System.Int64,``0)">
+            <summary>
+            PSETEX command (A Synchronized Version) <br /><br />
+            <br />
+            PSETEX works exactly like SETEX with the sole difference that the expire time is specified in milliseconds instead of seconds.<br /><br />
+            <br />
+            PSETEX 的工作方式与 SETEX 完全相同，唯一的区别是到期时间的单位是毫秒（ms），而不是秒（s）。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/psetex <br />
+            Available since 2.6.0. 
+            </summary>
+            <param name="key">Key</param>
+            <param name="milliseconds">Timeout milliseconds value</param>
+            <param name="value">Value</param>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:FreeRedis.RedisClient.Set``1(System.String,``0,System.Int32)">
+            <summary>
+            SET key value EX seconds (A Synchronized Version) <br /><br />
+            <br />
+            Set key to hold the string value.<br /><br />
+            <br />
+            设置键和值。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/set <br />
+            Available since 2.6.12. 
+            </summary>
+            <param name="key">Key</param>
+            <param name="value">Value</param>
+            <param name="timeoutSeconds">Timeout seconds</param>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:FreeRedis.RedisClient.Set``1(System.String,``0,System.Boolean)">
+            <summary>
+            SET key value KEEPTTL command (A Synchronized Version) <br /><br />
+            <br />
+            Set key to hold the string value. Retain the time to live associated with the key. <br /><br />
+            <br />
+            设置键和值。<br /><br />
+            Document link: https://redis.io/commands/set <br />
+            Available since 6.0.0.  
+            </summary>
+            <param name="key">Key</param>
+            <param name="value">Value</param>
+            <param name="keepTtl">Retain the time to live associated with the key</param>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:FreeRedis.RedisClient.SetNx``1(System.String,``0,System.Int32)">
+            <summary>
+            SET key value EX seconds NX command (A Synchronized Version) <br /><br />
+            <br />
+            Set key to hold the string value. Only set the key if it does not already exist.<br /><br />
+            <br />
+            设置键和值。当且仅当键值不存在时才执行命令。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/set <br />
+            Available since 2.6.12. 
+            </summary>
+            <param name="key">Key</param>
+            <param name="value">Value</param>
+            <param name="timeoutSeconds">Timeout seconds</param>
+            <typeparam name="T"></typeparam>
+            <returns>
+            Simple string reply: OK if SET was executed correctly.<br />
+            Bulk string reply: when GET option is set, the old value stored at key, or nil when key did not exist.<br />
+            Null reply: a Null Bulk Reply is returned if the SET operation was not performed because the user specified the NX or XX option but the condition was not met or if user specified the NX and GET options that do not met.
+            </returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.SetXx``1(System.String,``0,System.Int32)">
+            <summary>
+            SET key value EX seconds XX command (A Synchronized Version) <br /><br />
+            <br />
+            Set key to hold the string value. Only set the key if it already exist.<br /><br />
+            <br />
+            设置键和值。当且仅当键值已存在时才执行命令。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/set <br />
+            Available since 2.6.12. 
+            </summary>
+            <param name="key">Key</param>
+            <param name="value">Value</param>
+            <param name="timeoutSeconds">Timeout seconds</param>
+            <typeparam name="T"></typeparam>
+            <returns>
+            Simple string reply: OK if SET was executed correctly.<br />
+            Bulk string reply: when GET option is set, the old value stored at key, or nil when key did not exist.<br />
+            Null reply: a Null Bulk Reply is returned if the SET operation was not performed because the user specified the NX or XX option but the condition was not met or if user specified the NX and GET options that do not met.
+            </returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.SetXx``1(System.String,``0,System.Boolean)">
+            <summary>
+            SET key value KEEPTTL XX command (A Synchronized Version) <br /><br />
+            <br />
+            Set key to hold the string value. Only set the key if it already exist.<br /><br />
+            <br />
+            设置键和值。当且仅当键值已存在时才执行命令。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/set <br />
+            Available since 6.0.0. 
+            </summary>
+            <param name="key">Key</param>
+            <param name="value">Value</param>
+            <param name="keepTtl">Retain the time to live associated with the key</param>
+            <typeparam name="T"></typeparam>
+            <returns>
+            Simple string reply: OK if SET was executed correctly.<br />
+            Bulk string reply: when GET option is set, the old value stored at key, or nil when key did not exist.<br />
+            Null reply: a Null Bulk Reply is returned if the SET operation was not performed because the user specified the NX or XX option but the condition was not met or if user specified the NX and GET options that do not met.
+            </returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.Set``1(System.String,``0,System.TimeSpan,System.Boolean,System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            SET command (A Synchronized Version) <br /><br />
+            <br />
+            Set key to hold the string value. If key already holds a value, it is overwritten, regardless of its type. <br /><br />
+            <br />
+            设置键和值。如果该键已存在，则覆盖之。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/set <br />
+            Available since 6.0.0. 
+            </summary>
+            <param name="key">Key</param>
+            <param name="value">Value</param>
+            <param name="timeout">Timeout value</param>
+            <param name="keepTtl">Retain the time to live associated with the key</param>
+            <param name="nx">Only set the key if it does not already exist.</param>
+            <param name="xx">Only set the key if it already exist.</param>
+            <param name="get">Return the old value stored at key, or nil when key did not exist.</param>
+            <typeparam name="T"></typeparam>
+            <returns>
+            Simple string reply: OK if SET was executed correctly.<br />
+            Bulk string reply: when GET option is set, the old value stored at key, or nil when key did not exist.<br />
+            Null reply: a Null Bulk Reply is returned if the SET operation was not performed because the user specified the NX or XX option but the condition was not met or if user specified the NX and GET options that do not met.
+            </returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.SetBit(System.String,System.Int64,System.Boolean)">
+            <summary>
+            SETBIT command (A Synchronized Version) <br /><br />
+            <br />
+            Sets or clears the bit at offset in the string value stored at key.<br /><br />
+            <br />
+            设置或清除键值字符串指定偏移量的位（bit）。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/setbit <br />
+            Available since 2.2.0.   
+            </summary>
+            <param name="key">Key</param>
+            <param name="offset">Offset value</param>
+            <param name="value">New value</param>
+            <returns>The original bit value stored at offset.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.SetEx``1(System.String,System.Int32,``0)">
+            <summary>
+            SETEX command (A Synchronized Version) <br /><br />
+            <br />
+            Set key to hold the string value and set key to timeout after a given number of seconds.<br /><br />
+            <br />
+            设置键值在给定的秒数后超时。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/setex <br />
+            Available since 2.0.0.   
+            </summary>
+            <param name="key">Key</param>
+            <param name="seconds">Seconds</param>
+            <param name="value">Value</param>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:FreeRedis.RedisClient.SetNx``1(System.String,``0)">
+            <summary>
+            SETNX command (A Synchronized Version) <br /><br />
+            <br />
+            Set key to hold string value if key does not exist. In that case, it is equal to SET. When key already holds a value, no operation is performed. <br />
+            SETNX is short for "SET if Not eXists".<br /><br />
+            <br />
+            如果键值不存在，则设置该键值，在此情况下与 SET 指令相似。当键值已经存在时，不执行任何操作。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/setnx <br />
+            Available since 1.0.0.   
+            </summary>
+            <param name="key">Key</param>
+            <param name="value">Value</param>
+            <typeparam name="T"></typeparam>
+            <returns>Set result, specifically: 1 is if the key was set; 0 is if the key was not set.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.SetRange``1(System.String,System.Int64,``0)">
+            <summary>
+            SETRANGE command (A Synchronized Version) <br /><br />
+            <br />
+            Overwrites part of the string stored at key, starting at the specified offset, for the entire length of value. If the offset is larger than the current length of the string at key, the string is padded with zero-bytes to make offset fit. Non-existing keys are considered as empty strings, so this command will make sure it holds a string large enough to be able to set value at offset.<br /><br />
+            <br />
+            从给定的偏移量开始覆盖键所对应的字符串值。如果偏移量大于值的长度，则为该字符串填充零字节（zero-bytes）以满足偏移量的要求。若键值不存在则视作空字符串值。故本指令将确保有足够长度的字符串以适应偏移量的要求。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/setrange <br />
+            Available since 2.2.0.  
+            </summary>
+            <param name="key">Key</param>
+            <param name="offset">Offset value</param>
+            <param name="value">The value to be filled.</param>
+            <typeparam name="T"></typeparam>
+            <returns>The length of the string after it was modified by the command.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.StrLen(System.String)">
+            <summary>
+            STRLRN command (A Synchronized Version) <br /><br />
+            <br />
+            Returns the length of the string value stored at key. An error is returned when key holds a non-string value.<br /><br />
+            <br />
+            返回键对应值字符串的长度。当该键对应的值不是字符串，则返回错误。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/strlen <br />
+            Available since 2.2.0. 
+            </summary>
+            <param name="key">Key</param>
+            <returns>The length of the string at key, or 0 when key does not exist.</returns>
+        </member>
+        <member name="T:FreeRedis.ZAddThan">
+            <summary>
+            redis version >=6.2: Added the GT and LT options.
+            </summary>
+        </member>
+    </members>
+</doc>

@@ -157,8 +157,9 @@ namespace FreeRedis
         }
 
         #region 序列化写入，反序列化
-        public Func<object, string> Serialize;
+        public Func<object, object> Serialize;
         public Func<string, Type, object> Deserialize;
+        public Func<byte[], Type, object> DeserializeRaw;
 
         internal object SerializeRedisValue(object value)
         {
@@ -186,24 +187,24 @@ namespace FreeRedis
                 case TimeSpan span: return span.Ticks;
                 case Guid _: return value.ToString();
                 default:
-                    var ser = Adapter.TopOwner.Serialize;
-                    if (ser != null) return ser(value);
+                    if (Adapter.TopOwner.Serialize != null) return Adapter.TopOwner.Serialize(value);
                     return value.ConvertTo<string>();
             }
         }
-        internal T DeserializeRedisValue<T>(byte[] value, Encoding encoding)
+        internal T DeserializeRedisValue<T>(byte[] valueRaw, Encoding encoding)
         {
-            if (value == null) return default(T);
+            if (valueRaw == null) return default(T);
             var type = typeof(T);
             var typename = type.ToString().TrimEnd(']');
-            if (typename == "System.Byte[") return (T)Convert.ChangeType(value, type);
-            if (typename == "System.String") return (T)Convert.ChangeType(encoding.GetString(value), type);
-            if (typename == "System.Boolean[") return (T)Convert.ChangeType(value.Select(a => a == 49).ToArray(), type);
+            if (typename == "System.Byte[") return (T)Convert.ChangeType(valueRaw, type);
+            if (typename == "System.String") return (T)Convert.ChangeType(encoding.GetString(valueRaw), type);
+            if (typename == "System.Boolean[") return (T)Convert.ChangeType(valueRaw.Select(a => a == 49).ToArray(), type);
+            if (valueRaw.Length == 0) return default(T);
 
-            var valueStr = encoding.GetString(value);
-            if (string.IsNullOrEmpty(valueStr)) return default(T);
+            string valueStr = null;
             if (type.IsValueType)
             {
+                valueStr = encoding.GetString(valueRaw);
                 bool isNullable = typename.StartsWith("System.Nullable`1[");
                 var basename = isNullable ? typename.Substring(18) : typename;
 
@@ -272,12 +273,13 @@ namespace FreeRedis
                 {
                     if (obj == null) return default(T);
                     return (T)obj;
-                    //return (T)Convert.ChangeType(obj, typeof(T));
                 }
             }
 
-            var deser = Adapter.TopOwner.Deserialize;
-            if (deser != null) return (T)deser(valueStr, typeof(T));
+            if (Adapter.TopOwner.DeserializeRaw != null) return (T)Adapter.TopOwner.DeserializeRaw(valueRaw, typeof(T));
+
+            if (valueStr == null) valueStr = encoding.GetString(valueRaw);
+            if (Adapter.TopOwner.Deserialize != null) return (T)Adapter.TopOwner.Deserialize(valueStr, typeof(T));
             return valueStr.ConvertTo<T>();
         }
         #endregion
