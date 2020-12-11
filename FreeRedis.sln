@@ -39,13 +39,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConcurrentWriteBytes", "tes
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntrinsicsTest", "test\Benchmark\IntrinsicsTest\IntrinsicsTest.csproj", "{5FD085A0-84AA-4099-8B7F-9BC65A63073E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "console_netcore31_newsocket", "examples\console_netcore31_newsocket\console_netcore31_newsocket.csproj", "{ECE8D399-7EB0-4D95-B3F8-E7F21F94483C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "console_netcore31_newsocket", "experimental\console_netcore31_newsocket\console_netcore31_newsocket.csproj", "{ECE8D399-7EB0-4D95-B3F8-E7F21F94483C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Unit", "Unit", "{36C8EC48-1329-4251-B795-7AEFC446EF60}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "console_netcore31_client_side_caching", "examples\console_netcore31_client_side_caching\console_netcore31_client_side_caching.csproj", "{DA686F0B-E9F7-4AF1-AD2E-EE6EE0C24BB4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "console_netcore31_taskcompletesource", "examples\console_netcore31_taskcompletesource\console_netcore31_taskcompletesource.csproj", "{9F1B6942-A353-4045-8A6E-D572170260C0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "console_netcore31_taskcompletesource", "experimental\console_netcore31_taskcompletesource\console_netcore31_taskcompletesource.csproj", "{9F1B6942-A353-4045-8A6E-D572170260C0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "console_netcore31_norman", "examples\console_netcore31_norman\console_netcore31_norman.csproj", "{D6DF0DBA-F181-4F1C-B6AD-9D71A01A4431}"
 EndProject
@@ -56,6 +56,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DispatcherTest", "test\Benchmark\DispatcherTest\DispatcherTest.csproj", "{832FD7BE-76DC-4AA4-BE8C-239346D4A1C6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "console_net452_vs", "examples\console_net452_vs\console_net452_vs.csproj", "{7AC68251-83D4-423F-849C-04BD89F4BDFB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "experimental", "experimental", "{B162D573-4F87-46C0-AFBC-444A5CB5997A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -312,10 +314,10 @@ Global
 		{A75FEF18-38D5-48A6-B412-E08E648104BC} = {ECEC9840-4A56-4E55-B6C5-E84A79DFDBC4}
 		{735C68EB-D4BC-4452-BD69-151E31D283AD} = {A75FEF18-38D5-48A6-B412-E08E648104BC}
 		{5FD085A0-84AA-4099-8B7F-9BC65A63073E} = {A75FEF18-38D5-48A6-B412-E08E648104BC}
-		{ECE8D399-7EB0-4D95-B3F8-E7F21F94483C} = {DD1426BF-F56F-49A8-9D4E-2BA0E3BEFC72}
+		{ECE8D399-7EB0-4D95-B3F8-E7F21F94483C} = {B162D573-4F87-46C0-AFBC-444A5CB5997A}
 		{36C8EC48-1329-4251-B795-7AEFC446EF60} = {ECEC9840-4A56-4E55-B6C5-E84A79DFDBC4}
 		{DA686F0B-E9F7-4AF1-AD2E-EE6EE0C24BB4} = {DD1426BF-F56F-49A8-9D4E-2BA0E3BEFC72}
-		{9F1B6942-A353-4045-8A6E-D572170260C0} = {DD1426BF-F56F-49A8-9D4E-2BA0E3BEFC72}
+		{9F1B6942-A353-4045-8A6E-D572170260C0} = {B162D573-4F87-46C0-AFBC-444A5CB5997A}
 		{D6DF0DBA-F181-4F1C-B6AD-9D71A01A4431} = {DD1426BF-F56F-49A8-9D4E-2BA0E3BEFC72}
 		{F94D950B-4AFC-412B-A1D5-5D277486DF57} = {A75FEF18-38D5-48A6-B412-E08E648104BC}
 		{EF59B801-0228-436D-88DA-DCBD58C7E074} = {D8045351-59E4-45B9-81F5-D21CC0996344}
