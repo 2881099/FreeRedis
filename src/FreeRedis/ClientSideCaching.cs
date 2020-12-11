@@ -60,9 +60,19 @@ namespace FreeRedis
 
             void InValidate(string chan, object msg)
             {
+                if (msg == null)
+                {
+                    //flushall
+                    lock (_dictLock) _dictSort.Clear();
+                    _dict.Clear();
+                    return;
+                }
                 var keys = msg as object[];
-                foreach (var key in keys)
-                    RemoveCache(string.Concat(key));
+                if (keys != null)
+                {
+                    foreach (var key in keys)
+                        RemoveCache(string.Concat(key));
+                }
             }
 
             static readonly DateTime _dt2020 = new DateTime(2020, 1, 1);
