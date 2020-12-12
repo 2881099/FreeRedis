@@ -189,6 +189,12 @@ namespace FreeRedis
             }
             return this;
         }
+
+        internal bool IsReadOnlyCommand()
+        {
+            var cmdset = CommandSets.Get(_command);
+            return cmdset != null && ((cmdset.Tag & CommandSets.ServerTag.read) == CommandSets.ServerTag.read || (cmdset.Flag & CommandSets.ServerFlag.@readonly) == CommandSets.ServerFlag.@readonly);
+        }
     }
 
     static class CommandPacketExtensions

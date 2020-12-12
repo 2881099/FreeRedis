@@ -83,7 +83,7 @@ namespace FreeRedis
                     catch (ProtocolViolationException)
                     {
                         _redisSocket.ReleaseSocket();
-                        if (++cmd._protocolErrorTryCount > 1) throw;
+                        if (cmd.IsReadOnlyCommand() == false || ++cmd._protocolErrorTryCount > 1) throw;
                         return AdapterCall(cmd, parse);
                     }
                 });

@@ -78,7 +78,7 @@ namespace FreeRedis
                         catch (ProtocolViolationException)
                         {
                             rds.ReleaseSocket();
-                            if (++cmd._protocolErrorTryCount > 1) throw;
+                            if (cmd.IsReadOnlyCommand() == false || ++cmd._protocolErrorTryCount > 1) throw;
                             protocolRetry = true;
                         }
                         catch (Exception ex)
@@ -108,7 +108,7 @@ namespace FreeRedis
                     }
                     catch (ProtocolViolationException)
                     {
-                        if (++cmd._protocolErrorTryCount > 1) throw;
+                        if (cmd.IsReadOnlyCommand() == false || ++cmd._protocolErrorTryCount > 1) throw;
                         return await AdapterCallAsync(cmd, parse);
                     }
                 });
