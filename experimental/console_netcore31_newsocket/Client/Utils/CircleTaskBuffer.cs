@@ -8,27 +8,66 @@ using System.Threading.Tasks;
 
 namespace console_netcore31_newsocket.Client.Utils
 {
+    public class SingleLinks5<T>
+    {
+        private int _lock = 0;
+        public bool InReading;
+        public readonly ManualResetValueTaskSource<T>[] Buffer;
+        public SingleLinks5()
+        {
+            Buffer = new ManualResetValueTaskSource<T>[10240];
+            for (int i = 0; i < 10240; i++)
+            {
+                Buffer[i] = new ManualResetValueTaskSource<T>();
+            }
+        }
+
+        public SingleLinks5<T> Next;
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void GetLock()
+        {
+            SpinWait wait = default;
+            while (Interlocked.CompareExchange(ref _lock, 1, 0) != 0)
+            {
+                wait.SpinOnce();
+            }
+        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void ReleaseLock()
+        {
+            _lock = 0;
+        }
+        public SingleLinks5<T> AppendNew()
+        {
+
+            var temp = new SingleLinks5<T>();
+            GetLock();
+            temp.Next = Next;
+            Next = temp;
+            ReleaseLock();
+            return temp;
+
+        }
+    }
+
     public class CircleTaskBuffer<T>
     {
         private int _readLock = 0;
         private int _writeLock = 0;
         public int ArrayLength = 10240;
-        private readonly Queue<ManualResetValueTaskSource<T>[]> _writeQueue;
-        private readonly Queue<ManualResetValueTaskSource<T>[]> _readQueue;
+        private SingleLinks5<T> _writePtr;
+        private SingleLinks5<T> _readPtr;
         private ManualResetValueTaskSource<T>[] _currentWrite;
         private ManualResetValueTaskSource<T>[] _currentRead;
         public CircleTaskBuffer()
         {
-            _writeQueue = new Queue<ManualResetValueTaskSource<T>[]>(32);
-            _readQueue = new Queue<ManualResetValueTaskSource<T>[]>(32);
-            var _current = new ManualResetValueTaskSource<T>[ArrayLength];
-            for (int i = 0; i < ArrayLength; i++)
-            {
-                _current[i] =new ManualResetValueTaskSource<T>();
-            }
-            _currentWrite = _current;
-            _currentRead = _current;
-            _readQueue.Enqueue(_currentRead);
+            var first = new SingleLinks5<T>();
+            first.InReading = true;
+            first.Next = first;
+            _writePtr = first;
+            _readPtr = first;
+            _currentWrite = first.Buffer;
+            _currentRead = first.Buffer;
         }
 
         private int _write_offset;
@@ -38,7 +77,6 @@ namespace console_netcore31_newsocket.Client.Utils
 
             var result = _currentWrite[_write_offset];
             result.Reset();
-            //Console.WriteLine(result.GetHashCode());
             _write_offset += 1;
             if (_write_offset == ArrayLength)
             {
@@ -50,30 +88,20 @@ namespace console_netcore31_newsocket.Client.Utils
 
         private void AddBuffer()
         {
-            SpinWait wait = default;
-            while (Interlocked.CompareExchange(ref _writeLock,1,0) != 0)
+            _writePtr.Next.GetLock();
+            bool shut = _writePtr.Next.InReading;
+            _writePtr.Next.ReleaseLock();
+            if (shut)
             {
-                wait.SpinOnce();
+                _writePtr = _writePtr.AppendNew();
             }
-            bool hasGetNewBUffer = _writeQueue.TryDequeue(out _currentWrite);
-            _writeLock = 0;
-            if (!hasGetNewBUffer)
+            else
             {
-                _currentWrite = new ManualResetValueTaskSource<T>[ArrayLength];
-                for (int i = 0; i < ArrayLength; i++)
-                {
-                    _currentWrite[i] = new ManualResetValueTaskSource<T>();
-                }
-
+                _writePtr = _writePtr.Next;
             }
-            while (Interlocked.CompareExchange(ref _readLock, 1, 0) != 0)
-            {
-                wait.SpinOnce();
-            }
-            _readQueue.Enqueue(_currentWrite);
-            _readLock = 0;
             _write_offset = 0;
-           
+            _currentWrite = _writePtr.Buffer;
+
         }
 
 
@@ -81,33 +109,26 @@ namespace console_netcore31_newsocket.Client.Utils
         {
 
             var result = _currentRead[_read_offset];
-            //Console.WriteLine("a"+result.GetHashCode());
             result.SetResult(value);
             _read_offset += 1;
             if (_read_offset == ArrayLength)
             {
                 CollectBuffer();
             }
-            
+
         }
 
         private void CollectBuffer()
         {
+
+            var pre = _readPtr;
+            pre.GetLock();
+            pre.InReading = false;
+            _readPtr = _readPtr.Next;
+            pre.ReleaseLock();
+            _readPtr.InReading = true;
             _read_offset = 0;
-            SpinWait wait = default;
-            while (Interlocked.CompareExchange(ref _readLock, 1, 0) != 0)
-            {
-                wait.SpinOnce();
-            }
-            var temp = _readQueue.Dequeue();
-            _currentRead = _readQueue.Peek();
-            _readLock = 0;
-            while (Interlocked.CompareExchange(ref _writeLock, 1, 0) != 0)
-            {
-                wait.SpinOnce();
-            }
-            _writeQueue.Enqueue(temp);
-            _writeLock = 0;
+            _currentRead = _readPtr.Buffer;
 
         }
     }

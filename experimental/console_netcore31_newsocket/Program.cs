@@ -48,6 +48,7 @@ namespace console_netcore31_newsocket
         private static NewRedisClient162 _redisClient162;
         private static NewRedisClient18 _redisClient18;
         private static NewRedisClient21 _redisClient21;
+        private static NewRedisClient22 _redisClient22;
         private static ClientPool3 _pool10;
         private static ClientPool4 _pool13;
         private static ClientPool5 _pool14;
@@ -133,6 +134,9 @@ namespace console_netcore31_newsocket
             _redisClient21 = new NewRedisClient21();
             _redisClient21.CreateConnection(ip, port);
 
+            _redisClient22 = new NewRedisClient22();
+            _redisClient22.CreateConnection(ip, port);
+
             _redisClient4 = new NewRedisClient4();
             _redisClient4.CreateConnection(ip, port);
 
@@ -156,12 +160,14 @@ namespace console_netcore31_newsocket
             
             NewSocketRedis21SetTest();
             NewSocketRedis21SetTest();
+            NewSocketRedis221SetTest();
+            NewSocketRedis221SetTest(); 
+            //StackExchangeRedisSetTest();
+            //StackExchangeRedisSetTest();
+            //NewSocketRedis161SetTest();
+            //NewSocketRedis162SetTest();
+            //NewSocketRedis162SetTest();
 
-            StackExchangeRedisSetTest();
-            StackExchangeRedisSetTest();
-            NewSocketRedis161SetTest();
-            NewSocketRedis162SetTest();
-            NewSocketRedis162SetTest();
 
         }
 
@@ -567,6 +573,19 @@ namespace console_netcore31_newsocket
         }
         #endregion
 
+        #region NewSocketRedis22 - SET
+        public static void NewSocketRedis221SetTest()
+        {
+            RunAction((key) =>
+            {
+
+                return _redisClient22.SetAsync(key, key);
+
+            }, "NewRedis22");
+
+        }
+        #endregion
+
         #region FreeRedis - SET
         //public static void FreeRedisSetTest()
         //{
@@ -576,7 +595,7 @@ namespace console_netcore31_newsocket
         //        _freeRedisClient.SetAsync(key, key);
 
         //    }, "FreeRedisClient");
-            
+
         //}
         #endregion
 
