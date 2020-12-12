@@ -13,6 +13,7 @@
     <PackageReference Include="NewLife.Redis" Version="3.8.2020.1101" />
     <PackageReference Include="StackExchange.Redis" Version="2.2.4" />
     <PackageReference Include="System.IO.Pipelines" Version="5.0.0" />
+    <PackageReference Include="ValueTaskSupplement" Version="1.1.0" />
   </ItemGroup>
 
 
