@@ -12,7 +12,7 @@
       "output": {
         ".html": {
           "relative_path": "README.html",
-          "hash": "0V6kWDsTWTf8KoW/H/NRlA=="
+          "hash": "BanThH4McrZ29hXNv6kDkg=="
         }
       },
       "is_incremental": false,
@@ -27,7 +27,7 @@
       "output": {
         ".html": {
           "relative_path": "README.zh-CN.html",
-          "hash": "hfpXFKMSSSZygMuhaJFDjw=="
+          "hash": "OyRJBavPzps/o4yswzaW8Q=="
         }
       },
       "is_incremental": false,
@@ -315,7 +315,7 @@
       "output": {
         ".html": {
           "relative_path": "docs/api/FreeRedis.ConnectionStringBuilder.html",
-          "hash": "7w17YQLCag3n2fSpKU6+vg=="
+          "hash": "hCltjVMLB4EEk3peT1p5iw=="
         }
       },
       "is_incremental": false,

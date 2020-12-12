@@ -1376,6 +1376,19 @@ references:
   isSpec: "True"
   fullName: FreeRedis.ConnectionStringBuilder.ReceiveTimeout
   nameWithType: ConnectionStringBuilder.ReceiveTimeout
+- uid: FreeRedis.ConnectionStringBuilder.Retry
+  name: Retry
+  href: docs/api/FreeRedis.ConnectionStringBuilder.html#FreeRedis_ConnectionStringBuilder_Retry
+  commentId: P:FreeRedis.ConnectionStringBuilder.Retry
+  fullName: FreeRedis.ConnectionStringBuilder.Retry
+  nameWithType: ConnectionStringBuilder.Retry
+- uid: FreeRedis.ConnectionStringBuilder.Retry*
+  name: Retry
+  href: docs/api/FreeRedis.ConnectionStringBuilder.html#FreeRedis_ConnectionStringBuilder_Retry_
+  commentId: Overload:FreeRedis.ConnectionStringBuilder.Retry
+  isSpec: "True"
+  fullName: FreeRedis.ConnectionStringBuilder.Retry
+  nameWithType: ConnectionStringBuilder.Retry
 - uid: FreeRedis.ConnectionStringBuilder.SendTimeout
   name: SendTimeout
   href: docs/api/FreeRedis.ConnectionStringBuilder.html#FreeRedis_ConnectionStringBuilder_SendTimeout
