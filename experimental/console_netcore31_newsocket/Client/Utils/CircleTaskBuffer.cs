@@ -37,6 +37,7 @@ namespace console_netcore31_newsocket.Client.Utils
         {
 
             var result = _currentWrite[_write_offset];
+            result.Reset();
             //Console.WriteLine(result.GetHashCode());
             _write_offset += 1;
             if (_write_offset == ArrayLength)
@@ -101,10 +102,6 @@ namespace console_netcore31_newsocket.Client.Utils
             var temp = _readQueue.Dequeue();
             _currentRead = _readQueue.Peek();
             _readLock = 0;
-            for (int i = 0; i < ArrayLength; i+=1)
-            {
-                temp[i].Reset();
-            }
             while (Interlocked.CompareExchange(ref _writeLock, 1, 0) != 0)
             {
                 wait.SpinOnce();

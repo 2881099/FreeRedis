@@ -41,12 +41,16 @@ public struct ManualResetValueTaskSourceImplemention<TResult>
     {
         // Reset/update state for the next use/await of this instance.
         //_version++;
-        _completed = false;
-        _result = default;
-        _error = null;
-        _capturedContext = null;
-        _continuation = null;
-        _continuationState = null;
+        if (_completed)
+        {
+            _completed = false;
+            _result = default;
+            _error = null;
+            _capturedContext = null;
+            _continuation = null;
+            _continuationState = null;
+        }
+        
     }
 
     /// <summary>Completes with a successful result.</summary>
