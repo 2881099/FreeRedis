@@ -3,6 +3,7 @@ using System.Buffers;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,13 +15,14 @@ namespace console_netcore31_taskcompletesource
     {
 
         private static ManualResetValueTaskSource<int> mrvts;
+        private static ConfiguredValueTaskAwaitable<int> _task;
         static void Main()
         {
 
             
             mrvts = new ManualResetValueTaskSource<int>();
-           
 
+            _task = new ValueTask<int>(mrvts, 0).ConfigureAwait(false);
             //mrvts.OnCompleted(s => { Console.WriteLine(1); }, null, 2, ValueTaskSourceOnCompletedFlags.None);
             //mrvts.Reset();
             //mrvts.Reset();
@@ -38,7 +40,7 @@ namespace console_netcore31_taskcompletesource
                     Run();
                     Thread.Sleep(3000);
                     mrvts.SetResult(i);
-                    mrvts.Reset();
+                    //mrvts.Reset();
                     //mrvts.ve
                 }
                 
@@ -49,7 +51,7 @@ namespace console_netcore31_taskcompletesource
         public static async void Run()
         {
 
-            var result = await new ValueTask<int>(mrvts, 0);
+            var result = await _task;
             Console.WriteLine(result);
 
         }

@@ -7,7 +7,7 @@ namespace console_netcore31_taskcompletesource
 {
     public sealed class ManualResetValueTaskSource<T> : IValueTaskSource<T>, IValueTaskSource
     {
-        private ManualResetValueTaskSourceCore<T> _core; // mutable struct; do not make this readonly
+        private TestManualResetValueTaskSourceCore<T> _core; // mutable struct; do not make this readonly
 
         public bool RunContinuationsAsynchronously { get => _core.RunContinuationsAsynchronously; set => _core.RunContinuationsAsynchronously = value; }
         public short Version => _core.Version;

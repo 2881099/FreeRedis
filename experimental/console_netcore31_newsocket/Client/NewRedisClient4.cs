@@ -52,6 +52,10 @@ namespace console_netcore31_newsocket
         }
         public Task<bool> AuthAsync(string password)
         {
+            if (password==null)
+            {
+                return Task.FromResult(true);
+            }
            // newRedisClient9.AuthAsync(password);
             var bytes = Encoding.UTF8.GetBytes($"AUTH {password}\r\n");
             var taskSource = CreateTask(null, TaskCreationOptions.RunContinuationsAsynchronously);

@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Sources;
@@ -11,7 +9,7 @@ using System.Threading.Tasks.Sources;
 namespace console_netcore31_taskcompletesource
 {
     [StructLayout(LayoutKind.Auto)]
-    public struct ManualResetValueTaskSourceCore<TResult>
+    public struct TestManualResetValueTaskSourceCore<TResult>
     {
         /// <summary>
         /// The callback to invoke when the operation completes if <see cref="OnCompleted"/> was called before the operation completed,
@@ -21,8 +19,6 @@ namespace console_netcore31_taskcompletesource
         private Action<object?>? _continuation;
         /// <summary>State to pass to <see cref="_continuation"/>.</summary>
         private object? _continuationState;
-        /// <summary><see cref="ExecutionContext"/> to flow to the callback, or null if no flowing is required.</summary>
-        private ExecutionContext? _executionContext;
         /// <summary>
         /// A "captured" <see cref="SynchronizationContext"/> or <see cref="TaskScheduler"/> with which to invoke the callback,
         /// or null if no special context is required.
@@ -45,11 +41,10 @@ namespace console_netcore31_taskcompletesource
         public void Reset()
         {
             // Reset/update state for the next use/await of this instance.
-            _version++;
+            //_version++;
             _completed = false;
             _result = default;
             _error = null;
-            _executionContext = null;
             _capturedContext = null;
             _continuation = null;
             _continuationState = null;
@@ -78,7 +73,6 @@ namespace console_netcore31_taskcompletesource
         /// <param name="token">Opaque value that was provided to the <see cref="ValueTask"/>'s constructor.</param>
         public ValueTaskSourceStatus GetStatus(short token)
         {
-            ValidateToken(token);
             return
                 _continuation == null || !_completed ? ValueTaskSourceStatus.Pending :
                 _error == null ? ValueTaskSourceStatus.Succeeded :
@@ -91,7 +85,6 @@ namespace console_netcore31_taskcompletesource
         //[StackTraceHidden]
         public TResult GetResult(short token)
         {
-            ValidateToken(token);
             if (!_completed)
             {
                 new Exception("任务未完成！");
@@ -112,27 +105,13 @@ namespace console_netcore31_taskcompletesource
             {
                 throw new ArgumentNullException(nameof(continuation));
             }
-            ValidateToken(token);
-
-            if ((flags & ValueTaskSourceOnCompletedFlags.FlowExecutionContext) != 0)
-            {
-                _executionContext = ExecutionContext.Capture();
-            }
 
             if ((flags & ValueTaskSourceOnCompletedFlags.UseSchedulingContext) != 0)
             {
-                SynchronizationContext? sc = SynchronizationContext.Current;
-                if (sc != null && sc.GetType() != typeof(SynchronizationContext))
+                TaskScheduler ts = TaskScheduler.Current;
+                if (ts != TaskScheduler.Default)
                 {
-                    _capturedContext = sc;
-                }
-                else
-                {
-                    TaskScheduler ts = TaskScheduler.Current;
-                    if (ts != TaskScheduler.Default)
-                    {
-                        _capturedContext = ts;
-                    }
+                    _capturedContext = ts;
                 }
             }
 
@@ -156,20 +135,14 @@ namespace console_netcore31_taskcompletesource
                 // Operation already completed, so we need to queue the supplied callback.
                 if (!ReferenceEquals(oldContinuation, ManualResetValueTaskSourceCoreShared.s_sentinel))
                 {
-                    new Exception("操作已经完成！"); 
+                    new Exception("操作已经完成！");
                 }
 
                 switch (_capturedContext)
                 {
                     case null:
-                        if (_executionContext != null)
-                        {
-                            ThreadPool.QueueUserWorkItem(continuation, state, preferLocal: true);
-                        }
-                        else
-                        {
-                            ThreadPool.UnsafeQueueUserWorkItem(continuation, state, preferLocal: true);
-                        }
+
+                        ThreadPool.UnsafeQueueUserWorkItem(continuation, state, preferLocal: true);
                         break;
 
                     case SynchronizationContext sc:
@@ -187,15 +160,6 @@ namespace console_netcore31_taskcompletesource
             }
         }
 
-        /// <summary>Ensures that the specified token matches the current version.</summary>
-        /// <param name="token">The token supplied by <see cref="ValueTask"/>.</param>
-        private void ValidateToken(short token)
-        {
-            if (token != _version)
-            {
-                new Exception("token 和 版本 不对！");
-            }
-        }
 
         /// <summary>Signals that the operation has completed.  Invoked after the result or error has been set.</summary>
         private void SignalCompletion()
@@ -208,18 +172,11 @@ namespace console_netcore31_taskcompletesource
 
             if (_continuation != null || Interlocked.CompareExchange(ref _continuation, ManualResetValueTaskSourceCoreShared.s_sentinel, null) != null)
             {
-                if (_executionContext != null)
-                {
-                    //ExecutionContext.RunInternal(
-                    //    _executionContext,
-                    //    (ref ManualResetValueTaskSourceCore<TResult> s) => s.InvokeContinuation(),
-                     //   ref this);
-                }
-                else
-                {
-                    InvokeContinuation();
-                }
+
+                InvokeContinuation();
             }
+
+            Reset();
         }
 
         /// <summary>
@@ -230,37 +187,14 @@ namespace console_netcore31_taskcompletesource
         private void InvokeContinuation()
         {
 
-            switch (_capturedContext)
+            if (RunContinuationsAsynchronously)
             {
-                case null:
-                    if (RunContinuationsAsynchronously)
-                    {
-                        if (_executionContext != null)
-                        {
-                            ThreadPool.QueueUserWorkItem(_continuation, _continuationState, preferLocal: true);
-                        }
-                        else
-                        {
-                            ThreadPool.UnsafeQueueUserWorkItem(_continuation, _continuationState, preferLocal: true);
-                        }
-                    }
-                    else
-                    {
-                        _continuation(_continuationState);
-                    }
-                    break;
 
-                case SynchronizationContext sc:
-                    sc.Post(s =>
-                    {
-                        var state = (Tuple<Action<object>, object>)s!;
-                        state.Item1(state.Item2);
-                    }, Tuple.Create(_continuation, _continuationState));
-                    break;
-
-                case TaskScheduler ts:
-                    Task.Factory.StartNew(_continuation, _continuationState, CancellationToken.None, TaskCreationOptions.DenyChildAttach, ts);
-                    break;
+                ThreadPool.UnsafeQueueUserWorkItem(_continuation, _continuationState, preferLocal: true);
+            }
+            else
+            {
+                _continuation(_continuationState);
             }
         }
     }
