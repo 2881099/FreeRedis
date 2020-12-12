@@ -60,6 +60,7 @@ string[] vals = cli.MGet("key1", "key2");
 | receiveTimeout    | 10000     | Receive timeout (MS) |
 | sendTimeout       | 10000     | Send timeout (MS) |
 | encoding          | utf-8     | string charset |
+| retry             | 0         | Protocol error retry execution times |
 | ssl               | false     | Enable encrypted transmission |
 | name              | \<empty\> | Connection name, use client list command to view |
 | prefix            | \<empty\> | The prefix of the key, all methods will have this prefix. cli.Set(prefix + "key", 111); |

@@ -106,8 +106,14 @@ namespace FreeRedis
                         catch (ProtocolViolationException)
                         {
                             rds.ReleaseSocket();
-                            if (cmd.IsReadOnlyCommand() == false || ++cmd._protocolErrorTryCount > 1) throw;
-                            protocolRetry = true;
+                            cmd._protocolErrorTryCount++;
+                            if (cmd._protocolErrorTryCount <= pool._policy._connectionStringBuilder.Retry)
+                                protocolRetry = true;
+                            else
+                            {
+                                if (cmd.IsReadOnlyCommand() == false || cmd._protocolErrorTryCount > 1) throw;
+                                protocolRetry = true;
+                            }
                         }
                         catch (Exception ex)
                         {

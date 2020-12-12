@@ -82,9 +82,16 @@ namespace FreeRedis
                     }
                     catch (ProtocolViolationException)
                     {
+                        var pool = (_redisSocket as DefaultRedisSocket.TempProxyRedisSocket)?._pool;
                         _redisSocket.ReleaseSocket();
-                        if (cmd.IsReadOnlyCommand() == false || ++cmd._protocolErrorTryCount > 1) throw;
-                        return AdapterCall(cmd, parse);
+                        cmd._protocolErrorTryCount++;
+                        if (pool != null && cmd._protocolErrorTryCount <= pool._policy._connectionStringBuilder.Retry)
+                            return AdapterCall(cmd, parse);
+                        else
+                        {
+                            if (cmd.IsReadOnlyCommand() == false || cmd._protocolErrorTryCount > 1) throw;
+                            return AdapterCall(cmd, parse);
+                        }
                     }
                 });
             }

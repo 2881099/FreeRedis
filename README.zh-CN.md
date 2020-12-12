@@ -60,6 +60,7 @@ string[] vals = cli.MGet("key1", "key2");
 | receiveTimeout    | 10000     | 接收超时，单位为毫秒（ms） |
 | sendTimeout       | 10000     | 发送超时，单位为毫秒（ms） |
 | encoding          | utf-8     | 字符串字符集 |
+| retry             | 0         | 协议发生错误时，重试执行的次数 |
 | ssl               | false     | 启用加密传输 |
 | name              | \<empty\> | 连接名，使用 CLIENT LIST 命令查看 |
 | prefix            | \<empty\> | `key` 前辍，所有方法都会附带此前辍，cli.Set(prefix + "key", 111); |

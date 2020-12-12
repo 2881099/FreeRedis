@@ -24,6 +24,7 @@ namespace FreeRedis
         public TimeSpan SendTimeout { get; set; } = TimeSpan.FromSeconds(20);
         public int MaxPoolSize { get; set; } = 100;
         public int MinPoolSize { get; set; } = 1;
+        public int Retry { get; set; } = 0;
 
         public static implicit operator ConnectionStringBuilder(string connectionString) => Parse(connectionString);
         public static implicit operator string(ConnectionStringBuilder connectionString) => connectionString.ToString();
@@ -48,6 +49,7 @@ namespace FreeRedis
             if (SendTimeout != TimeSpan.FromSeconds(10)) sb.Append(",send timeout=").Append((long)SendTimeout.TotalMilliseconds);
             if (MaxPoolSize != 100) sb.Append(",max pool size=").Append(MaxPoolSize);
             if (MinPoolSize != 1) sb.Append(",min pool size=").Append(MinPoolSize);
+            if (Retry != 0) sb.Append(",retry=").Append(Retry);
             return sb.ToString();
         }
 
@@ -86,6 +88,7 @@ namespace FreeRedis
                     case "poolsize":
                     case "maxpoolsize": if (kv.Length > 1 && int.TryParse(kv[1].Trim(), out var maxPoolSize) && maxPoolSize > 0) ret.MaxPoolSize = maxPoolSize; break;
                     case "minpoolsize": if (kv.Length > 1 && int.TryParse(kv[1].Trim(), out var minPoolSize) && minPoolSize > 0) ret.MinPoolSize = minPoolSize; break;
+                    case "retry": if (kv.Length > 1 && int.TryParse(kv[1].Trim(), out var retry) && retry > 0) ret.Retry = retry; break;
                 }
             }
             return ret;

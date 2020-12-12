@@ -88,7 +88,6 @@ namespace FreeRedis
                 return TopOwner.LogCall(cmd, () =>
                 {
                     RedisResult rt = null;
-                    RedisClientPool pool = null; 
                     var protocolRetry = false;
                     using (var rds = GetRedisSocket(cmd))
                     {
@@ -99,13 +98,20 @@ namespace FreeRedis
                         }
                         catch (ProtocolViolationException)
                         {
+                            var pool = (rds as DefaultRedisSocket.TempProxyRedisSocket)._pool;
                             rds.ReleaseSocket();
-                            if (cmd.IsReadOnlyCommand() == false || ++cmd._protocolErrorTryCount > 1) throw;
-                            protocolRetry = true;
+                            cmd._protocolErrorTryCount++;
+                            if (cmd._protocolErrorTryCount <= pool._policy._connectionStringBuilder.Retry)
+                                protocolRetry = true;
+                            else
+                            {
+                                if (cmd.IsReadOnlyCommand() == false || cmd._protocolErrorTryCount > 1) throw;
+                                protocolRetry = true;
+                            }
                         }
                         catch (Exception ex)
                         {
-                            pool = (rds as DefaultRedisSocket.TempProxyRedisSocket)._pool;
+                            var pool = (rds as DefaultRedisSocket.TempProxyRedisSocket)._pool;
                             if (pool?.SetUnavailable(ex) == true)
                             {
                             }
