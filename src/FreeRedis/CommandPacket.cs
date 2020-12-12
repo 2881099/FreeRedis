@@ -71,6 +71,7 @@ namespace FreeRedis
             return this;
         }
 
+        internal int _protocolErrorTryCount;
         internal bool _clusterMovedAsking;
         internal int _clusterMovedTryCount;
         public string WriteTarget { get; internal set; }

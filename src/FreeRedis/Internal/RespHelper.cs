@@ -203,7 +203,8 @@ namespace FreeRedis
             {
                 while (true)
                 {
-                    var c = (char)_stream.ReadByte();
+                    var b = _stream.ReadByte();
+                    var c = (char)b;
                     switch (c)
                     {
                         case '$': return new RedisResult(ReadBlobString(c, encoding, null, 1024), false, RedisMessageType.BlobString);
@@ -227,8 +228,7 @@ namespace FreeRedis
                         default:
                             //if (cb == -1) return new RedisResult(null, true, RedisMessageType.Null);
                             var allBytes = ReadAll();
-                            var allText = Encoding.UTF8.GetString(allBytes);
-                            throw new ProtocolViolationException($"Expecting fail MessageType '{c}{allText}'");
+                            throw new ProtocolViolationException($"Expecting fail MessageType '{b},{string.Join(",", allBytes)}'");
                     }
                 }
 

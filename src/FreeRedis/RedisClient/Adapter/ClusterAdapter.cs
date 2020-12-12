@@ -3,6 +3,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -86,6 +87,7 @@ namespace FreeRedis
                 {
                     RedisResult rt = null;
                     RedisClientPool pool = null;
+                    var protocolRetry = false;
                     using (var rds = GetRedisSocket(cmd))
                     {
                         pool = (rds as DefaultRedisSocket.TempProxyRedisSocket)._pool;
@@ -101,14 +103,21 @@ namespace FreeRedis
                             rds.Write(cmd);
                             rt = rds.Read(cmd);
                         }
+                        catch (ProtocolViolationException)
+                        {
+                            rds.ReleaseSocket();
+                            if (++cmd._protocolErrorTryCount > 1) throw;
+                            protocolRetry = true;
+                        }
                         catch (Exception ex)
                         {
                             if (pool?.SetUnavailable(ex) == true)
                             {
                             }
-                            throw ex;
+                            throw;
                         }
                     }
+                    if (protocolRetry) return AdapterCall(cmd, parse);
                     if (rt.IsError && pool != null)
                     {
                         var moved = ClusterMoved.ParseSimpleError(rt.SimpleError);

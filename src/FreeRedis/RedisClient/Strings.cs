@@ -511,6 +511,7 @@ namespace FreeRedis
         /// <param name="keepTtl">Retain the time to live associated with the key</param>
         /// <param name="nx">Only set the key if it does not already exist.</param>
         /// <param name="xx">Only set the key if it already exist.</param>
+        /// <param name="get"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns>
         /// Simple string reply: OK if SET was executed correctly.<br />

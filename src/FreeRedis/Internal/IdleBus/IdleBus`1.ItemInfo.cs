@@ -63,7 +63,7 @@ namespace FreeRedis.Internal
                     catch (Exception ex)
                     {
                         ib.OnNotice(new NoticeEventArgs(NoticeType.AutoCreate, key, ex, $"{key} 实例+++创建失败：{ex.Message}"));
-                        throw ex;
+                        throw;
                     }
                 }
                 lastActiveTime = DateTime.Now;

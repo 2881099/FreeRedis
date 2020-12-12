@@ -122,7 +122,7 @@ namespace FreeRedis
             catch (Exception ex)
             {
                 exception = ex;
-                throw ex;
+                throw;
             }
             finally
             {

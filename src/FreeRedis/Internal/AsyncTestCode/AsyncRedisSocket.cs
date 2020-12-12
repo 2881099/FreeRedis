@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
@@ -67,7 +68,7 @@ namespace FreeRedis.Internal
 
                     }, (innerRds, ioex) =>
                     {
-                        if (ioex != null) (rds as DefaultRedisSocket.TempProxyRedisSocket)._pool.SetUnavailable(ioex);
+                        if (ioex != null && ioex is ProtocolViolationException == false) (rds as DefaultRedisSocket.TempProxyRedisSocket)._pool.SetUnavailable(ioex);
                         innerRds.Dispose();
                     }, () =>
                     {
@@ -148,7 +149,7 @@ namespace FreeRedis.Internal
                     }
                     _rds.ReleaseSocket();
                     _end(_rds, ioex);
-                    throw ioex;
+                    throw;
                 }
 
                 for (var a = 0; a < 100; a++)
@@ -200,7 +201,7 @@ namespace FreeRedis.Internal
                             _bufferStream = null;
                             _rds.ReleaseSocket();
                             _end(_rds, ioex);
-                            throw ioex;
+                            throw;
                         }
                     }
                     long counter = 0;
@@ -218,7 +219,7 @@ namespace FreeRedis.Internal
                             localQueueThrowException(ioex);
                             _rds.ReleaseSocket();
                             _end(_rds, ioex);
-                            throw ioex;
+                            throw;
                         }
                         witem.TaskCompletionSource.TrySetResult(rt);
                         counter = Interlocked.Decrement(ref _writeCounter);

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -70,6 +71,8 @@ namespace FreeRedis
                 return TopOwner.LogCall(cmd, () =>
                 {
                     RedisResult rt = null;
+                    RedisClientPool pool = null;
+                    var protocolRetry = false;
                     using (var rds = GetRedisSocket(cmd))
                     {
                         try
@@ -77,17 +80,22 @@ namespace FreeRedis
                             rds.Write(cmd);
                             rt = rds.Read(cmd);
                         }
+                        catch (ProtocolViolationException)
+                        {
+                            rds.ReleaseSocket();
+                            if (++cmd._protocolErrorTryCount > 1) throw;
+                            protocolRetry = true;
+                        }
                         catch (Exception ex)
                         {
-                            var pool = (rds as DefaultRedisSocket.TempProxyRedisSocket)._pool;
+                            pool = (rds as DefaultRedisSocket.TempProxyRedisSocket)._pool;
                             if (pool?.SetUnavailable(ex) == true)
                             {
-                                Interlocked.Exchange(ref _masterHost, null);
-                                RecoverySentinel();
                             }
-                            throw ex;
+                            throw;
                         }
                     }
+                    if (protocolRetry) return AdapterCall(cmd, parse);
                     return parse(rt);
                 });
             }
@@ -98,8 +106,16 @@ namespace FreeRedis
                 return TopOwner.LogCallAsync(cmd, async () =>
                 {
                     var asyncRds = _asyncManager.GetAsyncRedisSocket(cmd);
-                    var rt = await asyncRds.WriteAsync(cmd);
-                    return parse(rt);
+                    try
+                    {
+                        var rt = await asyncRds.WriteAsync(cmd);
+                        return parse(rt);
+                    }
+                    catch (ProtocolViolationException)
+                    {
+                        if (++cmd._protocolErrorTryCount > 1) throw;
+                        return await AdapterCallAsync(cmd, parse);
+                    }
                 });
             }
 #endif

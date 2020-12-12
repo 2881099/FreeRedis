@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -72,10 +73,19 @@ namespace FreeRedis
             {
                 return TopOwner.LogCall(cmd, () =>
                 {
-                    _redisSocket.Write(cmd);
-                    var rt = _redisSocket.Read(cmd);
-                    if (cmd._command == "QUIT") _redisSocket.ReleaseSocket();
-                    return parse(rt);
+                    try
+                    {
+                        _redisSocket.Write(cmd);
+                        var rt = _redisSocket.Read(cmd); 
+                        if (cmd._command == "QUIT") _redisSocket.ReleaseSocket();
+                        return parse(rt);
+                    }
+                    catch (ProtocolViolationException)
+                    {
+                        _redisSocket.ReleaseSocket();
+                        if (++cmd._protocolErrorTryCount > 1) throw;
+                        return AdapterCall(cmd, parse);
+                    }
                 });
             }
 #if isasync

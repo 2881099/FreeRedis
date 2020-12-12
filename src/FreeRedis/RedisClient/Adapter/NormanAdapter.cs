@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -87,23 +88,31 @@ namespace FreeRedis
                 return TopOwner.LogCall(cmd, () =>
                 {
                     RedisResult rt = null;
-                    RedisClientPool pool = null;
+                    RedisClientPool pool = null; 
+                    var protocolRetry = false;
                     using (var rds = GetRedisSocket(cmd))
                     {
-                        pool = (rds as DefaultRedisSocket.TempProxyRedisSocket)._pool;
                         try
                         {
                             rds.Write(cmd);
                             rt = rds.Read(cmd);
                         }
+                        catch (ProtocolViolationException)
+                        {
+                            rds.ReleaseSocket();
+                            if (++cmd._protocolErrorTryCount > 1) throw;
+                            protocolRetry = true;
+                        }
                         catch (Exception ex)
                         {
+                            pool = (rds as DefaultRedisSocket.TempProxyRedisSocket)._pool;
                             if (pool?.SetUnavailable(ex) == true)
                             {
                             }
-                            throw ex;
+                            throw;
                         }
                     }
+                    if (protocolRetry) return AdapterCall(cmd, parse);
                     return parse(rt);
                 });
             }

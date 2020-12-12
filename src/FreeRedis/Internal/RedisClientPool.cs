@@ -107,7 +107,6 @@ namespace FreeRedis.Internal
                         var rt = rds.Read(cmd);
                         return rt.Value;
                     });
-                    
                 });
 
                 connected?.Invoke(cli);
