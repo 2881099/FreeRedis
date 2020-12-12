@@ -40,11 +40,11 @@ namespace console_netcore31_newsocket.Client.Utils
         public SingleLinks5<T> AppendNew()
         {
 
-            var temp = new SingleLinks5<T>();
-            GetLock();
-            temp.Next = Next;
+            var temp = new SingleLinks5<T>
+            {
+                Next = this.Next
+            };
             Next = temp;
-            ReleaseLock();
             return temp;
 
         }
@@ -86,12 +86,11 @@ namespace console_netcore31_newsocket.Client.Utils
 
         }
 
+
         private void AddBuffer()
         {
             _writePtr.Next.GetLock();
-            bool shut = _writePtr.Next.InReading;
-            _writePtr.Next.ReleaseLock();
-            if (shut)
+            if (_writePtr.Next.InReading)
             {
                 _writePtr = _writePtr.AppendNew();
             }
@@ -99,6 +98,7 @@ namespace console_netcore31_newsocket.Client.Utils
             {
                 _writePtr = _writePtr.Next;
             }
+            _writePtr.Next.ReleaseLock();
             _write_offset = 0;
             _currentWrite = _writePtr.Buffer;
 
@@ -121,12 +121,12 @@ namespace console_netcore31_newsocket.Client.Utils
         private void CollectBuffer()
         {
 
-            var pre = _readPtr;
-            pre.GetLock();
-            pre.InReading = false;
+            var current = _readPtr;
+            current.GetLock();
+            current.InReading = false;
             _readPtr = _readPtr.Next;
-            pre.ReleaseLock();
             _readPtr.InReading = true;
+            current.ReleaseLock();
             _read_offset = 0;
             _currentRead = _readPtr.Buffer;
 

@@ -49,6 +49,7 @@ namespace console_netcore31_newsocket
         private static NewRedisClient18 _redisClient18;
         private static NewRedisClient21 _redisClient21;
         private static NewRedisClient22 _redisClient22;
+        private static NewRedisClient23 _redisClient23;
         private static ClientPool3 _pool10;
         private static ClientPool4 _pool13;
         private static ClientPool5 _pool14;
@@ -137,13 +138,16 @@ namespace console_netcore31_newsocket
             _redisClient22 = new NewRedisClient22();
             _redisClient22.CreateConnection(ip, port);
 
+            _redisClient23 = new NewRedisClient23();
+            _redisClient23.CreateConnection(ip, port);
+
             _redisClient4 = new NewRedisClient4();
             _redisClient4.CreateConnection(ip, port);
 
             seredis = ConnectionMultiplexer.Connect($"{ip}:{port},password={pwd}");
             _stackExnchangeClient = seredis.GetDatabase(0);
-            T();
-            Console.ReadKey();
+            //T();
+            //Console.ReadKey();
 
 
         }
@@ -157,13 +161,14 @@ namespace console_netcore31_newsocket
         {
             //Thread.Sleep(3000);
             //FreeRedisSetTest();
-            
+            StackExchangeRedisSetTest();
+            StackExchangeRedisSetTest();
             NewSocketRedis21SetTest();
             NewSocketRedis21SetTest();
-            NewSocketRedis221SetTest();
-            NewSocketRedis221SetTest(); 
-            //StackExchangeRedisSetTest();
-            //StackExchangeRedisSetTest();
+            NewSocketRedis22SetTest();
+            NewSocketRedis22SetTest();
+            NewSocketRedis23SetTest();
+            NewSocketRedis23SetTest();
             //NewSocketRedis161SetTest();
             //NewSocketRedis162SetTest();
             //NewSocketRedis162SetTest();
@@ -574,7 +579,7 @@ namespace console_netcore31_newsocket
         #endregion
 
         #region NewSocketRedis22 - SET
-        public static void NewSocketRedis221SetTest()
+        public static void NewSocketRedis22SetTest()
         {
             RunAction((key) =>
             {
@@ -582,6 +587,19 @@ namespace console_netcore31_newsocket
                 return _redisClient22.SetAsync(key, key);
 
             }, "NewRedis22");
+
+        }
+        #endregion
+
+        #region NewSocketRedis23 - SET
+        public static void NewSocketRedis23SetTest()
+        {
+            RunAction((key) =>
+            {
+
+                return _redisClient23.SetAsync(key, key);
+
+            }, "NewRedis23");
 
         }
         #endregion
