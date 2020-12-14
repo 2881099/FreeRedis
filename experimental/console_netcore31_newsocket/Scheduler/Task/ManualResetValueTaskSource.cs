@@ -14,6 +14,7 @@ public sealed class ManualResetValueTaskSource<T> : IValueTaskSource<T>, IValueT
     public ManualResetValueTaskSource()
     {
         AwaitableTask = new ValueTask<T>(this, 0);
+        _core.RunContinuationsAsynchronously = true;
     }
 
     private ManualResetValueTaskSourceImplemention<T> _core; // mutable struct; do not make this readonly

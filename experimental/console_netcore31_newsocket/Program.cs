@@ -28,7 +28,7 @@ namespace console_netcore31_newsocket
         private static int port;
         private static string ip;
         private static string pwd;
-        private const int frequence = 1000000;
+        private const int frequence = 300000;
 
         private static RedisClient _freeRedisClient;
         private static BeetleX.Redis.RedisDB _beetleClient;
@@ -83,10 +83,17 @@ namespace console_netcore31_newsocket
             //}
             ///RunTest();
             //Console.WriteLine("====== 以上预热 =======");
-            RunSE();
-            RunSE();
-            Run21();
-            Run21();
+            //RunSE();
+            //RunSE();
+            for (int i = 0; i < 10; i++)
+            {
+                Run21();
+                Run23();
+                //Run161();
+            }
+            
+            //Run23();
+            //Run23();
             //Run21();
             //Run161();
             //Run161();
@@ -101,12 +108,12 @@ namespace console_netcore31_newsocket
         }
 
         private static ParallelOptions _options;
-        private static void Configuration()
+        private async static void Configuration()
         {
             _options = new ParallelOptions();
             _options.MaxDegreeOfParallelism = 4;
             _useDelay = true;
-            _delayCount = 5000;
+            _delayCount = 4000;
             //Notice : Please use "//" comment "/*".
 
             ///*
@@ -135,19 +142,26 @@ namespace console_netcore31_newsocket
 
             _redisClient161 = new NewRedisClient161();
             _redisClient161.CreateConnection(ip, port);
-            _redisClient161.AuthAsync(pwd);
+            //_redisClient161.AuthAsync(pwd);
 
             _redisClient162 = new NewRedisClient162();
             _redisClient162.CreateConnection(ip, port);
-            _redisClient162.AuthAsync(pwd);
+           //_redisClient162.AuthAsync(pwd);
 
             _redisClient21 = new NewRedisClient21();
             _redisClient21.CreateConnection(ip, port);
             _redisClient21.AuthAsync(pwd);
 
+
+
             _redisClient22 = new NewRedisClient22();
             _redisClient22.CreateConnection(ip, port);
-            _redisClient22.AuthAsync(pwd);
+            //_redisClient22.AuthAsync(pwd);
+
+            //var result = await _redisClient22.SetAsync("1","1");
+            //Console.WriteLine(result);
+            //result = await _redisClient22.SetAsync("1", "1");
+            //Console.WriteLine(result);
 
             _redisClient23 = new NewRedisClient23();
             _redisClient23.CreateConnection(ip, port);
@@ -447,7 +461,7 @@ namespace console_netcore31_newsocket
             Parallel.For(0, frequence, _options, (index) =>
             {
                 var key = index.ToString();
-                tasks[index] = _redisClient24.SetAsync(key, key);
+                tasks[index] = _redisClient22.SetAsync(key, key);
             });
 
 
@@ -487,6 +501,107 @@ namespace console_netcore31_newsocket
             }
             sw.Stop();
             Console.WriteLine($"21 (0-{frequence / 10000}W) : {sw.ElapsedMilliseconds}ms! ");
+            //Thread.Sleep(3000);
+            //var checkTasks = new Task[frequence];
+            //for (var a = 0; a < frequence; a += 1)
+            //{
+            //    var key = a.ToString();
+            //    checkTasks[a] = Task.Run(() =>
+            //    {
+            //        var result = _stackExnchangeClient.StringGet(key);
+            //        if (result != key)
+            //        {
+            //            Console.WriteLine(key);
+            //            Console.WriteLine(result);
+            //            Interlocked.Increment(ref count);
+            //        }
+            //    });
+            //}
+            //Task.WaitAll(checkTasks);
+            //Console.WriteLine($"Errors : {count} !");
+            //if (count>0)
+            //{
+            //    Thread.Sleep(1000);
+            //    for (var a = 0; a < frequence; a += 1)
+            //    {
+            //        var key = a.ToString();
+            //        tasks[a] = Task.Run(() =>
+            //        {
+            //            var result = _stackExnchangeClient.StringGet(key);
+            //            if (result != key)
+            //            {
+            //                Interlocked.Increment(ref count);
+            //            }
+            //        });
+            //    }
+            //    Task.WaitAll(tasks);
+            //    Console.WriteLine($"Rechecking Errors : {count} !");
+            //}
+            Console.WriteLine("=========================\r\n");
+        }
+
+        private static void Run23()
+        {
+
+            if (_useDelay)
+            {
+                Thread.Sleep(_delayCount);
+            }
+            int count = 0;
+            Console.WriteLine("=========================");
+            var result = _redisClient4.FlushDBAsync().Result;
+            Console.WriteLine($"Clear DB 0 - [{(result ? "SUCCEED" : "FAILED")}]!");
+
+            var tasks = new Task<bool>[frequence];
+            Stopwatch sw = new Stopwatch();
+            //_beforeSw?.Invoke(title);
+            Console.WriteLine("Start Run:");
+            //Thread.Sleep(0);
+            //Thread.Sleep(1000);
+            sw.Start();
+            Parallel.For(0, frequence, _options, (index) =>
+            {
+                var key = index.ToString();
+                tasks[index] = _redisClient23.SetAsync(key, key);
+            });
+
+
+            //Task.WaitAll(tasks);
+            int offset = 0;
+            //int ba = 0;
+            SpinWait wait = default;
+            while (offset != frequence - 1)
+            {
+                //ba = 0;
+                //offset = 0;
+                //Thread.Sleep(30000);
+                for (int i = offset; i < frequence; i++)
+                {
+                    if (tasks[i].IsCompleted)
+                    {
+                        offset = i;
+                        //if (tasks[i].Result)
+                        //{
+                        //    offset = i;
+                        //}
+                        //else
+                        //{
+                        //    Console.WriteLine("失败！");
+                        //}
+
+                    }
+                    //else
+                    //{
+
+                    //    ba++;
+
+                    //}
+                }
+                //Console.WriteLine("未完成！"+ba);
+                wait.SpinOnce();
+            }
+            sw.Stop();
+            Console.WriteLine($"23 (0-{frequence / 10000}W) : {sw.ElapsedMilliseconds}ms! ");
             //Thread.Sleep(3000);
             //var checkTasks = new Task[frequence];
             //for (var a = 0; a < frequence; a += 1)
@@ -570,26 +685,26 @@ namespace console_netcore31_newsocket
                 wait.SpinOnce();
             }
             sw.Stop();
-            Thread.Sleep(3000);
-            var checkTasks = new Task[frequence];
-            for (var a = 0; a < frequence; a += 1)
-            {
-                var key = a.ToString();
-                checkTasks[a] = Task.Run(() =>
-                {
-                    var result = _stackExnchangeClient.StringGet(key);
-                    if (result != key)
-                    {
-                        Console.WriteLine(key);
-                        Console.WriteLine(result);
-                        Interlocked.Increment(ref count);
-                    }
-                });
-            }
-            Task.WaitAll(checkTasks);
+            //Thread.Sleep(3000);
+            //var checkTasks = new Task[frequence];
+            //for (var a = 0; a < frequence; a += 1)
+            //{
+            //    var key = a.ToString();
+            //    checkTasks[a] = Task.Run(() =>
+            //    {
+            //        var result = _stackExnchangeClient.StringGet(key);
+            //        if (result != key)
+            //        {
+            //            Console.WriteLine(key);
+            //            Console.WriteLine(result);
+            //            Interlocked.Increment(ref count);
+            //        }
+            //    });
+            //}
+            //Task.WaitAll(checkTasks);
             //Console.WriteLine($"{title} (0-{frequence / 10000}W) : {sw.ElapsedTicks} SPAN! ");
             Console.WriteLine($"161 (0-{frequence / 10000}W) : {sw.ElapsedMilliseconds}ms! ");
-            Console.WriteLine($"Errors : {count} !");
+            //Console.WriteLine($"Errors : {count} !");
             //if (count>0)
             //{
             //    Thread.Sleep(1000);
