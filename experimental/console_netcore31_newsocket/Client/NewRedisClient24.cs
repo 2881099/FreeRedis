@@ -10,20 +10,28 @@ namespace console_netcore31_newsocket
 {
 
 
-    public class NewRedisClient22 : RedisClientBase5
+    public class NewRedisClient24 : RedisClientBase5
     {
 
         private readonly byte _protocalStart;
         private readonly CircleTaskBuffer2<bool> _taskBuffer;
-        public NewRedisClient22()
+        private readonly NewRedisClient22 _other;
+        public NewRedisClient24()
         {
             _taskBuffer = new CircleTaskBuffer2<bool>();
             _protocalStart = (byte)43;
-            
-        }
+            _other = new NewRedisClient22();
 
+
+        }
+        public override void CreateConnection(string ip, int port)
+        {
+            _other.CreateConnection(ip, port);
+            base.CreateConnection(ip, port);
+        }
         public ValueTask<bool> AuthAsync(string password)
         {
+            _other.AuthAsync(password);
             if (password == null)
             {
                 return default;
@@ -40,12 +48,20 @@ namespace console_netcore31_newsocket
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public ValueTask<bool> SetAsync(string key, string value)
         {
-            var bytes = Encoding.UTF8.GetBytes($"*3\r\n$3\r\nSET\r\n${key.Length}\r\n{key}\r\n${value.Length}\r\n{value}\r\n");
-            LockSend();
-            var task = _taskBuffer.WriteNext();
-            _sender.WriteAsync(bytes);
-            ReleaseSend();
-            return task.AwaitableTask;
+            if (TryGetSendLock())
+            {
+                var bytes = Encoding.UTF8.GetBytes($"*3\r\n$3\r\nSET\r\n${key.Length}\r\n{key}\r\n${value.Length}\r\n{value}\r\n");
+                //LockSend();
+                var task = _taskBuffer.WriteNext();
+                _sender.WriteAsync(bytes);
+                ReleaseSend();
+                return task.AwaitableTask;
+            }
+            else
+            {
+               return _other.SetAsync(key, value);
+            }
+           
         }
 
 

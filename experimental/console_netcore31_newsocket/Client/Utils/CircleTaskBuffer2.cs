@@ -12,7 +12,7 @@ namespace console_netcore31_newsocket.Client.Utils
     {
         private int _readLock = 0;
         private int _writeLock = 0;
-        public int ArrayLength = 10240;
+        public int ArrayLength = 4096;
         private readonly Queue<ManualResetValueTaskSource<T>[]> _writeQueue;
         private readonly Queue<ManualResetValueTaskSource<T>[]> _readQueue;
         private ManualResetValueTaskSource<T>[] _currentWrite;
@@ -29,16 +29,57 @@ namespace console_netcore31_newsocket.Client.Utils
             _currentWrite = _current;
             _currentRead = _current;
             _readQueue.Enqueue(_currentRead);
+            //_list = new List<int>();
+            //_cache = new HashSet<int>();
+            //_index = new HashSet<int>();
+            //_repeates = new List<ManualResetValueTaskSource<T>>();
+            //Task.Run(() =>
+            //{
+            //    for (int i = 0; i < 10; i++)
+            //    {
+            //        Thread.Sleep(10000);
+            //        if (_index.Count>0)
+            //        {
+            //            Console.WriteLine("HashCode:" + _list.Count);
+            //            Console.WriteLine("自增索引："+_index.Count);
+            //            Console.WriteLine("无重复HashCode：" + _cache.Count);
+            //        }
+                    
+            //    }
+            //    Console.WriteLine("End");
+
+            //    foreach (var item in _repeates)
+            //    {
+            //        if (item.AwaitableTask.IsCanceled)
+            //        {
+            //            Console.WriteLine("已取消！");
+            //        }
+            //        item.SetResult((T)(object)(true));
+            //    }
+            //});
         }
 
         private int _write_offset;
         private int _read_offset;
+        //private List<int> _list;
+        //private HashSet<int> _cache;
+        //private HashSet<int> _index;
+        //private List<ManualResetValueTaskSource<T>> _repeates;
         public ManualResetValueTaskSource<T> WriteNext()
         {
-
+            //_index.Add(_write_offset);
             var result = _currentWrite[_write_offset];
+            //var code = result.GetHashCode();
+            //if (_cache.Contains(code))
+            //{
+            //    result.IsRepeate = true;
+            //    _repeates.Add(result);
+            //    Console.WriteLine("重复！按键放行！");
+            //    //Console.ReadKey();
+            //}
+            //_list.Add(result.GetHashCode());
+            //_cache.Add(result.GetHashCode());
             result.Reset();
-            //Console.WriteLine(result.GetHashCode());
             _write_offset += 1;
             if (_write_offset == ArrayLength)
             {
@@ -47,6 +88,8 @@ namespace console_netcore31_newsocket.Client.Utils
             return result;
 
         }
+
+        
 
         private void AddBuffer()
         {
@@ -81,8 +124,16 @@ namespace console_netcore31_newsocket.Client.Utils
         {
 
             var result = _currentRead[_read_offset];
-            //Console.WriteLine("a"+result.GetHashCode());
             result.SetResult(value);
+            //Console.WriteLine("a"+result.GetHashCode());
+            //if (!result.IsRepeate)
+            //{
+            //  result.SetResult(value);
+            //}
+            //else
+            //{
+            //    result.SetResult((T)(object)false);
+            //}
             _read_offset += 1;
             if (_read_offset == ArrayLength)
             {

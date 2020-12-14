@@ -3,6 +3,7 @@ using System;
 using System.Buffers;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace console_netcore31_newsocket
@@ -19,6 +20,7 @@ namespace console_netcore31_newsocket
             _taskBuffer = new CircleTaskBuffer<bool>();
             _protocalStart = (byte)43;
         }
+
         public ValueTask<bool> AuthAsync(string password)
         {
             if (password == null)
@@ -47,7 +49,7 @@ namespace console_netcore31_newsocket
         }
 
 
-
+        private byte[] _array;
 
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         protected internal override void Handler(in ReadOnlySequence<byte> sequence)
@@ -69,7 +71,7 @@ namespace console_netcore31_newsocket
 
                 }
             }
-
+            //Console.WriteLine(1);
 
         }
 
@@ -92,7 +94,7 @@ namespace console_netcore31_newsocket
                 position = span.IndexOf(_protocalStart);
 
             }
-
+            //Console.WriteLine(1);
         }
     }
 

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace DispatcherTest
 {
@@ -18,16 +19,20 @@ namespace DispatcherTest
         }
 
         [Benchmark]
-        public void TestSingleNode()
+        public void TestLoop()
         {
-            var first = Head;
-            first = first.Next;
+            var bytes = new int[10240];
+            for (int i = 0; i < 10240; i+=1)
+            {
+                bytes[i] = i;
+            }
         }
 
         [Benchmark]
-        public void TestThreadPool()
+        public void TestConcurrent()
         {
-            ThreadPool.QueueUserWorkItem(new WaitCallback((state) => {  }));
+            var bytes = new int[10240];
+            Parallel.For(0, 10240, (index) => { bytes[index] = index; });
         }
     }
 

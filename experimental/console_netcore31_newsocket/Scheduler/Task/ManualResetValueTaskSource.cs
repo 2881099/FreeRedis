@@ -10,6 +10,7 @@ public sealed class ManualResetValueTaskSource<T> : IValueTaskSource<T>, IValueT
 {
     public readonly ValueTask<T> AwaitableTask;
 
+    public bool IsRepeate;
     public ManualResetValueTaskSource()
     {
         AwaitableTask = new ValueTask<T>(this, 0);
