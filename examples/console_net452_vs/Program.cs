@@ -15,7 +15,7 @@ namespace console_net452_vs
         static Lazy<RedisClient> _cliLazy = new Lazy<RedisClient>(() =>
         {
             //var r = new RedisClient("127.0.0.1:6379", false); //redis 3.2 Single test
-            var r = new RedisClient("127.0.0.1:6379,min pool size=500,max pool size=500"); //redis 3.2
+            var r = new RedisClient("127.0.0.1:6379,max pool size=500,retry=1"); //redis 3.2
             //var r = new RedisClient("127.0.0.1:6379,database=1", "127.0.0.1:6379,database=1");
             //var r = new RedisClient("192.168.164.10:6379,database=1"); //redis 6.0
             r.Serialize = obj => JsonConvert.SerializeObject(obj);
@@ -29,6 +29,11 @@ namespace console_net452_vs
 
         static void Main(string[] args)
         {
+            while (true)
+            {
+                var xxx = cli.GetAsync(Guid.NewGuid().ToString()).Result;
+            }
+
             RedisHelper.Initialization(new CSRedis.CSRedisClient("127.0.0.1:6379,asyncPipeline=true,preheat=100,poolsize=100"));
             cli.Set("TestMGet_null1", "");
             RedisHelper.Set("TestMGet_null1", "");

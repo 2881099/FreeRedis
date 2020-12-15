@@ -199,12 +199,16 @@ namespace FreeRedis
                 throw new ProtocolViolationException($"Expecting fail Map '{msgtype}3', got '{msgtype}{lenstr}'");
             }
 
+            //public static int debugger = 0;
             public RedisResult ReadObject(Encoding encoding)
             {
                 while (true)
                 {
                     var b = _stream.ReadByte();
                     var c = (char)b;
+                    //debugger++;
+                    //if (debugger > 10000 && debugger % 10 == 0) 
+                    //    throw new ProtocolViolationException($"Expecting fail MessageType '{b},{string.Join(",", ReadAll())}'");
                     switch (c)
                     {
                         case '$': return new RedisResult(ReadBlobString(c, encoding, null, 1024), false, RedisMessageType.BlobString);

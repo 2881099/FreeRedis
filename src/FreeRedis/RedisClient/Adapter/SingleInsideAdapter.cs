@@ -41,26 +41,10 @@ namespace FreeRedis
             {
                 return TopOwner.LogCall(cmd, () =>
                 {
-                    try
-                    {
-                        _redisSocket.Write(cmd);
-                        var rt = _redisSocket.Read(cmd);
-                        if (cmd._command == "QUIT") _redisSocket.ReleaseSocket();
-                        return parse(rt);
-                    }
-                    catch (ProtocolViolationException)
-                    {
-                        var pool = (_redisSocket as DefaultRedisSocket.TempProxyRedisSocket)?._pool;
-                        _redisSocket.ReleaseSocket();
-                        cmd._protocolErrorTryCount++;
-                        if (pool != null && cmd._protocolErrorTryCount <= pool._policy._connectionStringBuilder.Retry)
-                            return AdapterCall(cmd, parse);
-                        else
-                        {
-                            if (cmd.IsReadOnlyCommand() == false || cmd._protocolErrorTryCount > 1) throw;
-                            return AdapterCall(cmd, parse);
-                        }
-                    }
+                    _redisSocket.Write(cmd);
+                    var rt = _redisSocket.Read(cmd);
+                    if (cmd._command == "QUIT") _redisSocket.ReleaseSocket();
+                    return parse(rt);
                 });
             }
 #if isasync
