@@ -83,15 +83,20 @@ namespace console_netcore31_newsocket
             //}
             ///RunTest();
             //Console.WriteLine("====== 以上预热 =======");
-            //RunSE();
-            //RunSE();
-            for (int i = 0; i < 10; i++)
-            {
-                Run21();
-                Run23();
-                //Run161();
-            }
-            
+            RunSE();
+            RunSE();
+            //for (int i = 0; i < 10; i++)
+            //{
+            Run21();
+            Run22();
+            Run23();
+            Run21();
+            Run22();
+            Run23();
+            Run21();
+            //Run161();
+            //}
+
             //Run23();
             //Run23();
             //Run21();
@@ -461,7 +466,7 @@ namespace console_netcore31_newsocket
             Parallel.For(0, frequence, _options, (index) =>
             {
                 var key = index.ToString();
-                tasks[index] = _redisClient22.SetAsync(key, key);
+                tasks[index] = _redisClient21.SetAsync(key, key);
             });
 
 
@@ -501,6 +506,107 @@ namespace console_netcore31_newsocket
             }
             sw.Stop();
             Console.WriteLine($"21 (0-{frequence / 10000}W) : {sw.ElapsedMilliseconds}ms! ");
+            //Thread.Sleep(3000);
+            //var checkTasks = new Task[frequence];
+            //for (var a = 0; a < frequence; a += 1)
+            //{
+            //    var key = a.ToString();
+            //    checkTasks[a] = Task.Run(() =>
+            //    {
+            //        var result = _stackExnchangeClient.StringGet(key);
+            //        if (result != key)
+            //        {
+            //            Console.WriteLine(key);
+            //            Console.WriteLine(result);
+            //            Interlocked.Increment(ref count);
+            //        }
+            //    });
+            //}
+            //Task.WaitAll(checkTasks);
+            //Console.WriteLine($"Errors : {count} !");
+            //if (count>0)
+            //{
+            //    Thread.Sleep(1000);
+            //    for (var a = 0; a < frequence; a += 1)
+            //    {
+            //        var key = a.ToString();
+            //        tasks[a] = Task.Run(() =>
+            //        {
+            //            var result = _stackExnchangeClient.StringGet(key);
+            //            if (result != key)
+            //            {
+            //                Interlocked.Increment(ref count);
+            //            }
+            //        });
+            //    }
+            //    Task.WaitAll(tasks);
+            //    Console.WriteLine($"Rechecking Errors : {count} !");
+            //}
+            Console.WriteLine("=========================\r\n");
+        }
+
+        private static void Run22()
+        {
+
+            if (_useDelay)
+            {
+                Thread.Sleep(_delayCount);
+            }
+            int count = 0;
+            Console.WriteLine("=========================");
+            var result = _redisClient4.FlushDBAsync().Result;
+            Console.WriteLine($"Clear DB 0 - [{(result ? "SUCCEED" : "FAILED")}]!");
+
+            var tasks = new ValueTask<bool>[frequence];
+            Stopwatch sw = new Stopwatch();
+            //_beforeSw?.Invoke(title);
+            Console.WriteLine("Start Run:");
+            //Thread.Sleep(0);
+            //Thread.Sleep(1000);
+            sw.Start();
+            Parallel.For(0, frequence, _options, (index) =>
+            {
+                var key = index.ToString();
+                tasks[index] = _redisClient22.SetAsync(key, key);
+            });
+
+
+            //Task.WaitAll(tasks);
+            int offset = 0;
+            //int ba = 0;
+            SpinWait wait = default;
+            while (offset != frequence - 1)
+            {
+                //ba = 0;
+                //offset = 0;
+                //Thread.Sleep(30000);
+                for (int i = offset; i < frequence; i++)
+                {
+                    if (tasks[i].IsCompleted)
+                    {
+                        offset = i;
+                        //if (tasks[i].Result)
+                        //{
+                        //    offset = i;
+                        //}
+                        //else
+                        //{
+                        //    Console.WriteLine("失败！");
+                        //}
+
+                    }
+                    //else
+                    //{
+
+                    //    ba++;
+
+                    //}
+                }
+                //Console.WriteLine("未完成！"+ba);
+                wait.SpinOnce();
+            }
+            sw.Stop();
+            Console.WriteLine($"22 (0-{frequence / 10000}W) : {sw.ElapsedMilliseconds}ms! ");
             //Thread.Sleep(3000);
             //var checkTasks = new Task[frequence];
             //for (var a = 0; a < frequence; a += 1)

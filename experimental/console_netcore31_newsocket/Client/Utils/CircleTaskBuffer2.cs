@@ -12,7 +12,7 @@ namespace console_netcore31_newsocket.Client.Utils
     {
         private int _readLock = 0;
         private int _writeLock = 0;
-        public int ArrayLength = 4096;
+        public int ArrayLength = 10240;
         private readonly Queue<ManualResetValueTaskSource<T>[]> _writeQueue;
         private readonly Queue<ManualResetValueTaskSource<T>[]> _readQueue;
         private ManualResetValueTaskSource<T>[] _currentWrite;
@@ -102,11 +102,9 @@ namespace console_netcore31_newsocket.Client.Utils
             _writeLock = 0;
             if (!hasGetNewBUffer)
             {
+
                 _currentWrite = new ManualResetValueTaskSource<T>[ArrayLength];
-                for (int i = 0; i < ArrayLength; i++)
-                {
-                    _currentWrite[i] = new ManualResetValueTaskSource<T>();
-                }
+                Parallel.For(0, ArrayLength, (index) => { _currentWrite[index] = new ManualResetValueTaskSource<T>(); });
 
             }
             while (Interlocked.CompareExchange(ref _readLock, 1, 0) != 0)
@@ -152,6 +150,11 @@ namespace console_netcore31_newsocket.Client.Utils
             }
             var temp = _readQueue.Dequeue();
             _currentRead = _readQueue.Peek();
+            while (_currentRead == null)
+            {
+                _currentRead = _readQueue.Peek();
+                wait.SpinOnce();
+            }
             _readLock = 0;
             while (Interlocked.CompareExchange(ref _writeLock, 1, 0) != 0)
             {

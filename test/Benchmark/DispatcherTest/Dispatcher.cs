@@ -21,24 +21,27 @@ namespace DispatcherTest
         [Benchmark]
         public void TestLoop()
         {
-            var bytes = new int[10240];
+            var bytes = new SingleNode[10240];
             for (int i = 0; i < 10240; i+=1)
             {
-                bytes[i] = i;
+                bytes[i] = new SingleNode();
             }
         }
 
         [Benchmark]
         public void TestConcurrent()
         {
-            var bytes = new int[10240];
-            Parallel.For(0, 10240, (index) => { bytes[index] = index; });
+            var bytes = new SingleNode[10240];
+            Parallel.For(0, 10240, (index) => { bytes[index] = new SingleNode(); });
         }
     }
 
 
     public class SingleNode
     {
+        public int Num;
+        public bool Shut;
+        public object test;
         public SingleNode Next;
     }
 }
