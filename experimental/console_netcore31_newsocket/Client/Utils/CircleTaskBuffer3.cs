@@ -92,6 +92,11 @@ namespace console_netcore31_newsocket.Client.Utils
             }
             var temp = _readQueue.Dequeue();
             _currentRead = _readQueue.Peek();
+            while (_currentRead == null)
+            {
+                _currentRead = _readQueue.Peek();
+                wait.SpinOnce();
+            }
             _readLock = 0;
             while (Interlocked.CompareExchange(ref _writeLock, 1, 0) != 0)
             {

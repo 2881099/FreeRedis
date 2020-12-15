@@ -15,14 +15,14 @@ public struct ManualResetValueTaskSourceImplemention<TResult>
     /// or <see cref="ManualResetValueTaskSourceCoreShared.s_sentinel"/> if the operation completed before a callback was supplied,
     /// or null if a callback hasn't yet been provided and the operation hasn't yet completed.
     /// </summary>
-    private Action<object?>? _continuation;
+    private Action<object> _continuation;
     /// <summary>State to pass to <see cref="_continuation"/>.</summary>
-    private object? _continuationState;
+    private object _continuationState;
     /// <summary>
     /// A "captured" <see cref="SynchronizationContext"/> or <see cref="TaskScheduler"/> with which to invoke the callback,
     /// or null if no special context is required.
     /// </summary>
-    private object? _capturedContext;
+    private object _capturedContext;
     /// <summary>Whether the current operation has completed.</summary>
     private bool _completed;
     /// <summary>The result with which the operation succeeded, or the default value if it hasn't yet completed or failed.</summary>
@@ -44,7 +44,7 @@ public struct ManualResetValueTaskSourceImplemention<TResult>
         if (_completed)
         {
             _completed = false;
-            _result = default;
+            //_result = default;
             _error = null;
             _capturedContext = null;
             _continuation = null;
@@ -102,7 +102,7 @@ public struct ManualResetValueTaskSourceImplemention<TResult>
     /// <param name="state">The state object to pass to <paramref name="continuation"/> when it's invoked.</param>
     /// <param name="token">Opaque value that was provided to the <see cref="ValueTask"/>'s constructor.</param>
     /// <param name="flags">The flags describing the behavior of the continuation.</param>
-    public void OnCompleted(Action<object?> continuation, object? state, short token, ValueTaskSourceOnCompletedFlags flags)
+    public void OnCompleted(Action<object> continuation, object state, short token, ValueTaskSourceOnCompletedFlags flags)
     {
         if (continuation == null)
         {
@@ -126,7 +126,7 @@ public struct ManualResetValueTaskSourceImplemention<TResult>
         // To minimize the chances of that, we check preemptively whether _continuation
         // is already set to something other than the completion sentinel.
 
-        object? oldContinuation = _continuation;
+        object oldContinuation = _continuation;
         if (oldContinuation == null)
         {
             _continuationState = state;
@@ -146,7 +146,7 @@ public struct ManualResetValueTaskSourceImplemention<TResult>
                 ThreadPool.UnsafeQueueUserWorkItem(continuation, state, preferLocal: true);
             }
         }
-    }
+    } 
 
 
     /// <summary>Signals that the operation has completed.  Invoked after the result or error has been set.</summary>

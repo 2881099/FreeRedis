@@ -62,10 +62,11 @@ namespace console_netcore31_newsocket
             if (ReferenceEquals(_callback, _callbackCompleted) ||
                 ReferenceEquals(Interlocked.CompareExchange(ref _callback, continuation, null), _callbackCompleted))
             {
-                
+
                 //Console.WriteLine(_name + ":In OnCompleted Action! Will Task.Run Continuation!");
                 //Console.WriteLine(_name + $":In OnCompleted Action! callback is movenext? {_callback.Method.Name.Contains("Next")}");
-                Task.Run(continuation);
+                ThreadPool.UnsafeQueueUserWorkItem(state => ((Action)state)(), continuation);
+                //Task.Run(continuation);
             }
 
         }
