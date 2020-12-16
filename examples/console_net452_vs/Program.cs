@@ -29,11 +29,6 @@ namespace console_net452_vs
 
         static void Main(string[] args)
         {
-            while (true)
-            {
-                var xxx = cli.GetAsync(Guid.NewGuid().ToString()).Result;
-            }
-
             RedisHelper.Initialization(new CSRedis.CSRedisClient("127.0.0.1:6379,asyncPipeline=true,preheat=100,poolsize=100"));
             cli.Set("TestMGet_null1", "");
             RedisHelper.Set("TestMGet_null1", "");

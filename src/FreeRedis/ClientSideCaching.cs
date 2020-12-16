@@ -69,12 +69,13 @@ namespace FreeRedis
                 };
                 _cli.Connected += (_, e) =>
                 {
-                    var redirectId = GetOrAddClusterTrackingRedirectId(e.Host, e.Pool.Key);
+                    var redirectId = GetOrAddClusterTrackingRedirectId(e.Host, e.Pool);
                     e.Client.ClientTracking(true, redirectId, null, false, false, false, false);
                 };
             }
-            long GetOrAddClusterTrackingRedirectId(string host, string poolkey)
+            long GetOrAddClusterTrackingRedirectId(string host, RedisClientPool pool)
             {
+                var poolkey = pool.Key;
                 //return _sub.RedisSocket.ClientId;
                 if (_cli.Adapter.UseType != RedisClient.UseType.Cluster) return _sub.RedisSocket.ClientId;
 
@@ -88,8 +89,15 @@ namespace FreeRedis
                             Client = new RedisClient(new ConnectionStringBuilder
                             {
                                 Host = host,
-                                MinPoolSize = _clusterTrackings.Count + 2,
-                                MaxPoolSize = _clusterTrackings.Count + 2,
+                                MaxPoolSize = 1,
+                                Password = pool._policy._connectionStringBuilder.Password,
+                                ClientName = "client_tracking_redirect",
+                                ConnectTimeout = pool._policy._connectionStringBuilder.ConnectTimeout,
+                                IdleTimeout = pool._policy._connectionStringBuilder.IdleTimeout,
+                                ReceiveTimeout = pool._policy._connectionStringBuilder.ReceiveTimeout,
+                                SendTimeout = pool._policy._connectionStringBuilder.SendTimeout,
+                                Ssl = pool._policy._connectionStringBuilder.Ssl,
+                                User = pool._policy._connectionStringBuilder.User,
                             })
                         };
                         tracking.Client.Unavailable += (_, e) =>
