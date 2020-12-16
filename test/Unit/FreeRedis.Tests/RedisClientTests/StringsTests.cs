@@ -96,13 +96,13 @@ namespace FreeRedis.Tests.RedisClientTests
 
             key = "TestGet_class";
             cli.Set(key, Class);
-            Assert.Equal((cli.Get<TestClass>(key))?.ToString(), Class.ToString());
+            Assert.Equal(JsonConvert.SerializeObject(cli.Get<TestClass>(key)), JsonConvert.SerializeObject(Class));
 
             key = "TestGet_classArray";
             cli.Set(key, new[] { Class, Class });
             Assert.Equal(2, cli.Get<TestClass[]>(key)?.Length);
-            Assert.Equal((cli.Get<TestClass[]>(key))?.First().ToString(), Class.ToString());
-            Assert.Equal((cli.Get<TestClass[]>(key))?.Last().ToString(), Class.ToString());
+            Assert.Equal(JsonConvert.SerializeObject(cli.Get<TestClass[]>(key)?.First()), JsonConvert.SerializeObject(Class));
+            Assert.Equal(JsonConvert.SerializeObject(cli.Get<TestClass[]>(key)?.Last()), JsonConvert.SerializeObject(Class));
         }
 
         [Fact]
@@ -203,14 +203,14 @@ namespace FreeRedis.Tests.RedisClientTests
             Assert.Equal("", cli.Get("TestMSet_null1"));
             Assert.Equal(String, cli.Get("TestMSet_string1"));
             Assert.Equal(Bytes, cli.Get<byte[]>("TestMSet_bytes1"));
-            Assert.Equal(Class.ToString(), cli.Get<TestClass>("TestMSet_class1").ToString());
+            Assert.Equal(JsonConvert.SerializeObject(Class), JsonConvert.SerializeObject(cli.Get<TestClass>("TestMSet_class1")));
 
             cli.Del("TestMSet_null1", "TestMSet_string1", "TestMSet_bytes1", "TestMSet_class1");
             cli.MSet("TestMSet_null1", Null, "TestMSet_string1", String, "TestMSet_bytes1", Bytes, "TestMSet_class1", Class);
             Assert.Equal("", cli.Get("TestMSet_null1"));
             Assert.Equal(String, cli.Get("TestMSet_string1"));
             Assert.Equal(Bytes, cli.Get<byte[]>("TestMSet_bytes1"));
-            Assert.Equal(Class.ToString(), cli.Get<TestClass>("TestMSet_class1").ToString());
+            Assert.Equal(JsonConvert.SerializeObject(Class), JsonConvert.SerializeObject(cli.Get<TestClass>("TestMSet_class1")));
         }
 
         [Fact]
@@ -233,7 +233,7 @@ namespace FreeRedis.Tests.RedisClientTests
 
             Assert.True(cli.MSetNx(new Dictionary<string, object> { ["TestMSetNx_class"] = Class }));
             Assert.False(cli.MSetNx(new Dictionary<string, object> { ["TestMSetNx_class"] = Class }));
-            Assert.Equal(Class.ToString(), cli.Get<TestClass>("TestMSetNx_class").ToString());
+            Assert.Equal(JsonConvert.SerializeObject(Class), JsonConvert.SerializeObject(cli.Get<TestClass>("TestMSetNx_class")));
 
             cli.Set("abctest", 1);
             Assert.False(cli.MSetNx(new Dictionary<string, object> { ["abctest"] = 2, ["TestMSetNx_null1"] = Null, ["TestMSetNx_string1"] = String, ["TestMSetNx_bytes1"] = Bytes, ["TestMSetNx_class1"] = Class }));
@@ -242,14 +242,14 @@ namespace FreeRedis.Tests.RedisClientTests
             Assert.Equal("", cli.Get("TestMSetNx_null1"));
             Assert.Equal(String, cli.Get("TestMSetNx_string1"));
             Assert.Equal(Bytes, cli.Get<byte[]>("TestMSetNx_bytes1"));
-            Assert.Equal(Class.ToString(), cli.Get<TestClass>("TestMSetNx_class1").ToString());
+            Assert.Equal(JsonConvert.SerializeObject(Class), JsonConvert.SerializeObject(cli.Get<TestClass>("TestMSetNx_class1")));
 
             cli.Del("TestMSetNx_null", "TestMSetNx_string", "TestMSetNx_bytes", "TestMSetNx_class");
             cli.MSetNx("TestMSetNx_null1", Null, "TestMSetNx_string1", String, "TestMSetNx_bytes1", Bytes, "TestMSetNx_class1", Class);
             Assert.Equal("", cli.Get("TestMSetNx_null1"));
             Assert.Equal(String, cli.Get("TestMSetNx_string1"));
             Assert.Equal(Bytes, cli.Get<byte[]>("TestMSetNx_bytes1"));
-            Assert.Equal(Class.ToString(), cli.Get<TestClass>("TestMSetNx_class1").ToString());
+            Assert.Equal(JsonConvert.SerializeObject(Class), JsonConvert.SerializeObject(cli.Get<TestClass>("TestMSetNx_class1")));
         }
 
         [Fact]
@@ -265,7 +265,7 @@ namespace FreeRedis.Tests.RedisClientTests
             Assert.Equal(Bytes, cli.Get<byte[]>("TestSetNx_bytes"));
 
             cli.PSetEx("TestSetNx_class", 10000, Class);
-            Assert.Equal(Class.ToString(), cli.Get<TestClass>("TestSetNx_class").ToString());
+            Assert.Equal(JsonConvert.SerializeObject(Class), JsonConvert.SerializeObject(cli.Get<TestClass>("TestSetNx_class")));
         }
 
         [Fact]
@@ -282,7 +282,7 @@ namespace FreeRedis.Tests.RedisClientTests
             Assert.Equal(Bytes, cli.Get<byte[]>("TestSet_bytes"));
 
             cli.Set("TestSet_class", Class);
-            Assert.Equal(Class.ToString(), cli.Get<TestClass>("TestSet_class").ToString());
+            Assert.Equal(JsonConvert.SerializeObject(Class), JsonConvert.SerializeObject(cli.Get<TestClass>("TestSet_class")));
 
             cli.Del("TestSetNx_null", "TestSetNx_string", "TestSetNx_bytes", "TestSetNx_class");
             cli.Set("TestSet_null", Null, 10);
@@ -295,7 +295,7 @@ namespace FreeRedis.Tests.RedisClientTests
             Assert.Equal(Bytes, cli.Get<byte[]>("TestSet_bytes"));
 
             cli.Set("TestSet_class", Class, 10);
-            Assert.Equal(Class.ToString(), cli.Get<TestClass>("TestSet_class").ToString());
+            Assert.Equal(JsonConvert.SerializeObject(Class), JsonConvert.SerializeObject(cli.Get<TestClass>("TestSet_class")));
 
             cli.Del("TestSetNx_null", "TestSetNx_string", "TestSetNx_bytes", "TestSetNx_class");
             cli.Set("TestSet_null", Null, true);
@@ -308,7 +308,7 @@ namespace FreeRedis.Tests.RedisClientTests
             Assert.Equal(Bytes, cli.Get<byte[]>("TestSet_bytes"));
 
             cli.Set("TestSet_class", Class, true);
-            Assert.Equal(Class.ToString(), cli.Get<TestClass>("TestSet_class").ToString());
+            Assert.Equal(JsonConvert.SerializeObject(Class), JsonConvert.SerializeObject(cli.Get<TestClass>("TestSet_class")));
         }
 
         [Fact]
@@ -329,7 +329,7 @@ namespace FreeRedis.Tests.RedisClientTests
 
             Assert.True(cli.SetNx("TestSetNx_class", Class));
             Assert.False(cli.SetNx("TestSetNx_class", Class));
-            Assert.Equal(Class.ToString(), cli.Get<TestClass>("TestSetNx_class").ToString());
+            Assert.Equal(JsonConvert.SerializeObject(Class), JsonConvert.SerializeObject(cli.Get<TestClass>("TestSetNx_class")));
 
             cli.Del("TestSetNx_null", "TestSetNx_string", "TestSetNx_bytes", "TestSetNx_class");
             Assert.True(cli.SetNx("TestSetNx_null", Null, 10));
@@ -346,7 +346,7 @@ namespace FreeRedis.Tests.RedisClientTests
 
             Assert.True(cli.SetNx("TestSetNx_class", Class, 10));
             Assert.False(cli.SetNx("TestSetNx_class", Class, 10));
-            Assert.Equal(Class.ToString(), cli.Get<TestClass>("TestSetNx_class").ToString());
+            Assert.Equal(JsonConvert.SerializeObject(Class), JsonConvert.SerializeObject(cli.Get<TestClass>("TestSetNx_class")));
         }
 
         [Fact]
@@ -374,7 +374,7 @@ namespace FreeRedis.Tests.RedisClientTests
             Assert.False(cli.SetXx("TestSetXx_class", Class, 10));
             cli.Set("TestSetXx_class", 1, true);
             Assert.True(cli.SetXx("TestSetXx_class", Class, 10));
-            Assert.Equal(Class.ToString(), cli.Get<TestClass>("TestSetXx_class").ToString());
+            Assert.Equal(JsonConvert.SerializeObject(Class), JsonConvert.SerializeObject(cli.Get<TestClass>("TestSetXx_class")));
 
             cli.Del("TestSetXx_null");
             Assert.False(cli.SetXx("TestSetXx_null", Null, true));
@@ -398,7 +398,7 @@ namespace FreeRedis.Tests.RedisClientTests
             Assert.False(cli.SetXx("TestSetXx_class", Class, true));
             cli.Set("TestSetXx_class", 1, true);
             Assert.True(cli.SetXx("TestSetXx_class", Class, true));
-            Assert.Equal(Class.ToString(), cli.Get<TestClass>("TestSetXx_class").ToString());
+            Assert.Equal(JsonConvert.SerializeObject(Class), JsonConvert.SerializeObject(cli.Get<TestClass>("TestSetXx_class")));
         }
 
         [Fact]
@@ -414,17 +414,17 @@ namespace FreeRedis.Tests.RedisClientTests
         public void SetEx()
         {
             cli.Del("TestSetEx_null", "TestSetEx_string", "TestSetEx_bytes", "TestSetEx_class");
-            cli.SetEx("TestSet_null", 10, Null);
-            Assert.Equal("", cli.Get("TestSet_null"));
+            cli.SetEx("TestSetEx_null", 10, Null);
+            Assert.Equal("", cli.Get("TestSetEx_null"));
 
-            cli.SetEx("TestSet_string", 10, String);
-            Assert.Equal(String, cli.Get("TestSet_string"));
+            cli.SetEx("TestSetEx_string", 10, String);
+            Assert.Equal(String, cli.Get("TestSetEx_string"));
 
-            cli.SetEx("TestSet_bytes", 10, Bytes);
-            Assert.Equal(Bytes, cli.Get<byte[]>("TestSet_bytes"));
+            cli.SetEx("TestSetEx_bytes", 10, Bytes);
+            Assert.Equal(Bytes, cli.Get<byte[]>("TestSetEx_bytes"));
 
-            cli.SetEx("TestSet_class", 10, Class);
-            Assert.Equal(Class.ToString(), cli.Get<TestClass>("TestSet_class").ToString());
+            cli.SetEx("TestSetEx_class", 10, Class);
+            Assert.Equal(JsonConvert.SerializeObject(Class), JsonConvert.SerializeObject(cli.Get<TestClass>("TestSetEx_class")));
         }
 
         [Fact]

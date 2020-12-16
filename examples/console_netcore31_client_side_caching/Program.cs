@@ -16,9 +16,7 @@ namespace console_netcore31_client_side_caching
             //var r = new RedisClient("127.0.0.1:6379", false); //redis 3.2 Single test
             //var r = new RedisClient("127.0.0.1:6379,database=1,min pool size=500,max pool size=500"); //redis 3.2
             //var r = new RedisClient("127.0.0.1:6379,database=1", "127.0.0.1:6379,database=1");
-            var r = new RedisClient(new [] { (ConnectionStringBuilder)"192.168.164.10:6379,database=1", (ConnectionStringBuilder)"192.168.164.10:6379,database=2" }, 
-                key => 
-                    key.GetHashCode() % 2 == 0 ? "192.168.164.10:6379/1" : "192.168.164.10:6379/2"); //redis 6.0
+            var r = new RedisClient(new [] { (ConnectionStringBuilder)"192.168.164.10:6379,database=1", (ConnectionStringBuilder)"192.168.164.10:6379,database=2" },  null); //redis 6.0
             r.Serialize = obj => JsonConvert.SerializeObject(obj);
             r.Deserialize = (json, type) => JsonConvert.DeserializeObject(json, type);
             r.Notice += (s, e) => Console.WriteLine(e.Log);
@@ -62,11 +60,29 @@ namespace console_netcore31_client_side_caching
             var val11 = cli.Get("123Interceptor01"); //redis-server
             var val12 = cli.Get("123Interceptor01"); //redis-server
             var val23 = cli.Get("123Interceptor01"); //redis-server
+
+
+            cli.Set("Interceptor011", Class); //redis-server
+            var val0111 = cli.Get<TestClass>("Interceptor011"); //redis-server
+            var val0112 = cli.Get<TestClass>("Interceptor011"); //本地
+            var val0113 = cli.Get<TestClass>("Interceptor011"); //断点等3秒，redis-server
+
+
             Console.ReadKey();
 
             cli.Dispose();
         }
+
+        static readonly TestClass Class = new TestClass { Id = 1, Name = "Class名称", CreateTime = DateTime.Now, TagId = new[] { 1, 3, 3, 3, 3 } };
     }
 
+    public class TestClass
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public DateTime CreateTime { get; set; }
+
+        public int[] TagId { get; set; }
+    }
     
 }
