@@ -126,14 +126,8 @@ namespace FreeRedis
 
             public void Dispose()
             {
-                try
-                {
-                    Cancel(_cancels.Keys.ToArray());
-                }
-                finally
-                {
-                    _stoped = true;
-                }
+                _stoped = true;
+                Cancel(_cancels.Keys.ToArray());
             }
 
             internal void Cancel(params Guid[] ids)
@@ -268,8 +262,9 @@ namespace FreeRedis
                 {
                     if (IsSubscribed == false)
                         throw new RedisClientException($"Subscription not opened, unable to execute");
-                    lock (_lock)
-                        _redisSocket.Write(cmd);
+                    if (_stoped == false && _redisSocket.IsConnected)
+                        lock (_lock)
+                            _redisSocket.Write(cmd);
                     return null;
                 });
             }

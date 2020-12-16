@@ -36,6 +36,13 @@ namespace FreeRedis
             readonly RedisClient _cli;
             readonly ClientSideCachingOptions _options;
             IPubSubSubscriber _sub;
+            Dictionary<string, ClusterTrackingInfo> _clusterTrackings = new Dictionary<string, ClusterTrackingInfo>();
+            object _clusterTrackingsLock = new object();
+            class ClusterTrackingInfo
+            {
+                public RedisClient Client;
+                public IPubSubSubscriber PubSub;
+            }
 
             public ClientSideCachingContext(RedisClient cli, ClientSideCachingOptions options)
             {
@@ -51,11 +58,58 @@ namespace FreeRedis
                 {
                     lock (_dictLock) _dictSort.Clear();
                     _dict.Clear();
+                    lock (_clusterTrackingsLock)
+                    {
+                        if (_clusterTrackings.TryGetValue(e.Pool.Key, out var localTracking))
+                        {
+                            _clusterTrackings.Remove(e.Pool.Key);
+                            localTracking.Client.Dispose();
+                        }
+                    }
                 };
                 _cli.Connected += (_, e) =>
                 {
-                    e.Client.ClientTracking(true, _sub.RedisSocket.ClientId, null, false, false, false, false);
+                    var redirectId = GetOrAddClusterTrackingRedirectId(e.Host, e.Pool.Key);
+                    e.Client.ClientTracking(true, redirectId, null, false, false, false, false);
                 };
+            }
+            long GetOrAddClusterTrackingRedirectId(string host, string poolkey)
+            {
+                //return _sub.RedisSocket.ClientId;
+                if (_cli.Adapter.UseType != RedisClient.UseType.Cluster) return _sub.RedisSocket.ClientId;
+
+                ClusterTrackingInfo tracking = null;
+                lock (_clusterTrackingsLock)
+                {
+                    if (_clusterTrackings.TryGetValue(poolkey, out tracking) == false)
+                    {
+                        tracking = new ClusterTrackingInfo
+                        {
+                            Client = new RedisClient(new ConnectionStringBuilder
+                            {
+                                Host = host,
+                                MinPoolSize = _clusterTrackings.Count + 2,
+                                MaxPoolSize = _clusterTrackings.Count + 2,
+                            })
+                        };
+                        tracking.Client.Unavailable += (_, e) =>
+                        {
+                            lock (_dictLock) _dictSort.Clear();
+                            _dict.Clear();
+                            lock (_clusterTrackingsLock)
+                            {
+                                if (_clusterTrackings.TryGetValue(e.Pool.Key, out var localTracking))
+                                {
+                                    _clusterTrackings.Remove(e.Pool.Key);
+                                    localTracking.Client.Dispose();
+                                }
+                            }
+                        };
+                        tracking.PubSub = tracking.Client.Subscribe("__redis__:invalidate", InValidate) as IPubSubSubscriber;
+                        _clusterTrackings.Add(poolkey, tracking);
+                    }
+                }
+                return tracking.PubSub.RedisSocket.ClientId;
             }
 
             void InValidate(string chan, object msg)

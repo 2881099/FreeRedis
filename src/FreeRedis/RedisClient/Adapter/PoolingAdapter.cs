@@ -40,13 +40,21 @@ namespace FreeRedis
 #endif
             }
 
+            bool isdisposed = false;
             public override void Dispose()
             {
+                foreach (var key in _ib.GetKeys())
+                {
+                    var pool = _ib.Get(key);
+                    TopOwner.Unavailable?.Invoke(TopOwner, new UnavailableEventArgs(pool.Key, pool));
+                }
+                isdisposed = true;
                 _ib.Dispose();
             }
 
             public override void Refersh(IRedisSocket redisSocket)
             {
+                if (isdisposed) return;
                 var tmprds = redisSocket as DefaultRedisSocket.TempProxyRedisSocket;
                 if (tmprds != null) _ib.Get(tmprds._poolkey);
             }

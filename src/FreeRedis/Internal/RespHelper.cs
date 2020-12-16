@@ -230,7 +230,8 @@ namespace FreeRedis
                         case '.': ReadLine(null); return new RedisResult(null, true, RedisMessageType.SimpleString); //无类型
                         case ' ': continue;
                         default:
-                            //if (cb == -1) return new RedisResult(null, true, RedisMessageType.Null);
+                            if (b == -1) return new RedisResult(null, true, RedisMessageType.Null);
+                            //if (b == -1) return new RedisResult(null, true, RedisMessageType.Null);
                             var allBytes = ReadAll();
                             throw new ProtocolViolationException($"Expecting fail MessageType '{b},{string.Join(",", allBytes)}'");
                     }

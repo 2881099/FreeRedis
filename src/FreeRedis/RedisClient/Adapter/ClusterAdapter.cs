@@ -29,13 +29,21 @@ namespace FreeRedis
                 RefershClusterNodes();
             }
 
+            bool isdisposed = false;
             public override void Dispose()
             {
+                foreach(var key in _ib.GetKeys())
+                {
+                    var pool = _ib.Get(key);
+                    TopOwner.Unavailable?.Invoke(TopOwner, new UnavailableEventArgs(pool.Key, pool));
+                }
+                isdisposed = true;
                 _ib.Dispose();
             }
 
             public override void Refersh(IRedisSocket redisSocket)
             {
+                if (isdisposed) return;
                 var tmprds = redisSocket as DefaultRedisSocket.TempProxyRedisSocket;
                 if (tmprds != null) _ib.Get(tmprds._poolkey);
             }
@@ -78,7 +86,11 @@ namespace FreeRedis
                             cmd._keyIndexes.ForEach(idx => AdapterCall(cmd._command.InputKey(cmd._input[idx].ToInvariantCultureToString()).InputRaw(cmd._input[idx + 1]), parse));
                             return default;
                         case "MGET":
-                            return cmd._keyIndexes.Select((_, idx) => AdapterCall(cmd._command.InputKey(cmd.GetKey(idx)), parse).ConvertTo<object[]>().First()).ToArray().ConvertTo<TValue>();
+                            return cmd._keyIndexes.Select((_, idx) =>
+                            {
+                                var rt = AdapterCall(cmd._command.InputKey(cmd.GetKey(idx)), parse);
+                                return rt.ConvertTo<object[]>().FirstOrDefault();
+                            }).ToArray().ConvertTo<TValue>();
                         case "PFCOUNT":
                             return cmd._keyIndexes.Select((_, idx) => AdapterCall(cmd._command.InputKey(cmd.GetKey(idx)), parse)).Sum(a => a.ConvertTo<long>()).ConvertTo<TValue>();
                     }

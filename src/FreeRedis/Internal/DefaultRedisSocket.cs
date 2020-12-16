@@ -175,23 +175,27 @@ namespace FreeRedis.Internal
             }
         }
 
+        object _connectLock = new object();
         public void Connect()
         {
-            ResetHost(Host);
+            lock (_connectLock)
+            {
+                ResetHost(Host);
 
-            IPEndPoint endpoint = IPAddress.TryParse(_ip, out var tryip) ?
-                new IPEndPoint(tryip, _port) :
-                new IPEndPoint(Dns.GetHostAddresses(_ip).FirstOrDefault() ?? IPAddress.Parse(_ip), _port);
-            var localSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                IPEndPoint endpoint = IPAddress.TryParse(_ip, out var tryip) ?
+                    new IPEndPoint(tryip, _port) :
+                    new IPEndPoint(Dns.GetHostAddresses(_ip).FirstOrDefault() ?? IPAddress.Parse(_ip), _port);
+                var localSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
-            var asyncResult = localSocket.BeginConnect(endpoint, null, null);
-            if (!asyncResult.AsyncWaitHandle.WaitOne(ConnectTimeout, true))
-                throw new TimeoutException("Connect to redis-server timeout");
-            _socket = localSocket;
-            _stream = new NetworkStream(Socket, true);
-            _socket.ReceiveTimeout = (int)ReceiveTimeout.TotalMilliseconds;
-            _socket.SendTimeout = (int)SendTimeout.TotalMilliseconds;
-            Connected?.Invoke(this, new EventArgs());
+                var asyncResult = localSocket.BeginConnect(endpoint, null, null);
+                if (!asyncResult.AsyncWaitHandle.WaitOne(ConnectTimeout, true))
+                    throw new TimeoutException("Connect to redis-server timeout");
+                _socket = localSocket;
+                _stream = new NetworkStream(Socket, true);
+                _socket.ReceiveTimeout = (int)ReceiveTimeout.TotalMilliseconds;
+                _socket.SendTimeout = (int)SendTimeout.TotalMilliseconds;
+                Connected?.Invoke(this, new EventArgs());
+            }
         }
 
         public void ResetHost(string host)
@@ -205,20 +209,23 @@ namespace FreeRedis.Internal
 
         public void ReleaseSocket()
         {
-            if (_socket != null)
+            lock (_connectLock)
             {
-                try { _socket.Shutdown(SocketShutdown.Both); } catch { }
-                try { _socket.Close(); } catch { }
-                try { _socket.Dispose(); } catch { }
-                _socket = null;
+                if (_socket != null)
+                {
+                    try { _socket.Shutdown(SocketShutdown.Both); } catch { }
+                    try { _socket.Close(); } catch { }
+                    try { _socket.Dispose(); } catch { }
+                    _socket = null;
+                }
+                if (_stream != null)
+                {
+                    try { _stream.Close(); } catch { }
+                    try { _stream.Dispose(); } catch { }
+                    _stream = null;
+                }
+                _reader = null;
             }
-            if (_stream != null)
-            {
-                try { _stream.Close(); } catch { }
-                try { _stream.Dispose(); } catch { }
-                _stream = null;
-            }
-            _reader = null;
         }
 
         public void Dispose()
