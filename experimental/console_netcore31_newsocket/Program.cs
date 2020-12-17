@@ -68,11 +68,18 @@ namespace console_netcore31_newsocket
         private static ClientPool2<NewRedisClient7> _pool27;
         private static ClientPool2<NewRedisClient4> _pool24;
         private static ClientPool2<NewRedisClient5> _pool25;
-
+        public class A<T> { }
         private static Action<string> _beforeSw;
         public static ConnectionMultiplexer seredis;
         static void Main(string[] args)
         {
+            //HashSet<int> code = new HashSet<int>();
+            //for (int i = 0; i < 60000; i++)
+            //{
+            //    code.Add((new A<bool>()).GetHashCode());
+            //}
+            //Console.WriteLine(code.Count);
+            //Console.ReadKey();
             //Console.WriteLine("按键开始！");
             //Console.ReadKey();
             Configuration();
@@ -118,7 +125,7 @@ namespace console_netcore31_newsocket
             _options = new ParallelOptions();
             _options.MaxDegreeOfParallelism = 4;
             _useDelay = true;
-            _delayCount = 4000;
+            _delayCount = 8000;
             //Notice : Please use "//" comment "/*".
 
             ///*
@@ -161,7 +168,7 @@ namespace console_netcore31_newsocket
 
             _redisClient22 = new NewRedisClient22();
             _redisClient22.CreateConnection(ip, port);
-            //_redisClient22.AuthAsync(pwd);
+            _redisClient22.AuthAsync(pwd);
 
             //var result = await _redisClient22.SetAsync("1","1");
             //Console.WriteLine(result);

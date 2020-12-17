@@ -12,7 +12,7 @@ namespace console_netcore31_newsocket.Client.Utils
     {
         private int _readLock = 0;
         private int _writeLock = 0;
-        public int ArrayLength = 10240;
+        public int ArrayLength = 8192;
         private readonly Queue<TaskCompletionSource<T>[]> _writeQueue;
         private readonly Queue<TaskCompletionSource<T>[]> _readQueue;
         private TaskCompletionSource<T>[] _currentWrite;
