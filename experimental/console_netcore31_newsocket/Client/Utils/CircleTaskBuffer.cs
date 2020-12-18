@@ -85,8 +85,8 @@ namespace console_netcore31_newsocket.Client.Utils
             else
             {
                 _writePtr = _writePtr.Next;
-                _currentWrite = _writePtr.Buffer;
                 _lock = 0;
+                _currentWrite = _writePtr.Buffer;
             }
             _write_offset = 0;
 
