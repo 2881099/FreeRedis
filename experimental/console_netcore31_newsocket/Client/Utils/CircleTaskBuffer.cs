@@ -33,7 +33,7 @@ namespace console_netcore31_newsocket.Client.Utils
     public class CircleTaskBuffer<T>
     {
         
-        public int ArrayLength = 10240;
+        public int ArrayLength = 8192;
         private SingleLinks5<T> _writePtr;
         private SingleLinks5<T> _readPtr;
         private ManualResetValueTaskSource<T>[] _currentWrite;
