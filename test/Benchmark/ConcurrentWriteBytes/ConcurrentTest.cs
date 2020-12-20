@@ -11,18 +11,14 @@ namespace ConcurrentWriteBytes
     [MinColumn, MaxColumn, MeanColumn, MedianColumn]
     public class ConcurrentTest
     {
-        public readonly NewConcurrentQueue<int> _newQueue;
-        public readonly SourceConcurrentQueue<int> _sourceQueue;
-        public readonly SourceConcurrentQueue2<int> _sourceQueue2;
+        public readonly CircleTaskBuffer<int> _newQueue;
         public readonly ConcurrentQueue<int> _queue;
-        public const int Count = 100;
+        public const int Count = 1000;
 
         public ConcurrentTest()
         {
-            _newQueue = new NewConcurrentQueue<int>(default);
+            _newQueue = new CircleTaskBuffer<int>();
             _queue = new ConcurrentQueue<int>();
-            _sourceQueue = new SourceConcurrentQueue<int>();
-            _sourceQueue2 = new SourceConcurrentQueue2<int>();
         }
 
         //[Benchmark]
@@ -37,24 +33,14 @@ namespace ConcurrentWriteBytes
         //}
 
         [Benchmark]
-        public void SourceConcurrentQueue()
+        public void CircleTaskBuffer()
         {
             Parallel.For(0, Count, (i) => {
-                _sourceQueue.Enqueue(i);
+               
+                _newQueue.WriteNext();
             });
             Parallel.For(0, Count, (i) => {
-                _sourceQueue.TryDequeue(out var _);
-            });
-        }
-
-        [Benchmark]
-        public void SourceConcurrentQueue2()
-        {
-            Parallel.For(0, Count, (i) => {
-                _sourceQueue2.Enqueue(i);
-            });
-            Parallel.For(0, Count, (i) => {
-                _sourceQueue2.TryDequeue(out var _);
+                _newQueue.ReadNext(i);
             });
         }
 

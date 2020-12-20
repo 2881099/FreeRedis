@@ -28,7 +28,7 @@ namespace console_netcore31_newsocket
         private static int port;
         private static string ip;
         private static string pwd;
-        private const int frequence = 300000;
+        private const int frequence = 200000;
 
         private static RedisClient _freeRedisClient;
         private static BeetleX.Redis.RedisDB _beetleClient;
@@ -95,10 +95,10 @@ namespace console_netcore31_newsocket
             //for (int i = 0; i < 10; i++)
             //{
             Run21();
-            Run22();
-            Run23();
             Run21();
             Run22();
+            Run22();
+            Run23();
             Run23();
             Run21();
             //Run161();
