@@ -118,8 +118,8 @@ namespace console_netcore31_newsocket.Client.Utils
             _readPtr = _readPtr.Next;
             _readPtr.InReading = true;
             _lock = 0;
-            _read_offset = 0;
             _currentRead = _readPtr.Buffer;
+            _read_offset = 0;
 
         }
     }

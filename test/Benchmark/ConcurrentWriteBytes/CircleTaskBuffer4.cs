@@ -27,7 +27,7 @@ public class CircleTaskBuffer<T> where T : new()
 {
 
     public int ArrayLength = 8192;
-    public int TopLength = 8191;
+    public int TopLength = 8190;
     private SingleLinks5<T> _writePtr;
     private SingleLinks5<T> _readPtr;
     private T[] _currentWrite;
@@ -49,13 +49,14 @@ public class CircleTaskBuffer<T> where T : new()
     private int _read_offset;
     public T WriteNext()
     {
-        int newhigh = _write_offset;
-        SpinWait wait = default;
-        while (Interlocked.CompareExchange(ref _write_offset, newhigh + 1, newhigh) != newhigh)
-        {
-            wait.SpinOnce();
-            newhigh = _write_offset;
-        }
+
+        int newhigh = Interlocked.Increment(ref _write_offset);
+        
+        //while (Interlocked.CompareExchange(ref _write_offset, newhigh + 1, newhigh) != newhigh)
+        //{
+        //    wait.SpinOnce();
+        //    newhigh = _write_offset;
+        //}
 
         
         if (newhigh < TopLength)
@@ -70,6 +71,7 @@ public class CircleTaskBuffer<T> where T : new()
 
         }else 
         {
+            SpinWait wait = default;
             wait.SpinOnce();
             while (_write_offset > ArrayLength)
             {
@@ -102,21 +104,22 @@ public class CircleTaskBuffer<T> where T : new()
             _currentWrite = _writePtr.Buffer;
             //_lock = 0;
         }
-        _write_offset = 0;
+        Interlocked.Exchange(ref _write_offset, 0);
+        //_write_offset = 0;
 
     }
 
 
     public void ReadNext(T value)
     {
-        int newhigh = _read_offset;
-        SpinWait wait = default;
-        while (Interlocked.CompareExchange(ref _read_offset, newhigh + 1, newhigh) != newhigh)
-        {
+        int newhigh = Interlocked.Increment(ref _read_offset);
+        //SpinWait wait = default;
+        //while (Interlocked.CompareExchange(ref _read_offset, newhigh + 1, newhigh) != newhigh)
+        //{
 
-            wait.SpinOnce();
-            newhigh = _read_offset;
-        }
+        //    wait.SpinOnce();
+        //    newhigh = _read_offset;
+        //}
 
         if (newhigh < TopLength)
         {
@@ -129,6 +132,7 @@ public class CircleTaskBuffer<T> where T : new()
         }
         else
         {
+            SpinWait wait = default;
             wait.SpinOnce();
             while (_read_offset > ArrayLength)
             {
@@ -151,8 +155,9 @@ public class CircleTaskBuffer<T> where T : new()
         _readPtr = _readPtr.Next;
         _readPtr.InReading = true;
         //_lock = 0;
-        _read_offset = 0;
+        //_read_offset = 0;
         _currentRead = _readPtr.Buffer;
+        Interlocked.Exchange(ref _read_offset, 0);
 
     }
 }

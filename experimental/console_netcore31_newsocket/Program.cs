@@ -52,6 +52,7 @@ namespace console_netcore31_newsocket
         private static NewRedisClient22 _redisClient22;
         private static NewRedisClient23 _redisClient23;
         private static NewRedisClient24 _redisClient24;
+        private static NewRedisClient25 _redisClient25;
         private static ClientPool3 _pool10;
         private static ClientPool4 _pool13;
         private static ClientPool5 _pool14;
@@ -90,17 +91,16 @@ namespace console_netcore31_newsocket
             //}
             ///RunTest();
             //Console.WriteLine("====== 以上预热 =======");
-            RunSE();
-            RunSE();
+            //RunSE();
+            //RunSE();
             //for (int i = 0; i < 10; i++)
             //{
             Run21();
             Run21();
-            Run22();
-            Run22();
-            Run23();
-            Run23();
-            Run21();
+            Run25();
+            Run25();
+            Run25();
+            Run25();
             //Run161();
             //}
 
@@ -183,6 +183,11 @@ namespace console_netcore31_newsocket
             _redisClient24.CreateConnection(ip, port);
             _redisClient24.AuthAsync(pwd);
 
+            _redisClient25 = new NewRedisClient25();
+            _redisClient25.CreateConnection(ip, port);
+            _redisClient25.AuthAsync(pwd);
+
+
             _redisClient4 = new NewRedisClient4();
             _redisClient4.CreateConnection(ip, port);
             _redisClient4.AuthAsync(pwd);
@@ -217,6 +222,20 @@ namespace console_netcore31_newsocket
             //NewSocketRedis162SetTest();
 
 
+        }
+
+        private static void RunSE()
+        {
+            RunTasks((key) => _stackExnchangeClient.StringSetAsync(key, key), "SE");
+        }
+
+        private static void Run25()
+        {
+            RunValueTasks((key) => _redisClient25.SetAsync(key, key), "client25");
+        }
+        private static void Run21()
+        {
+            RunValueTasks((key) => _redisClient21.SetAsync(key, key), "client21");
         }
 
         #region CheckPool
@@ -372,189 +391,10 @@ namespace console_netcore31_newsocket
 
         //#region RedisTest
 
-        private static void RunSE()
+        
+     
+        private static void RunValueTasks(Func<string,ValueTask<bool>> task,string title)
         {
-            if (_useDelay)
-            {
-                Thread.Sleep(_delayCount);
-            }
-            int count = 0;
-            Console.WriteLine("=========================");
-            var result = _redisClient4.FlushDBAsync().Result;
-            Console.WriteLine($"Clear DB 0 - [{(result?"SUCCEED":"FAILED")}]!");
-           
-            var tasks = new Task[frequence];
-            Stopwatch sw = new Stopwatch();
-            //_beforeSw?.Invoke(title);
-            Console.WriteLine("Start Run:");
-            //Thread.Sleep(0);
-            //Thread.Sleep(1000);
-            sw.Start();
-            Parallel.For(0, frequence, _options, (index) =>
-            {
-                var key = index.ToString();
-                tasks[index] = _stackExnchangeClient.StringSetAsync(key, key);
-            });
-            int offset = 0;
-            SpinWait wait = default;
-            while (offset != frequence - 1)
-            {
-                for (int i = offset; i < frequence; i++)
-                {
-
-                    if (tasks[i].IsCompleted)
-                    {
-                        offset = i;
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-                wait.SpinOnce();
-            }
-            sw.Stop();
-            //var checkTasks = new Task[frequence];
-            //for (var a = 0; a < frequence; a += 1)
-            //{
-            //    var key = a.ToString();
-            //    checkTasks[a] = Task.Run(() =>
-            //    {
-            //        var result = _stackExnchangeClient.StringGet(key);
-            //        if (result != key)
-            //        {
-            //            Interlocked.Increment(ref count);
-            //        }
-            //    });
-            //}
-            //Task.WaitAll(checkTasks);
-            //Console.WriteLine($"{title} (0-{frequence / 10000}W) : {sw.ElapsedTicks} SPAN! ");
-            Console.WriteLine($"SE (0-{frequence / 10000}W) : {sw.ElapsedMilliseconds}ms! ");
-            //Console.WriteLine($"Errors : {count} !");
-            //if (count>0)
-            //{
-            //    Thread.Sleep(1000);
-            //    for (var a = 0; a < frequence; a += 1)
-            //    {
-            //        var key = a.ToString();
-            //        tasks[a] = Task.Run(() =>
-            //        {
-            //            var result = _stackExnchangeClient.StringGet(key);
-            //            if (result != key)
-            //            {
-            //                Interlocked.Increment(ref count);
-            //            }
-            //        });
-            //    }
-            //    Task.WaitAll(tasks);
-            //    Console.WriteLine($"Rechecking Errors : {count} !");
-            //}
-            Console.WriteLine("=========================\r\n");
-        }
-        private static void Run21()
-        {
-
-            if (_useDelay)
-            {
-                Thread.Sleep(_delayCount);
-            }
-            int count = 0;
-            Console.WriteLine("=========================");
-            var result = _redisClient4.FlushDBAsync().Result;
-            Console.WriteLine($"Clear DB 0 - [{(result ? "SUCCEED" : "FAILED")}]!");
-           
-            var tasks = new ValueTask<bool>[frequence];
-            Stopwatch sw = new Stopwatch();
-            //_beforeSw?.Invoke(title);
-            Console.WriteLine("Start Run:");
-            //Thread.Sleep(0);
-            //Thread.Sleep(1000);
-            sw.Start();
-            Parallel.For(0, frequence, _options, (index) =>
-            {
-                var key = index.ToString();
-                tasks[index] = _redisClient21.SetAsync(key, key);
-            });
-
-
-            //Task.WaitAll(tasks);
-            int offset = 0;
-            //int ba = 0;
-            SpinWait wait = default;
-            while (offset != frequence - 1)
-            {
-                //ba = 0;
-                //offset = 0;
-                //Thread.Sleep(30000);
-                for (int i = offset; i < frequence; i++)
-                {
-                    if (tasks[i].IsCompleted)
-                    {
-                        offset = i;
-                        //if (tasks[i].Result)
-                        //{
-                        //    offset = i;
-                        //}
-                        //else
-                        //{
-                        //    Console.WriteLine("失败！");
-                        //}
-                        
-                    }
-                    //else
-                    //{
-
-                    //    ba++;
-                        
-                    //}
-                }
-                //Console.WriteLine("未完成！"+ba);
-                wait.SpinOnce();
-            }
-            sw.Stop();
-            Console.WriteLine($"21 (0-{frequence / 10000}W) : {sw.ElapsedMilliseconds}ms! ");
-            //Thread.Sleep(3000);
-            //var checkTasks = new Task[frequence];
-            //for (var a = 0; a < frequence; a += 1)
-            //{
-            //    var key = a.ToString();
-            //    checkTasks[a] = Task.Run(() =>
-            //    {
-            //        var result = _stackExnchangeClient.StringGet(key);
-            //        if (result != key)
-            //        {
-            //            Console.WriteLine(key);
-            //            Console.WriteLine(result);
-            //            Interlocked.Increment(ref count);
-            //        }
-            //    });
-            //}
-            //Task.WaitAll(checkTasks);
-            //Console.WriteLine($"Errors : {count} !");
-            //if (count>0)
-            //{
-            //    Thread.Sleep(1000);
-            //    for (var a = 0; a < frequence; a += 1)
-            //    {
-            //        var key = a.ToString();
-            //        tasks[a] = Task.Run(() =>
-            //        {
-            //            var result = _stackExnchangeClient.StringGet(key);
-            //            if (result != key)
-            //            {
-            //                Interlocked.Increment(ref count);
-            //            }
-            //        });
-            //    }
-            //    Task.WaitAll(tasks);
-            //    Console.WriteLine($"Rechecking Errors : {count} !");
-            //}
-            Console.WriteLine("=========================\r\n");
-        }
-
-        private static void Run22()
-        {
-
             if (_useDelay)
             {
                 Thread.Sleep(_delayCount);
@@ -566,96 +406,34 @@ namespace console_netcore31_newsocket
 
             var tasks = new ValueTask<bool>[frequence];
             Stopwatch sw = new Stopwatch();
-            //_beforeSw?.Invoke(title);
             Console.WriteLine("Start Run:");
-            //Thread.Sleep(0);
-            //Thread.Sleep(1000);
             sw.Start();
             Parallel.For(0, frequence, _options, (index) =>
             {
-                var key = index.ToString();
-                tasks[index] = _redisClient22.SetAsync(key, key);
+                tasks[index] = task(index.ToString());
             });
-
-
-            //Task.WaitAll(tasks);
             int offset = 0;
-            //int ba = 0;
             SpinWait wait = default;
             while (offset != frequence - 1)
             {
-                //ba = 0;
-                //offset = 0;
-                //Thread.Sleep(30000);
+
                 for (int i = offset; i < frequence; i++)
                 {
                     if (tasks[i].IsCompleted)
                     {
                         offset = i;
-                        //if (tasks[i].Result)
-                        //{
-                        //    offset = i;
-                        //}
-                        //else
-                        //{
-                        //    Console.WriteLine("失败！");
-                        //}
-
                     }
-                    //else
-                    //{
 
-                    //    ba++;
-
-                    //}
                 }
-                //Console.WriteLine("未完成！"+ba);
                 wait.SpinOnce();
             }
             sw.Stop();
-            Console.WriteLine($"22 (0-{frequence / 10000}W) : {sw.ElapsedMilliseconds}ms! ");
-            //Thread.Sleep(3000);
-            //var checkTasks = new Task[frequence];
-            //for (var a = 0; a < frequence; a += 1)
-            //{
-            //    var key = a.ToString();
-            //    checkTasks[a] = Task.Run(() =>
-            //    {
-            //        var result = _stackExnchangeClient.StringGet(key);
-            //        if (result != key)
-            //        {
-            //            Console.WriteLine(key);
-            //            Console.WriteLine(result);
-            //            Interlocked.Increment(ref count);
-            //        }
-            //    });
-            //}
-            //Task.WaitAll(checkTasks);
-            //Console.WriteLine($"Errors : {count} !");
-            //if (count>0)
-            //{
-            //    Thread.Sleep(1000);
-            //    for (var a = 0; a < frequence; a += 1)
-            //    {
-            //        var key = a.ToString();
-            //        tasks[a] = Task.Run(() =>
-            //        {
-            //            var result = _stackExnchangeClient.StringGet(key);
-            //            if (result != key)
-            //            {
-            //                Interlocked.Increment(ref count);
-            //            }
-            //        });
-            //    }
-            //    Task.WaitAll(tasks);
-            //    Console.WriteLine($"Rechecking Errors : {count} !");
-            //}
+            Console.WriteLine($"{title} (0-{frequence / 10000}W) : {sw.ElapsedMilliseconds}ms! ");
             Console.WriteLine("=========================\r\n");
         }
 
-        private static void Run23()
+        private static void RunTasks(Func<string, Task<bool>> task, string title)
         {
-
             if (_useDelay)
             {
                 Thread.Sleep(_delayCount);
@@ -667,92 +445,33 @@ namespace console_netcore31_newsocket
 
             var tasks = new Task<bool>[frequence];
             Stopwatch sw = new Stopwatch();
-            //_beforeSw?.Invoke(title);
             Console.WriteLine("Start Run:");
-            //Thread.Sleep(0);
-            //Thread.Sleep(1000);
             sw.Start();
             Parallel.For(0, frequence, _options, (index) =>
             {
-                var key = index.ToString();
-                tasks[index] = _redisClient23.SetAsync(key, key);
+                tasks[index] = task(index.ToString());
             });
-
-
-            //Task.WaitAll(tasks);
             int offset = 0;
-            //int ba = 0;
             SpinWait wait = default;
             while (offset != frequence - 1)
             {
-                //ba = 0;
-                //offset = 0;
-                //Thread.Sleep(30000);
+
                 for (int i = offset; i < frequence; i++)
                 {
                     if (tasks[i].IsCompleted)
                     {
                         offset = i;
-                        //if (tasks[i].Result)
-                        //{
-                        //    offset = i;
-                        //}
-                        //else
-                        //{
-                        //    Console.WriteLine("失败！");
-                        //}
-
                     }
-                    //else
-                    //{
 
-                    //    ba++;
-
-                    //}
                 }
-                //Console.WriteLine("未完成！"+ba);
                 wait.SpinOnce();
             }
             sw.Stop();
-            Console.WriteLine($"23 (0-{frequence / 10000}W) : {sw.ElapsedMilliseconds}ms! ");
-            //Thread.Sleep(3000);
-            //var checkTasks = new Task[frequence];
-            //for (var a = 0; a < frequence; a += 1)
-            //{
-            //    var key = a.ToString();
-            //    checkTasks[a] = Task.Run(() =>
-            //    {
-            //        var result = _stackExnchangeClient.StringGet(key);
-            //        if (result != key)
-            //        {
-            //            Console.WriteLine(key);
-            //            Console.WriteLine(result);
-            //            Interlocked.Increment(ref count);
-            //        }
-            //    });
-            //}
-            //Task.WaitAll(checkTasks);
-            //Console.WriteLine($"Errors : {count} !");
-            //if (count>0)
-            //{
-            //    Thread.Sleep(1000);
-            //    for (var a = 0; a < frequence; a += 1)
-            //    {
-            //        var key = a.ToString();
-            //        tasks[a] = Task.Run(() =>
-            //        {
-            //            var result = _stackExnchangeClient.StringGet(key);
-            //            if (result != key)
-            //            {
-            //                Interlocked.Increment(ref count);
-            //            }
-            //        });
-            //    }
-            //    Task.WaitAll(tasks);
-            //    Console.WriteLine($"Rechecking Errors : {count} !");
-            //}
+            Console.WriteLine($"{title} (0-{frequence / 10000}W) : {sw.ElapsedMilliseconds}ms! ");
             Console.WriteLine("=========================\r\n");
         }
+
+        
         private static void Run161()
         {
             
