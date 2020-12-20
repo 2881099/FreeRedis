@@ -27,6 +27,7 @@ public class CircleTaskBuffer<T> where T : new()
 {
 
     public int ArrayLength = 8192;
+    public int TopLength = 8191;
     private SingleLinks5<T> _writePtr;
     private SingleLinks5<T> _readPtr;
     private T[] _currentWrite;
@@ -48,21 +49,35 @@ public class CircleTaskBuffer<T> where T : new()
     private int _read_offset;
     public T WriteNext()
     {
+        int newhigh = _write_offset;
         SpinWait wait = default;
-        while (Interlocked.CompareExchange(ref _lock, 1, 0) != 0)
+        while (Interlocked.CompareExchange(ref _write_offset, newhigh + 1, newhigh) != newhigh)
         {
             wait.SpinOnce();
+            newhigh = _write_offset;
         }
-        var result = _currentWrite[_write_offset];
-        _write_offset += 1;
-        if (_write_offset == ArrayLength)
-        {
-            AddBuffer();
-        }
-        _lock = 0;
-        //Volatile.Write(ref _lock, 0);
-        return result;
 
+        
+        if (newhigh < TopLength)
+        {
+            return _currentWrite[newhigh];
+
+        }else if (newhigh == TopLength)
+        {
+
+            AddBuffer();
+            return _currentWrite[newhigh];
+
+        }else 
+        {
+            wait.SpinOnce();
+            while (_write_offset > ArrayLength)
+            {
+                wait.SpinOnce();
+            }
+            return WriteNext();
+        }
+        
     }
 
     private int _lock;
@@ -94,19 +109,34 @@ public class CircleTaskBuffer<T> where T : new()
 
     public void ReadNext(T value)
     {
+        int newhigh = _read_offset;
         SpinWait wait = default;
-        while (Interlocked.CompareExchange(ref _lock, 1, 0) != 0)
+        while (Interlocked.CompareExchange(ref _read_offset, newhigh + 1, newhigh) != newhigh)
         {
+
             wait.SpinOnce();
+            newhigh = _read_offset;
         }
-        var result = _currentRead[_read_offset];
-        _read_offset += 1;
-        if (_read_offset == ArrayLength)
+
+        if (newhigh < TopLength)
+        {
+            _currentRead[newhigh] = value;
+        }
+        else if (newhigh == TopLength)
         {
             CollectBuffer();
+            _currentRead[newhigh] = value;
         }
-        _lock = 0;
-        //Volatile.Write(ref _lock, 0);
+        else
+        {
+            wait.SpinOnce();
+            while (_read_offset > ArrayLength)
+            {
+                wait.SpinOnce();
+            }
+            ReadNext(value);
+        }
+
     }
 
     private void CollectBuffer()

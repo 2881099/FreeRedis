@@ -3,6 +3,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ConcurrentWriteBytes
@@ -13,12 +14,14 @@ namespace ConcurrentWriteBytes
     {
         public readonly CircleTaskBuffer<int> _newQueue;
         public readonly ConcurrentQueue<int> _queue;
+        public readonly SourceConcurrentQueue<int> _sourceQueue;
         public const int Count = 1000;
 
         public ConcurrentTest()
         {
             _newQueue = new CircleTaskBuffer<int>();
             _queue = new ConcurrentQueue<int>();
+            _sourceQueue = new SourceConcurrentQueue<int>();
         }
 
         //[Benchmark]
@@ -44,6 +47,33 @@ namespace ConcurrentWriteBytes
             });
         }
 
+        private int _lock;
+        //[Benchmark]
+        //public void EmptyLock()
+        //{
+        //    Parallel.For(0, Count, (i) => {
+
+        //        SpinWait wait = default;
+        //        while (Interlocked.CompareExchange(ref _lock, 1, 0) != 0)
+        //        {
+        //            wait.SpinOnce();
+        //        }
+        //        int a = 0;
+        //        _lock = 0;
+        //    });
+        //    Parallel.For(0, Count, (i) => {
+
+        //        SpinWait wait = default;
+        //        while (Interlocked.CompareExchange(ref _lock, 1, 0) != 0)
+        //        {
+        //            wait.SpinOnce();
+        //        }
+        //        int a = 0;
+        //        _lock = 0;
+        //    });
+
+        //}
+
         [Benchmark]
         public void ConcurrentQueue()
         {
@@ -54,6 +84,17 @@ namespace ConcurrentWriteBytes
                 _queue.TryDequeue(out var _);
             });
         }
+
+        //[Benchmark]
+        //public void ConcurrentQueue2()
+        //{
+        //    Parallel.For(0, Count, (i) => {
+        //        _sourceQueue.Enqueue(i);
+        //    });
+        //    Parallel.For(0, Count, (i) => {
+        //        _sourceQueue.TryDequeue(out var _);
+        //    });
+        //}
 
     }
 
