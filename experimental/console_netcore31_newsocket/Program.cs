@@ -28,7 +28,7 @@ namespace console_netcore31_newsocket
         private static int port;
         private static string ip;
         private static string pwd;
-        private const int frequence = 200000;
+        private const int frequence = 1024;
 
         private static RedisClient _freeRedisClient;
         private static BeetleX.Redis.RedisDB _beetleClient;
@@ -95,12 +95,12 @@ namespace console_netcore31_newsocket
             //RunSE();
             //for (int i = 0; i < 10; i++)
             //{
-            Run21();
-            Run21();
+            //Run21();
+            //Run21();
             Run25();
-            Run25();
-            Run25();
-            Run25();
+            //Run25();
+            //Run25();
+            //Run25();
             //Run161();
             //}
 
@@ -185,7 +185,7 @@ namespace console_netcore31_newsocket
 
             _redisClient25 = new NewRedisClient25();
             _redisClient25.CreateConnection(ip, port);
-            _redisClient25.AuthAsync(pwd);
+            //_redisClient25.AuthAsync(pwd);
 
 
             _redisClient4 = new NewRedisClient4();
@@ -421,7 +421,10 @@ namespace console_netcore31_newsocket
                 {
                     if (tasks[i].IsCompleted)
                     {
-                        offset = i;
+                        if (tasks[i].Result)
+                        {
+                            offset = i;
+                        }
                     }
 
                 }

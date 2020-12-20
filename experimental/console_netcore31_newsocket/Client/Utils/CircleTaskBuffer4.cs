@@ -1,4 +1,5 @@
-﻿using System.IO.Pipelines;
+﻿using System.Collections.Generic;
+using System.IO.Pipelines;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -66,8 +67,7 @@ public class CircleTaskBuffer4<T> where T : new()
 
     }
 
-    public int ArrayLength = 8192;
-    public int TopLength = 8190;
+    public int ArrayLength = 1025;
     private SingleLinks6<T> _writePtr;
     private SingleLinks6<T> _readPtr;
     private ManualResetValueTaskSource<T>[] _currentWrite;
@@ -83,30 +83,84 @@ public class CircleTaskBuffer4<T> where T : new()
         _readPtr = first;
         _currentWrite = first.Buffer;
         _currentRead = first.Buffer;
+        _set = new HashSet<int>();
+        _count = new HashSet<int>();
+        Task.Run(() =>
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                Thread.Sleep(5000);
+                System.Console.WriteLine(_set.Count);
+                System.Console.WriteLine("a"+_count.Count);
+                if (i>1)
+                {
+                    for (int j = 0; j < _currentWrite.Length; j++)
+                    {
+                        if (!_currentWrite[j].AwaitableTask.IsCompleted)
+                        {
+                            System.Console.WriteLine(j+"NotComepleted!");
+                        }
+                    }
+                }
+            }
+        });
         Parallel.For(0, ArrayLength, (index) => { _currentWrite[index] = new ManualResetValueTaskSource<T>(); });
     }
 
     private int _write_offset;
     private int _read_offset;
+    private HashSet<int> _set;
+    private HashSet<int> _count;
     public ManualResetValueTaskSource<T> WriteNext(byte[] bytes)
     {
+        if (_write_offset > ArrayLength)
+        {
+            System.Console.WriteLine(_write_offset);
+            SpinWait wait = default;
+            wait.SpinOnce();
+            while (_write_offset > ArrayLength)
+            {
+                wait.SpinOnce();
+            }
+        }
         int newhigh = Interlocked.Increment(ref _write_offset);
-        if (newhigh < TopLength)
+        //System.Console.WriteLine(newhigh);
+        //System.Console.ReadKey();
+       
+        if (newhigh < ArrayLength)
         {
             LockSend();
+            if (_set.Contains(newhigh))
+            {
+                System.Console.WriteLine($"{newhigh} Repeate!");
+            }
+            else
+            {
+                _set.Add(newhigh);
+            }
+            var result = _currentWrite[newhigh - 1];
+            result.Reset();
             _writer.WriteAsync(bytes);
-            var result = _currentWrite[newhigh];
             ReleaseSend();
             return result;
 
         }
-        else if (newhigh == TopLength)
+        else if (newhigh == ArrayLength)
         {
 
             AddBuffer();
             LockSend();
+            if (_set.Contains(newhigh))
+            {
+                System.Console.WriteLine($"{newhigh} Repeate!");
+            }
+            else
+            {
+                _set.Add(newhigh);
+            }
+            var result = _currentWrite[newhigh - 1];
+            result.Reset();
             _writer.WriteAsync(bytes);
-            var result = _currentWrite[newhigh];
             ReleaseSend();
             return result;
 
@@ -117,6 +171,7 @@ public class CircleTaskBuffer4<T> where T : new()
             wait.SpinOnce();
             while (_write_offset > ArrayLength)
             {
+                System.Console.WriteLine(_write_offset);
                 wait.SpinOnce();
             }
             return WriteNext(bytes);
@@ -137,8 +192,8 @@ public class CircleTaskBuffer4<T> where T : new()
         {
             _writePtr = _writePtr.AppendNew(ArrayLength);
             _currentWrite = _writePtr.Buffer;
-            _lock = 0;
             Parallel.For(0, ArrayLength, (index) => { _currentWrite[index] = new ManualResetValueTaskSource<T>(); });
+            _lock = 0;
         }
         else
         {
@@ -180,6 +235,15 @@ public class CircleTaskBuffer4<T> where T : new()
         //    }
         //    ReadNext(value);
         //}
+        _count.Add(_read_offset);
+        if (_read_offset == 1)
+        {
+            System.Console.WriteLine("1Completed!");
+        }
+        if (_read_offset == 2)
+        {
+            System.Console.WriteLine("1Completed!");
+        }
         var result = _currentRead[_read_offset];
         result.SetResult(value);
         _read_offset += 1;

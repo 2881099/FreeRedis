@@ -26,8 +26,8 @@ using System.Threading.Tasks;
 public class CircleTaskBuffer<T> where T : new()
 {
 
-    public int ArrayLength = 8192;
-    public int TopLength = 8190;
+    public int ArrayLength = 1024;
+    public int TopLength = 1023;
     private SingleLinks5<T> _writePtr;
     private SingleLinks5<T> _readPtr;
     private T[] _currentWrite;
@@ -47,7 +47,7 @@ public class CircleTaskBuffer<T> where T : new()
 
     private int _write_offset;
     private int _read_offset;
-    public T WriteNext()
+    public T WriteNext(T value)
     {
 
         int newhigh = Interlocked.Increment(ref _write_offset);
@@ -77,7 +77,7 @@ public class CircleTaskBuffer<T> where T : new()
             {
                 wait.SpinOnce();
             }
-            return WriteNext();
+            return WriteNext(value);
         }
         
     }

@@ -40,10 +40,7 @@ namespace ConcurrentWriteBytes
         {
             Parallel.For(0, Count, (i) => {
                
-                _newQueue.WriteNext();
-            });
-            Parallel.For(0, Count, (i) => {
-                _newQueue.ReadNext(i);
+                _newQueue.WriteNext(i);
             });
         }
 
@@ -79,9 +76,6 @@ namespace ConcurrentWriteBytes
         {
             Parallel.For(0, Count, (i) => {
                 _queue.Enqueue(i);
-            });
-            Parallel.For(0, Count, (i) => {
-                _queue.TryDequeue(out var _);
             });
         }
 
