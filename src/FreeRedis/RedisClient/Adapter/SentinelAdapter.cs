@@ -238,8 +238,8 @@ namespace FreeRedis
                             //test set/get
                         }
                     }
-                    connectionString.MinPoolSize = connectionString.MinPoolSize;
-                    connectionString.MaxPoolSize = connectionString.MaxPoolSize;
+                    connectionString.MinPoolSize = _connectionString.MinPoolSize;
+                    connectionString.MaxPoolSize = _connectionString.MaxPoolSize;
 
                     _ib.TryRegister(host, () => new RedisClientPool(connectionString, null, TopOwner));
                     allkeys.Remove(host);

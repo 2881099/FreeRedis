@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO.Pipelines;
 using System.Text;
 using System.Threading;
 
@@ -43,7 +44,7 @@ public class SourceConcurrentQueue<T> : IProducerConsumerCollection<T>
         int index = 0;
         foreach (T element in collection)
         {
-            //Debug.Assert(index >= 0 && index < SEGMENT_SIZE);
+            Debug.Assert(index >= 0 && index < SEGMENT_SIZE);
             localTail.UnsafeAdd(element);
             index++;
 
@@ -523,7 +524,9 @@ public class SourceConcurrentQueue<T> : IProducerConsumerCollection<T>
         {
             Segment tail = _tail;
             if (tail.TryAppend(item))
+            {
                 return;
+            }
             spin.SpinOnce();
         }
     }
@@ -634,7 +637,7 @@ public class SourceConcurrentQueue<T> : IProducerConsumerCollection<T>
             _array = new T[SEGMENT_SIZE];
             _state = new VolatileBool[SEGMENT_SIZE]; //all initialized to false
             _high = -1;
-            //Debug.Assert(index >= 0);
+            Debug.Assert(index >= 0);
             _index = index;
             _source = source;
         }
@@ -666,7 +669,7 @@ public class SourceConcurrentQueue<T> : IProducerConsumerCollection<T>
         /// <param name="value"></param>
         internal void UnsafeAdd(T value)
         {
-            //Debug.Assert(_high < SEGMENT_SIZE - 1);
+            Debug.Assert(_high < SEGMENT_SIZE - 1);
             _high++;
             _array[_high] = value;
             _state[_high]._value = true;
@@ -682,7 +685,7 @@ public class SourceConcurrentQueue<T> : IProducerConsumerCollection<T>
         /// <returns>the reference to the new Segment</returns>
         internal Segment UnsafeGrow()
         {
-            //Debug.Assert(_high >= SEGMENT_SIZE - 1);
+            Debug.Assert(_high >= SEGMENT_SIZE - 1);
             Segment newSegment = new Segment(_index + 1, _source); //_index is Int64, we don't need to worry about overflow
             _next = newSegment;
             return newSegment;
@@ -698,7 +701,7 @@ public class SourceConcurrentQueue<T> : IProducerConsumerCollection<T>
             //no CAS is needed, since there is no contention (other threads are blocked, busy waiting)
             Segment newSegment = new Segment(_index + 1, _source);  //_index is Int64, we don't need to worry about overflow
             _next = newSegment;
-            //Debug.Assert(_source._tail == this);
+            Debug.Assert(_source._tail == this);
             _source._tail = _next;
         }
 
@@ -803,7 +806,7 @@ public class SourceConcurrentQueue<T> : IProducerConsumerCollection<T>
                         {
                             spinLocal.SpinOnce();
                         }
-                        //Debug.Assert(_source._head == this);
+                        Debug.Assert(_source._head == this);
                         _source._head = _next;
                     }
                     return true;
