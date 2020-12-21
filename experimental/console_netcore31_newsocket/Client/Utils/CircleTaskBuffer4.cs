@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO.Pipelines;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -29,7 +30,7 @@ public class CircleTaskBuffer4<T> where T : new()
 {
 
 
-    public int ArrayLength = 8192;
+    public int ArrayLength = 1024;
     private SingleLinks6<T> _writePtr;
     private SingleLinks6<T> _readPtr;
     private ManualResetValueTaskSource<T>[] _currentWrite;
@@ -41,11 +42,47 @@ public class CircleTaskBuffer4<T> where T : new()
         var first = new SingleLinks6<T>(ArrayLength);
         first.InReading = true;
         first.Next = first;
+        var head = first;
+        for (int i = 0; i < 2; i++)
+        {
+            head = head.AppendNew(ArrayLength);
+            var buffer = head.Buffer;
+            Parallel.For(0, ArrayLength, (index) => { buffer[index] = new ManualResetValueTaskSource<T>(); });
+        }
+        
         _writePtr = first;
         _readPtr = first;
         _currentWrite = first.Buffer;
         _currentRead = first.Buffer;
         Parallel.For(0, ArrayLength, (index) => { _currentWrite[index] = new ManualResetValueTaskSource<T>(); });
+
+        //Task.Run(() =>
+        //{
+        //    for (int i = 0; i < 50; i++)
+        //    {
+        //        Thread.Sleep(200);
+        //        var head = _readPtr;
+        //        var temp = 0;
+        //        if (_readPtr.InReading)
+        //        {
+        //            temp += 1;
+        //        }
+        //        while (head.Next != _readPtr)
+        //        {
+        //            head = head.Next;
+        //            if (head.InReading)
+        //            {
+        //                temp += 1;
+        //            }
+        //        }
+        //        if (temp>0)
+        //        {
+        //            System.Console.WriteLine("共：" + temp);
+        //        }
+                
+        //    }
+
+        //});
     }
 
     private int _write_offset;
@@ -137,6 +174,17 @@ public class CircleTaskBuffer4<T> where T : new()
 public static class DebugBuffer<T> 
 {
 
+
+    public static void Clear()
+    {
+        ShowInfo();
+        _senderCount = 0;
+        _receiverCount = 0;
+        _sendOverflowCount = 0;
+        _hasCompletedCount = 0;
+        _contactCount.Clear();
+    }
+
     public static int TimeInteval = 3000;
 
     static DebugBuffer()
@@ -226,11 +274,10 @@ public static class DebugBuffer<T>
         }
 
         System.Console.WriteLine(@$"
-发送任务次数: {_senderCount}
-分配结果次数: {_receiverCount}
-发送溢出等待次数:{_sendOverflowCount}
-未SetResult就已完成的任务:{_hasCompletedCount}
-扩容锁争用次数:{_lockCount}
+发送任务 次数: {_senderCount}
+分配结果 次数: {_receiverCount}
+提前任务 异常次数:{_hasCompletedCount}
+扩 容 锁 争用次数:{_lockCount}
 ");
         
         System.Console.WriteLine("-------------------------------------------------------");
