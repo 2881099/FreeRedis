@@ -23,29 +23,35 @@ namespace console_netcore31_newsocket
 
         protected override void Init()
         {
-            _taskBuffer = new CircleTaskBuffer4<bool>(_sender);
+            _taskBuffer = new CircleTaskBuffer4<bool>();
         }
 
 
         public ValueTask<bool> AuthAsync(string password)
         {
-            if (password == null)
+            if (string.IsNullOrEmpty(password))
             {
                 return default;
             }
             var bytes = Encoding.UTF8.GetBytes($"AUTH {password}\r\n");
-            return _taskBuffer.WriteNext(bytes).AwaitableTask;
+            LockSend();
+            _sender.WriteAsync(bytes);
+            var task = _taskBuffer.WriteNext();
+            ReleaseSend();
+            return task.AwaitableTask;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public ValueTask<bool> SetAsync(string key, string value)
         {
             var bytes = Encoding.UTF8.GetBytes($"*3\r\n$3\r\nSET\r\n${key.Length}\r\n{key}\r\n${value.Length}\r\n{value}\r\n");
-            return _taskBuffer.WriteNext(bytes).AwaitableTask;
+            LockSend();
+            _sender.WriteAsync(bytes);
+            var task = _taskBuffer.WriteNext();
+            ReleaseSend();
+            return task.AwaitableTask;
         }
 
-
-        private byte[] _array;
 
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         protected internal override void Handler(in ReadOnlySequence<byte> sequence)

@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.IO.Pipelines;
-using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
-    public class SingleLinks6<T>
+public class SingleLinks6<T>
     {
         public bool InReading;
         public readonly ManualResetValueTaskSource<T>[] Buffer;
@@ -29,53 +28,16 @@ using System.Threading.Tasks;
 public class CircleTaskBuffer4<T> where T : new()
 {
 
-    private long _send_lock_flag;
 
-    public bool IsCompleted
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get
-        {
-            return _send_lock_flag != 1;
-
-        }
-    }
-    public int LockCount;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    protected void LockSend()
-    {
-
-        SpinWait wait = default;
-        while (Interlocked.CompareExchange(ref _send_lock_flag, 1, 0) != 0)
-        {
-            //Interlocked.Increment(ref LockCount);
-            wait.SpinOnce();
-        }
-
-    }
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public bool TryGetSendLock()
-    {
-        return Interlocked.CompareExchange(ref _send_lock_flag, 1, 0) == 0;
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void ReleaseSend()
-    {
-
-        _send_lock_flag = 0;
-
-    }
-
-    public int ArrayLength = 1025;
+    public int ArrayLength = 8192;
     private SingleLinks6<T> _writePtr;
     private SingleLinks6<T> _readPtr;
     private ManualResetValueTaskSource<T>[] _currentWrite;
     private ManualResetValueTaskSource<T>[] _currentRead;
     private readonly PipeWriter _writer;
-    public CircleTaskBuffer4(PipeWriter writer)
+    public CircleTaskBuffer4()
     {
-        _writer = writer;
+        //_writer = writer;
         var first = new SingleLinks6<T>(ArrayLength);
         first.InReading = true;
         first.Next = first;
@@ -83,169 +45,68 @@ public class CircleTaskBuffer4<T> where T : new()
         _readPtr = first;
         _currentWrite = first.Buffer;
         _currentRead = first.Buffer;
-        _set = new HashSet<int>();
-        _count = new HashSet<int>();
-        Task.Run(() =>
-        {
-            for (int i = 0; i < 10; i++)
-            {
-                Thread.Sleep(5000);
-                System.Console.WriteLine(_set.Count);
-                System.Console.WriteLine("a"+_count.Count);
-                if (i>1)
-                {
-                    for (int j = 0; j < _currentWrite.Length; j++)
-                    {
-                        if (!_currentWrite[j].AwaitableTask.IsCompleted)
-                        {
-                            System.Console.WriteLine(j+"NotComepleted!");
-                        }
-                    }
-                }
-            }
-        });
         Parallel.For(0, ArrayLength, (index) => { _currentWrite[index] = new ManualResetValueTaskSource<T>(); });
     }
 
     private int _write_offset;
     private int _read_offset;
-    private HashSet<int> _set;
-    private HashSet<int> _count;
-    public ManualResetValueTaskSource<T> WriteNext(byte[] bytes)
+    public ManualResetValueTaskSource<T> WriteNext()
     {
-        if (_write_offset > ArrayLength)
+        DebugBuffer<T>.RecodSender();
+        var result = _currentWrite[_write_offset];
+        result.Reset();
+        _write_offset += 1;
+        if (_write_offset == ArrayLength) 
         {
-            System.Console.WriteLine(_write_offset);
-            SpinWait wait = default;
-            wait.SpinOnce();
-            while (_write_offset > ArrayLength)
-            {
-                wait.SpinOnce();
-            }
-        }
-        int newhigh = Interlocked.Increment(ref _write_offset);
-        //System.Console.WriteLine(newhigh);
-        //System.Console.ReadKey();
-       
-        if (newhigh < ArrayLength)
-        {
-            LockSend();
-            if (_set.Contains(newhigh))
-            {
-                System.Console.WriteLine($"{newhigh} Repeate!");
-            }
-            else
-            {
-                _set.Add(newhigh);
-            }
-            var result = _currentWrite[newhigh - 1];
-            result.Reset();
-            _writer.WriteAsync(bytes);
-            ReleaseSend();
-            return result;
-
-        }
-        else if (newhigh == ArrayLength)
-        {
-
             AddBuffer();
-            LockSend();
-            if (_set.Contains(newhigh))
-            {
-                System.Console.WriteLine($"{newhigh} Repeate!");
-            }
-            else
-            {
-                _set.Add(newhigh);
-            }
-            var result = _currentWrite[newhigh - 1];
-            result.Reset();
-            _writer.WriteAsync(bytes);
-            ReleaseSend();
-            return result;
-
         }
-        else
-        {
-            SpinWait wait = default;
-            wait.SpinOnce();
-            while (_write_offset > ArrayLength)
-            {
-                System.Console.WriteLine(_write_offset);
-                wait.SpinOnce();
-            }
-            return WriteNext(bytes);
-        }
-
+        return result;
     }
 
     private int _lock;
     private void AddBuffer()
     {
-
+        
         SpinWait wait = default;
         while (Interlocked.CompareExchange(ref _lock, 1, 0) != 0)
         {
+            DebugBuffer<T>.RecodLock();
             wait.SpinOnce();
         }
         if (_writePtr.Next.InReading)
         {
+            DebugBuffer<T>.RecodContact(true);
             _writePtr = _writePtr.AppendNew(ArrayLength);
+            _lock = 0;
             _currentWrite = _writePtr.Buffer;
             Parallel.For(0, ArrayLength, (index) => { _currentWrite[index] = new ManualResetValueTaskSource<T>(); });
-            _lock = 0;
         }
         else
         {
+            DebugBuffer<T>.RecodContact(false);
             _writePtr = _writePtr.Next;
-            _currentWrite = _writePtr.Buffer;
             _lock = 0;
+            _currentWrite = _writePtr.Buffer;
         }
         _write_offset = 0;
+
     }
 
 
     public void ReadNext(T value)
     {
-        //int newhigh = Interlocked.Increment(ref _read_offset);
-        ////SpinWait wait = default;
-        ////while (Interlocked.CompareExchange(ref _read_offset, newhigh + 1, newhigh) != newhigh)
-        ////{
-
-        ////    wait.SpinOnce();
-        ////    newhigh = _read_offset;
-        ////}
-
-        //if (newhigh < TopLength)
-        //{
-        //    _currentRead[newhigh].SetResult(value);
-        //}
-        //else if (newhigh == TopLength)
-        //{
-        //    CollectBuffer();
-        //    _currentRead[newhigh].SetResult(value);
-        //}
-        //else
-        //{
-        //    SpinWait wait = default;
-        //    wait.SpinOnce();
-        //    while (_read_offset > ArrayLength)
-        //    {
-        //        wait.SpinOnce();
-        //    }
-        //    ReadNext(value);
-        //}
-        _count.Add(_read_offset);
-        if (_read_offset == 1)
-        {
-            System.Console.WriteLine("1Completed!");
-        }
-        if (_read_offset == 2)
-        {
-            System.Console.WriteLine("1Completed!");
-        }
         var result = _currentRead[_read_offset];
-        result.SetResult(value);
+        DebugBuffer<T>.RecodReceiver();
+        DebugBuffer<T>.AcceptTask(result.AwaitableTask);
+        if (result.AwaitableTask.IsCompleted)
+        {
+            System.Console.WriteLine("Need False!");
+            //result.SetResult((T)(object)false);
+        }
+        else
+        {
+            result.SetResult(value);
+        }
         _read_offset += 1;
         if (_read_offset == ArrayLength)
         {
@@ -260,14 +121,123 @@ public class CircleTaskBuffer4<T> where T : new()
         SpinWait wait = default;
         while (Interlocked.CompareExchange(ref _lock, 1, 0) != 0)
         {
+            DebugBuffer<T>.RecodLock();
             wait.SpinOnce();
         }
         _readPtr.InReading = false;
         _readPtr = _readPtr.Next;
         _readPtr.InReading = true;
+        _lock = 0;
         _currentRead = _readPtr.Buffer;
         _read_offset = 0;
-        _lock = 0;
-        //Interlocked.Exchange(ref _read_offset, 0);
     }
 }
+
+#if DEBUG
+public static class DebugBuffer<T> 
+{
+
+    public static int TimeInteval = 3000;
+
+    static DebugBuffer()
+    {
+        _contactCount = new List<(int oldLength, bool isNew)>();
+        Task.Run(() =>
+        {
+
+            while (true)
+            {
+                Thread.Sleep(TimeInteval);
+                ShowInfo();
+            }
+
+        });
+    }
+
+
+    private static int _senderCount;
+    public static void RecodSender()
+    {
+        Interlocked.Increment(ref _senderCount);
+    }
+
+
+    private static int _receiverCount;
+    public static void RecodReceiver()
+    {
+        Interlocked.Increment(ref _receiverCount);
+    }
+
+
+    private static int _sendOverflowCount;
+    public static void RecodSendOverflow()
+    {
+        Interlocked.Increment(ref _sendOverflowCount);
+    }
+
+
+    private static List<(int oldLength, bool isNew)> _contactCount;
+    public static void RecodContact(bool isNew = false)
+    {
+        _contactCount.Add((_senderCount, isNew));
+    }
+
+
+    private static int _lockCount;
+    public static void RecodLock()
+    {
+        Interlocked.Increment(ref _lockCount);
+    }
+
+
+    private static int _hasCompletedCount;
+
+    public static void AcceptTask(ValueTask<T> task)
+    {
+        if (task.IsCompleted)
+        {
+            Interlocked.Increment(ref _hasCompletedCount);
+        }
+    }
+
+    public static void AcceptTask(Task<T> task)
+    {
+        if (task.IsCompleted)
+        {
+            Interlocked.Increment(ref _hasCompletedCount);
+        }
+    }
+
+
+
+    public static void ShowInfo()
+    {
+        System.Console.WriteLine("-------------------------------------------------------");
+        System.Console.WriteLine($"缓冲区经历了{_contactCount.Count}次移动！");
+        for (int i = 0; i < _contactCount.Count; i++)
+        {
+            var item = _contactCount[i];
+            System.Console.Write($"第{i}次移动时，发送任务{item.oldLength}个！");
+            if (item.isNew)
+            {
+                System.Console.WriteLine($"本次进行了扩容处理！");
+            }
+            System.Console.WriteLine();
+        }
+
+        System.Console.WriteLine(@$"
+发送任务次数: {_senderCount}
+分配结果次数: {_receiverCount}
+发送溢出等待次数:{_sendOverflowCount}
+未SetResult就已完成的任务:{_hasCompletedCount}
+扩容锁争用次数:{_lockCount}
+");
+        
+        System.Console.WriteLine("-------------------------------------------------------");
+        System.Console.ReadKey();
+    }
+
+
+}
+#endif
+

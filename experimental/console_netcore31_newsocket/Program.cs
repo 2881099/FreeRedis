@@ -28,7 +28,7 @@ namespace console_netcore31_newsocket
         private static int port;
         private static string ip;
         private static string pwd;
-        private const int frequence = 1024;
+        private const int frequence = 102400;
 
         private static RedisClient _freeRedisClient;
         private static BeetleX.Redis.RedisDB _beetleClient;
@@ -53,6 +53,7 @@ namespace console_netcore31_newsocket
         private static NewRedisClient23 _redisClient23;
         private static NewRedisClient24 _redisClient24;
         private static NewRedisClient25 _redisClient25;
+        //private static NewRedisClient26 _redisClient26;
         private static ClientPool3 _pool10;
         private static ClientPool4 _pool13;
         private static ClientPool5 _pool14;
@@ -91,7 +92,7 @@ namespace console_netcore31_newsocket
             //}
             ///RunTest();
             //Console.WriteLine("====== 以上预热 =======");
-            //RunSE();
+            RunSE();
             //RunSE();
             //for (int i = 0; i < 10; i++)
             //{
@@ -124,8 +125,8 @@ namespace console_netcore31_newsocket
         {
             _options = new ParallelOptions();
             _options.MaxDegreeOfParallelism = 4;
-            _useDelay = true;
-            _delayCount = 8000;
+            //_useDelay = true;
+            _delayCount = 6000;
             //Notice : Please use "//" comment "/*".
 
             ///*
@@ -139,7 +140,8 @@ namespace console_netcore31_newsocket
             ip = "127.0.0.1";
             port = 6379;
             //*/
-
+            seredis = ConnectionMultiplexer.Connect($"{ip}:{port},password={pwd}");
+            _stackExnchangeClient = seredis.GetDatabase(0);
             // NewLife.Redis
             // _newLifeRedis = new NewLife.Caching.Redis($"{ip}:{port}",null, 1);
             //var result = newLifeRedis.Set("1", "1");
@@ -150,6 +152,9 @@ namespace console_netcore31_newsocket
             //host.MaxConnections = 1000;
             //host.QueueMaxLength = 512;
             //_freeRedisClient = new RedisClient($"{ip}:{port},database=0,min pool size=100");
+            _redisClient4 = new NewRedisClient4();
+            _redisClient4.CreateConnection(ip, port);
+            _redisClient4.AuthAsync(pwd);
 
 
             _redisClient161 = new NewRedisClient161();
@@ -183,17 +188,19 @@ namespace console_netcore31_newsocket
             _redisClient24.CreateConnection(ip, port);
             _redisClient24.AuthAsync(pwd);
 
+            //_redisClient26 = new NewRedisClient26();
+            //_redisClient26.CreateConnection(ip, port);
+            //var temp = _redisClient26.AuthAsync(pwd).Result;
+            //Console.WriteLine(temp);
+
             _redisClient25 = new NewRedisClient25();
             _redisClient25.CreateConnection(ip, port);
-            //_redisClient25.AuthAsync(pwd);
+            var temp = await _redisClient25.AuthAsync(pwd);
+            Console.WriteLine(temp);
 
+           
 
-            _redisClient4 = new NewRedisClient4();
-            _redisClient4.CreateConnection(ip, port);
-            _redisClient4.AuthAsync(pwd);
-
-            seredis = ConnectionMultiplexer.Connect($"{ip}:{port},password={pwd}");
-            _stackExnchangeClient = seredis.GetDatabase(0);
+           
             //T();
             //Console.ReadKey();
 
@@ -237,6 +244,11 @@ namespace console_netcore31_newsocket
         {
             RunValueTasks((key) => _redisClient21.SetAsync(key, key), "client21");
         }
+
+        //private static void Run26()
+        //{
+        //    RunTasks((key) => _redisClient26.SetAsync(key, key), "client26");
+        //}
 
         #region CheckPool
         public static void CheckPool()
@@ -421,9 +433,11 @@ namespace console_netcore31_newsocket
                 {
                     if (tasks[i].IsCompleted)
                     {
-                        if (tasks[i].Result)
+
+                        offset = i;
+                        if (!tasks[i].Result)
                         {
-                            offset = i;
+                            Console.WriteLine("false!");
                         }
                     }
 
