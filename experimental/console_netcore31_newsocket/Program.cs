@@ -8,7 +8,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -53,7 +52,7 @@ namespace console_netcore31_newsocket
         private static NewRedisClient23 _redisClient23;
         private static NewRedisClient24 _redisClient24;
         private static NewRedisClient25 _redisClient25;
-        //private static NewRedisClient26 _redisClient26;
+        private static NewRedisClient26 _redisClient26;
         private static ClientPool3 _pool10;
         private static ClientPool4 _pool13;
         private static ClientPool5 _pool14;
@@ -93,14 +92,21 @@ namespace console_netcore31_newsocket
             ///RunTest();
             //Console.WriteLine("====== 以上预热 =======");
             RunSE();
-            RunSE();
+            //RunSE();
             //RunSE();
             //for (int i = 0; i < 10; i++)
             //{
             //Run21();
             //Run21();
-            Run25();
-            Run25();
+            Run26();
+            //Console.ReadKey();
+            Run26();
+            //Console.ReadKey();
+            Run26();
+            //Run25();
+            //Console.ReadKey();
+            //Run25();
+            //Run25();
             //Run25();
             //Run25();
             //Run25();
@@ -165,7 +171,7 @@ namespace console_netcore31_newsocket
 
             _redisClient162 = new NewRedisClient162();
             _redisClient162.CreateConnection(ip, port);
-           //_redisClient162.AuthAsync(pwd);
+            //_redisClient162.AuthAsync(pwd);
 
             _redisClient21 = new NewRedisClient21();
             _redisClient21.CreateConnection(ip, port);
@@ -190,19 +196,19 @@ namespace console_netcore31_newsocket
             _redisClient24.CreateConnection(ip, port);
             _redisClient24.AuthAsync(pwd);
 
-            //_redisClient26 = new NewRedisClient26();
-            //_redisClient26.CreateConnection(ip, port);
-            //var temp = _redisClient26.AuthAsync(pwd).Result;
-            //Console.WriteLine(temp);
+            _redisClient26 = new NewRedisClient26();
+            _redisClient26.CreateConnection(ip, port);
+            var temp = _redisClient26.AuthAsync(pwd).Result;
+            Console.WriteLine(temp);
 
             _redisClient25 = new NewRedisClient25();
             _redisClient25.CreateConnection(ip, port);
-            var temp = await _redisClient25.AuthAsync(pwd);
+            temp = await _redisClient25.AuthAsync(pwd);
             Console.WriteLine(temp);
 
-           
 
-           
+
+
             //T();
             //Console.ReadKey();
 
@@ -210,7 +216,7 @@ namespace console_netcore31_newsocket
         }
         public static async void T()
         {
-            var temp =await _redisClient21.SetAsync("1", "1");
+            var temp = await _redisClient21.SetAsync("1", "1");
             Console.WriteLine(temp);
         }
 
@@ -240,9 +246,15 @@ namespace console_netcore31_newsocket
 
         private static void Run25()
         {
-            
+
             RunValueTasks((key) => _redisClient25.SetAsync(key, key), "client25");
-            DebugBuffer<bool>.Clear();
+            _redisClient25.Clear();
+        }
+        private static void Run26()
+        {
+
+            RunTasks((key) => _redisClient26.SetAsync(key, key), "client26");
+            _redisClient26.Clear();
         }
         private static void Run21()
         {
@@ -341,7 +353,7 @@ namespace console_netcore31_newsocket
         }
 
 
-       
+
 
         public static async void Output(ConnectionContext connection)
         {
@@ -407,9 +419,9 @@ namespace console_netcore31_newsocket
 
         //#region RedisTest
 
-        
-     
-        private static void RunValueTasks(Func<string,ValueTask<bool>> task,string title)
+
+
+        private static void RunValueTasks(Func<string, ValueTask<bool>> task, string title)
         {
             if (_useDelay)
             {
@@ -419,7 +431,7 @@ namespace console_netcore31_newsocket
             Console.WriteLine("=========================");
             var result = _redisClient4.FlushDBAsync().Result;
             Console.WriteLine($"Clear DB 0 - [{(result ? "SUCCEED" : "FAILED")}]!");
-
+            _redisClient25.Pause = false;
             var tasks = new ValueTask<bool>[frequence];
             Stopwatch sw = new Stopwatch();
             Console.WriteLine("Start Run:");
@@ -435,14 +447,15 @@ namespace console_netcore31_newsocket
 
                 for (int i = offset; i < frequence; i++)
                 {
-                    if (tasks[i].IsCompleted)
+                    if (tasks[i].IsCompletedSuccessfully)
                     {
 
-                        offset = i;
                         if (!tasks[i].Result)
                         {
-                            Console.WriteLine("false!");
+                            break;
+                            //Console.WriteLine("false!");
                         }
+                        offset = i;
                     }
 
                 }
@@ -479,23 +492,24 @@ namespace console_netcore31_newsocket
 
                 for (int i = offset; i < frequence; i++)
                 {
-                    if (tasks[i].IsCompleted)
+                    if (!tasks[i].Result)
                     {
-                        offset = i;
+                        break;
                     }
-
+                    offset = i;
                 }
                 wait.SpinOnce();
             }
             sw.Stop();
+
             Console.WriteLine($"{title} (0-{frequence / 10000}W) : {sw.ElapsedMilliseconds}ms! ");
             Console.WriteLine("=========================\r\n");
         }
 
-        
+
         private static void Run161()
         {
-            
+
             if (_useDelay)
             {
                 Thread.Sleep(_delayCount);
@@ -512,16 +526,16 @@ namespace console_netcore31_newsocket
             //Thread.Sleep(0);
             //Thread.Sleep(1000);
             sw.Start();
-            
+
             Parallel.For(0, frequence, _options, (index) =>
             {
                 var key = index.ToString();
                 tasks[index] = _redisClient161.SetAsync(key, key);
-            } );
+            });
             //Task.WaitAll(tasks);
             int offset = 0;
             SpinWait wait = default;
-            
+
             while (offset != frequence - 1)
             {
                 for (int i = offset; i < frequence; i++)

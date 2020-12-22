@@ -44,7 +44,7 @@ public struct ManualResetValueTaskSourceImplemention<TResult>
         if (_completed)
         {
             _completed = false;
-            //_result = default;
+            _result = default;
             _error = null;
             _capturedContext = null;
             _continuation = null;

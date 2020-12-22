@@ -10,12 +10,12 @@ namespace console_netcore31_newsocket
 {
 
 
-    public class NewRedisClient25 : RedisClientBase5
+    public class NewRedisClient26 : RedisClientBase5
     {
 
         private readonly byte _protocalStart;
-        public CircleTaskBuffer4<bool> _taskBuffer;
-        public NewRedisClient25()
+        public CircleTaskBuffer5<bool> _taskBuffer;
+        public NewRedisClient26()
         {
            
             _protocalStart = (byte)43;
@@ -26,12 +26,11 @@ namespace console_netcore31_newsocket
         }
         protected override void Init()
         {
-            _taskBuffer = new CircleTaskBuffer4<bool>();
+            _taskBuffer = new CircleTaskBuffer5<bool>();
         }
 
-        public bool Pause;
 
-        public ValueTask<bool> AuthAsync(string password)
+        public Task<bool> AuthAsync(string password)
         {
             if (string.IsNullOrEmpty(password))
             {
@@ -42,31 +41,27 @@ namespace console_netcore31_newsocket
             _sender.WriteAsync(bytes);
             var task = _taskBuffer.WriteNext();
             ReleaseSend();
-            return task.AwaitableTask;
+            return task.Task;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-        public ValueTask<bool> SetAsync(string key, string value)
+        public Task<bool> SetAsync(string key, string value)
         {
             var bytes = Encoding.UTF8.GetBytes($"*3\r\n$3\r\nSET\r\n${key.Length}\r\n{key}\r\n${value.Length}\r\n{value}\r\n");
             LockSend();
             _sender.WriteAsync(bytes);
             var task = _taskBuffer.WriteNext();
             ReleaseSend();
-            return task.AwaitableTask;
+            return task.Task;
         }
 
 
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         protected internal override void Handler(in ReadOnlySequence<byte> sequence)
         {
-            
+
             foreach (ReadOnlyMemory<byte> segment in sequence)
             {
-                if (Pause)
-                {
-                    Console.WriteLine("出现未处理的数据！");
-                }
                 var span = segment.Span;
                 var position = span.IndexOf(_protocalStart);
                 while (position != -1)

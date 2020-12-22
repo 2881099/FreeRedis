@@ -5,40 +5,49 @@ using System.Threading;
 using System.Threading.Tasks;
 
 public class SingleLinks6<T>
+{
+    public static int Increment;
+    public int Index;
+    public bool InReading;
+    public readonly ManualResetValueTaskSource<T>[] Buffer;
+    public SingleLinks6(int length)
     {
-        public bool InReading;
-        public readonly ManualResetValueTaskSource<T>[] Buffer;
-        public SingleLinks6(int length)
-        {
-            Buffer = new ManualResetValueTaskSource<T>[length];
-        }
-
-        public SingleLinks6<T> Next;
-
-        public SingleLinks6<T> AppendNew(int length)
-        {
-
-            var temp = new SingleLinks6<T>(length);
-            temp.Next = Next;
-            Next = temp;
-            return temp;
-
-        }
+        Buffer = new ManualResetValueTaskSource<T>[length];
+        Index = Interlocked.Increment(ref Increment);
     }
+
+    public SingleLinks6<T> Next;
+
+    public SingleLinks6<T> AppendNew(int length)
+    {
+
+        var temp = new SingleLinks6<T>(length);
+        temp.Next = Next;
+        Next = temp;
+        return temp;
+
+    }
+}
 
 public class CircleTaskBuffer4<T> where T : new()
 {
 
-
-    public int ArrayLength = 1024;
+    private readonly DebugBuffer<T> _debug;
+    public int ArrayLength = 8192;
     private SingleLinks6<T> _writePtr;
-    private SingleLinks6<T> _readPtr;
+    public SingleLinks6<T> _readPtr;
     private ManualResetValueTaskSource<T>[] _currentWrite;
     private ManualResetValueTaskSource<T>[] _currentRead;
     private readonly PipeWriter _writer;
+
+    public void Clear()
+    {
+        _debug.Clear();
+    }
     public CircleTaskBuffer4()
     {
         //_writer = writer;
+        _debug = new();
         var first = new SingleLinks6<T>(ArrayLength);
         first.InReading = true;
         first.Next = first;
@@ -49,51 +58,24 @@ public class CircleTaskBuffer4<T> where T : new()
             var buffer = head.Buffer;
             Parallel.For(0, ArrayLength, (index) => { buffer[index] = new ManualResetValueTaskSource<T>(); });
         }
-        
+
         _writePtr = first;
         _readPtr = first;
         _currentWrite = first.Buffer;
         _currentRead = first.Buffer;
         Parallel.For(0, ArrayLength, (index) => { _currentWrite[index] = new ManualResetValueTaskSource<T>(); });
-
-        //Task.Run(() =>
-        //{
-        //    for (int i = 0; i < 50; i++)
-        //    {
-        //        Thread.Sleep(200);
-        //        var head = _readPtr;
-        //        var temp = 0;
-        //        if (_readPtr.InReading)
-        //        {
-        //            temp += 1;
-        //        }
-        //        while (head.Next != _readPtr)
-        //        {
-        //            head = head.Next;
-        //            if (head.InReading)
-        //            {
-        //                temp += 1;
-        //            }
-        //        }
-        //        if (temp>0)
-        //        {
-        //            System.Console.WriteLine("共：" + temp);
-        //        }
-                
-        //    }
-
-        //});
+        System.Console.WriteLine($"总环数{SingleLinks6<T>.Increment}！");
     }
 
     private int _write_offset;
     private int _read_offset;
     public ManualResetValueTaskSource<T> WriteNext()
     {
-        DebugBuffer<T>.RecodSender();
+        _debug.RecodSender();
         var result = _currentWrite[_write_offset];
         result.Reset();
         _write_offset += 1;
-        if (_write_offset == ArrayLength) 
+        if (_write_offset == ArrayLength)
         {
             AddBuffer();
         }
@@ -103,25 +85,28 @@ public class CircleTaskBuffer4<T> where T : new()
     private int _lock;
     private void AddBuffer()
     {
-        
+
         SpinWait wait = default;
         while (Interlocked.CompareExchange(ref _lock, 1, 0) != 0)
         {
-            DebugBuffer<T>.RecodLock();
+            _debug.RecodLock();
             wait.SpinOnce();
         }
+        System.Console.Write($"环{_writePtr.Index}已满！");
         if (_writePtr.Next.InReading)
         {
-            DebugBuffer<T>.RecodContact(true);
+            _debug.RecodContact(true);
             _writePtr = _writePtr.AppendNew(ArrayLength);
             _lock = 0;
             _currentWrite = _writePtr.Buffer;
+            System.Console.WriteLine($"开辟新环，总环数{SingleLinks6<T>.Increment}！");
             Parallel.For(0, ArrayLength, (index) => { _currentWrite[index] = new ManualResetValueTaskSource<T>(); });
         }
         else
         {
-            DebugBuffer<T>.RecodContact(false);
+            _debug.RecodContact(false);
             _writePtr = _writePtr.Next;
+            System.Console.WriteLine($"移动到环{_writePtr.Index}");
             _lock = 0;
             _currentWrite = _writePtr.Buffer;
         }
@@ -132,12 +117,13 @@ public class CircleTaskBuffer4<T> where T : new()
 
     public void ReadNext(T value)
     {
+       
         var result = _currentRead[_read_offset];
-        DebugBuffer<T>.RecodReceiver();
-        DebugBuffer<T>.AcceptTask(result.AwaitableTask);
+        _debug.RecodReceiver();
+        _debug.AcceptTask(result.AwaitableTask);
         if (result.AwaitableTask.IsCompleted)
         {
-            System.Console.WriteLine("Need False!");
+            //System.Console.WriteLine("Need False!");
             //result.SetResult((T)(object)false);
         }
         else
@@ -152,139 +138,23 @@ public class CircleTaskBuffer4<T> where T : new()
 
     }
 
+
     private void CollectBuffer()
     {
 
         SpinWait wait = default;
         while (Interlocked.CompareExchange(ref _lock, 1, 0) != 0)
         {
-            DebugBuffer<T>.RecodLock();
+            _debug.RecodLock();
             wait.SpinOnce();
         }
+        System.Console.Write($"环{_readPtr.Index}已处理完！");
         _readPtr.InReading = false;
         _readPtr = _readPtr.Next;
+        System.Console.WriteLine($"移动到环{_readPtr.Index}");
         _readPtr.InReading = true;
         _lock = 0;
         _currentRead = _readPtr.Buffer;
         _read_offset = 0;
     }
 }
-
-#if DEBUG
-public static class DebugBuffer<T> 
-{
-
-
-    public static void Clear()
-    {
-        ShowInfo();
-        _senderCount = 0;
-        _receiverCount = 0;
-        _sendOverflowCount = 0;
-        _hasCompletedCount = 0;
-        _contactCount.Clear();
-    }
-
-    public static int TimeInteval = 3000;
-
-    static DebugBuffer()
-    {
-        _contactCount = new List<(int oldLength, bool isNew)>();
-        Task.Run(() =>
-        {
-
-            while (true)
-            {
-                Thread.Sleep(TimeInteval);
-                ShowInfo();
-            }
-
-        });
-    }
-
-
-    private static int _senderCount;
-    public static void RecodSender()
-    {
-        Interlocked.Increment(ref _senderCount);
-    }
-
-
-    private static int _receiverCount;
-    public static void RecodReceiver()
-    {
-        Interlocked.Increment(ref _receiverCount);
-    }
-
-
-    private static int _sendOverflowCount;
-    public static void RecodSendOverflow()
-    {
-        Interlocked.Increment(ref _sendOverflowCount);
-    }
-
-
-    private static List<(int oldLength, bool isNew)> _contactCount;
-    public static void RecodContact(bool isNew = false)
-    {
-        _contactCount.Add((_senderCount, isNew));
-    }
-
-
-    private static int _lockCount;
-    public static void RecodLock()
-    {
-        Interlocked.Increment(ref _lockCount);
-    }
-
-
-    private static int _hasCompletedCount;
-
-    public static void AcceptTask(ValueTask<T> task)
-    {
-        if (task.IsCompleted)
-        {
-            Interlocked.Increment(ref _hasCompletedCount);
-        }
-    }
-
-    public static void AcceptTask(Task<T> task)
-    {
-        if (task.IsCompleted)
-        {
-            Interlocked.Increment(ref _hasCompletedCount);
-        }
-    }
-
-
-
-    public static void ShowInfo()
-    {
-        System.Console.WriteLine("-------------------------------------------------------");
-        System.Console.WriteLine($"缓冲区经历了{_contactCount.Count}次移动！");
-        for (int i = 0; i < _contactCount.Count; i++)
-        {
-            var item = _contactCount[i];
-            System.Console.Write($"第{i}次移动时，发送任务{item.oldLength}个！");
-            if (item.isNew)
-            {
-                System.Console.WriteLine($"本次进行了扩容处理！");
-            }
-            System.Console.WriteLine();
-        }
-
-        System.Console.WriteLine(@$"
-发送任务 次数: {_senderCount}
-分配结果 次数: {_receiverCount}
-提前任务 异常次数:{_hasCompletedCount}
-扩 容 锁 争用次数:{_lockCount}
-");
-        
-        System.Console.WriteLine("-------------------------------------------------------");
-        System.Console.ReadKey();
-    }
-
-
-}
-#endif
-
