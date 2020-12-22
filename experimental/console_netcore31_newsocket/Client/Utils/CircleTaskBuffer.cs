@@ -85,8 +85,8 @@ namespace console_netcore31_newsocket.Client.Utils
             else
             {
                 _writePtr = _writePtr.Next;
-                _currentWrite = _writePtr.Buffer;
                 _lock = 0;
+                _currentWrite = _writePtr.Buffer;
             }
             _write_offset = 0;
 
@@ -118,8 +118,8 @@ namespace console_netcore31_newsocket.Client.Utils
             _readPtr = _readPtr.Next;
             _readPtr.InReading = true;
             _lock = 0;
-            _read_offset = 0;
             _currentRead = _readPtr.Buffer;
+            _read_offset = 0;
 
         }
     }

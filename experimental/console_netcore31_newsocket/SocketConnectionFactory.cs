@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Connections;
+﻿using console_netcore31_newsocket.IO;
+using Microsoft.AspNetCore.Connections;
 using System;
 using System.Buffers;
 using System.Collections.Generic;
@@ -58,7 +59,7 @@ namespace console_netcore31_newsocket
             var socketConnection = new SocketConnection(
                 socket,
                 _memoryPool,
-                PipeScheduler.ThreadPool,
+                 new IOQueue(),
                 _options.MaxReadBufferSize,
                 _options.MaxWriteBufferSize,
                 _options.WaitForDataBeforeAllocatingBuffer,

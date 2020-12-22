@@ -18,33 +18,40 @@ namespace console_netcore31_taskcompletesource
         private static ConfiguredValueTaskAwaitable<int> _task;
         static void Main()
         {
-
-            
-            mrvts = new ManualResetValueTaskSource<int>();
-
-            _task = new ValueTask<int>(mrvts, 0).ConfigureAwait(false);
-            //mrvts.OnCompleted(s => { Console.WriteLine(1); }, null, 2, ValueTaskSourceOnCompletedFlags.None);
-            //mrvts.Reset();
-            //mrvts.Reset();
-            //Console.WriteLine(mrvts.Version);
-
-            //mrvts.SetResult(42);
-
-            //Assert.Equal(ValueTaskSourceStatus.Succeeded, mrvts.GetStatus(2));
-            //Assert.Equal(42, mrvts.GetResult(2));
-            //Test();
-            Task.Run(() =>
+            int testIndex = 0;
+            ConcurrentDictionary<int,int> a = new ConcurrentDictionary<int,int>();
+            Parallel.For(1, 1024000, (index) =>
             {
-                for (int i = 0; i < 10; i++)
-                {
-                    Run();
-                    Thread.Sleep(3000);
-                    mrvts.SetResult(i);
-                    //mrvts.Reset();
-                    //mrvts.ve
-                }
-                
+                int temp = Interlocked.Increment(ref testIndex);
+                a[temp] = testIndex;
             });
+            Console.WriteLine(a.Count);
+            Console.WriteLine(testIndex);
+            //mrvts = new ManualResetValueTaskSource<int>();
+
+            //_task = new ValueTask<int>(mrvts, 0).ConfigureAwait(false);
+            ////mrvts.OnCompleted(s => { Console.WriteLine(1); }, null, 2, ValueTaskSourceOnCompletedFlags.None);
+            ////mrvts.Reset();
+            ////mrvts.Reset();
+            ////Console.WriteLine(mrvts.Version);
+
+            ////mrvts.SetResult(42);
+
+            ////Assert.Equal(ValueTaskSourceStatus.Succeeded, mrvts.GetStatus(2));
+            ////Assert.Equal(42, mrvts.GetResult(2));
+            ////Test();
+            //Task.Run(() =>
+            //{
+            //    for (int i = 0; i < 10; i++)
+            //    {
+            //        Run();
+            //        Thread.Sleep(3000);
+            //        mrvts.SetResult(i);
+            //        //mrvts.Reset();
+            //        //mrvts.ve
+            //    }
+                
+            //});
             //Assert.Equal(2, mrvts.Version);
             Console.ReadKey();
         }
