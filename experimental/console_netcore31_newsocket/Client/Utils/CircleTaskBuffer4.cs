@@ -32,7 +32,7 @@ public class SingleLinks6<T>
 public class CircleTaskBuffer4<T> where T : new()
 {
 
-    private readonly DebugBuffer<T> _debug;
+    //private readonly DebugBuffer<T> _debug;
     public int ArrayLength = 8192;
     private SingleLinks6<T> _writePtr;
     public SingleLinks6<T> _readPtr;
@@ -42,12 +42,12 @@ public class CircleTaskBuffer4<T> where T : new()
 
     public void Clear()
     {
-        _debug.Clear();
+        //_debug.Clear();
     }
     public CircleTaskBuffer4()
     {
         //_writer = writer;
-        _debug = new();
+        //_debug = new();
         var first = new SingleLinks6<T>(ArrayLength);
         first.InReading = true;
         first.Next = first;
@@ -71,7 +71,7 @@ public class CircleTaskBuffer4<T> where T : new()
     private int _read_offset;
     public ManualResetValueTaskSource<T> WriteNext()
     {
-        _debug.RecodSender();
+        //_debug.RecodSender();
         var result = _currentWrite[_write_offset];
         result.Reset();
         _write_offset += 1;
@@ -89,13 +89,13 @@ public class CircleTaskBuffer4<T> where T : new()
         SpinWait wait = default;
         while (Interlocked.CompareExchange(ref _lock, 1, 0) != 0)
         {
-            _debug.RecodLock();
+            //_debug.RecodLock();
             wait.SpinOnce();
         }
         System.Console.Write($"环{_writePtr.Index}已满！");
         if (_writePtr.Next.InReading)
         {
-            _debug.RecodContact(true);
+            //_debug.RecodContact(true);
             _writePtr = _writePtr.AppendNew(ArrayLength);
             _lock = 0;
             _currentWrite = _writePtr.Buffer;
@@ -104,7 +104,7 @@ public class CircleTaskBuffer4<T> where T : new()
         }
         else
         {
-            _debug.RecodContact(false);
+            //_debug.RecodContact(false);
             _writePtr = _writePtr.Next;
             System.Console.WriteLine($"移动到环{_writePtr.Index}");
             _lock = 0;
@@ -119,8 +119,8 @@ public class CircleTaskBuffer4<T> where T : new()
     {
        
         var result = _currentRead[_read_offset];
-        _debug.RecodReceiver();
-        _debug.AcceptTask(result.AwaitableTask);
+        //_debug.RecodReceiver();
+        //_debug.AcceptTask(result.AwaitableTask);
         if (result.AwaitableTask.IsCompleted)
         {
             //System.Console.WriteLine("Need False!");
@@ -145,7 +145,7 @@ public class CircleTaskBuffer4<T> where T : new()
         SpinWait wait = default;
         while (Interlocked.CompareExchange(ref _lock, 1, 0) != 0)
         {
-            _debug.RecodLock();
+            //_debug.RecodLock();
             wait.SpinOnce();
         }
         System.Console.Write($"环{_readPtr.Index}已处理完！");

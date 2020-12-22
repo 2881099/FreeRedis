@@ -5,14 +5,14 @@ using System.Threading.Tasks;
 
 public class SingleLinks7<T>
 {
-    public static int Increment;
-    public int Index;
+    //public static int Increment;
+    //public int Index;
     public bool InReading;
     public readonly TaskCompletionSource<T>[] Buffer;
     public SingleLinks7(int length)
     {
         Buffer = new TaskCompletionSource<T>[length];
-        Index = Interlocked.Increment(ref Increment);
+        //Index = Interlocked.Increment(ref Increment);
     }
 
     public SingleLinks7<T> Next;
@@ -30,11 +30,16 @@ public class SingleLinks7<T>
 
 public class CircleTaskBuffer5<T> where T : new()
 {
+
+#if DEBUG
     public void Clear()
     {
         _debug.Clear();
     }
+
     private readonly DebugBuffer<T> _debug;
+#endif
+
     public int ArrayLength = 8192;
     private SingleLinks7<T> _writePtr;
     public SingleLinks7<T> _readPtr;
@@ -44,7 +49,9 @@ public class CircleTaskBuffer5<T> where T : new()
     public CircleTaskBuffer5()
     {
         //_writer = writer;
+#if DEBUG
         _debug = new();
+#endif
         var first = new SingleLinks7<T>(ArrayLength);
         first.InReading = true;
         first.Next = first;
@@ -60,18 +67,20 @@ public class CircleTaskBuffer5<T> where T : new()
         _currentWrite = first.Buffer;
         _currentRead = first.Buffer;
         //Parallel.For(0, ArrayLength, (index) => { _currentWrite[index] = new TaskCompletionSource<T>(); });
-        System.Console.WriteLine($"总环数{SingleLinks7<T>.Increment}！");
+        //System.Console.WriteLine($"总环数{SingleLinks7<T>.Increment}！");
     }
 
     private int _write_offset;
     private int _read_offset;
     public TaskCompletionSource<T> WriteNext()
     {
+#if DEBUG
         _debug.RecodSender();
+#endif
         var result = new TaskCompletionSource<T>();
         _currentWrite[_write_offset] = result;
-       //result.Reset();
-       _write_offset += 1;
+        //result.Reset();
+        _write_offset += 1;
         if (_write_offset == ArrayLength)
         {
             AddBuffer();
@@ -86,24 +95,30 @@ public class CircleTaskBuffer5<T> where T : new()
         SpinWait wait = default;
         while (Interlocked.CompareExchange(ref _lock, 1, 0) != 0)
         {
+#if DEBUG
             _debug.RecodLock();
+#endif
             wait.SpinOnce();
         }
-        System.Console.Write($"环{_writePtr.Index}已满！");
+        //System.Console.Write($"环{_writePtr.Index}已满！");
         if (_writePtr.Next.InReading)
         {
+#if DEBUG
             _debug.RecodContact(true);
+#endif
             _writePtr = _writePtr.AppendNew(ArrayLength);
             _lock = 0;
             _currentWrite = _writePtr.Buffer;
-            System.Console.WriteLine($"开辟新环，总环数{SingleLinks7<T>.Increment}！");
-            Parallel.For(0, ArrayLength, (index) => { _currentWrite[index] = new TaskCompletionSource<T>(); });
+            //System.Console.WriteLine($"开辟新环，总环数{SingleLinks7<T>.Increment}！");
+            //Parallel.For(0, ArrayLength, (index) => { _currentWrite[index] = new TaskCompletionSource<T>(); });
         }
         else
         {
+#if DEBUG
             _debug.RecodContact(false);
+#endif
             _writePtr = _writePtr.Next;
-            System.Console.WriteLine($"移动到环{_writePtr.Index}");
+            //System.Console.WriteLine($"移动到环{_writePtr.Index}");
             _lock = 0;
             _currentWrite = _writePtr.Buffer;
         }
@@ -114,19 +129,22 @@ public class CircleTaskBuffer5<T> where T : new()
 
     public void ReadNext(T value)
     {
-       
+
         var result = _currentRead[_read_offset];
+#if DEBUG
         _debug.RecodReceiver();
         _debug.AcceptTask(result.Task);
-        if (result.Task.IsCompleted)
-        {
-            //System.Console.WriteLine("Need False!");
-            //result.SetResult((T)(object)false);
-        }
-        else
-        {
-            result.SetResult(value);
-        }
+#endif
+        result.SetResult(value);
+        //if (result.Task.IsCompleted)
+        //{
+        //    //System.Console.WriteLine("Need False!");
+        //    //result.SetResult((T)(object)false);
+        //}
+        //else
+        //{
+        //    result.SetResult(value);
+        //}
         _read_offset += 1;
         if (_read_offset == ArrayLength)
         {
@@ -143,13 +161,15 @@ public class CircleTaskBuffer5<T> where T : new()
         SpinWait wait = default;
         while (Interlocked.CompareExchange(ref _lock, 1, 0) != 0)
         {
+#if DEBUG
             _debug.RecodLock();
+#endif
             wait.SpinOnce();
         }
-        System.Console.Write($"环{_readPtr.Index}已处理完！");
+        //System.Console.Write($"环{_readPtr.Index}已处理完！");
         _readPtr.InReading = false;
         _readPtr = _readPtr.Next;
-        System.Console.WriteLine($"移动到环{_readPtr.Index}");
+        //System.Console.WriteLine($"移动到环{_readPtr.Index}");
         _readPtr.InReading = true;
         _lock = 0;
         _currentRead = _readPtr.Buffer;
@@ -247,7 +267,7 @@ public class DebugBuffer<T>
 
     public void ShowInfo()
     {
-        return;
+
         System.Console.WriteLine("-------------------------------------------------------");
         System.Console.WriteLine($"缓冲区经历了{_contactCount.Count}次移动！");
         for (int i = 0; i < _contactCount.Count; i++)

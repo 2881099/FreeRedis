@@ -92,6 +92,7 @@ namespace console_netcore31_newsocket
             ///RunTest();
             //Console.WriteLine("====== 以上预热 =======");
             RunSE();
+            RunSE();
             //RunSE();
             //RunSE();
             //for (int i = 0; i < 10; i++)
@@ -254,7 +255,7 @@ namespace console_netcore31_newsocket
         {
 
             RunTasks((key) => _redisClient26.SetAsync(key, key), "client26");
-            _redisClient26.Clear();
+            //_redisClient26.Clear();
         }
         private static void Run21()
         {

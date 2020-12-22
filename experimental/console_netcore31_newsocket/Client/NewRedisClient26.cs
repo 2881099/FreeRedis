@@ -20,10 +20,12 @@ namespace console_netcore31_newsocket
            
             _protocalStart = (byte)43;
         }
+#if DEBUG
         public void Clear()
         {
             _taskBuffer.Clear();
         }
+#endif
         protected override void Init()
         {
             _taskBuffer = new CircleTaskBuffer5<bool>();
