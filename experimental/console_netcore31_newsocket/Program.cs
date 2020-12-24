@@ -27,7 +27,7 @@ namespace console_netcore31_newsocket
         private static int port;
         private static string ip;
         private static string pwd;
-        private const int frequence = 102400;
+        private const int frequence =  100000;
 
         private static RedisClient _freeRedisClient;
         private static BeetleX.Redis.RedisDB _beetleClient;
@@ -53,9 +53,11 @@ namespace console_netcore31_newsocket
         private static NewRedisClient24 _redisClient24;
         private static NewRedisClient25 _redisClient25;
         private static NewRedisClient26 _redisClient26;
+        private static NewRedisClient27 _redisClient27;
+        //private static NewRedisClient28 _redisClient28;
         private static ClientPool3 _pool10;
         private static ClientPool4 _pool13;
-        private static ClientPool5 _pool14;
+        private static ClientPool5 _pool26;
         private static NewLife.Caching.Redis _newLifeRedis;
 
         private static IDatabase _stackExnchangeClient;
@@ -74,57 +76,9 @@ namespace console_netcore31_newsocket
         public static ConnectionMultiplexer seredis;
         static void Main(string[] args)
         {
-            //HashSet<int> code = new HashSet<int>();
-            //for (int i = 0; i < 60000; i++)
-            //{
-            //    code.Add((new A<bool>()).GetHashCode());
-            //}
-            //Console.WriteLine(code.Count);
-            //Console.ReadKey();
-            //Console.WriteLine("按键开始！");
-            //Console.ReadKey();
-            Configuration();
-            //Thread.Sleep(3000);
-            //for (int i = 0; i < 100; i++)
-            //{
-            //    RunTest();
-            //}
-            ///RunTest();
-            //Console.WriteLine("====== 以上预热 =======");
-            RunSE();
-            RunSE();
-            //RunSE();
-            //RunSE();
-            //for (int i = 0; i < 10; i++)
-            //{
-            //Run21();
-            //Run21();
-            Run26();
-            //Console.ReadKey();
-            Run26();
-            //Console.ReadKey();
-            Run26();
-            //Run25();
-            //Console.ReadKey();
-            //Run25();
-            //Run25();
-            //Run25();
-            //Run25();
-            //Run25();
-            //Run161();
-            //}
 
-            //Run23();
-            //Run23();
-            //Run21();
-            //Run161();
-            //Run161();
-            //NewSocketRedis21SetTest();
-            //_pool10.ShowHandlerCount();
-            //CheckPool();
-            //Console.WriteLine(_pool10.GetLockCount1());
-            //Console.WriteLine(_pool10.GetLockCount2());
-            //Console.WriteLine(_pool10.GetLockCount3());
+            Configuration();
+            RunTest();
             Console.ReadKey();
 
         }
@@ -134,7 +88,7 @@ namespace console_netcore31_newsocket
         {
             _options = new ParallelOptions();
             _options.MaxDegreeOfParallelism = 4;
-            //_useDelay = true;
+            _useDelay = true;
             _delayCount = 6000;
             //Notice : Please use "//" comment "/*".
 
@@ -151,61 +105,75 @@ namespace console_netcore31_newsocket
             //*/
             seredis = ConnectionMultiplexer.Connect($"{ip}:{port},password={pwd}");
             _stackExnchangeClient = seredis.GetDatabase(0);
-            // NewLife.Redis
-            // _newLifeRedis = new NewLife.Caching.Redis($"{ip}:{port}",null, 1);
-            //var result = newLifeRedis.Set("1", "1");
-            //Console.WriteLine(result);
-            //Console.ReadKey();
-            //_beetleClient = new BeetleX.Redis.RedisDB(0);
-            //var host = _beetleClient.Host.AddWriteHost(ip, port);
-            //host.MaxConnections = 1000;
-            //host.QueueMaxLength = 512;
-            //_freeRedisClient = new RedisClient($"{ip}:{port},database=0,min pool size=100");
+            //// NewLife.Redis
+            //// _newLifeRedis = new NewLife.Caching.Redis($"{ip}:{port}",null, 1);
+            ////var result = newLifeRedis.Set("1", "1");
+            ////Console.WriteLine(result);
+            ////Console.ReadKey();
+            var client = new BeetleX.Redis.RedisClient(false, ip, port);
+            _beetleClient = new BeetleX.Redis.RedisDB(0);
+            var host = _beetleClient.Host.AddWriteHost(ip, port);
+            host.Password = "123456";
+            //host.Connect(client);
+            //_beetleClient.
+            ////host.MaxConnections = 1000;
+            ////host.QueueMaxLength = 512;
+            ////_freeRedisClient = new RedisClient($"{ip}:{port},database=0,min pool size=100");
             _redisClient4 = new NewRedisClient4();
             _redisClient4.CreateConnection(ip, port);
             _redisClient4.AuthAsync(pwd);
 
-
-            _redisClient161 = new NewRedisClient161();
-            _redisClient161.CreateConnection(ip, port);
-            //_redisClient161.AuthAsync(pwd);
-
-            _redisClient162 = new NewRedisClient162();
-            _redisClient162.CreateConnection(ip, port);
-            //_redisClient162.AuthAsync(pwd);
-
-            _redisClient21 = new NewRedisClient21();
-            _redisClient21.CreateConnection(ip, port);
-            _redisClient21.AuthAsync(pwd);
+            _pool26 = new ClientPool5(ip, port);
+            _pool26.AuthAsync(pwd);
 
 
+            //_redisClient28 = new NewRedisClient28(ip, port);
+            //_redisClient28.Connect();
+            // var r = _redisClient28.AuthAsync(pwd).Result;
+            //Console.WriteLine("28"+r);
+            //_redisClient161 = new NewRedisClient161();
+            //_redisClient161.CreateConnection(ip, port);
+            ////_redisClient161.AuthAsync(pwd);
 
-            _redisClient22 = new NewRedisClient22();
-            _redisClient22.CreateConnection(ip, port);
-            _redisClient22.AuthAsync(pwd);
+            //_redisClient162 = new NewRedisClient162();
+            //_redisClient162.CreateConnection(ip, port);
+            ////_redisClient162.AuthAsync(pwd);
 
-            //var result = await _redisClient22.SetAsync("1","1");
-            //Console.WriteLine(result);
-            //result = await _redisClient22.SetAsync("1", "1");
-            //Console.WriteLine(result);
+            //_redisClient21 = new NewRedisClient21();
+            //_redisClient21.CreateConnection(ip, port);
+            //_redisClient21.AuthAsync(pwd);
 
-            _redisClient23 = new NewRedisClient23();
-            _redisClient23.CreateConnection(ip, port);
-            _redisClient23.AuthAsync(pwd);
 
-            _redisClient24 = new NewRedisClient24();
-            _redisClient24.CreateConnection(ip, port);
-            _redisClient24.AuthAsync(pwd);
+
+            //_redisClient22 = new NewRedisClient22();
+            //_redisClient22.CreateConnection(ip, port);
+            //_redisClient22.AuthAsync(pwd);
+
+            ////var result = await _redisClient22.SetAsync("1","1");
+            ////Console.WriteLine(result);
+            ////result = await _redisClient22.SetAsync("1", "1");
+            ////Console.WriteLine(result);
+
+            //_redisClient23 = new NewRedisClient23();
+            //_redisClient23.CreateConnection(ip, port);
+            //_redisClient23.AuthAsync(pwd);
+
+            //_redisClient24 = new NewRedisClient24();
+            //_redisClient24.CreateConnection(ip, port);
+            //_redisClient24.AuthAsync(pwd);
+            _redisClient27 = new NewRedisClient27();
+            _redisClient27.CreateConnection(ip, port);
+            var temp = _redisClient27.AuthAsync(pwd).Result;
 
             _redisClient26 = new NewRedisClient26();
             _redisClient26.CreateConnection(ip, port);
-            var temp = _redisClient26.AuthAsync(pwd).Result;
+            temp = _redisClient26.AuthAsync(pwd).Result;
             Console.WriteLine(temp);
 
-            _redisClient25 = new NewRedisClient25();
-            _redisClient25.CreateConnection(ip, port);
-            temp = await _redisClient25.AuthAsync(pwd);
-            Console.WriteLine(temp);
+            //_redisClient25 = new NewRedisClient25();
+            //_redisClient25.CreateConnection(ip, port);
+            //temp = await _redisClient25.AuthAsync(pwd);
+            //Console.WriteLine(temp);
 
 
 
@@ -227,8 +195,31 @@ namespace console_netcore31_newsocket
             //FreeRedisSetTest();
             //StackExchangeRedisSetTest();
             //StackExchangeRedisSetTest();
-            Run21();
-            Run21();
+            //Run21();
+            //Run26();
+            //Console.ReadKey();
+            //Console.ReadKey();
+            //Run26();
+            //Run26();
+            //Run27();
+            Run27();
+            RunBeetle();
+            Run27();
+            RunBeetle();
+            Run27();
+            RunBeetle();
+            Run27();
+            RunBeetle();
+            //Run26Pool();
+            //Run26Pool();
+            //RunSE();
+            //RunSE();
+            //RunSE();
+            //RunSE();
+            //for (int i = 0; i < 10; i++)
+            //{
+            //Run21();
+
             //NewSocketRedis22SetTest();
             //NewSocketRedis22SetTest();
             //NewSocketRedis23SetTest();
@@ -257,6 +248,33 @@ namespace console_netcore31_newsocket
             RunTasks((key) => _redisClient26.SetAsync(key, key), "client26");
             //_redisClient26.Clear();
         }
+        private static void Run26Pool()
+        {
+
+            RunTasks((key) => _pool26.SetAsync(key, key), "client26Pool");
+            //_redisClient26.Clear();
+        }
+        
+        private static void Run27()
+        {
+
+            RunTasks((key) => _redisClient27.SetAsync(key, key), "client27");
+            //_redisClient26.Clear();
+        }
+
+        private static void RunBeetle()
+        {
+
+            RunValueTasks((key) => _beetleClient.Set(key, key), "BeetleX");
+            //_redisClient26.Clear();
+        }
+
+        //private static void Run28()
+        //{
+
+        //    RunTasks((key) => _redisClient28.SetAsync(key, key), "client28");
+        //    //_redisClient26.Clear();
+        //}
         private static void Run21()
         {
             RunValueTasks((key) => _redisClient21.SetAsync(key, key), "client21");
@@ -421,7 +439,54 @@ namespace console_netcore31_newsocket
         //#region RedisTest
 
 
+        private static void RunValueTasks(Func<string, ValueTask<string>> task, string title)
+        {
+            if (_useDelay)
+            {
+                Thread.Sleep(_delayCount);
+            }
+            int count = 0;
+            Console.WriteLine("=========================");
+            var result = _redisClient4.FlushDBAsync().Result;
+            Console.WriteLine($"Clear DB 0 - [{(result ? "SUCCEED" : "FAILED")}]!");
+            //_redisClient25.Pause = false;
+            var tasks = new ValueTask<string>[frequence];
+            Stopwatch sw = new Stopwatch();
+            Console.WriteLine("Start Run:");
+            sw.Start();
+            Parallel.For(0, frequence, _options, (index) =>
+            {
+                tasks[index] = task(index.ToString());
+            });
+            int offset = 0;
+            SpinWait wait = default;
+            while (offset != frequence - 1)
+            {
 
+                for (int i = offset; i < frequence; i++)
+                {
+                    if (tasks[i].IsCompleted)
+                    {
+
+                        //if (!tasks[i].Result == "Ok")
+                        //{
+                        //    break;
+                        //    //Console.WriteLine("false!");
+                        //}
+                        offset = i;
+                    }
+                    else
+                    {
+                        break;
+                    }
+
+                }
+                wait.SpinOnce();
+            }
+            sw.Stop();
+            Console.WriteLine($"{title} (0-{frequence / 10000}W) : {sw.ElapsedMilliseconds}ms! ");
+            Console.WriteLine("=========================\r\n");
+        }
         private static void RunValueTasks(Func<string, ValueTask<bool>> task, string title)
         {
             if (_useDelay)
@@ -458,7 +523,10 @@ namespace console_netcore31_newsocket
                         }
                         offset = i;
                     }
-
+                    else
+                    {
+                        break;
+                    }
                 }
                 wait.SpinOnce();
             }
@@ -493,6 +561,7 @@ namespace console_netcore31_newsocket
 
                 for (int i = offset; i < frequence; i++)
                 {
+
                     if (!tasks[i].Result)
                     {
                         break;

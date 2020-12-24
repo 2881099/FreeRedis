@@ -41,7 +41,7 @@ namespace console_netcore31_newsocket
                 throw new NotSupportedException("The SocketConnectionFactory only supports IPEndPoints for now.");
             }
 
-           
+
 
             var addressFamily = endpoint.AddressFamily;
             if (addressFamily == AddressFamily.Unspecified && endpoint is DnsEndPoint)
@@ -52,8 +52,15 @@ namespace console_netcore31_newsocket
             var protocolType = addressFamily == AddressFamily.Unix ? ProtocolType.Unspecified : ProtocolType.Tcp;
             var socket = new Socket(ipEndPoint.AddressFamily, SocketType.Stream, protocolType)
             {
-                NoDelay = _options.NoDelay
+                NoDelay = _options.NoDelay,
             };
+            // Apply the option: keep alive
+            //if (OptionKeepAlive)
+            //socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
+            //socket.UseOnlyOverlappedIO = true;
+            // Apply the option: no delay
+            //if (OptionNoDelay)
+            socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.NoDelay, true);
             await socket.ConnectAsync(ipEndPoint);
 
             var socketConnection = new SocketConnection(

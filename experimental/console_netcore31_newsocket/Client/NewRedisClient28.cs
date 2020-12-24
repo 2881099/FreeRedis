@@ -1,6 +1,9 @@
-﻿using console_netcore31_newsocket.Client.Utils;
+﻿using BeetleX.Clients;
+using console_netcore31_newsocket.Client.Utils;
+//using NetCoreServer;
 using System;
 using System.Buffers;
+using System.Net;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
@@ -10,15 +13,17 @@ namespace console_netcore31_newsocket
 {
 
 
-    public class NewRedisClient26 : RedisClientBase5
+    public class NewRedisClient28 : AsyncTcpClient
     {
 
         private readonly byte _protocalStart;
-        public CircleTaskBuffer5<bool> _taskBuffer;
-        public NewRedisClient26()
+        public readonly CircleTaskBuffer5<bool> _taskBuffer;
+        public NewRedisClient28(string ip,int port)
         {
-           
-            _protocalStart = (byte)43;
+            this.LocalEndPoint = new IPEndPoint(IPAddress.Parse(ip), port);
+            this.Connect(out _);
+             _protocalStart = (byte)43;
+            _taskBuffer = new CircleTaskBuffer5<bool>();
         }
 #if DEBUG
         public void Clear()
@@ -26,9 +31,50 @@ namespace console_netcore31_newsocket
             _taskBuffer.Clear();
         }
 #endif
-        protected override void Init()
+
+        //protected override void OnConnected()
+        //{
+        //    Console.WriteLine($"Chat TCP client connected a new session with Id {Id}");
+        //}
+        //protected override void OnError(System.Net.Sockets.SocketError error)
+        //{
+        //    Console.WriteLine($"Chat TCP client caught an error with code {error}");
+        //}
+        private int _send_lock_flag;
+
+        public bool IsCompleted
         {
-            _taskBuffer = new CircleTaskBuffer5<bool>();
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get
+            {
+                return _send_lock_flag != 1;
+
+            }
+        }
+        public int LockCount;
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        protected void LockSend()
+        {
+
+            SpinWait wait = default;
+            while (Interlocked.CompareExchange(ref _send_lock_flag, 1, 0) != 0)
+            {
+                wait.SpinOnce();
+            }
+
+        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool TryGetSendLock()
+        {
+            return Interlocked.CompareExchange(ref _send_lock_flag, 1, 0) == 0;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void ReleaseSend()
+        {
+
+            _send_lock_flag = 0;
+
         }
 
 
@@ -40,7 +86,7 @@ namespace console_netcore31_newsocket
             }
             var bytes = Encoding.UTF8.GetBytes($"AUTH {password}\r\n");
             LockSend();
-            _sender.WriteAsync(bytes);
+            this.SendAsync($"AUTH {password}\r\n");
             var task = _taskBuffer.WriteNext();
             ReleaseSend();
             return task.Task;
@@ -51,7 +97,7 @@ namespace console_netcore31_newsocket
         {
             var bytes = Encoding.UTF8.GetBytes($"*3\r\n$3\r\nSET\r\n${key.Length}\r\n{key}\r\n${value.Length}\r\n{value}\r\n");
             LockSend();
-            _sender.WriteAsync(bytes);
+            this.SendAsync(bytes);
             var task = _taskBuffer.WriteNext();
             ReleaseSend();
             return task.Task;
@@ -61,7 +107,7 @@ namespace console_netcore31_newsocket
         public Task<bool> SetAsync(byte[] bytes)
         {
             LockSend();
-            _sender.WriteAsync(bytes);
+            this.SendAsync(bytes);
             var task = _taskBuffer.WriteNext();
             ReleaseSend();
             return task.Task;
@@ -69,14 +115,19 @@ namespace console_netcore31_newsocket
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public Task<bool> SetAsyncWithoutLock(byte[] bytes)
         {
-            _sender.WriteAsync(bytes);
+            this.SendAsync(bytes);
             var task = _taskBuffer.WriteNext();
             ReleaseSend();
             return task.Task;
         }
 
+        protected override void OnReceived(byte[] buffer, long offset, long size)
+        {
+            Handler(buffer.AsSpan().Slice((int)offset,(int)size));
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-        protected internal override void Handler(in ReadOnlySequence<byte> sequence)
+        protected internal void Handler(in ReadOnlySequence<byte> sequence)
         {
 
             foreach (ReadOnlyMemory<byte> segment in sequence)
@@ -100,7 +151,7 @@ namespace console_netcore31_newsocket
         }
 
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-        protected internal override void Handler(in ReadOnlySpan<byte> sequence)
+        protected internal void Handler(in ReadOnlySpan<byte> sequence)
         {
 
             //第一个节点是有用的节点

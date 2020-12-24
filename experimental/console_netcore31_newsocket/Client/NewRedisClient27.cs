@@ -10,14 +10,16 @@ namespace console_netcore31_newsocket
 {
 
 
-    public class NewRedisClient26 : RedisClientBase5
+    public class NewRedisClient27 : RedisClientBase5
     {
 
         private readonly byte _protocalStart;
-        public CircleTaskBuffer5<bool> _taskBuffer;
-        public NewRedisClient26()
+        public readonly CircleTaskBuffer5<bool> _taskBuffer;
+        private readonly NewRedisClient26 _other;
+        public NewRedisClient27()
         {
-           
+            _taskBuffer = new CircleTaskBuffer5<bool>();
+            _other = new NewRedisClient26();
             _protocalStart = (byte)43;
         }
 #if DEBUG
@@ -26,10 +28,12 @@ namespace console_netcore31_newsocket
             _taskBuffer.Clear();
         }
 #endif
-        protected override void Init()
+        public override void CreateConnection(string ip, int port)
         {
-            _taskBuffer = new CircleTaskBuffer5<bool>();
+            _other.CreateConnection(ip, port);
+            base.CreateConnection(ip, port);
         }
+
 
 
         public Task<bool> AuthAsync(string password)
@@ -39,6 +43,7 @@ namespace console_netcore31_newsocket
                 return default;
             }
             var bytes = Encoding.UTF8.GetBytes($"AUTH {password}\r\n");
+            _other.AuthAsync(password);
             LockSend();
             _sender.WriteAsync(bytes);
             var task = _taskBuffer.WriteNext();
@@ -50,30 +55,22 @@ namespace console_netcore31_newsocket
         public Task<bool> SetAsync(string key, string value)
         {
             var bytes = Encoding.UTF8.GetBytes($"*3\r\n$3\r\nSET\r\n${key.Length}\r\n{key}\r\n${value.Length}\r\n{value}\r\n");
-            LockSend();
-            _sender.WriteAsync(bytes);
-            var task = _taskBuffer.WriteNext();
-            ReleaseSend();
-            return task.Task;
+            if (TryGetSendLock())
+            {
+                _sender.WriteAsync(bytes);
+                var task = _taskBuffer.WriteNext();
+                ReleaseSend();
+                return task.Task;
+
+            }
+            else
+            {
+                return _other.SetAsync(bytes);
+            }
+           
+           
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-        public Task<bool> SetAsync(byte[] bytes)
-        {
-            LockSend();
-            _sender.WriteAsync(bytes);
-            var task = _taskBuffer.WriteNext();
-            ReleaseSend();
-            return task.Task;
-        }
-        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-        public Task<bool> SetAsyncWithoutLock(byte[] bytes)
-        {
-            _sender.WriteAsync(bytes);
-            var task = _taskBuffer.WriteNext();
-            ReleaseSend();
-            return task.Task;
-        }
 
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         protected internal override void Handler(in ReadOnlySequence<byte> sequence)

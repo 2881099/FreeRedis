@@ -48,9 +48,9 @@ namespace console_netcore31_newsocket
 
         private string _ip;
         private int _port;
-        private NewRedisClient14 _node1;
-        private NewRedisClient14 _node2;
-        private NewRedisClient14 _node3;
+        private NewRedisClient26 _node1;
+        private NewRedisClient26 _node2;
+        private NewRedisClient26 _node3;
         private const int _length = 2;
         public int[] CallCounter;
         public ClientPool5(string ip, int port)
@@ -58,13 +58,13 @@ namespace console_netcore31_newsocket
             _ip = ip;
             _port = port;
 
-            _node1 = new NewRedisClient14();
+            _node1 = new NewRedisClient26();
             _node1.CreateConnection(ip, port);
 
-            _node2 = new NewRedisClient14();
+            _node2 = new NewRedisClient26();
             _node2.CreateConnection(ip, port);
 
-            _node3 = new NewRedisClient14();
+            _node3 = new NewRedisClient26();
             _node3.CreateConnection(ip, port);
 
         }
@@ -88,22 +88,20 @@ namespace console_netcore31_newsocket
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public Task<bool> SetAsync(byte[] bytes)
         {
-            var taskSource = CreateTask(null, TaskCreationOptions.RunContinuationsAsynchronously);
             if (_node1.TryGetSendLock())
             {
-                _node1.SetAsync(bytes, taskSource);
+                return _node1.SetAsyncWithoutLock(bytes);
             }
             else if (_node2.TryGetSendLock())
             {
-                _node2.SetAsync(bytes, taskSource);
+                return _node2.SetAsyncWithoutLock(bytes);
             }
             else
             {
-                _node3.SetAndWaitAsync(bytes, taskSource);
+                return _node3.SetAsync(bytes);
             }
-
-            return taskSource;
         }
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public Task<bool> SetAsync(string key, string value)
         {
 
