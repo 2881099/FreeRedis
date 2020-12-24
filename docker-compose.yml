@@ -1,0 +1,10 @@
+version: "3.9"
+services:
+  redis_single:
+    image: redis:6.0-alpine
+    container_name: "redis_single"
+    volumes:
+      - ${workDirectory}/env/redis.conf:/usr/local/etc/redis/redis.conf
+    ports:
+      - "6379:6379"
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
