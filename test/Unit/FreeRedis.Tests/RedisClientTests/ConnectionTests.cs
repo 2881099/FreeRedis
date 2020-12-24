@@ -142,7 +142,7 @@ namespace FreeRedis.Tests.RedisClientTests.Other
         {
             RedisScopeExecHelper.ExecScope(new ConnectionStringBuilder()
             {
-                Host = "redis_single",
+                Host = RedisEnvironmentHelper.GetHost("redis_single"),
                 Password = "123456",
                 MaxPoolSize = 1
             }, (cli) =>

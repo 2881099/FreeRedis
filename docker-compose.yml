@@ -38,13 +38,3 @@ services:
     command: redis-sentinel /usr/local/etc/redis/sentinel.conf
     volumes:
       - ${workDirectory}/env/sentinel.conf:/usr/local/etc/redis/sentinel.conf
-  dns_proxy:
-    image: defreitas/dns-proxy-server
-    container_name: "dns_proxy_server"
-    hostname: "dns.mageddo"
-    ports:
-      - 5380:5380
-    volumes:
-      - /opt/dns-proxy-server/conf:/app/conf
-      - /var/run/docker.sock:/var/run/docker.sock
-      - /etc/resolv.conf:/etc/resolv.conf

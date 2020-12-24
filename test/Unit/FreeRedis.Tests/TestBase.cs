@@ -8,7 +8,15 @@ namespace FreeRedis.Tests
 {
     public class TestBase
     {
-	    protected static readonly string Connection = "redis_single,password=123456,database=1,max pool size=10,protocol=RESP2,ClientName=FreeRedis";
+	    protected static ConnectionStringBuilder Connection = new ConnectionStringBuilder()
+	    {
+		    Host = RedisEnvironmentHelper.GetHost("redis_single"),
+		    Password = "123456",
+		    Database = 1,
+		    MaxPoolSize = 10,
+		    Protocol = RedisProtocol.RESP2,
+		    ClientName = "FreeRedis"
+	    };
 		//static Lazy<RedisClient> _cliLazy = new Lazy<RedisClient>(() => new RedisClient("127.0.0.1:6379,database=1", "127.0.0.1:6379,database=1"));
 		static Lazy<RedisClient> _cliLazy = new Lazy<RedisClient>(() =>
 		{
