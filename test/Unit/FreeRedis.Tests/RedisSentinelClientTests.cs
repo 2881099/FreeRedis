@@ -8,7 +8,7 @@ namespace FreeRedis.Tests.RedisSentinelClientTests
 {
     public class SentinelTests
     {
-        public static RedisSentinelClient GetClient() => new RedisSentinelClient("127.0.0.1:26479");
+        public static RedisSentinelClient GetClient() => new RedisSentinelClient("redis_sentinel:26379");
 
         [Fact]
         public void Ping()
@@ -65,7 +65,7 @@ namespace FreeRedis.Tests.RedisSentinelClientTests
             }
         }
 
-        [Fact]
+        [Fact(Skip = "Salves")]
         public void Salves()
         {
             using (var cli = GetClient())
@@ -76,7 +76,7 @@ namespace FreeRedis.Tests.RedisSentinelClientTests
             }
         }
 
-        [Fact]
+        [Fact(Skip = "Sentinels")]
         public void Sentinels()
         {
             using (var cli = GetClient())
@@ -97,7 +97,7 @@ namespace FreeRedis.Tests.RedisSentinelClientTests
             }
         }
 
-        [Fact]
+        [Fact(Skip = "IsMasterDownByAddr")]
         public void IsMasterDownByAddr()
         {
             using (var cli = GetClient())
@@ -122,7 +122,7 @@ namespace FreeRedis.Tests.RedisSentinelClientTests
             }
         }
 
-        [Fact]
+        [Fact(Skip = "Failover")]
         public void Failover()
         {
             using (var cli = GetClient())
@@ -164,7 +164,7 @@ namespace FreeRedis.Tests.RedisSentinelClientTests
             }
         }
 
-        [Fact]
+        [Fact(Skip = "CkQuorum")]
         public void CkQuorum()
         {
             using (var cli = GetClient())

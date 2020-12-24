@@ -221,11 +221,14 @@ namespace FreeRedis.Tests.RedisClientTests.Other
         [Fact]
         public void FlushAll()
         {
-            using (var sh = cli.GetDatabase(7))
+            RedisScopeExecHelper.ExecScope("redis_flush", (cli) =>
             {
-                cli.FlushAll(true);
-                cli.FlushAll(false);
-            }
+                using (var sh = cli.GetDatabase(7))
+                {
+                    cli.FlushAll(true);
+                    cli.FlushAll(false);
+                }
+            });
         }
 
         [Fact]

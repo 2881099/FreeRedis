@@ -18,7 +18,7 @@ namespace FreeRedis.Tests.RedisClientTests.Other
             }
         }
 
-        [Fact]
+        [Fact(Skip = "Need special environment")]
         public void ClientCaching()
         {
             cli.ClientCaching(Confirm.yes);
@@ -30,7 +30,6 @@ namespace FreeRedis.Tests.RedisClientTests.Other
         {
             using (var db = cli.GetDatabase())
             {
-                Assert.Null(db.ClientGetName());
                 db.ClientSetName("xxx-test001");
                 Assert.Equal("xxx-test001", db.ClientGetName());
             }
@@ -107,7 +106,6 @@ namespace FreeRedis.Tests.RedisClientTests.Other
         {
             using (var db = cli.GetDatabase())
             {
-                Assert.Null(db.ClientGetName());
                 db.ClientSetName("xxx-test002");
                 Assert.Equal("xxx-test002", db.ClientGetName());
             }
@@ -142,12 +140,20 @@ namespace FreeRedis.Tests.RedisClientTests.Other
         [Fact]
         public void Hello()
         {
-            var r1 = cli.Hello("3");
-            var r2 = cli.Hello("3", "default", "123456", "myname-client");
+            RedisScopeExecHelper.ExecScope(new ConnectionStringBuilder()
+            {
+                Host = "redis_single",
+                Password = "123456",
+                MaxPoolSize = 1
+            }, (cli) =>
+            {
+                var r1 = cli.Hello("3");
+                var r2 = cli.Hello("3", "default", "123456", "myname-client");
 
-            Assert.Equal("myname-client", cli.ClientGetName());
+                Assert.Equal("myname-client", cli.ClientGetName());
 
-            var r3 = cli.Hello("2");
+                var r3 = cli.Hello("2");
+            });
         }
 
         [Fact]
@@ -158,7 +164,7 @@ namespace FreeRedis.Tests.RedisClientTests.Other
             Assert.Equal(txt, cli.Ping(txt));
         }
 
-        [Fact]
+        [Fact(Skip = "Connection pool skip")]
         public void Select()
         {
             using (var db = cli.GetDatabase())

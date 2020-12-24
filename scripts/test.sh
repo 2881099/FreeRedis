@@ -1,21 +1,5 @@
 #!/bin/bash
 
-# Setup environment variables
-
-while read name ports image; do
-    key="DOCKER_HOST_$name"
-    # 0.0.0.0:1234->9876/tcp,first
-    tempPort=$(cut -d'-' -f1 <<<"$ports")
-    vr="$key=$tempPort"
-    echo "$vr"
-    export "$vr"
-done <<<$(docker ps --filter "status="running"" --format "{{.Names}}\t{{.Ports}}\t{{.Image}}")
-
-#echo $(printenv DOCKER_HOST_redis_auth)
-#echo $(printenv DOCKER_HOST_redis_single)
-
-echo "setup is finished"
-
 cd test/Unit/ || exit
 
 for i in *.Tests ; do 

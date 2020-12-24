@@ -28,37 +28,43 @@ namespace FreeRedis.Tests.RedisClientTests.Other
         [Fact]
         public void PubSubChannels()
         {
-            var key1 = "PubSubChannels1";
-            using (cli.Subscribe(key1, (chan, msg) =>
+            RedisScopeExecHelper.ExecScope(Connection, (cli) =>
             {
+                var key1 = "PubSubChannels1";
+                using (cli.Subscribe(key1, (chan, msg) =>
+                {
 
-            }))
-            {
-                var chans = cli.PubSubChannels("PubSubChannels1*");
-                Assert.Single(chans);
-                Assert.Equal(key1, chans[0]);
-                Thread.CurrentThread.Join(500);
-            }
+                }))
+                {
+                    var chans = cli.PubSubChannels("PubSubChannels1*");
+                    Assert.Single(chans);
+                    Assert.Equal(key1, chans[0]);
+                    Thread.CurrentThread.Join(500);
+                }
+            });
         }
 
         [Fact]
         public void PubSubNumSub()
         {
-            var key1 = "PubSubNumSub1";
-            using (cli.Subscribe(key1, (chan, msg) =>
+            RedisScopeExecHelper.ExecScope(Connection, (cli) =>
             {
+                var key1 = "PubSubNumSub1";
+                using (cli.Subscribe(key1, (chan, msg) =>
+                {
 
-            }))
-            {
-                var r1 = cli.PubSubNumSub("PubSubNumSub1");
-                Assert.Equal(1, r1);
+                }))
+                {
+                    var r1 = cli.PubSubNumSub("PubSubNumSub1");
+                    Assert.Equal(1, r1);
 
-                var r2 = cli.PubSubNumSub(new[] { "PubSubNumSub1" });
-                Assert.Single(r2);
-                Assert.Equal(1, r2[0]);
+                    var r2 = cli.PubSubNumSub(new[] { "PubSubNumSub1" });
+                    Assert.Single(r2);
+                    Assert.Equal(1, r2[0]);
 
-                Thread.CurrentThread.Join(500);
-            }
+                    Thread.CurrentThread.Join(500);
+                }
+            });
         }
 
         [Fact]
