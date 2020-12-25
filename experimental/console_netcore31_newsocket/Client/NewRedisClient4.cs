@@ -22,7 +22,6 @@ namespace console_netcore31_newsocket
        
         private SourceConcurrentQueue2<Task<bool>> _receiverQueue;
         private readonly byte _protocalStart;
-        private readonly NewRedisClient405 newRedisClient9;
 
         public NewRedisClient4()
         {

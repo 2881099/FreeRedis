@@ -32,45 +32,20 @@ namespace console_netcore31_newsocket
         private static RedisClient _freeRedisClient;
         private static BeetleX.Redis.RedisDB _beetleClient;
         //private static NewRedisClient0 _redisClient0;
-        private static NewRedisClient1 _redisClient1;
-        private static NewRedisClient2 _redisClient2;
-        private static NewRedisClient5 _redisClient5;
-        private static NewRedisClient7 _redisClient7;
-        private static NewRedisClient3 _redisClient3;
         private static NewRedisClient4 _redisClient4;
-        private static NewRedisClient8 _redisClient8;
-        private static NewRedisClient9 _redisClient9;
-        private static NewRedisClient12 _redisClient12;
-        private static NewRedisClient14 _redisClient14;
-        private static NewRedisClient15 _redisClient15;
-        private static NewRedisClient16 _redisClient16;
         private static NewRedisClient161 _redisClient161;
-        private static NewRedisClient162 _redisClient162;
-        private static NewRedisClient18 _redisClient18;
         private static NewRedisClient21 _redisClient21;
-        private static NewRedisClient22 _redisClient22;
-        private static NewRedisClient23 _redisClient23;
-        private static NewRedisClient24 _redisClient24;
         private static NewRedisClient25 _redisClient25;
         private static NewRedisClient26 _redisClient26;
         private static NewRedisClient27 _redisClient27;
-        //private static NewRedisClient28 _redisClient28;
-        private static ClientPool3 _pool10;
-        private static ClientPool4 _pool13;
+        private static NewRedisClient28 _redisClient28;
         private static ClientPool5 _pool26;
         private static NewLife.Caching.Redis _newLifeRedis;
 
         private static IDatabase _stackExnchangeClient;
 
-
-        private static ClientPool1<NewRedisClient9> _pool9;
-        private static ClientPool1<NewRedisClient7> _pool7;
         private static ClientPool1<NewRedisClient4> _pool4;
-        private static ClientPool1<NewRedisClient5> _pool5;
-
-        private static ClientPool2<NewRedisClient7> _pool27;
         private static ClientPool2<NewRedisClient4> _pool24;
-        private static ClientPool2<NewRedisClient5> _pool25;
         public class A<T> { }
         private static Action<string> _beforeSw;
         public static ConnectionMultiplexer seredis;
@@ -89,7 +64,7 @@ namespace console_netcore31_newsocket
             _options = new ParallelOptions();
             _options.MaxDegreeOfParallelism = 4;
             _useDelay = true;
-            _delayCount = 6000;
+            _delayCount = 12000;
             //Notice : Please use "//" comment "/*".
 
             ///*
@@ -126,14 +101,15 @@ namespace console_netcore31_newsocket
             _pool26 = new ClientPool5(ip, port);
             _pool26.AuthAsync(pwd);
 
-
-            //_redisClient28 = new NewRedisClient28(ip, port);
-            //_redisClient28.Connect();
+            
+            _redisClient28 = new NewRedisClient28();
+            _redisClient28.CreateConnection(ip, port);
+            _redisClient28.AuthAsync(pwd);
             // var r = _redisClient28.AuthAsync(pwd).Result;
             //Console.WriteLine("28"+r);
-            //_redisClient161 = new NewRedisClient161();
-            //_redisClient161.CreateConnection(ip, port);
-            ////_redisClient161.AuthAsync(pwd);
+            _redisClient161 = new NewRedisClient161();
+            _redisClient161.CreateConnection(ip, port);
+            _redisClient161.AuthAsync(pwd);
 
             //_redisClient162 = new NewRedisClient162();
             //_redisClient162.CreateConnection(ip, port);
@@ -202,14 +178,24 @@ namespace console_netcore31_newsocket
             //Run26();
             //Run26();
             //Run27();
-            Run27();
-            RunBeetle();
-            Run27();
-            RunBeetle();
-            Run27();
-            RunBeetle();
-            Run27();
-            RunBeetle();
+            //Run4();
+            //Run4();
+            //Run4();
+            //Run161();
+            //Run161();
+            //Run161();
+            Run26();
+            //RunBeetle();
+            Run26();
+            //RunBeetle();
+            Run26();
+            //RunBeetle();
+            Run26();
+            Run28();
+            Run28();
+            Run28();
+            Run28();
+            //RunBeetle();
             //Run26Pool();
             //Run26Pool();
             //RunSE();
@@ -255,10 +241,10 @@ namespace console_netcore31_newsocket
             //_redisClient26.Clear();
         }
         
-        private static void Run27()
+        private static void Run28()
         {
 
-            RunTasks((key) => _redisClient27.SetAsync(key, key), "client27");
+            RunTasks((key) => _redisClient28.SetAsync(key, key), "client28");
             //_redisClient26.Clear();
         }
 
@@ -280,6 +266,11 @@ namespace console_netcore31_newsocket
             RunValueTasks((key) => _redisClient21.SetAsync(key, key), "client21");
         }
 
+        private static void Run4()
+        {
+            RunTasks((key) => _redisClient4.SetAsync(key, key), "client4");
+        }
+
         //private static void Run26()
         //{
         //    RunTasks((key) => _redisClient26.SetAsync(key, key), "client26");
@@ -288,7 +279,6 @@ namespace console_netcore31_newsocket
         #region CheckPool
         public static void CheckPool()
         {
-            CheckPool(_pool9);
             CheckPool(_pool4);
             //CheckPool(_pool7);
             //CheckPool(_pool24);
