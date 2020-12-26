@@ -10,7 +10,7 @@ namespace FreeRedis.Tests
 {
     public class InterceptorTests
     {
-        public static RedisClient CreateClient() => new RedisClient("redis_interceptor");
+        public static RedisClient CreateClient() => new RedisClient(RedisEnvironmentHelper.GetHost("redis_interceptor"));
 
         [Fact]
         public void Interceptor()
