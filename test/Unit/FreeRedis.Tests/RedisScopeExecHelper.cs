@@ -6,7 +6,7 @@ namespace FreeRedis.Tests
     {
         public static void ExecScope(string connectionString, Action<RedisClient> func)
         {
-            using (var scope = new RedisClient(connectionString))
+            using (var scope = new RedisClient(RedisEnvironmentHelper.GetHost(connectionString)))
             {
                 func.Invoke(scope);
             }

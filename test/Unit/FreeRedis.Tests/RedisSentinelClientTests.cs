@@ -8,7 +8,7 @@ namespace FreeRedis.Tests.RedisSentinelClientTests
 {
     public class SentinelTests
     {
-        public static RedisSentinelClient GetClient() => new RedisSentinelClient("redis_sentinel:26379");
+        public static RedisSentinelClient GetClient() => new RedisSentinelClient(RedisEnvironmentHelper.GetHost("redis_sentinel"));
 
         [Fact]
         public void Ping()
