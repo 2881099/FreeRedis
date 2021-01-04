@@ -174,7 +174,7 @@ namespace FreeRedis
                 for (var a = 0; a < regkeys.Length; a++)
                 {
                     ConcurrentDictionary<Guid, RegisterInfo> dict = null;
-                    lock (_lock) dict = _registers.GetOrAdd(regkeys[0], k1 => new ConcurrentDictionary<Guid, RegisterInfo>());
+                    lock (_lock) dict = _registers.GetOrAdd(regkeys[a], k1 => new ConcurrentDictionary<Guid, RegisterInfo>());
                     dict.TryAdd(id, new RegisterInfo(id, handler, time));
                 }
                 lock (_lock)
