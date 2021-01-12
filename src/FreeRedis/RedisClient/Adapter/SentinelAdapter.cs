@@ -275,7 +275,7 @@ namespace FreeRedis
                                 if (_ib.Get(_masterHost).CheckAvailable())
                                 {
                                     if (!TopOwner.OnNotice(null, new NoticeEventArgs(NoticeType.Info, null, $"{_connectionString.Host.PadRight(21)} > Redis Sentinel switch to {_masterHost}", null)))
-                                        InternalTrace.WriteLine($"【{_connectionString.Host}】Redis Sentinel switch to {_masterHost}", ConsoleColor.DarkGreen);
+                                        TestTrace.WriteLine($"【{_connectionString.Host}】Redis Sentinel switch to {_masterHost}", ConsoleColor.DarkGreen);
 
                                     RecoverySentineling = false;
                                     return;
@@ -284,7 +284,7 @@ namespace FreeRedis
                             catch (Exception ex21)
                             {
                                 if (!TopOwner.OnNotice(null, new NoticeEventArgs(NoticeType.Info, null, $"{_connectionString.Host.PadRight(21)} > Redis Sentinel switch to {_masterHost}", null)))
-                                    InternalTrace.WriteLine($"【{_connectionString.Host}】Redis Sentinel: {ex21.Message}", ConsoleColor.DarkYellow);
+                                    TestTrace.WriteLine($"【{_connectionString.Host}】Redis Sentinel: {ex21.Message}", ConsoleColor.DarkYellow);
                             }
                         }
                     }).Start();

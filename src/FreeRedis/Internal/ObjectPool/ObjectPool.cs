@@ -10,7 +10,7 @@ using System.Diagnostics;
 
 namespace FreeRedis.Internal.ObjectPool
 {
-    internal class InternalTrace
+    internal class TestTrace
     {
         internal static void WriteLine(string text, ConsoleColor backgroundColor)
         {
@@ -109,7 +109,7 @@ namespace FreeRedis.Internal.ObjectPool
             {
 
                 if (UnavailableException != null)
-                    InternalTrace.WriteLine($"【{Policy.Name}】Next recovery time：{DateTime.Now.AddSeconds(interval)}", ConsoleColor.DarkYellow);
+                    TestTrace.WriteLine($"【{Policy.Name}】Next recovery time：{DateTime.Now.AddSeconds(interval)}", ConsoleColor.DarkYellow);
 
                 while (UnavailableException != null)
                 {
@@ -142,7 +142,7 @@ namespace FreeRedis.Internal.ObjectPool
                     }
                     catch (Exception ex)
                     {
-                        InternalTrace.WriteLine($"【{Policy.Name}】Next recovery time: {DateTime.Now.AddSeconds(interval)} ({ex.Message})", ConsoleColor.DarkYellow);
+                        TestTrace.WriteLine($"【{Policy.Name}】Next recovery time: {DateTime.Now.AddSeconds(interval)} ({ex.Message})", ConsoleColor.DarkYellow);
                     }
                 }
 
@@ -179,7 +179,7 @@ namespace FreeRedis.Internal.ObjectPool
 
                 Policy.OnAvailable();
 
-                InternalTrace.WriteLine($"【{Policy.Name}】Recovered", ConsoleColor.DarkGreen);
+                TestTrace.WriteLine($"【{Policy.Name}】Recovered", ConsoleColor.DarkGreen);
             }
         }
 
