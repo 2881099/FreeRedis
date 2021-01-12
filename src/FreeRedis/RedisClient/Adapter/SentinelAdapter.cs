@@ -1,4 +1,5 @@
 ﻿using FreeRedis.Internal;
+using FreeRedis.Internal.ObjectPool;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -274,16 +275,7 @@ namespace FreeRedis
                                 if (_ib.Get(_masterHost).CheckAvailable())
                                 {
                                     if (!TopOwner.OnNotice(null, new NoticeEventArgs(NoticeType.Info, null, $"{_connectionString.Host.PadRight(21)} > Redis Sentinel switch to {_masterHost}", null)))
-                                    {
-                                        var bgcolor = Console.BackgroundColor;
-                                        var forecolor = Console.ForegroundColor;
-                                        Console.BackgroundColor = ConsoleColor.DarkGreen;
-                                        Console.ForegroundColor = ConsoleColor.White;
-                                        Console.Write($"【{_connectionString.Host}】Redis Sentinel switch to {_masterHost}");
-                                        Console.BackgroundColor = bgcolor;
-                                        Console.ForegroundColor = forecolor;
-                                        Console.WriteLine();
-                                    }
+                                        InternalTrace.WriteLine($"【{_connectionString.Host}】Redis Sentinel switch to {_masterHost}", ConsoleColor.DarkGreen);
 
                                     RecoverySentineling = false;
                                     return;
@@ -292,9 +284,7 @@ namespace FreeRedis
                             catch (Exception ex21)
                             {
                                 if (!TopOwner.OnNotice(null, new NoticeEventArgs(NoticeType.Info, null, $"{_connectionString.Host.PadRight(21)} > Redis Sentinel switch to {_masterHost}", null)))
-                                {
-                                    Console.WriteLine($"【{_connectionString.Host}】Redis Sentinel: {ex21.Message}");
-                                }
+                                    InternalTrace.WriteLine($"【{_connectionString.Host}】Redis Sentinel: {ex21.Message}", ConsoleColor.DarkYellow);
                             }
                         }
                     }).Start();

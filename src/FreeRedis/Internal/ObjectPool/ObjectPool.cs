@@ -6,9 +6,44 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace FreeRedis.Internal.ObjectPool
 {
+    internal class InternalTrace
+    {
+        internal static void WriteLine(string text, ConsoleColor backgroundColor)
+        {
+            try
+            {
+                var bgcolor = Console.BackgroundColor;
+                var forecolor = Console.ForegroundColor;
+                Console.BackgroundColor = backgroundColor;
+
+                switch (backgroundColor)
+                {
+                    case ConsoleColor.DarkYellow:
+                        Console.ForegroundColor = ConsoleColor.White;
+                        break;
+                    case ConsoleColor.DarkGreen:
+                        Console.ForegroundColor = ConsoleColor.White;
+                        break;
+                }
+                Console.Write(text);
+                Console.BackgroundColor = bgcolor;
+                Console.ForegroundColor = forecolor;
+                Console.WriteLine();
+            }
+            catch
+            {
+                try
+                {
+                    System.Diagnostics.Debug.WriteLine(text);
+                }
+                catch { }
+            }
+        }
+    }
 
     /// <summary>
     /// 对象池管理类
@@ -74,16 +109,7 @@ namespace FreeRedis.Internal.ObjectPool
             {
 
                 if (UnavailableException != null)
-                {
-                    var bgcolor = Console.BackgroundColor;
-                    var forecolor = Console.ForegroundColor;
-                    Console.BackgroundColor = ConsoleColor.DarkYellow;
-                    Console.ForegroundColor = ConsoleColor.White;
-                    Console.Write($"【{Policy.Name}】恢复检查时间：{DateTime.Now.AddSeconds(interval)}");
-                    Console.BackgroundColor = bgcolor;
-                    Console.ForegroundColor = forecolor;
-                    Console.WriteLine();
-                }
+                    InternalTrace.WriteLine($"【{Policy.Name}】Next recovery time：{DateTime.Now.AddSeconds(interval)}", ConsoleColor.DarkYellow);
 
                 while (UnavailableException != null)
                 {
@@ -116,14 +142,7 @@ namespace FreeRedis.Internal.ObjectPool
                     }
                     catch (Exception ex)
                     {
-                        var bgcolor = Console.BackgroundColor;
-                        var forecolor = Console.ForegroundColor;
-                        Console.BackgroundColor = ConsoleColor.DarkYellow;
-                        Console.ForegroundColor = ConsoleColor.White;
-                        Console.Write($"【{Policy.Name}】Next recovery time: {DateTime.Now.AddSeconds(interval)} ({ex.Message})");
-                        Console.BackgroundColor = bgcolor;
-                        Console.ForegroundColor = forecolor;
-                        Console.WriteLine();
+                        InternalTrace.WriteLine($"【{Policy.Name}】Next recovery time: {DateTime.Now.AddSeconds(interval)} ({ex.Message})", ConsoleColor.DarkYellow);
                     }
                 }
 
@@ -160,14 +179,7 @@ namespace FreeRedis.Internal.ObjectPool
 
                 Policy.OnAvailable();
 
-                var bgcolor = Console.BackgroundColor;
-                var forecolor = Console.ForegroundColor;
-                Console.BackgroundColor = ConsoleColor.DarkGreen;
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.Write($"【{Policy.Name}】Recovered");
-                Console.BackgroundColor = bgcolor;
-                Console.ForegroundColor = forecolor;
-                Console.WriteLine();
+                InternalTrace.WriteLine($"【{Policy.Name}】Recovered", ConsoleColor.DarkGreen);
             }
         }
 

@@ -33,14 +33,12 @@ namespace FreeRedis.Internal.ObjectPool
 
         public void OnGet(Object<T> obj)
         {
-            //Console.WriteLine("Get: " + obj);
             OnGetObject?.Invoke(obj);
         }
 
 #if !NET40
         public Task OnGetAsync(Object<T> obj)
         {
-            //Console.WriteLine("GetAsync: " + obj);
             OnGetObject?.Invoke(obj);
             return Task.FromResult(true);
         }
@@ -53,7 +51,6 @@ namespace FreeRedis.Internal.ObjectPool
 
         public void OnReturn(Object<T> obj)
         {
-            //Console.WriteLine("Return: " + obj);
         }
 
         public bool OnCheckAvailable(Object<T> obj)
