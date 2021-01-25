@@ -97,7 +97,7 @@ public static RedisClient cli = new RedisClient(
 
 ```csharp
 public static RedisClient cli = new RedisClient(
-    new ConnectionStringBuilder[] { "192.168.0.2:7001", "192.168.0.2:7001", "192.168.0.2:7003" }
+    new ConnectionStringBuilder[] { "192.168.0.2:7001", "192.168.0.2:7002", "192.168.0.2:7003" }
     );
 ```
 
