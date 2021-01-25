@@ -97,7 +97,7 @@ Suppose, a Redis cluster has three master nodes (7001-7003) and three slave node
 
 ```csharp
 public static RedisClient cli = new RedisClient(
-    new ConnectionStringBuilder[] { "192.168.0.2:7001", "192.168.0.2:7001", "192.168.0.2:7003" }
+    new ConnectionStringBuilder[] { "192.168.0.2:7001", "192.168.0.2:7002", "192.168.0.2:7003" }
     );
 ```
 
