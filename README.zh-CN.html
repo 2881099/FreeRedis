@@ -213,7 +213,7 @@ var value = cli.Get(&quot;key1&quot;);
 <h3 id="-redis-cluster-集群">🌌 Redis Cluster (集群)</h3>
 <p>假如你有一个 Redis Cluster 集群，其中有三个主节点(7001-7003)、三个从节点(7004-7006)，则连接此集群的代码：</p>
 <pre><code class="lang-csharp">public static RedisClient cli = new RedisClient(
-    new ConnectionStringBuilder[] { &quot;192.168.0.2:7001&quot;, &quot;192.168.0.2:7002&quot;, &quot;192.168.0.2:7003&quot; }
+    new ConnectionStringBuilder[] { &quot;192.168.0.2:7001&quot;, &quot;192.168.0.2:7001&quot;, &quot;192.168.0.2:7003&quot; }
     );
 </code></pre>
 <h3 id="-client-side-cahing-本地缓存">⚡ Client-side-cahing (本地缓存)</h3>
