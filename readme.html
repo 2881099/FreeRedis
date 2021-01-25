@@ -213,7 +213,7 @@ var value = cli.Get(&quot;key1&quot;);
 <h3 id="-redis-cluster">🌌 Redis Cluster</h3>
 <p>Suppose, a Redis cluster has three master nodes (7001-7003) and three slave nodes (7004-7006), then use the following code to connect to the cluster:</p>
 <pre><code class="lang-csharp">public static RedisClient cli = new RedisClient(
-    new ConnectionStringBuilder[] { &quot;192.168.0.2:7001&quot;, &quot;192.168.0.2:7001&quot;, &quot;192.168.0.2:7003&quot; }
+    new ConnectionStringBuilder[] { &quot;192.168.0.2:7001&quot;, &quot;192.168.0.2:7002&quot;, &quot;192.168.0.2:7003&quot; }
     );
 </code></pre>
 <h3 id="-client-side-cahing">⚡ Client-side-cahing</h3>
