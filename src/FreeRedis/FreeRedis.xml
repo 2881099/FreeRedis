@@ -1109,6 +1109,26 @@
             </summary>
             <returns>成功/失败</returns>
         </member>
+        <member name="M:FreeRedis.RedisClient.ZRandMember(System.String,System.Int32,System.Boolean)">
+            <summary>
+            随机返回N个元素
+            <para>Redis 6.2.0+以上才支持该命令</para>
+            </summary>
+            <param name="key">Key</param>
+            <param name="count">返回的个数</param>
+            <param name="repetition">是否允许有重复元素返回</param>
+            <returns></returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.ZRandMemberWithScores(System.String,System.Int32,System.Boolean)">
+            <summary>
+            随机返回N个元素, 包含分数
+            <para>Redis 6.2.0+以上才支持该命令</para>
+            </summary>
+            <param name="key">Key</param>
+            <param name="count">返回的个数</param>
+            <param name="repetition">是否允许有重复元素返回</param>
+            <returns></returns>
+        </member>
         <member name="M:FreeRedis.RedisClient.Append``1(System.String,``0)">
             <summary>
             APPEND command (A Synchronized Version)<br /><br />
