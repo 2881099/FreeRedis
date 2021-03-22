@@ -6693,6 +6693,12 @@ references:
   commentId: M:FreeRedis.RedisClient.Expire(System.String,System.Int32)
   fullName: FreeRedis.RedisClient.Expire(System.String, System.Int32)
   nameWithType: RedisClient.Expire(String, Int32)
+- uid: FreeRedis.RedisClient.Expire(System.String,System.TimeSpan)
+  name: Expire(String, TimeSpan)
+  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_Expire_System_String_System_TimeSpan_
+  commentId: M:FreeRedis.RedisClient.Expire(System.String,System.TimeSpan)
+  fullName: FreeRedis.RedisClient.Expire(System.String, System.TimeSpan)
+  nameWithType: RedisClient.Expire(String, TimeSpan)
 - uid: FreeRedis.RedisClient.Expire*
   name: Expire
   href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_Expire_
@@ -8548,6 +8554,15 @@ references:
   fullName.vb: FreeRedis.RedisClient.Set(Of T)(System.String, T, System.Int32)
   nameWithType: RedisClient.Set<T>(String, T, Int32)
   nameWithType.vb: RedisClient.Set(Of T)(String, T, Int32)
+- uid: FreeRedis.RedisClient.Set``1(System.String,``0,System.TimeSpan)
+  name: Set<T>(String, T, TimeSpan)
+  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_Set__1_System_String___0_System_TimeSpan_
+  commentId: M:FreeRedis.RedisClient.Set``1(System.String,``0,System.TimeSpan)
+  name.vb: Set(Of T)(String, T, TimeSpan)
+  fullName: FreeRedis.RedisClient.Set<T>(System.String, T, System.TimeSpan)
+  fullName.vb: FreeRedis.RedisClient.Set(Of T)(System.String, T, System.TimeSpan)
+  nameWithType: RedisClient.Set<T>(String, T, TimeSpan)
+  nameWithType.vb: RedisClient.Set(Of T)(String, T, TimeSpan)
 - uid: FreeRedis.RedisClient.Set``1(System.String,``0,System.TimeSpan,System.Boolean,System.Boolean,System.Boolean,System.Boolean)
   name: Set<T>(String, T, TimeSpan, Boolean, Boolean, Boolean, Boolean)
   href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_Set__1_System_String___0_System_TimeSpan_System_Boolean_System_Boolean_System_Boolean_System_Boolean_
@@ -8611,6 +8626,15 @@ references:
   fullName.vb: FreeRedis.RedisClient.SetNx(Of T)(System.String, T, System.Int32)
   nameWithType: RedisClient.SetNx<T>(String, T, Int32)
   nameWithType.vb: RedisClient.SetNx(Of T)(String, T, Int32)
+- uid: FreeRedis.RedisClient.SetNx``1(System.String,``0,System.TimeSpan)
+  name: SetNx<T>(String, T, TimeSpan)
+  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_SetNx__1_System_String___0_System_TimeSpan_
+  commentId: M:FreeRedis.RedisClient.SetNx``1(System.String,``0,System.TimeSpan)
+  name.vb: SetNx(Of T)(String, T, TimeSpan)
+  fullName: FreeRedis.RedisClient.SetNx<T>(System.String, T, System.TimeSpan)
+  fullName.vb: FreeRedis.RedisClient.SetNx(Of T)(System.String, T, System.TimeSpan)
+  nameWithType: RedisClient.SetNx<T>(String, T, TimeSpan)
+  nameWithType.vb: RedisClient.SetNx(Of T)(String, T, TimeSpan)
 - uid: FreeRedis.RedisClient.SetRange*
   name: SetRange
   href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_SetRange_
@@ -8652,6 +8676,15 @@ references:
   fullName.vb: FreeRedis.RedisClient.SetXx(Of T)(System.String, T, System.Int32)
   nameWithType: RedisClient.SetXx<T>(String, T, Int32)
   nameWithType.vb: RedisClient.SetXx(Of T)(String, T, Int32)
+- uid: FreeRedis.RedisClient.SetXx``1(System.String,``0,System.TimeSpan)
+  name: SetXx<T>(String, T, TimeSpan)
+  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_SetXx__1_System_String___0_System_TimeSpan_
+  commentId: M:FreeRedis.RedisClient.SetXx``1(System.String,``0,System.TimeSpan)
+  name.vb: SetXx(Of T)(String, T, TimeSpan)
+  fullName: FreeRedis.RedisClient.SetXx<T>(System.String, T, System.TimeSpan)
+  fullName.vb: FreeRedis.RedisClient.SetXx(Of T)(System.String, T, System.TimeSpan)
+  nameWithType: RedisClient.SetXx<T>(String, T, TimeSpan)
+  nameWithType.vb: RedisClient.SetXx(Of T)(String, T, TimeSpan)
 - uid: FreeRedis.RedisClient.SInter(System.String[])
   name: SInter(String[])
   href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_SInter_System_String___

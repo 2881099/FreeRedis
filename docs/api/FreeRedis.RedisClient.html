@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class RedisClient
    ">
-    <meta name="generator" content="docfx 2.56.6.0">
+    <meta name="generator" content="docfx 2.56.7.0">
     
     <link rel="shortcut icon" href="../../favicon.ico">
     <link rel="stylesheet" href="../../styles/docfx.vendor.css">
@@ -4716,6 +4716,64 @@ Available since 1.0.0.</p>
         <td><span class="xref">System.Int32</span></td>
         <td><span class="parametername">seconds</span></td>
         <td><p>Expires time (seconds)</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p>Specifically: True if the timeout was set.False if key does not exist.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="FreeRedis_RedisClient_Expire_" data-uid="FreeRedis.RedisClient.Expire*"></a>
+  <h4 id="FreeRedis_RedisClient_Expire_System_String_System_TimeSpan_" data-uid="FreeRedis.RedisClient.Expire(System.String,System.TimeSpan)">Expire(String, TimeSpan)</h4>
+  <div class="markdown level1 summary"><p>EXPIRE command (A Synchronized Version) <br><br>
+<br>
+Set a timeout on key. After the timeout has expired, the key will automatically be deleted. A key with an associated timeout is often said to be volatile in Redis terminology.<br><br>
+<br>
+设置键的超时时间。到期后，键将被自动删除。<br><br>
+<br>
+Document link: <a href="https://redis.io/commands/expire">https://redis.io/commands/expire</a> <br>
+Available since 1.0.0.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool Expire(string key, TimeSpan expire)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td><p>Key</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.TimeSpan</span></td>
+        <td><span class="parametername">expire</span></td>
+        <td><p>Expires TimeSpan</p>
 </td>
       </tr>
     </tbody>
@@ -11347,6 +11405,69 @@ Available since 2.6.12.</p>
   
   
   <a id="FreeRedis_RedisClient_Set_" data-uid="FreeRedis.RedisClient.Set*"></a>
+  <h4 id="FreeRedis_RedisClient_Set__1_System_String___0_System_TimeSpan_" data-uid="FreeRedis.RedisClient.Set``1(System.String,``0,System.TimeSpan)">Set&lt;T&gt;(String, T, TimeSpan)</h4>
+  <div class="markdown level1 summary"><p>SET key value EX seconds (A Synchronized Version) <br><br>
+<br>
+Set key to hold the string value.<br><br>
+<br>
+设置键和值。<br><br>
+<br>
+Document link: <a href="https://redis.io/commands/set">https://redis.io/commands/set</a> <br>
+Available since 2.6.12.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Set&lt;T&gt;(string key, T value, TimeSpan timeout)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td><p>Key</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">T</span></td>
+        <td><span class="parametername">value</span></td>
+        <td><p>Value</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.TimeSpan</span></td>
+        <td><span class="parametername">timeout</span></td>
+        <td><p>Timeout</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="FreeRedis_RedisClient_Set_" data-uid="FreeRedis.RedisClient.Set*"></a>
   <h4 id="FreeRedis_RedisClient_Set__1_System_String___0_System_TimeSpan_System_Boolean_System_Boolean_System_Boolean_System_Boolean_" data-uid="FreeRedis.RedisClient.Set``1(System.String,``0,System.TimeSpan,System.Boolean,System.Boolean,System.Boolean,System.Boolean)">Set&lt;T&gt;(String, T, TimeSpan, Boolean, Boolean, Boolean, Boolean)</h4>
   <div class="markdown level1 summary"><p>SET command (A Synchronized Version) <br><br>
 <br>
@@ -11733,6 +11854,87 @@ Null reply: a Null Bulk Reply is returned if the SET operation was not performed
   </table>
   
   
+  <a id="FreeRedis_RedisClient_SetNx_" data-uid="FreeRedis.RedisClient.SetNx*"></a>
+  <h4 id="FreeRedis_RedisClient_SetNx__1_System_String___0_System_TimeSpan_" data-uid="FreeRedis.RedisClient.SetNx``1(System.String,``0,System.TimeSpan)">SetNx&lt;T&gt;(String, T, TimeSpan)</h4>
+  <div class="markdown level1 summary"><p>SET key value EX seconds NX command (A Synchronized Version) <br><br>
+<br>
+Set key to hold the string value. Only set the key if it does not already exist.<br><br>
+<br>
+设置键和值。当且仅当键值不存在时才执行命令。<br><br>
+<br>
+Document link: <a href="https://redis.io/commands/set">https://redis.io/commands/set</a> <br>
+Available since 2.6.12.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool SetNx&lt;T&gt;(string key, T value, TimeSpan timeout)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td><p>Key</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">T</span></td>
+        <td><span class="parametername">value</span></td>
+        <td><p>Value</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.TimeSpan</span></td>
+        <td><span class="parametername">timeout</span></td>
+        <td><p>Timeout</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p>Simple string reply: OK if SET was executed correctly.<br>
+Bulk string reply: when GET option is set, the old value stored at key, or nil when key did not exist.<br>
+Null reply: a Null Bulk Reply is returned if the SET operation was not performed because the user specified the NX or XX option but the condition was not met or if user specified the NX and GET options that do not met.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
   <a id="FreeRedis_RedisClient_SetRange_" data-uid="FreeRedis.RedisClient.SetRange*"></a>
   <h4 id="FreeRedis_RedisClient_SetRange__1_System_String_System_Int64___0_" data-uid="FreeRedis.RedisClient.SetRange``1(System.String,System.Int64,``0)">SetRange&lt;T&gt;(String, Int64, T)</h4>
   <div class="markdown level1 summary"><p>SETRANGE command (A Synchronized Version) <br><br>
@@ -11935,6 +12137,87 @@ Available since 2.6.12.</p>
         <td><span class="xref">System.Int32</span></td>
         <td><span class="parametername">timeoutSeconds</span></td>
         <td><p>Timeout seconds</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p>Simple string reply: OK if SET was executed correctly.<br>
+Bulk string reply: when GET option is set, the old value stored at key, or nil when key did not exist.<br>
+Null reply: a Null Bulk Reply is returned if the SET operation was not performed because the user specified the NX or XX option but the condition was not met or if user specified the NX and GET options that do not met.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="FreeRedis_RedisClient_SetXx_" data-uid="FreeRedis.RedisClient.SetXx*"></a>
+  <h4 id="FreeRedis_RedisClient_SetXx__1_System_String___0_System_TimeSpan_" data-uid="FreeRedis.RedisClient.SetXx``1(System.String,``0,System.TimeSpan)">SetXx&lt;T&gt;(String, T, TimeSpan)</h4>
+  <div class="markdown level1 summary"><p>SET key value EX seconds XX command (A Synchronized Version) <br><br>
+<br>
+Set key to hold the string value. Only set the key if it already exist.<br><br>
+<br>
+设置键和值。当且仅当键值已存在时才执行命令。<br><br>
+<br>
+Document link: <a href="https://redis.io/commands/set">https://redis.io/commands/set</a> <br>
+Available since 2.6.12.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool SetXx&lt;T&gt;(string key, T value, TimeSpan timeout)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td><p>Key</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">T</span></td>
+        <td><span class="parametername">value</span></td>
+        <td><p>Value</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.TimeSpan</span></td>
+        <td><span class="parametername">timeout</span></td>
+        <td><p>Timeout</p>
 </td>
       </tr>
     </tbody>
