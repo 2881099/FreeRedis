@@ -268,6 +268,29 @@ namespace FreeRedis
             .InputIf(weights?.Any() == true, weights)
             .InputIf(aggregate != null, "AGGREGATE", aggregate ?? ZAggregate.max), rt => rt
             .ThrowOrValue<long>());
+
+        /// <summary>
+        /// 随机返回N个元素
+        /// <para>Redis 6.2.0+以上才支持该命令</para>
+        /// </summary>
+        /// <param name="key">Key</param>
+        /// <param name="count">返回的个数</param>
+        /// <param name="repetition">是否允许有重复元素返回</param>
+        /// <returns></returns>
+        public string[] ZRandMember(string key, int count, bool repetition) => Call("ZRANDMEMBER".InputKey(key, repetition ? -count : count), rt => rt.ThrowOrValue<string[]>());
+
+        /// <summary>
+        /// 随机返回N个元素, 包含分数
+        /// <para>Redis 6.2.0+以上才支持该命令</para>
+        /// </summary>
+        /// <param name="key">Key</param>
+        /// <param name="count">返回的个数</param>
+        /// <param name="repetition">是否允许有重复元素返回</param>
+        /// <returns></returns>
+        public ZMember[] ZRandMemberWithScores(string key, int count, bool repetition) => Call("ZRANDMEMBER"
+            .InputKey(key, repetition ? -count : count)
+            .Input("WITHSCORES"), rt => rt
+            .ThrowOrValue((a, _) => a == null || a.Length == 0 ? new ZMember[0] : a.MapToHash<decimal>(rt.Encoding).Select(b => new ZMember(b.Key, b.Value)).ToArray()));
     }
 
     public class ZMember
