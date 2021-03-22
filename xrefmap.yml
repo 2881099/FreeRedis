@@ -9964,6 +9964,32 @@ references:
   isSpec: "True"
   fullName: FreeRedis.RedisClient.ZPopMin
   nameWithType: RedisClient.ZPopMin
+- uid: FreeRedis.RedisClient.ZRandMember(System.String,System.Int32,System.Boolean)
+  name: ZRandMember(String, Int32, Boolean)
+  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_ZRandMember_System_String_System_Int32_System_Boolean_
+  commentId: M:FreeRedis.RedisClient.ZRandMember(System.String,System.Int32,System.Boolean)
+  fullName: FreeRedis.RedisClient.ZRandMember(System.String, System.Int32, System.Boolean)
+  nameWithType: RedisClient.ZRandMember(String, Int32, Boolean)
+- uid: FreeRedis.RedisClient.ZRandMember*
+  name: ZRandMember
+  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_ZRandMember_
+  commentId: Overload:FreeRedis.RedisClient.ZRandMember
+  isSpec: "True"
+  fullName: FreeRedis.RedisClient.ZRandMember
+  nameWithType: RedisClient.ZRandMember
+- uid: FreeRedis.RedisClient.ZRandMemberWithScores(System.String,System.Int32,System.Boolean)
+  name: ZRandMemberWithScores(String, Int32, Boolean)
+  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_ZRandMemberWithScores_System_String_System_Int32_System_Boolean_
+  commentId: M:FreeRedis.RedisClient.ZRandMemberWithScores(System.String,System.Int32,System.Boolean)
+  fullName: FreeRedis.RedisClient.ZRandMemberWithScores(System.String, System.Int32, System.Boolean)
+  nameWithType: RedisClient.ZRandMemberWithScores(String, Int32, Boolean)
+- uid: FreeRedis.RedisClient.ZRandMemberWithScores*
+  name: ZRandMemberWithScores
+  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_ZRandMemberWithScores_
+  commentId: Overload:FreeRedis.RedisClient.ZRandMemberWithScores
+  isSpec: "True"
+  fullName: FreeRedis.RedisClient.ZRandMemberWithScores
+  nameWithType: RedisClient.ZRandMemberWithScores
 - uid: FreeRedis.RedisClient.ZRange(System.String,System.Decimal,System.Decimal)
   name: ZRange(String, Decimal, Decimal)
   href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_ZRange_System_String_System_Decimal_System_Decimal_

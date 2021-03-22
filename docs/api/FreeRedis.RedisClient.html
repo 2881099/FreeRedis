@@ -17112,6 +17112,120 @@ Available since 3.0.0.</p>
   </table>
   
   
+  <a id="FreeRedis_RedisClient_ZRandMember_" data-uid="FreeRedis.RedisClient.ZRandMember*"></a>
+  <h4 id="FreeRedis_RedisClient_ZRandMember_System_String_System_Int32_System_Boolean_" data-uid="FreeRedis.RedisClient.ZRandMember(System.String,System.Int32,System.Boolean)">ZRandMember(String, Int32, Boolean)</h4>
+  <div class="markdown level1 summary"><p>随机返回N个元素</p>
+<p>Redis 6.2.0+以上才支持该命令</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string[] ZRandMember(string key, int count, bool repetition)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td><p>Key</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">count</span></td>
+        <td><p>返回的个数</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">repetition</span></td>
+        <td><p>是否允许有重复元素返回</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span>[]</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="FreeRedis_RedisClient_ZRandMemberWithScores_" data-uid="FreeRedis.RedisClient.ZRandMemberWithScores*"></a>
+  <h4 id="FreeRedis_RedisClient_ZRandMemberWithScores_System_String_System_Int32_System_Boolean_" data-uid="FreeRedis.RedisClient.ZRandMemberWithScores(System.String,System.Int32,System.Boolean)">ZRandMemberWithScores(String, Int32, Boolean)</h4>
+  <div class="markdown level1 summary"><p>随机返回N个元素, 包含分数</p>
+<p>Redis 6.2.0+以上才支持该命令</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ZMember[] ZRandMemberWithScores(string key, int count, bool repetition)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td><p>Key</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">count</span></td>
+        <td><p>返回的个数</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">repetition</span></td>
+        <td><p>是否允许有重复元素返回</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="FreeRedis.ZMember.html">ZMember</a>[]</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
   <a id="FreeRedis_RedisClient_ZRange_" data-uid="FreeRedis.RedisClient.ZRange*"></a>
   <h4 id="FreeRedis_RedisClient_ZRange_System_String_System_Decimal_System_Decimal_" data-uid="FreeRedis.RedisClient.ZRange(System.String,System.Decimal,System.Decimal)">ZRange(String, Decimal, Decimal)</h4>
   <div class="markdown level1 summary"></div>
