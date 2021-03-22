@@ -655,6 +655,21 @@
             <param name="seconds">Expires time (seconds)</param>
             <returns>Specifically: True if the timeout was set.False if key does not exist.</returns>
         </member>
+        <member name="M:FreeRedis.RedisClient.Expire(System.String,System.TimeSpan)">
+            <summary>
+            EXPIRE command (A Synchronized Version) <br /><br />
+            <br />
+            Set a timeout on key. After the timeout has expired, the key will automatically be deleted. A key with an associated timeout is often said to be volatile in Redis terminology.<br /><br />
+            <br />
+            设置键的超时时间。到期后，键将被自动删除。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/expire <br />
+            Available since 1.0.0. 
+            </summary>
+            <param name="key">Key</param>
+            <param name="expire">Expires TimeSpan</param>
+            <returns>Specifically: True if the timeout was set.False if key does not exist.</returns>
+        </member>
         <member name="M:FreeRedis.RedisClient.ExpireAt(System.String,System.DateTime)">
             <summary>
             EXPIREAT command (A Synchronized Version) <br /><br />
@@ -1504,6 +1519,22 @@
             <param name="timeoutSeconds">Timeout seconds</param>
             <typeparam name="T"></typeparam>
         </member>
+        <member name="M:FreeRedis.RedisClient.Set``1(System.String,``0,System.TimeSpan)">
+            <summary>
+            SET key value EX seconds (A Synchronized Version) <br /><br />
+            <br />
+            Set key to hold the string value.<br /><br />
+            <br />
+            设置键和值。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/set <br />
+            Available since 2.6.12. 
+            </summary>
+            <param name="key">Key</param>
+            <param name="value">Value</param>
+            <param name="timeout">Timeout</param>
+            <typeparam name="T"></typeparam>
+        </member>
         <member name="M:FreeRedis.RedisClient.Set``1(System.String,``0,System.Boolean)">
             <summary>
             SET key value KEEPTTL command (A Synchronized Version) <br /><br />
@@ -1540,6 +1571,27 @@
             Null reply: a Null Bulk Reply is returned if the SET operation was not performed because the user specified the NX or XX option but the condition was not met or if user specified the NX and GET options that do not met.
             </returns>
         </member>
+        <member name="M:FreeRedis.RedisClient.SetNx``1(System.String,``0,System.TimeSpan)">
+            <summary>
+            SET key value EX seconds NX command (A Synchronized Version) <br /><br />
+            <br />
+            Set key to hold the string value. Only set the key if it does not already exist.<br /><br />
+            <br />
+            设置键和值。当且仅当键值不存在时才执行命令。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/set <br />
+            Available since 2.6.12. 
+            </summary>
+            <param name="key">Key</param>
+            <param name="value">Value</param>
+            <param name="timeout">Timeout</param>
+            <typeparam name="T"></typeparam>
+            <returns>
+            Simple string reply: OK if SET was executed correctly.<br />
+            Bulk string reply: when GET option is set, the old value stored at key, or nil when key did not exist.<br />
+            Null reply: a Null Bulk Reply is returned if the SET operation was not performed because the user specified the NX or XX option but the condition was not met or if user specified the NX and GET options that do not met.
+            </returns>
+        </member>
         <member name="M:FreeRedis.RedisClient.SetXx``1(System.String,``0,System.Int32)">
             <summary>
             SET key value EX seconds XX command (A Synchronized Version) <br /><br />
@@ -1554,6 +1606,27 @@
             <param name="key">Key</param>
             <param name="value">Value</param>
             <param name="timeoutSeconds">Timeout seconds</param>
+            <typeparam name="T"></typeparam>
+            <returns>
+            Simple string reply: OK if SET was executed correctly.<br />
+            Bulk string reply: when GET option is set, the old value stored at key, or nil when key did not exist.<br />
+            Null reply: a Null Bulk Reply is returned if the SET operation was not performed because the user specified the NX or XX option but the condition was not met or if user specified the NX and GET options that do not met.
+            </returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.SetXx``1(System.String,``0,System.TimeSpan)">
+            <summary>
+            SET key value EX seconds XX command (A Synchronized Version) <br /><br />
+            <br />
+            Set key to hold the string value. Only set the key if it already exist.<br /><br />
+            <br />
+            设置键和值。当且仅当键值已存在时才执行命令。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/set <br />
+            Available since 2.6.12. 
+            </summary>
+            <param name="key">Key</param>
+            <param name="value">Value</param>
+            <param name="timeout">Timeout</param>
             <typeparam name="T"></typeparam>
             <returns>
             Simple string reply: OK if SET was executed correctly.<br />

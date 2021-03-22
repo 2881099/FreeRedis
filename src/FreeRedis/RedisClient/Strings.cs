@@ -1048,6 +1048,22 @@ namespace FreeRedis
         public void Set<T>(string key, T value, int timeoutSeconds = 0) => Set(key, value, TimeSpan.FromSeconds(timeoutSeconds), false, false, false, false);
 
         /// <summary>
+        /// SET key value EX seconds (A Synchronized Version) <br /><br />
+        /// <br />
+        /// Set key to hold the string value.<br /><br />
+        /// <br />
+        /// 设置键和值。<br /><br />
+        /// <br />
+        /// Document link: https://redis.io/commands/set <br />
+        /// Available since 2.6.12. 
+        /// </summary>
+        /// <param name="key">Key</param>
+        /// <param name="value">Value</param>
+        /// <param name="timeout">Timeout</param>
+        /// <typeparam name="T"></typeparam>
+        public void Set<T>(string key, T value, TimeSpan timeout) => Set(key, value, timeout, false, false, false, false);
+
+        /// <summary>
         /// SET key value KEEPTTL command (A Synchronized Version) <br /><br />
         /// <br />
         /// Set key to hold the string value. Retain the time to live associated with the key. <br /><br />
@@ -1084,6 +1100,27 @@ namespace FreeRedis
         public bool SetNx<T>(string key, T value, int timeoutSeconds) => Set(key, value, TimeSpan.FromSeconds(timeoutSeconds), false, true, false, false) == "OK";
 
         /// <summary>
+        /// SET key value EX seconds NX command (A Synchronized Version) <br /><br />
+        /// <br />
+        /// Set key to hold the string value. Only set the key if it does not already exist.<br /><br />
+        /// <br />
+        /// 设置键和值。当且仅当键值不存在时才执行命令。<br /><br />
+        /// <br />
+        /// Document link: https://redis.io/commands/set <br />
+        /// Available since 2.6.12. 
+        /// </summary>
+        /// <param name="key">Key</param>
+        /// <param name="value">Value</param>
+        /// <param name="timeout">Timeout</param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns>
+        /// Simple string reply: OK if SET was executed correctly.<br />
+        /// Bulk string reply: when GET option is set, the old value stored at key, or nil when key did not exist.<br />
+        /// Null reply: a Null Bulk Reply is returned if the SET operation was not performed because the user specified the NX or XX option but the condition was not met or if user specified the NX and GET options that do not met.
+        /// </returns>
+        public bool SetNx<T>(string key, T value, TimeSpan timeout) => Set(key, value, timeout, false, true, false, false) == "OK";
+
+        /// <summary>
         /// SET key value EX seconds XX command (A Synchronized Version) <br /><br />
         /// <br />
         /// Set key to hold the string value. Only set the key if it already exist.<br /><br />
@@ -1103,6 +1140,27 @@ namespace FreeRedis
         /// Null reply: a Null Bulk Reply is returned if the SET operation was not performed because the user specified the NX or XX option but the condition was not met or if user specified the NX and GET options that do not met.
         /// </returns>
         public bool SetXx<T>(string key, T value, int timeoutSeconds = 0) => Set(key, value, TimeSpan.FromSeconds(timeoutSeconds), false, false, true, false) == "OK";
+
+        /// <summary>
+        /// SET key value EX seconds XX command (A Synchronized Version) <br /><br />
+        /// <br />
+        /// Set key to hold the string value. Only set the key if it already exist.<br /><br />
+        /// <br />
+        /// 设置键和值。当且仅当键值已存在时才执行命令。<br /><br />
+        /// <br />
+        /// Document link: https://redis.io/commands/set <br />
+        /// Available since 2.6.12. 
+        /// </summary>
+        /// <param name="key">Key</param>
+        /// <param name="value">Value</param>
+        /// <param name="timeout">Timeout</param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns>
+        /// Simple string reply: OK if SET was executed correctly.<br />
+        /// Bulk string reply: when GET option is set, the old value stored at key, or nil when key did not exist.<br />
+        /// Null reply: a Null Bulk Reply is returned if the SET operation was not performed because the user specified the NX or XX option but the condition was not met or if user specified the NX and GET options that do not met.
+        /// </returns>
+        public bool SetXx<T>(string key, T value, TimeSpan timeout) => Set(key, value, timeout, false, false, true, false) == "OK";
 
         /// <summary>
         /// SET key value KEEPTTL XX command (A Synchronized Version) <br /><br />
