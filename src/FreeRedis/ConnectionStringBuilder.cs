@@ -9,7 +9,12 @@ namespace FreeRedis
 {
     public class ConnectionStringBuilder
     {
-        public string Host { get; set; } = "127.0.0.1:6379";
+        string _Host;
+        public string Host
+        {
+            get => string.IsNullOrWhiteSpace(_Host) ? "127.0.0.1:6379" : _Host;
+            set => _Host = string.IsNullOrWhiteSpace(value) ? "127.0.0.1:6379" : value;
+        }
         public bool Ssl { get; set; } = false;
         public RedisProtocol Protocol { get; set; } = RedisProtocol.RESP2;
         public string User { get; set; }

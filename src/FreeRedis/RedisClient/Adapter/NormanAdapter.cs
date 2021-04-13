@@ -81,6 +81,7 @@ namespace FreeRedis
             {
                 if (cmd._keyIndexes.Count > 1) //Multiple key slot values not equal
                 {
+                    cmd.Prefix(TopOwner.Prefix);
                     switch (cmd._command)
                     {
                         case "DEL":

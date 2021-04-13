@@ -153,7 +153,7 @@ namespace FreeRedis
                 if (!_cancels.Any())
                     lock (_lock)
                         if (!_cancels.Any())
-                            _redisSocket.ReleaseSocket();
+                            _redisSocket?.ReleaseSocket();
             }
             internal void UnSubscribe(bool punsub, string[] channels)
             {
@@ -262,9 +262,9 @@ namespace FreeRedis
                 {
                     if (IsSubscribed == false)
                         throw new RedisClientException($"Subscription not opened, unable to execute");
-                    if (_stoped == false && _redisSocket.IsConnected)
+                    if (_stoped == false && _redisSocket?.IsConnected == true)
                         lock (_lock)
-                            _redisSocket.Write(cmd);
+                            _redisSocket?.Write(cmd);
                     return null;
                 });
             }

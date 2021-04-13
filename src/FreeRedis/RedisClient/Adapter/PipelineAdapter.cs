@@ -86,6 +86,7 @@ namespace FreeRedis
             }
             public override TValue AdapterCall<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
             {
+                cmd.Prefix(TopOwner.Prefix);
                 _commands.Add(new PipelineCommand
                 {
                     Command = cmd,
@@ -99,6 +100,7 @@ namespace FreeRedis
             async public override Task<TValue> AdapterCallAsync<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
             {
                 var tsc = new TaskCompletionSource<object>();
+                cmd.Prefix(TopOwner.Prefix);
                 _commands.Add(new PipelineCommand
                 {
                     Command = cmd,
