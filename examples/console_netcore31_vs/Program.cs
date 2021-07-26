@@ -29,6 +29,24 @@ namespace console_netcore31_vs
 
         static void Main(string[] args)
         {
+
+            sedb.StringSet("key1", (string)null);
+
+            var val111 = sedb.StringGet("key1");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             RedisHelper.Initialization(new CSRedis.CSRedisClient("127.0.0.1:6379,asyncPipeline=true,preheat=100,poolsize=100"));
             cli.Set("TestMGet_null1", "");
             RedisHelper.Set("TestMGet_null1", "");
@@ -155,49 +173,49 @@ namespace console_netcore31_vs
             results.Clear();
             cli.FlushDb();
 
-            sw.Reset();
-            sw.Start();
-            Task.Run(async () =>
-            {
-                for (var a = 0; a < 100000; a++)
-                {
-                    var tmp = Guid.NewGuid().ToString();
-                    await cli.SetAsync(tmp, String);
-                    var val = await cli.GetAsync(tmp);
-                    if (val != String) throw new Exception("not equal");
-                    results.Enqueue(val);
-                }
-            }).Wait();
-            sw.Stop();
-            Console.WriteLine("FreeRedisAsync(0-100000): " + sw.ElapsedMilliseconds + "ms results: " + results.Count);
-            tasks.Clear();
-            results.Clear();
-            cli.FlushDb();
+            //sw.Reset();
+            //sw.Start();
+            //Task.Run(async () =>
+            //{
+            //    for (var a = 0; a < 100000; a++)
+            //    {
+            //        var tmp = Guid.NewGuid().ToString();
+            //        await cli.SetAsync(tmp, String);
+            //        var val = await cli.GetAsync(tmp);
+            //        if (val != String) throw new Exception("not equal");
+            //        results.Enqueue(val);
+            //    }
+            //}).Wait();
+            //sw.Stop();
+            //Console.WriteLine("FreeRedisAsync(0-100000): " + sw.ElapsedMilliseconds + "ms results: " + results.Count);
+            //tasks.Clear();
+            //results.Clear();
+            //cli.FlushDb();
 
             //FreeRedis.Internal.AsyncRedisSocket.sb.Clear();
             //FreeRedis.Internal.AsyncRedisSocket.sw.Start();
-            sw.Reset();
-            sw.Start();
-            tasks = new List<Task>();
-            for (var a = 0; a < 100000; a++)
-            {
-                tasks.Add(Task.Run(async () =>
-                {
-                    var tmp = Guid.NewGuid().ToString();
-                    await cli.SetAsync(tmp, String);
-                    var val = await cli.GetAsync(tmp);
-                    if (val != String) throw new Exception("not equal");
-                    results.Enqueue(val);
-                }));
-            }
-            Task.WaitAll(tasks.ToArray());
-            sw.Stop();
-            //var sbstr = FreeRedis.Internal.AsyncRedisSocket.sb.ToString()
-            //sbstr = sbstr + sbstr.Split("\r\n").Length + "条消息 ;
-            Console.WriteLine("FreeRedisAsync(Task.WaitAll 100000): " + sw.ElapsedMilliseconds + "ms results: " + results.Count);
-            tasks.Clear();
-            results.Clear();
-            cli.FlushDb();
+            //sw.Reset();
+            //sw.Start();
+            //tasks = new List<Task>();
+            //for (var a = 0; a < 100000; a++)
+            //{
+            //    tasks.Add(Task.Run(async () =>
+            //    {
+            //        var tmp = Guid.NewGuid().ToString();
+            //        await cli.SetAsync(tmp, String);
+            //        var val = await cli.GetAsync(tmp);
+            //        if (val != String) throw new Exception("not equal");
+            //        results.Enqueue(val);
+            //    }));
+            //}
+            //Task.WaitAll(tasks.ToArray());
+            //sw.Stop();
+            ////var sbstr = FreeRedis.Internal.AsyncRedisSocket.sb.ToString()
+            ////sbstr = sbstr + sbstr.Split("\r\n").Length + "条消息 ;
+            //Console.WriteLine("FreeRedisAsync(Task.WaitAll 100000): " + sw.ElapsedMilliseconds + "ms results: " + results.Count);
+            //tasks.Clear();
+            //results.Clear();
+            //cli.FlushDb();
 
             sw.Reset();
             sw.Start();

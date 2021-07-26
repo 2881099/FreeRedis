@@ -17,7 +17,7 @@ namespace console_netcore31
             //var r = new RedisClient("192.168.164.10:6379,database=1"); //redis 6.0
             r.Serialize = obj => JsonConvert.SerializeObject(obj);
             r.Deserialize = (json, type) => JsonConvert.DeserializeObject(json, type);
-            //r.Notice += (s, e) => Trace.WriteLine(e.Log);
+            r.Notice += (s, e) => Trace.WriteLine(e.Log);
             return r;
         });
         static RedisClient cli => _cliLazy.Value;
@@ -26,6 +26,10 @@ namespace console_netcore31
 
         static void Main(string[] args)
         {
+
+            var info = cli.Info();
+            var info1 = cli.Info("server");
+
             RedisHelper.Initialization(new CSRedis.CSRedisClient("127.0.0.1:6379,database=2"));
             cli.Set("TestMGet_null1", String);
             RedisHelper.Set("TestMGet_null1", String);

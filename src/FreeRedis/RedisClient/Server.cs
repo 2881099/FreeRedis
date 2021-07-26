@@ -52,7 +52,7 @@ namespace FreeRedis
         public string DebugObject(string key) => Call("DEBUG".SubCommand("OBJECT").InputKey(key), rt => rt.ThrowOrValue<string>());
         public void FlushAll(bool isasync = false) => Call("FLUSHALL".SubCommand(null).InputIf(isasync, "ASYNC"), rt => rt.ThrowOrValue());
         public void FlushDb(bool isasync = false) => Call("FLUSHDB".SubCommand(null).InputIf(isasync, "ASYNC"), rt => rt.ThrowOrValue());
-        public string Info(string section = null) => Call("INFO".Input(section), rt => rt.ThrowOrValue<string>());
+        public string Info(string section = null) => Call("INFO".SubCommand(null).InputIf(!string.IsNullOrWhiteSpace(section), section), rt => rt.ThrowOrValue<string>());
 
         public DateTime LastSave() => Call("LASTSAVE", rt => rt.ThrowOrValue(a => _epoch.AddSeconds(a.ConvertTo<long>()).ToLocalTime()));
         public string LatencyDoctor() => Call("LATENCY".SubCommand("DOCTOR"), rt => rt.ThrowOrValue<string>());
