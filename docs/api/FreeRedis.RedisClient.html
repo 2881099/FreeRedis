@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class RedisClient
    ">
-    <meta name="generator" content="docfx 2.58.0.0">
+    <meta name="generator" content="docfx 2.58.2.0">
     
     <link rel="shortcut icon" href="../../favicon.ico">
     <link rel="stylesheet" href="../../styles/docfx.vendor.css">
@@ -1103,7 +1103,7 @@ Available since 2.0.0.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string BfInsert(string key, string[] items, long? capacity = default(long? ), string error = null, int expansion = 2, bool noCreate = false, bool nonScaling = false)</code></pre>
+    <pre><code class="lang-csharp hljs">public string BfInsert(string key, string[] items, long? capacity = null, string error = null, int expansion = 2, bool noCreate = false, bool nonScaling = false)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -1636,7 +1636,7 @@ Available since 2.8.7.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public long BitPos(string key, bool bit, long? start = default(long? ), long? end = default(long? ))</code></pre>
+    <pre><code class="lang-csharp hljs">public long BitPos(string key, bool bit, long? start = null, long? end = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -2822,7 +2822,7 @@ Available since 2.8.7.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string CfInsert(string key, string[] items, long? capacity = default(long? ), bool noCreate = false)</code></pre>
+    <pre><code class="lang-csharp hljs">public string CfInsert(string key, string[] items, long? capacity = null, bool noCreate = false)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -2879,7 +2879,7 @@ Available since 2.8.7.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string CfInsertNx(string key, string[] items, long? capacity = default(long? ), bool noCreate = false)</code></pre>
+    <pre><code class="lang-csharp hljs">public string CfInsertNx(string key, string[] items, long? capacity = null, bool noCreate = false)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -2988,7 +2988,7 @@ Available since 2.8.7.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string CfReserve(string key, long capacity, long? bucketSize = default(long? ), long? maxIterations = default(long? ), int? expansion = default(int? ))</code></pre>
+    <pre><code class="lang-csharp hljs">public string CfReserve(string key, long capacity, long? bucketSize = null, long? maxIterations = null, int? expansion = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -3320,7 +3320,7 @@ Available since 2.8.7.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string ClientList(ClientType? type = default(ClientType? ))</code></pre>
+    <pre><code class="lang-csharp hljs">public string ClientList(ClientType? type = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -3500,7 +3500,7 @@ Available since 2.8.7.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool ClientUnBlock(long clientid, ClientUnBlockType? type = default(ClientUnBlockType? ))</code></pre>
+    <pre><code class="lang-csharp hljs">public bool ClientUnBlock(long clientid, ClientUnBlockType? type = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -5216,7 +5216,7 @@ Available since 1.2.0.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public GeoRadiusResult[] GeoRadius(string key, decimal longitude, decimal latitude, decimal radius, GeoUnit unit = GeoUnit.m, bool withdoord = false, bool withdist = false, bool withhash = false, long? count = default(long? ), Collation? collation = default(Collation? ))</code></pre>
+    <pre><code class="lang-csharp hljs">public GeoRadiusResult[] GeoRadius(string key, decimal longitude, decimal latitude, decimal radius, GeoUnit unit = GeoUnit.m, bool withdoord = false, bool withdist = false, bool withhash = false, long? count = null, Collation? collation = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -5303,7 +5303,7 @@ Available since 1.2.0.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public GeoRadiusResult[] GeoRadiusByMember(string key, string member, decimal radius, GeoUnit unit = GeoUnit.m, bool withdoord = false, bool withdist = false, bool withhash = false, long? count = default(long? ), Collation? collation = default(Collation? ))</code></pre>
+    <pre><code class="lang-csharp hljs">public GeoRadiusResult[] GeoRadiusByMember(string key, string member, decimal radius, GeoUnit unit = GeoUnit.m, bool withdoord = false, bool withdist = false, bool withhash = false, long? count = null, Collation? collation = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -5385,7 +5385,7 @@ Available since 1.2.0.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public long GeoRadiusByMemberStore(string key, string member, decimal radius, GeoUnit unit = GeoUnit.m, long? count = default(long? ), Collation? collation = default(Collation? ), string storekey = null, string storedistkey = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public long GeoRadiusByMemberStore(string key, string member, decimal radius, GeoUnit unit = GeoUnit.m, long? count = null, Collation? collation = null, string storekey = null, string storedistkey = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -5462,7 +5462,7 @@ Available since 1.2.0.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public long GeoRadiusStore(string key, decimal longitude, decimal latitude, decimal radius, GeoUnit unit = GeoUnit.m, long? count = default(long? ), Collation? collation = default(Collation? ), string storekey = null, string storedistkey = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public long GeoRadiusStore(string key, decimal longitude, decimal latitude, decimal radius, GeoUnit unit = GeoUnit.m, long? count = null, Collation? collation = null, string storekey = null, string storedistkey = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -5769,7 +5769,7 @@ Available since 2.2.0.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public RedisClient.DatabaseHook GetDatabase(int? index = default(int? ))</code></pre>
+    <pre><code class="lang-csharp hljs">public RedisClient.DatabaseHook GetDatabase(int? index = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -10354,7 +10354,7 @@ Available since 2.6.0.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void Restore(string key, int ttl, byte[] serializedValue, bool replace = false, bool absTtl = false, int? idleTimeSeconds = default(int? ), decimal? frequency = default(decimal? ))</code></pre>
+    <pre><code class="lang-csharp hljs">public void Restore(string key, int ttl, byte[] serializedValue, bool replace = false, bool absTtl = false, int? idleTimeSeconds = null, decimal? frequency = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -12786,7 +12786,7 @@ Available since 1.0.0.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string[] Sort(string key, string byPattern = null, long offset = 0L, long count = 0L, string[] getPatterns = null, Collation? collation = default(Collation? ), bool alpha = false)</code></pre>
+    <pre><code class="lang-csharp hljs">public string[] Sort(string key, string byPattern = null, long offset = 0L, long count = 0L, string[] getPatterns = null, Collation? collation = null, bool alpha = false)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -12874,7 +12874,7 @@ Available since 1.0.0.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public long SortStore(string storeDestination, string key, string byPattern = null, long offset = 0L, long count = 0L, string[] getPatterns = null, Collation? collation = default(Collation? ), bool alpha = false)</code></pre>
+    <pre><code class="lang-csharp hljs">public long SortStore(string storeDestination, string key, string byPattern = null, long offset = 0L, long count = 0L, string[] getPatterns = null, Collation? collation = null, bool alpha = false)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -16291,7 +16291,7 @@ Available since 3.0.0.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public long ZAdd(string key, ZMember[] scoreMembers, ZAddThan? than = default(ZAddThan? ), bool ch = false)</code></pre>
+    <pre><code class="lang-csharp hljs">public long ZAdd(string key, ZMember[] scoreMembers, ZAddThan? than = null, bool ch = false)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -16405,7 +16405,7 @@ Available since 3.0.0.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public long ZAddNx(string key, ZMember[] scoreMembers, ZAddThan? than = default(ZAddThan? ), bool ch = false)</code></pre>
+    <pre><code class="lang-csharp hljs">public long ZAddNx(string key, ZMember[] scoreMembers, ZAddThan? than = null, bool ch = false)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -16519,7 +16519,7 @@ Available since 3.0.0.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public long ZAddXx(string key, ZMember[] scoreMembers, ZAddThan? than = default(ZAddThan? ), bool ch = false)</code></pre>
+    <pre><code class="lang-csharp hljs">public long ZAddXx(string key, ZMember[] scoreMembers, ZAddThan? than = null, bool ch = false)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -16831,7 +16831,7 @@ Available since 3.0.0.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public long ZInterStore(string destination, string[] keys, int[] weights = null, ZAggregate? aggregate = default(ZAggregate? ))</code></pre>
+    <pre><code class="lang-csharp hljs">public long ZInterStore(string destination, string[] keys, int[] weights = null, ZAggregate? aggregate = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -17646,7 +17646,7 @@ Available since 3.0.0.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public long ZRank(string key, string member)</code></pre>
+    <pre><code class="lang-csharp hljs">public long? ZRank(string key, string member)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -17680,7 +17680,7 @@ Available since 3.0.0.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Int64</span></td>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int64</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -18518,7 +18518,7 @@ Available since 3.0.0.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public long ZUnionStore(string destination, string[] keys, int[] weights = null, ZAggregate? aggregate = default(ZAggregate? ))</code></pre>
+    <pre><code class="lang-csharp hljs">public long ZUnionStore(string destination, string[] keys, int[] weights = null, ZAggregate? aggregate = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
