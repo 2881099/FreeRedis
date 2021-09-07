@@ -93,7 +93,7 @@ namespace FreeRedis
             .InputIf(offset > 0 || count > 0, "LIMIT", offset, count), rt => rt
             .ThrowOrValue((a, _) => a == null || a.Length == 0 ? new ZMember[0] : a.MapToHash<decimal>(rt.Encoding).Select(b => new ZMember(b.Key, b.Value)).ToArray()));
 
-        public Task<long> ZRankAsync(string key, string member) => CallAsync("ZRANK".InputKey(key, member), rt => rt.ThrowOrValue<long>());
+        public Task<long?> ZRankAsync(string key, string member) => CallAsync("ZRANK".InputKey(key, member), rt => rt.ThrowOrValue<long?>());
         public Task<long> ZRemAsync(string key, params string[] members) => CallAsync("ZREM".InputKey(key, members), rt => rt.ThrowOrValue<long>());
         public Task<long> ZRemRangeByLexAsync(string key, string min, string max) => CallAsync("ZREMRANGEBYLEX".InputKey(key, min, max), rt => rt.ThrowOrValue<long>());
         public Task<long> ZRemRangeByRankAsync(string key, long start, long stop) => CallAsync("ZREMRANGEBYRANK".InputKey(key, start, stop), rt => rt.ThrowOrValue<long>());
@@ -223,7 +223,7 @@ namespace FreeRedis
             .InputIf(offset > 0 || count > 0, "LIMIT", offset, count), rt => rt
             .ThrowOrValue((a, _) => a == null || a.Length == 0 ? new ZMember[0] : a.MapToHash<decimal>(rt.Encoding).Select(b => new ZMember(b.Key, b.Value)).ToArray()));
 
-        public long ZRank(string key, string member) => Call("ZRANK".InputKey(key, member), rt => rt.ThrowOrValue<long>());
+        public long? ZRank(string key, string member) => Call("ZRANK".InputKey(key, member), rt => rt.ThrowOrValue<long?>());
         public long ZRem(string key, params string[] members) => Call("ZREM".InputKey(key, members), rt => rt.ThrowOrValue<long>());
         public long ZRemRangeByLex(string key, string min, string max) => Call("ZREMRANGEBYLEX".InputKey(key, min, max), rt => rt.ThrowOrValue<long>());
         public long ZRemRangeByRank(string key, long start, long stop) => Call("ZREMRANGEBYRANK".InputKey(key, start, stop), rt => rt.ThrowOrValue<long>());

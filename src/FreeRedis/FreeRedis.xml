@@ -291,12 +291,6 @@
             <param name="timeout">超时</param>
             <returns></returns>
         </member>
-        <member name="M:FreeRedis.Internal.ObjectPool.IObjectPool`1.GetAsync">
-            <summary>
-            获取资源
-            </summary>
-            <returns></returns>
-        </member>
         <member name="M:FreeRedis.Internal.ObjectPool.IObjectPool`1.Return(FreeRedis.Internal.ObjectPool.Object{`0},System.Boolean)">
             <summary>
             使用完毕后，归还资源
@@ -362,12 +356,6 @@
             </summary>
         </member>
         <member name="M:FreeRedis.Internal.ObjectPool.IPolicy`1.OnGet(FreeRedis.Internal.ObjectPool.Object{`0})">
-            <summary>
-            从对象池获取对象成功的时候触发，通过该方法统计或初始化对象
-            </summary>
-            <param name="obj">资源对象</param>
-        </member>
-        <member name="M:FreeRedis.Internal.ObjectPool.IPolicy`1.OnGetAsync(FreeRedis.Internal.ObjectPool.Object{`0})">
             <summary>
             从对象池获取对象成功的时候触发，通过该方法统计或初始化对象
             </summary>
@@ -1773,6 +1761,21 @@
             Returns the length of the string value stored at key. An error is returned when key holds a non-string value.<br /><br />
             <br />
             返回键对应值字符串的长度。当该键对应的值不是字符串，则返回错误。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/strlen <br />
+            Available since 2.2.0. 
+            </summary>
+            <param name="key">Key</param>
+            <returns>The length of the string at key, or 0 when key does not exist.</returns>
+        </member>
+        <member name="T:FreeRedis.ZAddThan">
+            <summary>
+            redis version >=6.2: Added the GT and LT options.
+            </summary>
+        </member>
+    </members>
+</doc>
+�串，则返回错误。<br /><br />
             <br />
             Document link: https://redis.io/commands/strlen <br />
             Available since 2.2.0. 
