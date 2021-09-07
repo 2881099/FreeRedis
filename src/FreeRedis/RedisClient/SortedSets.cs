@@ -130,7 +130,7 @@ namespace FreeRedis
         public Task<long> ZRevRankAsync(string key, string member) => CallAsync("ZREVRANK".InputKey(key, member), rt => rt.ThrowOrValue<long>());
 
         //ZSCAN key cursor [MATCH pattern] [COUNT count]
-        public Task<decimal> ZScoreAsync(string key, string member) => CallAsync("ZSCORE".InputKey(key, member), rt => rt.ThrowOrValue<decimal>());
+        public Task<decimal?> ZScoreAsync(string key, string member) => CallAsync("ZSCORE".InputKey(key, member), rt => rt.ThrowOrValue<decimal?>());
         public Task<long> ZUnionStoreAsync(string destination, string[] keys, int[] weights = null, ZAggregate? aggregate = null) => ZStoreAsync(false, destination, keys, weights, aggregate);
         Task<long> ZStoreAsync(bool inter, string destination, string[] keys, int[] weights, ZAggregate? aggregate) => CallAsync((inter ? "ZINTERSTORE" : "ZUNIONSTORE")
             .InputKey(destination, keys?.Length ?? 0)
@@ -260,7 +260,7 @@ namespace FreeRedis
         public long ZRevRank(string key, string member) => Call("ZREVRANK".InputKey(key, member), rt => rt.ThrowOrValue<long>());
 
         //ZSCAN key cursor [MATCH pattern] [COUNT count]
-        public decimal ZScore(string key, string member) => Call("ZSCORE".InputKey(key, member), rt => rt.ThrowOrValue<decimal>());
+        public decimal? ZScore(string key, string member) => Call("ZSCORE".InputKey(key, member), rt => rt.ThrowOrValue<decimal?>());
         public long ZUnionStore(string destination, string[] keys, int[] weights = null, ZAggregate? aggregate = null) => ZStore(false, destination, keys, weights, aggregate);
         long ZStore(bool inter, string destination, string[] keys, int[] weights, ZAggregate? aggregate) => Call((inter ? "ZINTERSTORE" : "ZUNIONSTORE")
             .InputKey(destination, keys?.Length ?? 0)
