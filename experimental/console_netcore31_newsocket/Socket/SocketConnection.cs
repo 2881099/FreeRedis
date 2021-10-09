@@ -6,7 +6,6 @@ using System.Buffers;
 using System.Diagnostics;
 using System.IO.Pipelines;
 using System.Net.Sockets;
-using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -26,7 +25,7 @@ namespace console_netcore31_newsocket
         private volatile bool _socketDisposed;
         private volatile Exception _shutdownReason;
         private Task _processingTask;
-        private readonly TaskCompletionSource<object> _waitForConnectionClosedTcs = new TaskCompletionSource<object>(TaskCreationOptions.RunContinuationsAsynchronously);
+        private readonly TaskCompletionSource _waitForConnectionClosedTcs = new TaskCompletionSource();
         private bool _connectionClosed;
         private readonly bool _waitForData;
 
@@ -327,7 +326,7 @@ namespace console_netcore31_newsocket
             {
                 state.CancelConnectionClosedToken();
 
-                state._waitForConnectionClosedTcs.TrySetResult(null);
+                state._waitForConnectionClosedTcs.TrySetResult();
             },
             this,
             preferLocal: false);
