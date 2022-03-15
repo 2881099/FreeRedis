@@ -4,16 +4,17 @@ using System.Text.RegularExpressions;
 
 namespace FreeRedis
 {
+    public enum RedisProtocol { RESP2, RESP3 }
     public class ConnectionStringBuilder
     {
         public string Host { get; set; } = "127.0.0.1:6379";
         public bool Ssl { get; set; } = false;
         public RedisProtocol Protocol { get; set; } = RedisProtocol.RESP2;
-        public string User { get; set; }
-        public string Password { get; set; }
+        public string User { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
         public int Database { get; set; } = 0;
-        public string Prefix { get; set; }
-        public string ClientName { get; set; }
+        public string Prefix { get; set; } = string.Empty;
+        public string ClientName { get; set; } = string.Empty;
         public Encoding Encoding { get; set; } = Encoding.UTF8;
         public TimeSpan IdleTimeout { get; set; } = TimeSpan.FromSeconds(20);
         public TimeSpan ConnectTimeout { get; set; } = TimeSpan.FromSeconds(10);
@@ -29,15 +30,15 @@ namespace FreeRedis
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append(string.IsNullOrWhiteSpace(Host) ? "127.0.0.1:6379" : Host);
+            sb.Append(Host);
             if (Ssl) sb.Append(",ssl=true");
             if (Protocol == RedisProtocol.RESP3) sb.Append(",protocol=").Append(Protocol);
-            if (!string.IsNullOrWhiteSpace(User)) sb.Append(",user=").Append(User);
-            if (!string.IsNullOrEmpty(Password)) sb.Append(",password=").Append(Password);
+            if (User != string.Empty) sb.Append(",user=").Append(User);
+            if (Password != string.Empty) sb.Append(",password=").Append(Password);
             if (Database > 0) sb.Append(",database=").Append(Database);
 
-            if (!string.IsNullOrWhiteSpace(Prefix)) sb.Append(",prefix=").Append(Prefix);
-            if (!string.IsNullOrWhiteSpace(ClientName)) sb.Append(",client name=").Append(ClientName);
+            if (Prefix != string.Empty) sb.Append(",prefix=").Append(Prefix);
+            if (ClientName != string.Empty) sb.Append(",client name=").Append(ClientName);
             if (Encoding != Encoding.UTF8) sb.Append(",encoding=").Append(Encoding.BodyName);
 
             if (IdleTimeout != TimeSpan.FromSeconds(20)) sb.Append(",idle timeout=").Append((long)IdleTimeout.TotalMilliseconds);
@@ -53,7 +54,7 @@ namespace FreeRedis
         public static ConnectionStringBuilder Parse(string connectionString)
         {
             var ret = new ConnectionStringBuilder();
-            if (string.IsNullOrEmpty(connectionString)) return ret;
+            if (connectionString==string.Empty) return ret;
 
             //支持密码中带有逗号，将原有 split(',') 改成以下处理方式
             var vs = Regex.Split(connectionString, @"\,([\w \t\r\n]+)=", RegexOptions.Multiline);

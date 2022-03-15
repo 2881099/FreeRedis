@@ -45,11 +45,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "experimental", "experimenta
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FreeRedis.Transport", "experimental\FreeRedis.Transport\FreeRedis.Transport.csproj", "{35BE5A9B-6830-43B2-BAF8-B2EE67248E69}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FreeRedis.Engine", "experimental\FreeRedis.Engine\FreeRedis.Engine.csproj", "{FF22ABEC-FCB4-4795-812C-341481E3FA70}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FreeRedis.Engine", "experimental\FreeRedis.Engine\FreeRedis.Engine.csproj", "{FF22ABEC-FCB4-4795-812C-341481E3FA70}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FreeRedis.Client", "experimental\FreeRedis.Client\FreeRedis.Client.csproj", "{4B571A5A-A7FE-4F69-89B4-F79D6E1477A9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FreeRedis.Client", "experimental\FreeRedis.Client\FreeRedis.Client.csproj", "{4B571A5A-A7FE-4F69-89B4-F79D6E1477A9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "old", "old", "{1FECEA6E-230A-45EB-BC29-9D537ADCD125}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewRedisTest", "examples\NewRedisTest\NewRedisTest.csproj", "{E056735F-58CB-436D-A8BE-CCEFC5587C99}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -229,6 +231,18 @@ Global
 		{4B571A5A-A7FE-4F69-89B4-F79D6E1477A9}.Release|x64.Build.0 = Release|Any CPU
 		{4B571A5A-A7FE-4F69-89B4-F79D6E1477A9}.Release|x86.ActiveCfg = Release|Any CPU
 		{4B571A5A-A7FE-4F69-89B4-F79D6E1477A9}.Release|x86.Build.0 = Release|Any CPU
+		{E056735F-58CB-436D-A8BE-CCEFC5587C99}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E056735F-58CB-436D-A8BE-CCEFC5587C99}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E056735F-58CB-436D-A8BE-CCEFC5587C99}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E056735F-58CB-436D-A8BE-CCEFC5587C99}.Debug|x64.Build.0 = Debug|Any CPU
+		{E056735F-58CB-436D-A8BE-CCEFC5587C99}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E056735F-58CB-436D-A8BE-CCEFC5587C99}.Debug|x86.Build.0 = Debug|Any CPU
+		{E056735F-58CB-436D-A8BE-CCEFC5587C99}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E056735F-58CB-436D-A8BE-CCEFC5587C99}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E056735F-58CB-436D-A8BE-CCEFC5587C99}.Release|x64.ActiveCfg = Release|Any CPU
+		{E056735F-58CB-436D-A8BE-CCEFC5587C99}.Release|x64.Build.0 = Release|Any CPU
+		{E056735F-58CB-436D-A8BE-CCEFC5587C99}.Release|x86.ActiveCfg = Release|Any CPU
+		{E056735F-58CB-436D-A8BE-CCEFC5587C99}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -251,6 +265,7 @@ Global
 		{FF22ABEC-FCB4-4795-812C-341481E3FA70} = {B162D573-4F87-46C0-AFBC-444A5CB5997A}
 		{4B571A5A-A7FE-4F69-89B4-F79D6E1477A9} = {B162D573-4F87-46C0-AFBC-444A5CB5997A}
 		{1FECEA6E-230A-45EB-BC29-9D537ADCD125} = {B162D573-4F87-46C0-AFBC-444A5CB5997A}
+		{E056735F-58CB-436D-A8BE-CCEFC5587C99} = {DD1426BF-F56F-49A8-9D4E-2BA0E3BEFC72}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B36AD060-F6AE-49C7-A310-B58B8467CE69}

@@ -292,3 +292,4 @@ ASALocalRun/
 _site
 docs/api/*.yml
 docs/api/.manifest
+examples/NewRedisTest/Program.cs

@@ -1,12 +1,14 @@
-﻿public class TaskBuckets
+﻿using System.Buffers;
+
+public class TaskBuckets
 {
     //public static int Increment;
     //public int Index;
     public bool InReading;
-    public readonly IRedisProtocal[] Buffer;
+    public readonly IRedisProtocol[] Buffer;
     public TaskBuckets(int length)
     {
-        Buffer = new IRedisProtocal[length];
+        Buffer = new IRedisProtocol[length];
         //Index = Interlocked.Increment(ref Increment);
     }
 
@@ -43,8 +45,8 @@ public class CircleTask
     public int ArrayLength = 8192;
     private TaskBuckets _writePtr;
     public  TaskBuckets _readPtr;
-    private IRedisProtocal[] _currentWrite;
-    private IRedisProtocal[] _currentRead;
+    private IRedisProtocol[] _currentWrite;
+    private IRedisProtocol[] _currentRead;
     public CircleTask()
     {
         //_writer = writer;
@@ -71,7 +73,7 @@ public class CircleTask
 
     private int _write_offset;
     private int _read_offset;
-    public void WriteNext(IRedisProtocal protocal)
+    public void WriteNext(IRedisProtocol protocal)
     {
 #if DEBUG
         //_debug.RecodSender();
@@ -130,29 +132,35 @@ public class CircleTask
     }
 
 
-    public void ReadNext(in ReadOnlyMemory<byte> bytes, ref int offset)
+    public void ReadNext(in ReadOnlySequence<byte> revData)
     {
-        if (_currentRead[_read_offset].GetInstanceFromBytes(in bytes, ref offset))
+        //var current_recv_offset = 0;
+        var reader = new SequenceReader<byte>(revData);
+        while (!reader.End)
         {
-#if DEBUG
-            //_debug.RecodReceiver();
-            //_debug.AcceptTask(result.Task);
-#endif
-            //result.SetResult(value);
-            //if (result.Task.IsCompleted)
-            //{
-            //    //System.Console.WriteLine("Need False!");
-            //    //result.SetResult((T)(object)false);
-            //}
-            //else
-            //{
-            //    result.SetResult(value);
-            //}
-            _read_offset += 1;
-            if (_read_offset == ArrayLength)
+            Console.WriteLine(reader.CurrentSpanIndex);
+            if (_currentRead[_read_offset].HandleBytes(ref reader))
             {
-                CollectBuffer();
-                _read_offset = 0;
+#if DEBUG
+                //_debug.RecodReceiver();
+                //_debug.AcceptTask(result.Task);
+#endif
+                //result.SetResult(value);
+                //if (result.Task.IsCompleted)
+                //{
+                //    //System.Console.WriteLine("Need False!");
+                //    //result.SetResult((T)(object)false);
+                //}
+                //else
+                //{
+                //    result.SetResult(value);
+                //}
+                _read_offset += 1;
+                if (_read_offset == ArrayLength)
+                {
+                    CollectBuffer();
+                    _read_offset = 0;
+                }
             }
         }
     }

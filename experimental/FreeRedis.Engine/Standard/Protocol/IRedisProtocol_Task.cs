@@ -1,7 +1,7 @@
-﻿public abstract class IRedisProtocal<T> : IRedisProtocal
+﻿public abstract class IRedisProtocal<T> : IRedisProtocol
 {
     protected readonly TaskCompletionSource<T> Task;
-    public IRedisProtocal()
+    public IRedisProtocal(Action<string>? logger) : base(logger)
     {
         Task = new TaskCompletionSource<T>();
     }

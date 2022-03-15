@@ -1,4 +1,5 @@
 ﻿using FreeRedis.Transport;
+using System.Buffers;
 using System.IO.Pipelines;
 using System.Net;
 using System.Runtime.CompilerServices;
@@ -11,9 +12,11 @@ namespace FreeRedis.Engine
         protected readonly PipeWriter _sender;
         protected readonly PipeReader _reciver;
         protected readonly CircleTask _taskBuffer;
-        public FreeRedisClientBase()
+        protected readonly Action<string>? errorLogger;
+        public FreeRedisClientBase(Action<string>? logger)
         {
             _taskBuffer = new CircleTask();
+            errorLogger = logger;
             _sender = default!;
             _reciver = default!;
             _connection = default!;
@@ -31,7 +34,7 @@ namespace FreeRedis.Engine
 
         }
 
-
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Task<T> SendProtocal<T>(IRedisProtocal<T> redisProtocal)
         {
             LockSend();
@@ -41,25 +44,19 @@ namespace FreeRedis.Engine
             return redisProtocal.WaitTask;
         }
 
-        private int _revc_offset;
         private async void RunReciver()
         {
 
             while (true)
             {
-
                 var result = await _reciver.ReadAsync().ConfigureAwait(false);
                 var buffer = result.Buffer;
-                foreach (ReadOnlyMemory<byte> segment in buffer)
-                {
-                    _taskBuffer.ReadNext(in segment, ref _revc_offset);
-                }
+                _taskBuffer.ReadNext(in buffer);
                 _reciver.AdvanceTo(buffer.End);
                 if (result.IsCompleted)
                 {
                     return;
                 }
-
             }
         }
 

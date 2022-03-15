@@ -1,47 +1,39 @@
 ﻿using FreeRedis.Client.Protocal;
+using FreeRedis.Engine;
 using System.Buffers;
 using System.Runtime.CompilerServices;
 using System.Text;
 
-namespace FreeRedis.Engine
+namespace FreeRedis
 {
 
 
     public class FreeRedisClient : FreeRedisClientBase
     {
-
-        private readonly byte _protocalStart;
-        public FreeRedisClient(string connectionString)
+        public FreeRedisClient(ConnectionStringBuilder connectionString, Action<string>? logger = null) : base(logger)
         {
-           
-
             try
             {
                 //Todo Analysis connectionString
-                string ip = default!;
-                int port = default!;
-                this.CreateConnection(ip, port);
-
-                string? password = default!;
-                if (password != null)
+                var host = connectionString.Host.Split(':');
+                string ip = host[0];
+                this.CreateConnection(host[0], Convert.ToInt32(host[1]));
+                    
+                string password = connectionString.Password;
+                if (password !=  string.Empty)
                 {
                     var result = this.AuthAsync(password).Result;
                     if (!result)
                     {
-                        throw new Exception("Reids服务器密码不正确!");
+                        throw new Exception("Reids 服务器密码不正确!");
                     }
                 }
             }
             catch (Exception ex)
             {
-
                 throw new Exception($"创建链接遇到问题:{ex.Message!}");
+                DisposeAsync().ConfigureAwait(false);
             }
-            finally
-            {
-                this.DisposeAsync();
-            }
-             _protocalStart = (byte)43;
         }
 #if DEBUG
         //public void Clear()
@@ -57,13 +49,13 @@ namespace FreeRedis.Engine
 
         public Task<bool> AuthAsync(string password)
         {
-            var authHandler = new AuthProtocal(password);
+            var authHandler = new AuthProtocol(password, errorLogger);
             return SendProtocal(authHandler);
         }
 
         public Task<bool> SetAsync(string key, string value)
         {
-            var setHandler = new SetProtocal(key, value);
+            var setHandler = new SetProtocol(key, value, errorLogger);
             return SendProtocal(setHandler);
         }
 
