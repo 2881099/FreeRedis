@@ -1,4 +1,5 @@
 ﻿using System.Buffers;
+using System.IO.Pipelines;
 
 public class TaskBuckets
 {
@@ -131,39 +132,46 @@ public class CircleTask
 
     }
 
-
-    public void ReadNext(in ReadOnlySequence<byte> revData)
+    //private readonly PipeReader _protocolReader = new Pipe(null);
+    //private readonly PipeWriter _protocolWriter = new Pipe(null);
+    private void LoopHandle(ref SequenceReader<byte> reader)
     {
-        //var current_recv_offset = 0;
-        var reader = new SequenceReader<byte>(revData);
-        while (!reader.End)
+        var result = _currentRead[_read_offset].HandleBytes(ref reader);
+        switch (result)
         {
-            Console.WriteLine(reader.CurrentSpanIndex);
-            if (_currentRead[_read_offset].HandleBytes(ref reader))
-            {
-#if DEBUG
-                //_debug.RecodReceiver();
-                //_debug.AcceptTask(result.Task);
-#endif
-                //result.SetResult(value);
-                //if (result.Task.IsCompleted)
-                //{
-                //    //System.Console.WriteLine("Need False!");
-                //    //result.SetResult((T)(object)false);
-                //}
-                //else
-                //{
-                //    result.SetResult(value);
-                //}
+            case ProtocolContinueResult.Continue:
+                if (!reader.End)
+                {
+                    LoopHandle(ref reader);
+                }
+                break;
+
+            case ProtocolContinueResult.Completed:
                 _read_offset += 1;
                 if (_read_offset == ArrayLength)
                 {
                     CollectBuffer();
                     _read_offset = 0;
                 }
-            }
+                if (!reader.End)
+                {
+                    LoopHandle(ref reader);
+                }
+                break;
+
+            case ProtocolContinueResult.Wait:
+            default:
+                return;
         }
     }
+
+    public SequencePosition ReadNext(in ReadOnlySequence<byte> revData)
+    {
+        var reader = new SequenceReader<byte>(revData);
+        LoopHandle(ref reader);
+        return reader.Position;
+    }
+
     private void CollectBuffer()
     {
 

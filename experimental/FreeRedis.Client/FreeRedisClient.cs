@@ -1,8 +1,9 @@
-﻿using FreeRedis.Client.Protocal;
+﻿using FreeRedis.Client.Protocol;
 using FreeRedis.Engine;
 using System.Buffers;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.Json;
 
 namespace FreeRedis
 {
@@ -22,6 +23,8 @@ namespace FreeRedis
                 string password = connectionString.Password;
                 if (password !=  string.Empty)
                 {
+                    AuthAsync("123");
+                    Thread.Sleep(3000);
                     var result = this.AuthAsync(password).Result;
                     if (!result)
                     {
@@ -53,13 +56,27 @@ namespace FreeRedis
             return SendProtocal(authHandler);
         }
 
+        public Task<bool> SetObjAsync<T>(string key, T value) 
+        {
+            return SetAsync(key, JsonSerializer.Serialize(value));
+        }
         public Task<bool> SetAsync(string key, string value)
         {
             var setHandler = new SetProtocol(key, value, errorLogger);
             return SendProtocal(setHandler);
         }
 
-       
+        public Task<T?> GetAsync<T>(string key)
+        {
+            var getHandler = new GetProtocol<T>(key, errorLogger);
+            return SendProtocal(getHandler);
+        }
+
+        public Task<TryResult<T>> TryGetAsync<T>(string key)
+        {
+            var getHandler = new TryGetProtocol<T>(key, errorLogger);
+            return SendProtocal(getHandler);
+        }
 
         //private int _revc_offset;
         ////从返回流中分割获取 Redis 结果.

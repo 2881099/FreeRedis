@@ -5,7 +5,9 @@ public abstract class IRedisProtocol
 {
     public const byte TAIL = 10;
     public const byte OK_HEAD = 43;
+    public const byte OK_DATA = 36;
     public const byte ERROR_HEAD = 45;
+
 
     protected bool IsOKRemainData;
     protected bool IsErrorRemainData;
@@ -38,85 +40,37 @@ public abstract class IRedisProtocol
 
     public string? ErrorMessage { get { return _error == null? null : _error.ToString(); } }
 
-    public virtual bool HandleBytes(ref SequenceReader<byte> recvReader)
+    public virtual ProtocolContinueResult HandleBytes(ref SequenceReader<byte> recvReader)
     {
-        if (IsOKRemainData)
+        if (recvReader.IsNext(ERROR_HEAD, false))
         {
-
-            return HandleAfterOkBytes(ref recvReader);
-
-        }
-        else if (IsErrorRemainData)
-        {
-
-            return HandleAfterErrorBytes(ref recvReader);
-
-        }
-        else if (recvReader.IsNext(ERROR_HEAD, true))
-        {
-            SetErrorDefaultResult();
             if (recvReader.TryReadTo(out ReadOnlySpan<byte> requestLine, TAIL, true))
             {
-                Error(requestLine);
+                SetErrorDefaultResult();
                 if (_writeLogger!=null)
                 {
+                    Error(requestLine);
                     _writeLogger(ErrorMessage!);
                 }
-                return true;
+                return ProtocolContinueResult.Completed;
             }
-            else
-            {
-                recvReader.AdvanceToEnd();
-                //粘包处理(前段)
-                this.PostToAfterError();
-                return false;
-            }
+            return ProtocolContinueResult.Wait;
         }
         else
         {
-
             return HandleOkBytes(ref recvReader);
-
         }
     }
 
     protected abstract void SetErrorDefaultResult();
 
-    protected void PostToAfterOk()
-    {
-        IsOKRemainData = true;
-    }
-
-    protected void PostToAfterError()
-    {
-        IsErrorRemainData = true;
-    }
 
     /// <summary>
     /// 根据获取到的比特流解析结果,如果需要继续处理下一个流,返回 false 即可.
     /// </summary>
     /// <param name="recvBytes">从服务器收到的数据流切片(连续)</param>
     /// <param name="offset">下一条协议起始位置</param>
-    protected abstract bool HandleOkBytes(ref SequenceReader<byte> recvReader);
+    protected abstract ProtocolContinueResult HandleOkBytes(ref SequenceReader<byte> recvReader);
 
-    protected virtual bool HandleAfterOkBytes(ref SequenceReader<byte> recvReader)
-    {
-        recvReader.AdvancePast(TAIL);
-        return true;
-    }
-
-    protected virtual bool HandleAfterErrorBytes(ref SequenceReader<byte> recvReader)
-    {
-        if (recvReader.TryReadTo(out ReadOnlySpan<byte> requestLine, TAIL, true))
-        {
-            Error(in requestLine);
-            if (_writeLogger != null)
-            {
-                _writeLogger(ErrorMessage!);
-            }
-            return true;
-        }
-        throw new Exception("未找到后续错误边界!");
-    }
 
 }

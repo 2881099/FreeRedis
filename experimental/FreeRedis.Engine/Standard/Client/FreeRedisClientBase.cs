@@ -1,5 +1,6 @@
 ﻿using FreeRedis.Transport;
 using System.Buffers;
+using System.Buffers.Binary;
 using System.IO.Pipelines;
 using System.Net;
 using System.Runtime.CompilerServices;
@@ -44,6 +45,8 @@ namespace FreeRedis.Engine
             return redisProtocal.WaitTask;
         }
 
+
+
         private async void RunReciver()
         {
 
@@ -51,8 +54,8 @@ namespace FreeRedis.Engine
             {
                 var result = await _reciver.ReadAsync().ConfigureAwait(false);
                 var buffer = result.Buffer;
-                _taskBuffer.ReadNext(in buffer);
-                _reciver.AdvanceTo(buffer.End);
+                var position = _taskBuffer.ReadNext(in buffer);
+                _reciver.AdvanceTo(position);
                 if (result.IsCompleted)
                 {
                     return;
@@ -82,7 +85,7 @@ namespace FreeRedis.Engine
 
         }
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool TryGetLockAnalysisLock()
+        protected bool TryGetLockAnalysisLock()
         {
             return Interlocked.CompareExchange(ref _analysis_lock_flag, 1, 0) == 0;
         }
@@ -122,13 +125,13 @@ namespace FreeRedis.Engine
 
         }
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool TryGetSendLock()
+        protected bool TryGetSendLock()
         {
             return Interlocked.CompareExchange(ref _send_lock_flag, 1, 0) == 0;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void ReleaseSend()
+        protected void ReleaseSend()
         {
 
             _send_lock_flag = 0;
@@ -152,7 +155,7 @@ namespace FreeRedis.Engine
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool TryGetReceiverLock()
+        protected bool TryGetReceiverLock()
         {
             return _receiver_lock_flag == 0;
         }
