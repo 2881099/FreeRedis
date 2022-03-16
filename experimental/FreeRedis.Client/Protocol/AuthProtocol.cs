@@ -5,7 +5,6 @@ namespace FreeRedis.Client.Protocol
 {
     internal class AuthProtocol : IRedisProtocal<bool>
     {
-        static int a = 1;
         public AuthProtocol(string password, Action<string>? logger) : base(logger)
         {
             ReadBuffer = Encoding.UTF8.GetBytes($"AUTH {password}\r\n");

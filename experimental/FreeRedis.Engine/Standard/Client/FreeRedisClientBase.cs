@@ -54,7 +54,7 @@ namespace FreeRedis.Engine
             {
                 var result = await _reciver.ReadAsync().ConfigureAwait(false);
                 var buffer = result.Buffer;
-                var position = _taskBuffer.ReadNext(in buffer);
+                var position = _taskBuffer.HandleTask(in buffer);
                 _reciver.AdvanceTo(position);
                 if (result.IsCompleted)
                 {

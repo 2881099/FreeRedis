@@ -165,7 +165,7 @@ public class CircleTask
         }
     }
 
-    public SequencePosition ReadNext(in ReadOnlySequence<byte> revData)
+    public SequencePosition HandleTask(in ReadOnlySequence<byte> revData)
     {
         var reader = new SequenceReader<byte>(revData);
         LoopHandle(ref reader);
