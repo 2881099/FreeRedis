@@ -62,7 +62,7 @@ namespace FreeRedis.Client.Protocol.Serialization
             {
                 makeAction = () =>
                 {
-                    Unsafe.AsRef(ProtocolSerializer<int>.ReadFunc) = BinaryPrimitives.ReadInt32LittleEndian;
+                    Unsafe.AsRef(ProtocolSerializer<int>.ReadFunc) = (bytes) => Convert.ToInt32(Encoding.UTF8.GetString(bytes));
                     Unsafe.AsRef(ProtocolSerializer<int>.WriteFunc) = value =>
                     {
                         var span = Span<byte>.Empty;
@@ -75,7 +75,7 @@ namespace FreeRedis.Client.Protocol.Serialization
             {
                 makeAction = () =>
                 {
-                    Unsafe.AsRef(ProtocolSerializer<short>.ReadFunc) = BinaryPrimitives.ReadInt16LittleEndian;
+                    Unsafe.AsRef(ProtocolSerializer<short>.ReadFunc) = (bytes) => Convert.ToInt16(Encoding.UTF8.GetString(bytes));
                     Unsafe.AsRef(ProtocolSerializer<short>.WriteFunc) = value =>
                     {
                         var span = Span<byte>.Empty;
@@ -88,7 +88,7 @@ namespace FreeRedis.Client.Protocol.Serialization
             {
                 makeAction = () =>
                 {
-                    Unsafe.AsRef(ProtocolSerializer<long>.ReadFunc) = BinaryPrimitives.ReadInt64LittleEndian;
+                    Unsafe.AsRef(ProtocolSerializer<long>.ReadFunc) = (bytes) => Convert.ToInt64(Encoding.UTF8.GetString(bytes));
                     Unsafe.AsRef(ProtocolSerializer<long>.WriteFunc) = value =>
                     {
                         var span = Span<byte>.Empty;
@@ -101,7 +101,7 @@ namespace FreeRedis.Client.Protocol.Serialization
             {
                 makeAction = () =>
                 {
-                    Unsafe.AsRef(ProtocolSerializer<uint>.ReadFunc) = BinaryPrimitives.ReadUInt32LittleEndian;
+                    Unsafe.AsRef(ProtocolSerializer<uint>.ReadFunc) = (bytes) => Convert.ToUInt32(Encoding.UTF8.GetString(bytes));
                     Unsafe.AsRef(ProtocolSerializer<uint>.WriteFunc) = value =>
                     {
                         var span = Span<byte>.Empty;
@@ -114,7 +114,7 @@ namespace FreeRedis.Client.Protocol.Serialization
             {
                 makeAction = () =>
                 {
-                    Unsafe.AsRef(ProtocolSerializer<ushort>.ReadFunc) = BinaryPrimitives.ReadUInt16LittleEndian;
+                    Unsafe.AsRef(ProtocolSerializer<ushort>.ReadFunc) = (bytes) => Convert.ToUInt16(Encoding.UTF8.GetString(bytes));
                     Unsafe.AsRef(ProtocolSerializer<ushort>.WriteFunc) = value =>
                     {
                         var span = Span<byte>.Empty;
@@ -127,7 +127,7 @@ namespace FreeRedis.Client.Protocol.Serialization
             {
                 makeAction = () =>
                 {
-                    Unsafe.AsRef(ProtocolSerializer<ulong>.ReadFunc) = BinaryPrimitives.ReadUInt64LittleEndian;
+                    Unsafe.AsRef(ProtocolSerializer<ulong>.ReadFunc) = (bytes) => Convert.ToUInt64(Encoding.UTF8.GetString(bytes));
                     Unsafe.AsRef(ProtocolSerializer<ulong>.WriteFunc) = value =>
                     {
                         var span = Span<byte>.Empty;
@@ -140,7 +140,7 @@ namespace FreeRedis.Client.Protocol.Serialization
             {
                 makeAction = () =>
                 {
-                    Unsafe.AsRef(ProtocolSerializer<float>.ReadFunc) = BinaryPrimitives.ReadSingleLittleEndian;
+                    Unsafe.AsRef(ProtocolSerializer<float>.ReadFunc) = (bytes) => Convert.ToSingle(Encoding.UTF8.GetString(bytes));
                     Unsafe.AsRef(ProtocolSerializer<float>.WriteFunc) = value =>
                     {
                         var span = Span<byte>.Empty;
@@ -154,7 +154,7 @@ namespace FreeRedis.Client.Protocol.Serialization
             {
                 makeAction = () =>
                 {
-                    Unsafe.AsRef(ProtocolSerializer<double>.ReadFunc) = BinaryPrimitives.ReadDoubleLittleEndian;
+                    Unsafe.AsRef(ProtocolSerializer<double>.ReadFunc) = (bytes) => Convert.ToDouble(Encoding.UTF8.GetString(bytes));
                     Unsafe.AsRef(ProtocolSerializer<double>.WriteFunc) = value =>
                     {
                         var span = Span<byte>.Empty;
@@ -167,8 +167,16 @@ namespace FreeRedis.Client.Protocol.Serialization
             {
                 makeAction = () =>
                 {
-                    Unsafe.AsRef(ProtocolSerializer<decimal>.ReadFunc) = bytes=>Convert.ToDecimal(Encoding.UTF8.GetString(bytes));
+                    Unsafe.AsRef(ProtocolSerializer<decimal>.ReadFunc) = (bytes) => Convert.ToDecimal(Encoding.UTF8.GetString(bytes));
                     Unsafe.AsRef(ProtocolSerializer<decimal>.WriteFunc) = value => Encoding.UTF8.GetBytes(value.ToString());
+                };
+            }
+            else if (type == typeof(DateTime))
+            {
+                makeAction = () =>
+                {
+                    Unsafe.AsRef(ProtocolSerializer<DateTime>.ReadFunc) = (bytes) => Convert.ToDateTime(Encoding.UTF8.GetString(bytes));
+                    Unsafe.AsRef(ProtocolSerializer<DateTime>.WriteFunc) = value => Encoding.UTF8.GetBytes(value.ToString());
                 };
             }
             else if (type == typeof(bool))

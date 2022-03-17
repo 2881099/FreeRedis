@@ -81,7 +81,7 @@ namespace FreeRedis.Client.Protocol
         {
             if (bufferLength > 0)
             {
-                return HanadleSerializer(ref recvReader);
+                return HandleSerializer(ref recvReader);
             }
             else
             {
@@ -108,7 +108,7 @@ namespace FreeRedis.Client.Protocol
                                     bufferLength += lengthBytes[i] - 48;
                                 }
                             }
-                            return HanadleSerializer(ref recvReader);
+                            return HandleSerializer(ref recvReader);
                         }
                     }
 
@@ -119,7 +119,7 @@ namespace FreeRedis.Client.Protocol
             throw new Exception($"{this.GetType()}协议未解析到协议头!");
         }
 
-        private ProtocolContinueResult HanadleSerializer(ref SequenceReader<byte> recvReader)
+        private ProtocolContinueResult HandleSerializer(ref SequenceReader<byte> recvReader)
         {
             var span = recvReader.UnreadSpan;
             if (span.Length >= bufferLength + 2)
