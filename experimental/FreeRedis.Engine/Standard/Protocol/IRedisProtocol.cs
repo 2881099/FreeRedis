@@ -1,4 +1,6 @@
 ﻿using System.Buffers;
+using System.IO.Pipelines;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 public abstract class IRedisProtocol
@@ -7,18 +9,34 @@ public abstract class IRedisProtocol
     public const byte OK_HEAD = 43;
     public const byte OK_DATA = 36;
     public const byte ERROR_HEAD = 45;
+    protected static readonly Encoder Utf8Encoder;
+
+    public static readonly byte[] SplitField;
 
 
-    protected bool IsOKRemainData;
-    protected bool IsErrorRemainData;
-    protected byte[] ReadBuffer = default!;
+    static IRedisProtocol()
+    {
+        SplitField = Encoding.UTF8.GetBytes("\r\n");
+        Utf8Encoder = Encoding.UTF8.GetEncoder();
+    }
+
+    public byte[] ReadBuffer = default!;
 
     private StringBuilder? _error;
 
-    private readonly Action<string>? _writeLogger; 
+    private readonly Action<string>? _writeLogger;
+
     public IRedisProtocol(Action<string>? writeLogger)
     {
         _writeLogger = writeLogger;
+    }
+    protected string Command = default!;
+    public virtual void WriteBuffer(PipeWriter bufferWriter)
+    {
+        //Console.WriteLine("发送数据: \t"+ Command);
+        Utf8Encoder.Convert(Command, bufferWriter, false, out _, out _);
+        bufferWriter.FlushAsync();
+
     }
     protected void Error(in ReadOnlySpan<byte> errorStream)
     {
@@ -29,39 +47,29 @@ public abstract class IRedisProtocol
         _error.AppendLine(Encoding.UTF8.GetString(errorStream));
     }
 
-    /// <summary>
-    /// 将值通过协议转换为 byte 发送到服务器. 
-    /// </summary>
-    /// <returns>协议数据流</returns>
-    public virtual byte[] GetSendBytes()
-    {
-        return ReadBuffer;
-    }
-
-    public string? ErrorMessage { get { return _error == null? null : _error.ToString(); } }
+    public string? ErrorMessage { get { return _error == null ? null : _error.ToString(); } }
 
     public virtual ProtocolContinueResult HandleBytes(ref SequenceReader<byte> recvReader)
     {
-        if (recvReader.IsNext(ERROR_HEAD, false))
-        {
-            if (recvReader.TryReadTo(out ReadOnlySpan<byte> requestLine, TAIL, true))
-            {
-                SetErrorDefaultResult();
-                if (_writeLogger!=null)
-                {
-                    Error(requestLine);
-                    _writeLogger(ErrorMessage!);
-                }
-                return ProtocolContinueResult.Completed;
-            }
-            return ProtocolContinueResult.Wait;
-        }
-        else
+        //recvReader.IsNext(ERROR_HEAD, false)
+        if (recvReader.UnreadSpan[0] != ERROR_HEAD)
         {
             return HandleOkBytes(ref recvReader);
         }
+        else if (recvReader.TryReadTo(out ReadOnlySpan<byte> requestLine, TAIL, true))
+        {
+            SetErrorDefaultResult();
+            if (_writeLogger != null)
+            {
+                Error(requestLine);
+                _writeLogger(ErrorMessage!);
+            }
+            return ProtocolContinueResult.Completed;
+        }
+        return ProtocolContinueResult.Wait;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     protected abstract void SetErrorDefaultResult();
 
 

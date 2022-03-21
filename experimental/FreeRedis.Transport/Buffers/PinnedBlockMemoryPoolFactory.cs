@@ -21,7 +21,7 @@ internal sealed class PinnedBlockMemoryPool : MemoryPool<byte>
     /// <summary>
     /// The size of a block. 4096 is chosen because most operating systems use 4k pages.
     /// </summary>
-    private const int _blockSize = 4096;
+    private const int _blockSize = 8192;
 
     /// <summary>
     /// Max allocation block size for pooled blocks,

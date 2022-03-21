@@ -5,6 +5,7 @@ using System.Buffers;
 using System.IO.Pipelines;
 using System.Net;
 using System.Net.Sockets;
+using static System.IO.Pipelines.DuplexPipe;
 
 namespace FreeRedis.Transport;
 
@@ -37,6 +38,12 @@ public class SocketConnectionFactory : IAsyncDisposable
         _inputOptions = new PipeOptions(_memoryPool, applicationScheduler, transportScheduler, maxReadBufferSize, maxReadBufferSize / 2, useSynchronizationContext: false);
         _outputOptions = new PipeOptions(_memoryPool, transportScheduler, applicationScheduler, maxWriteBufferSize, maxWriteBufferSize / 2, useSynchronizationContext: false);
         _socketSenderPool = new SocketSenderPool(awaiterScheduler);
+    }
+
+    public static DuplexPipePair GetIOOperator()
+    {
+        var factory = new SocketConnectionFactory(new SocketTransportOptions());
+        return CreateConnectionPair(factory._inputOptions, factory._outputOptions);
     }
 
     public async ValueTask<SocketConnection> ConnectAsync(EndPoint endpoint, CancellationToken cancellationToken = default)

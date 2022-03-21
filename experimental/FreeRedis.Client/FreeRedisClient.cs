@@ -23,8 +23,6 @@ namespace FreeRedis
                 string password = connectionString.Password;
                 if (password !=  string.Empty)
                 {
-                    AuthAsync("123");
-                    Thread.Sleep(3000);
                     var result = this.AuthAsync(password).Result;
                     if (!result)
                     {
@@ -48,8 +46,16 @@ namespace FreeRedis
         //{
         //    _taskBuffer = new();
         //}
-
-
+        public Task<bool> SelectDbAsync(int dbIndex)
+        {
+            var selectHandler = new SelectProtocol(dbIndex, errorLogger);
+            return SendProtocal(selectHandler);
+        }
+        public Task<bool> FlushDbAsync()
+        {
+            var flushHandler = new FlushProtocol(errorLogger);
+            return SendProtocal(flushHandler);
+        }
         public Task<bool> AuthAsync(string password)
         {
             var authHandler = new AuthProtocol(password, errorLogger);

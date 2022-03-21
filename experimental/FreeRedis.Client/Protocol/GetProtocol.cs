@@ -1,5 +1,6 @@
 ﻿using FreeRedis.Client.Protocol.Serialization;
 using System.Buffers;
+using System.IO.Pipelines;
 using System.Text;
 using System.Text.Json;
 
@@ -18,8 +19,12 @@ namespace FreeRedis.Client.Protocol
         private static readonly ulong? _defaultULong = null;
         private static readonly float? _defaultFloat = null;
         private static readonly double? _defaultDouble = null;
+        private static readonly byte[] _fixedBuffer;
+
+
         static GetProtocol()
         {
+            _fixedBuffer = Encoding.UTF8.GetBytes("*2\r\n$3\r\nGET\r\n$");
             var type = typeof(T);
             if (type.BaseType == typeof(Nullable<>))
             {
@@ -68,8 +73,17 @@ namespace FreeRedis.Client.Protocol
         }
         public GetProtocol(string key, Action<string>? logger) : base(logger)
         {
-            ReadBuffer = Encoding.UTF8.GetBytes($"*2\r\n$3\r\nGET\r\n${key.Length}\r\n{key}\r\n");
+            Command = $"{key.Length}\r\n{key}";
         }
+
+        public override void WriteBuffer(PipeWriter bufferWriter)
+        {
+            bufferWriter.Write(_fixedBuffer);
+            Utf8Encoder.Convert(Command, bufferWriter, false, out _, out _);
+            bufferWriter.Write(SplitField);
+            bufferWriter.FlushAsync();
+        }
+
         private int bufferLength;
         /// <summary>
         /// 处理协议

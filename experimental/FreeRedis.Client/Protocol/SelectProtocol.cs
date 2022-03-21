@@ -4,17 +4,13 @@ using System.Text;
 
 namespace FreeRedis.Client.Protocol
 {
-    internal class AuthProtocol : IRedisProtocal<bool>
+    internal class SelectProtocol : IRedisProtocal<bool>
     {
         private static readonly byte[] _fixedBuffer;
 
-        static AuthProtocol()
+        static SelectProtocol()
         {
-            _fixedBuffer = Encoding.UTF8.GetBytes("AUTH ");
-        }
-        public AuthProtocol(string password, Action<string>? logger) : base(logger)
-        {
-            Command = $"{password}";
+            _fixedBuffer = Encoding.UTF8.GetBytes("SELECT ");
         }
 
         public override void WriteBuffer(PipeWriter bufferWriter)
@@ -23,6 +19,12 @@ namespace FreeRedis.Client.Protocol
             Utf8Encoder.Convert(Command, bufferWriter, false, out _, out _);
             bufferWriter.Write(SplitField);
             bufferWriter.FlushAsync();
+        }
+
+
+        public SelectProtocol(int dbIndex,Action<string>? logger) : base(logger)
+        {
+            Command = $"{dbIndex}";
         }
 
         protected override void SetErrorDefaultResult()
@@ -51,6 +53,7 @@ namespace FreeRedis.Client.Protocol
                 return ProtocolContinueResult.Wait;
             }
             throw new Exception($"{this.GetType()}协议未解析到标准协议头!下一个协议字段为:{recvReader.UnreadSpan[0]}");
+
         }
 
     }

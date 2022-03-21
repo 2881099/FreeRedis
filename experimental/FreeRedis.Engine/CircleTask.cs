@@ -43,7 +43,7 @@ public class CircleTask
     //private readonly DebugBuffer _debug;
 #endif
 
-    public int ArrayLength = 8192;
+    public const int ArrayLength = 8192;
     private TaskBuckets _writePtr;
     public  TaskBuckets _readPtr;
     private IRedisProtocol[] _currentWrite;
@@ -139,13 +139,6 @@ public class CircleTask
         var result = _currentRead[_read_offset].HandleBytes(ref reader);
         switch (result)
         {
-            case ProtocolContinueResult.Continue:
-                if (!reader.End)
-                {
-                    LoopHandle(ref reader);
-                }
-                break;
-
             case ProtocolContinueResult.Completed:
                 _read_offset += 1;
                 if (_read_offset == ArrayLength)
@@ -157,9 +150,15 @@ public class CircleTask
                 {
                     LoopHandle(ref reader);
                 }
-                break;
-
+                return;
             case ProtocolContinueResult.Wait:
+                return;
+            case ProtocolContinueResult.Continue:
+                if (!reader.End)
+                {
+                    LoopHandle(ref reader);
+                }
+                return;
             default:
                 return;
         }

@@ -4,6 +4,7 @@ using System.Buffers.Binary;
 using System.IO.Pipelines;
 using System.Net;
 using System.Runtime.CompilerServices;
+using System.Text;
 
 namespace FreeRedis.Engine
 {
@@ -38,8 +39,11 @@ namespace FreeRedis.Engine
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Task<T> SendProtocal<T>(IRedisProtocal<T> redisProtocal)
         {
+
+            //EncodingExtensions.Convert(encoder, "A".AsSpan(), (IBufferWriter<byte>)_sender, false, out bool bytesUesd, out bool completed)
             LockSend();
-            _sender.WriteAsync(redisProtocal.GetSendBytes());
+            redisProtocal.WriteBuffer(_sender);
+            //_sender.WriteAsync(redisProtocal.ReadBuffer).ConfigureAwait(false);
             _taskBuffer.WriteNext(redisProtocal);
             ReleaseSend();
             return redisProtocal.WaitTask;
