@@ -14,13 +14,26 @@ namespace console_netcore31_sentinel
             var r = new RedisClient("mymaster,default=3", new[] { "127.0.0.1:26379", "127.0.0.1:26479", "127.0.0.1:26579" }, false);
             r.Serialize = obj => JsonConvert.SerializeObject(obj);
             r.Deserialize = (json, type) => JsonConvert.DeserializeObject(json, type);
-            //r.Notice += (s, e) => Trace.WriteLine(e.Log);
+            r.Notice += (s, e) => Console.WriteLine(e.Log);
             return r;
         });
         static RedisClient cli => _cliLazy.Value;
 
         static void Main(string[] args)
         {
+            while (Console.ReadKey().Key == ConsoleKey.Enter)
+            {
+                try
+                {
+                    cli.Get(Guid.NewGuid().ToString());
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
+
+            return;
 
             for (var k = 0; k < 1; k++)
             {

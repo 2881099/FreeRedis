@@ -106,6 +106,7 @@ namespace FreeRedis
                             var pool = (rds as DefaultRedisSocket.TempProxyRedisSocket)._pool;
                             if (pool?.SetUnavailable(ex) == true)
                             {
+                                RecoverySentinel();
                             }
                             throw;
                         }
