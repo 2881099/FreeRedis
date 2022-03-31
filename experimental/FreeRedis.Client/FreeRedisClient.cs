@@ -1,5 +1,6 @@
 ﻿using FreeRedis.Client.Protocol;
 using FreeRedis.Engine;
+using System.Text;
 using System.Text.Json;
 
 namespace FreeRedis
@@ -8,6 +9,7 @@ namespace FreeRedis
 
     public sealed class FreeRedisClient : FreeRedisClientBase
     {
+        
         public FreeRedisClient(ConnectionStringBuilder connectionString, Action<string>? logger = null) : base(connectionString.Ip, connectionString.Port, logger)
         {
             try
@@ -47,18 +49,18 @@ namespace FreeRedis
         //}
         public Task<bool> SelectDbAsync(int dbIndex)
         {
-            var selectHandler = new SelectProtocol(dbIndex, errorLogger);
-            return SendProtocal(selectHandler);
+            var selectHandler = new SelectProtocol(errorLogger);
+            return SendProtocal($"SELECT {dbIndex}\r\n",selectHandler);
         }
         public Task<bool> FlushDbAsync()
         {
             var flushHandler = new FlushProtocol(errorLogger);
-            return SendProtocal(flushHandler);
+            return SendProtocal(FlushProtocol.FlushCommandBuffer, flushHandler);
         }
         public Task<bool> AuthAsync(string password)
         {
-            var authHandler = new AuthProtocol(password, errorLogger);
-            return SendProtocal(authHandler);
+            var authHandler = new AuthProtocol(errorLogger);
+            return SendProtocal($"AUTH {password}\r\n", authHandler);
         }
 
         public Task<bool> SetObjAsync<T>(string key, T value) 
@@ -67,14 +69,14 @@ namespace FreeRedis
         }
         public Task<bool> SetAsync(string key, string value)
         {
-            var setHandler = new SetProtocol(key, value, errorLogger);
-            return SendProtocal(setHandler);
+            var setHandler = new SetProtocol(errorLogger);
+            return SendProtocal(3, $"$3\r\nSET\r\n${key.Length}\r\n{key}\r\n${value.Length}\r\n{value}\r\n", setHandler);
         }
 
         public Task<string?> GetAsync(string key)
         {
-            var getHandler = new GetProtocol(key, errorLogger);
-            return SendProtocal(getHandler);
+            var getHandler = new GetProtocol(errorLogger);
+            return SendProtocal(2,$"$3\r\nGET\r\n${key.Length}\r\n{key}\r\n",getHandler);
         }
 
         //public Task<TryResult<T>> TryGetAsync<T>(string key)

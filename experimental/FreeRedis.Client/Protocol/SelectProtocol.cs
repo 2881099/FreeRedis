@@ -15,15 +15,15 @@ namespace FreeRedis.Client.Protocol
 
 
 
-        public SelectProtocol(int dbIndex,Action<string>? logger) : base(logger)
+        public SelectProtocol(Action<string>? logger) : base(logger)
         {
-            Command = $"SELECT {dbIndex}\r\n";
+            //Command = $"SELECT {dbIndex}\r\n";
         }
 
-        public override void WriteBuffer(PipeWriter bufferWriter)
-        {
-            bufferWriter.WriteUtf8String(Command);
-        }
+        //public override void WriteBuffer(PipeWriter bufferWriter)
+        //{
+        //    bufferWriter.WriteUtf8String(Command);
+        //}
 
         protected override void SetErrorDefaultResult()
         {

@@ -6,14 +6,14 @@ namespace FreeRedis.Client.Protocol
 {
     public sealed class FlushProtocol : IRedisProtocal<bool>
     {
-        private static readonly byte[] _flushCommandBuffer;
+        internal static readonly byte[] FlushCommandBuffer;
         static FlushProtocol()
         {
-            _flushCommandBuffer = Encoding.UTF8.GetBytes($"FLUSHDB\r\n");
+            FlushCommandBuffer = Encoding.UTF8.GetBytes($"FLUSHDB\r\n");
         }
         public FlushProtocol(Action<string>? logger) : base(logger)
         {
-            Command = $"FLUSHDB\r\n";
+
         }
 
         protected override void SetErrorDefaultResult()
@@ -21,10 +21,10 @@ namespace FreeRedis.Client.Protocol
             Task.SetResult(false);
         }
 
-        public override void WriteBuffer(PipeWriter bufferWriter)
-        {
-            bufferWriter.Write(_flushCommandBuffer);
-        }
+        //public override void WriteBuffer(PipeWriter bufferWriter)
+        //{
+        //    bufferWriter.Write(_flushCommandBuffer);
+        //}
 
         /// <summary>
         /// 处理协议

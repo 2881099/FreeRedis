@@ -15,12 +15,11 @@ namespace FreeRedis.Engine
         protected readonly PipeReader _reciver;
         protected readonly CircleTask _taskBuffer;
         protected readonly Action<string>? errorLogger;
-
-#if DEBUG
-        private static long _bufferLength;
-
+        private static readonly Encoder Utf8Encoder;
         static FreeRedisClientBase()
         {
+            Utf8Encoder = Encoding.UTF8.GetEncoder();
+#if DEBUG
             System.Threading.Tasks.Task.Run(() =>
             {
 
@@ -31,8 +30,12 @@ namespace FreeRedis.Engine
                 }
 
             });
-        }
 #endif
+        }
+
+
+        private static long _bufferLength;
+
 
         public FreeRedisClientBase(string ip, int port, Action<string>? logger)
         {
@@ -45,13 +48,61 @@ namespace FreeRedis.Engine
             RunReciver();
         }
 
-        private long _concurrentCount;
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Task<T> SendProtocal<T>(IRedisProtocal<T> redisProtocal)
+        public Task<T> SendProtocal<T>(byte[] commandData, IRedisProtocal<T> redisProtocal)
         {
             Interlocked.Increment(ref _concurrentCount);
             WaitAndLockSend();
-            redisProtocal.WriteBuffer(_sender);
+            _sender.Write(commandData);
+            _taskBuffer.WriteNext(redisProtocal);
+            ReleaseSend();
+            Interlocked.Decrement(ref _concurrentCount);
+            if (_concurrentCount == 0)
+            {
+                _sender.FlushAsync();
+            }
+
+            return redisProtocal.WaitTask;
+        }
+
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Task<T> SendProtocal<T>(string commandData, IRedisProtocal<T> redisProtocal)
+        {
+            Interlocked.Increment(ref _concurrentCount);
+            WaitAndLockSend();
+            _sender.WriteUtf8String(commandData);
+            _taskBuffer.WriteNext(redisProtocal);
+            ReleaseSend();
+            Interlocked.Decrement(ref _concurrentCount);
+            if (_concurrentCount == 0)
+            {
+                _sender.FlushAsync();
+            }
+
+            return redisProtocal.WaitTask;
+        }
+
+        private string _sendData;
+        private long _concurrentCount;
+        private int _commandCount;
+
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Task<T> SendProtocal<T>(int commandCount, string commandData , IRedisProtocal<T> redisProtocal)
+        {
+            Interlocked.Increment(ref _concurrentCount);
+            WaitAndLockSend();
+            _sendData += commandData;
+            _commandCount += commandCount;
+            if (_concurrentCount == 1)
+            {
+                _sender.WriteUtf8String($"*{_commandCount}\r\n{_sendData}");
+                _commandCount = 0;
+                _sendData = string.Empty;
+
+            }
             _taskBuffer.WriteNext(redisProtocal);
             ReleaseSend();
             Interlocked.Decrement(ref _concurrentCount);

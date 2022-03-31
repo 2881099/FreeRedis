@@ -6,15 +6,15 @@ namespace FreeRedis.Client.Protocol
 {
     public sealed class GetProtocol : IRedisProtocal<string?>
     {
-        public GetProtocol(string key, Action<string>? logger) : base(logger)
+        public GetProtocol(Action<string>? logger) : base(logger)
         {
-            Command = $"*2\r\n$3\r\nGET\r\n${key.Length}\r\n{key}\r\n";
+           
         }
 
-        public override void WriteBuffer(PipeWriter bufferWriter)
-        {
-            bufferWriter.WriteUtf8String(Command);
-        }
+        //public override void WriteBuffer(PipeWriter bufferWriter)
+        //{
+        //    bufferWriter.WriteUtf8String(Command);
+        //}
 
         private long bufferLength;
         /// <summary>
@@ -31,6 +31,7 @@ namespace FreeRedis.Client.Protocol
             }
             else
             {
+                recvReader.IsNext(OK_BATCH_DATA, true);
                 if (recvReader.IsNext(OK_DATA, true))
                 {
                     //获取完整的长度字段
@@ -67,7 +68,7 @@ namespace FreeRedis.Client.Protocol
         public string? StringResult;
         private ProtocolContinueResult HandleSerializer(ref SequenceReader<byte> recvReader)
         {
-            if (recvReader.UnreadSequence.Length > bufferLength + 2)
+            if (recvReader.UnreadSequence.Length >= bufferLength + 2)
             {
                 var bytes = recvReader.UnreadSequence.Slice(0, bufferLength);
                 Task.SetResult(Encoding.UTF8.GetString(in bytes));

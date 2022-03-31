@@ -13,15 +13,15 @@ namespace FreeRedis.Client.Protocol
         //    _fixedBuffer = Encoding.UTF8.GetBytes("AUTH ");
         //}
 
-        public AuthProtocol(string password, Action<string>? logger) : base(logger)
+        public AuthProtocol(Action<string>? logger) : base(logger)
         {
-            Command = $"AUTH {password}\r\n";
+           // Command = $"AUTH {password}\r\n";
         }
 
-        public override void WriteBuffer(PipeWriter bufferWriter)
-        {
-            bufferWriter.WriteUtf8String(Command);
-        }
+        //public override void WriteBuffer(PipeWriter bufferWriter)
+        //{
+        //    bufferWriter.WriteUtf8String(Command);
+        //}
 
         protected override void SetErrorDefaultResult()
         {

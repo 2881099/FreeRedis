@@ -17,15 +17,15 @@ namespace FreeRedis.Client.Protocol
             
         //    });
         //}
-        public SetProtocol(string key, string value, Action<string>? logger) : base(logger)
+        public SetProtocol(Action<string>? logger) : base(logger)
         {
-            Command = $"*3\r\n$3\r\nSET\r\n${key.Length}\r\n{key}\r\n${value.Length}\r\n{value}\r\n";
+            //Command = $"*3\r\n$3\r\nSET\r\n${key.Length}\r\n{key}\r\n${value.Length}\r\n{value}\r\n";
         }
 
-        public override void WriteBuffer(PipeWriter bufferWriter)
-        {
-            bufferWriter.WriteUtf8String(Command);
-        }
+        //public override void WriteBuffer(PipeWriter bufferWriter)
+        //{
+        //    bufferWriter.WriteUtf8String(Command);
+        //}
 
         /// <summary>
         /// 处理协议

@@ -9,6 +9,7 @@ public abstract class IRedisProtocol
     public const byte OK_HEAD = 43;
     public const byte OK_DATA = 36;
     public const byte ERROR_HEAD = 45;
+    public const byte OK_BATCH_DATA = 42;
     protected static readonly Encoder Utf8Encoder;
 
     public static readonly byte[] SplitField;
@@ -30,13 +31,7 @@ public abstract class IRedisProtocol
     {
         _writeLogger = writeLogger;
     }
-    protected string Command = default!;
-    public virtual void WriteBuffer(PipeWriter bufferWriter)
-    {
-        //Console.WriteLine("发送数据: \t"+ Command);
-        Utf8Encoder.Convert(Command, bufferWriter, false, out _, out _);
 
-    }
     protected void Error(in ReadOnlySpan<byte> errorStream)
     {
         if (_error == null)
