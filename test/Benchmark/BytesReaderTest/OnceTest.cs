@@ -21,7 +21,7 @@ namespace BytesReaderTest
         private static readonly byte[] _fixBuffer2;
         private readonly PipeWriter _writer;
         private static readonly Encoder Utf8Encoder;
-
+        private const string _field = "abc\r\nurueue454456456465ab";
         static OnceTest()
         {
             _fixBuffer1 = Encoding.UTF8.GetBytes("4141\r\n");
@@ -35,36 +35,55 @@ namespace BytesReaderTest
             _writer = pipe.Transport.Output;
         }
 
-
+        private const string _data = "4141\r\nabc\r\nurueue454456456465ab\r\n";
         //[Benchmark]
         //public void EncodingConvertWithFalse()
         //{
-        //    Utf8Encoder.Convert("4141\r\nabc\r\nab\r\n", _writer, false, out _, out _);
+        //    Utf8Encoder.Convert(_data, _writer, true, out _, out _);
         //    _writer.FlushAsync();
         //}
 
-        //[Benchmark]
-        //public void EncodingConvertWithTrue()
-        //{
-        //    Utf8Encoder.Convert("4141\r\nabc\r\nab\r\n", _writer, true, out _, out _);
-        //    _writer.FlushAsync();
-        //}
+        [Benchmark]
+        public void SelfDivConvert()
+        {
+            var chars = _data.AsSpan();
+            if (chars.Length <= 1048576)
+            {
+                int sizeHint = Utf8Encoder.GetByteCount(chars, true);
+                Span<byte> span = _writer.GetSpan(sizeHint);
+                Utf8Encoder.Convert(chars, span, true, out _, out var bytesUsed2, out _);
+                _writer.Advance(bytesUsed2);
+            }
+            else
+            {
+                do
+                {
+                    int sizeHint = Utf8Encoder.GetByteCount(chars.Slice(0, 1048576), flush: false);
+                    Span<byte> span = _writer.GetSpan(sizeHint);
+                    Utf8Encoder.Convert(chars, span, true, out var charsUsed, out var bytesUsed2, out _);
+                    chars = chars.Slice(charsUsed);
+                    _writer.Advance(bytesUsed2);
+                }
+                while (!chars.IsEmpty);
+            }
+            _writer.FlushAsync();
+
+        }
 
         //[Benchmark]
         //public void EncodingUtf8GetBytes()
         //{
-        //    var bytes = Encoding.UTF8.GetBytes("4141\r\nabc\r\nab\r\n");
-        //    _writer.WriteAsync(bytes);
+        //    _writer.WriteAsync(Encoding.UTF8.GetBytes(_data));
         //}
 
-        [Benchmark]
-        public void ContactAndConvert()
-        {
-            _writer.Write(_fixBuffer1);
-            Utf8Encoder.Convert("abc\r\nab", _writer, false, out _, out _);
-            _writer.Write(_fixBuffer2);
-            _writer.FlushAsync();
-        }
+        //[Benchmark]
+        //public void ContactAndConvert()
+        //{
+        //    _writer.Write(_fixBuffer1);
+        //    Utf8Encoder.Convert(_field, _writer, false, out _, out _);
+        //    _writer.Write(_fixBuffer2);
+        //    _writer.FlushAsync();
+        //}
         //[Benchmark]
         //public void Safe()
         //{

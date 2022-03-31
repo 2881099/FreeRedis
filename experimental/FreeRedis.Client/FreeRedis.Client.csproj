@@ -7,7 +7,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Protocol\GetProtocol2.cs" />
+    <Compile Remove="Protocol\Serialization\ProtocolSerializer.cs" />
+    <Compile Remove="Protocol\TryGetProtocol.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\FreeRedis.Engine\FreeRedis.Engine.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Protocol\Serialization\" />
   </ItemGroup>
 
 </Project>

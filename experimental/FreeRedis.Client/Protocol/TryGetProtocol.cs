@@ -1,28 +1,25 @@
 ﻿using FreeRedis.Client.Protocol.Serialization;
 using System.Buffers;
 using System.IO.Pipelines;
-using System.Text;
 
 namespace FreeRedis.Client.Protocol
 {
-    internal class TryGetProtocol<T> : IRedisProtocal<TryResult<T>>
+    public class TryGetProtocol<T> : IRedisProtocal<TryResult<T>>
     {
-        private static readonly byte[] _fixedBuffer;
-        static TryGetProtocol()
-        {
-            _fixedBuffer = Encoding.UTF8.GetBytes("*2\r\n$3\r\nGET\r\n$");
-        }
+        //private static readonly byte[] _fixedBuffer;
+        //static TryGetProtocol()
+        //{
+        //    _fixedBuffer = Encoding.UTF8.GetBytes("*2\r\n$3\r\nGET\r\n$");
+        //}
+
         public TryGetProtocol(string key, Action<string>? logger) : base(logger)
         {
-            Command = $"{key.Length}\r\n{key}";
+            Command = $"*2\r\n$3\r\nGET\r\n${key.Length}\r\n{key}\r\n";
         }
 
         public override void WriteBuffer(PipeWriter bufferWriter)
         {
-            bufferWriter.Write(_fixedBuffer);
-            Utf8Encoder.Convert(Command, bufferWriter, false, out _, out _);
-            bufferWriter.Write(SplitField);
-            bufferWriter.FlushAsync();
+            bufferWriter.WriteUtf8String(Command);
         }
 
         private int bufferLength;

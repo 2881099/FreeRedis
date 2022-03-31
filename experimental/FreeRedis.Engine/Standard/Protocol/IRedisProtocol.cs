@@ -35,7 +35,6 @@ public abstract class IRedisProtocol
     {
         //Console.WriteLine("发送数据: \t"+ Command);
         Utf8Encoder.Convert(Command, bufferWriter, false, out _, out _);
-        bufferWriter.FlushAsync();
 
     }
     protected void Error(in ReadOnlySpan<byte> errorStream)
@@ -52,7 +51,7 @@ public abstract class IRedisProtocol
     public virtual ProtocolContinueResult HandleBytes(ref SequenceReader<byte> recvReader)
     {
         //recvReader.IsNext(ERROR_HEAD, false)
-        if (recvReader.UnreadSpan[0] != ERROR_HEAD)
+        if (!recvReader.IsNext(ERROR_HEAD, false))
         {
             return HandleOkBytes(ref recvReader);
         }

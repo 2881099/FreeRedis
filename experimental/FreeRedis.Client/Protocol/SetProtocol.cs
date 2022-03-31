@@ -1,29 +1,32 @@
 ﻿using System.Buffers;
 using System.IO.Pipelines;
-using System.Text;
 
 namespace FreeRedis.Client.Protocol
 {
-    internal class SetProtocol : IRedisProtocal<bool>
+    public sealed class SetProtocol : IRedisProtocal<bool>
     {
-        private static readonly byte[] _fixedBuffer;
+        //static SetProtocol()
+        //{
+        //    System.Threading.Tasks.Task.Run(() => {
 
-        static SetProtocol()
+        //        while (true)
+        //        {
+        //            Thread.Sleep(5000);
+        //            Console.WriteLine("已处理:"+count);
+        //        }
+            
+        //    });
+        //}
+        public SetProtocol(string key, string value, Action<string>? logger) : base(logger)
         {
-            _fixedBuffer = Encoding.UTF8.GetBytes("*3\r\n$3\r\nSET\r\n$");
+            Command = $"*3\r\n$3\r\nSET\r\n${key.Length}\r\n{key}\r\n${value.Length}\r\n{value}\r\n";
         }
 
         public override void WriteBuffer(PipeWriter bufferWriter)
         {
-            bufferWriter.Write(_fixedBuffer);
-            Utf8Encoder.Convert(Command, bufferWriter, false, out _, out _);
-            bufferWriter.Write(SplitField);
-            bufferWriter.FlushAsync();
+            bufferWriter.WriteUtf8String(Command);
         }
-        public SetProtocol(string key, string value, Action<string>? logger) : base(logger)
-        {
-            Command = $"{key.Length}\r\n{key}\r\n${value.Length}\r\n{value}";
-        }
+
         /// <summary>
         /// 处理协议
         /// </summary>
@@ -32,14 +35,12 @@ namespace FreeRedis.Client.Protocol
         /// <returns>false:继续使用当前实例处理下一个数据流</returns>
         protected override ProtocolContinueResult HandleOkBytes(ref SequenceReader<byte> recvReader)
         {
-            var span = recvReader.UnreadSpan;
-            if (span[0] == OK_HEAD)
+
+            if (recvReader.IsNext(OK_HEAD))
             {
-                var position = span.IndexOf(TAIL);
-                if (position != -1)
+                if (recvReader.TryReadTo(out ReadOnlySpan<byte> _, TAIL, true))
                 {
                     Task.SetResult(true);
-                    recvReader.Advance(position + 1);
                     return ProtocolContinueResult.Completed;
                 }
                 return ProtocolContinueResult.Wait;

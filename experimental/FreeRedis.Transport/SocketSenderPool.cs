@@ -8,7 +8,7 @@ namespace FreeRedis.Transport;
 
 internal class SocketSenderPool : IDisposable
 {
-    private const int MaxQueueSize = 1024; // REVIEW: Is this good enough?
+    private const int MaxQueueSize = 2048; // REVIEW: Is this good enough?
 
     private readonly ConcurrentQueue<SocketSender> _queue = new();
     private int _count;

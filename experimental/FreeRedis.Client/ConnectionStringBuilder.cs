@@ -7,6 +7,8 @@ namespace FreeRedis
     public enum RedisProtocol { RESP2, RESP3 }
     public class ConnectionStringBuilder
     {
+        public string Ip { get { return Host.Split(':')[0]; } }
+        public int Port { get { return Convert.ToInt32(Host.Split(':')[1]); } }
         public string Host { get; set; } = "127.0.0.1:6379";
         public bool Ssl { get; set; } = false;
         public RedisProtocol Protocol { get; set; } = RedisProtocol.RESP2;

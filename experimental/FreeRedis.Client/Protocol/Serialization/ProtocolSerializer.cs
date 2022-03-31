@@ -1,4 +1,5 @@
-﻿using System.Buffers.Binary;
+﻿using System.Buffers;
+using System.Buffers.Binary;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json;
@@ -6,10 +7,10 @@ using System.Text.Json;
 namespace FreeRedis.Client.Protocol.Serialization
 {
 
-    public delegate T DeserializeResponseDelegate<T>(ReadOnlySpan<byte> bytes);
+    public delegate T DeserializeResponseDelegate<T>(string result);
     public delegate Span<byte> SerializeResponseDelegate<T>(T value);
 
-    internal static class ProtocolSerializer<T>
+    public static class ProtocolSerializer<T>
     {
         private static readonly byte[] _trueBytes = new byte[1] { 48 };
         private static readonly byte[] _falseBytes = new byte[1] { 49 };
@@ -25,19 +26,12 @@ namespace FreeRedis.Client.Protocol.Serialization
             }
             var type = typeof(T);
             Action makeAction = () => { };
-            if (type == typeof(byte[]))
+
+           if (type == typeof(byte))
             {
                 makeAction = () =>
                 {
-                    Unsafe.AsRef(ProtocolSerializer<byte[]>.ReadFunc) = bytes => bytes.ToArray();
-                    Unsafe.AsRef(ProtocolSerializer<byte[]>.WriteFunc) = value => value;
-                };
-            }
-            else if (type == typeof(byte))
-            {
-                makeAction = () =>
-                {
-                    Unsafe.AsRef(ProtocolSerializer<byte>.ReadFunc) = bytes => bytes[0];
+                    Unsafe.AsRef(ProtocolSerializer<byte>.ReadFunc) = result => Convert.ToByte(result);
                     Unsafe.AsRef(ProtocolSerializer<byte>.WriteFunc) = value => _byteArray[value];
                 };
             }
@@ -45,7 +39,7 @@ namespace FreeRedis.Client.Protocol.Serialization
             {
                 makeAction = () =>
                 {
-                    Unsafe.AsRef(ProtocolSerializer<sbyte>.ReadFunc) = bytes => Convert.ToSByte(bytes[0]);
+                    Unsafe.AsRef(ProtocolSerializer<sbyte>.ReadFunc) = result => Convert.ToSByte(result);
                     Unsafe.AsRef(ProtocolSerializer<sbyte>.WriteFunc) = value => _byteArray[Convert.ToByte(value)];
                 };
             }

@@ -1,39 +1,38 @@
 ﻿using FreeRedis.Client.Protocol;
 using FreeRedis.Engine;
-using System.Buffers;
-using System.Runtime.CompilerServices;
-using System.Text;
 using System.Text.Json;
 
 namespace FreeRedis
 {
 
 
-    public class FreeRedisClient : FreeRedisClientBase
+    public sealed class FreeRedisClient : FreeRedisClientBase
     {
-        public FreeRedisClient(ConnectionStringBuilder connectionString, Action<string>? logger = null) : base(logger)
+        public FreeRedisClient(ConnectionStringBuilder connectionString, Action<string>? logger = null) : base(connectionString.Ip, connectionString.Port, logger)
         {
             try
             {
-                //Todo Analysis connectionString
-                var host = connectionString.Host.Split(':');
-                string ip = host[0];
-                this.CreateConnection(host[0], Convert.ToInt32(host[1]));
-                    
+   
                 string password = connectionString.Password;
                 if (password !=  string.Empty)
                 {
-                    var result = this.AuthAsync(password).Result;
-                    if (!result)
+                    if (!this.AuthAsync(password).Result)
                     {
                         throw new Exception("Reids 服务器密码不正确!");
                     }
                 }
+
+                int dbIndex = connectionString.Database;
+                if (!this.SelectDbAsync(dbIndex).Result)
+                {
+                    throw new Exception($"Reids 服务器选择数据库出错,数据库索引{dbIndex}!");
+                }
+
             }
             catch (Exception ex)
             {
                 throw new Exception($"创建链接遇到问题:{ex.Message!}");
-                DisposeAsync().ConfigureAwait(false);
+                DisposeAsync();
             }
         }
 #if DEBUG
@@ -72,17 +71,17 @@ namespace FreeRedis
             return SendProtocal(setHandler);
         }
 
-        public Task<T?> GetAsync<T>(string key)
+        public Task<string?> GetAsync(string key)
         {
-            var getHandler = new GetProtocol<T>(key, errorLogger);
+            var getHandler = new GetProtocol(key, errorLogger);
             return SendProtocal(getHandler);
         }
 
-        public Task<TryResult<T>> TryGetAsync<T>(string key)
-        {
-            var getHandler = new TryGetProtocol<T>(key, errorLogger);
-            return SendProtocal(getHandler);
-        }
+        //public Task<TryResult<T>> TryGetAsync<T>(string key)
+        //{
+        //    var getHandler = new TryGetProtocol<T>(key, errorLogger);
+        //    return SendProtocal(getHandler);
+        //}
 
         //private int _revc_offset;
         ////从返回流中分割获取 Redis 结果.

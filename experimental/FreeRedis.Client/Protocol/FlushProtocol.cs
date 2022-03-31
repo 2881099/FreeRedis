@@ -4,7 +4,7 @@ using System.Text;
 
 namespace FreeRedis.Client.Protocol
 {
-    internal class FlushProtocol : IRedisProtocal<bool>
+    public sealed class FlushProtocol : IRedisProtocal<bool>
     {
         private static readonly byte[] _flushCommandBuffer;
         static FlushProtocol()
@@ -24,7 +24,6 @@ namespace FreeRedis.Client.Protocol
         public override void WriteBuffer(PipeWriter bufferWriter)
         {
             bufferWriter.Write(_flushCommandBuffer);
-            bufferWriter.FlushAsync();
         }
 
         /// <summary>
@@ -35,14 +34,11 @@ namespace FreeRedis.Client.Protocol
         /// <returns>false:继续使用当前实例处理下一个数据流</returns>
         protected override ProtocolContinueResult HandleOkBytes(ref SequenceReader<byte> recvReader)
         {
-            var span = recvReader.UnreadSpan;
-            if (span[0] == OK_HEAD)
+            if (recvReader.IsNext(OK_HEAD))
             {
-                var position = span.IndexOf(TAIL);
-                if (position != -1)
+                if (recvReader.TryReadTo(out ReadOnlySpan<byte> _, TAIL, true))
                 {
                     Task.SetResult(true);
-                    recvReader.Advance(position + 1);
                     return ProtocolContinueResult.Completed;
                 }
                 return ProtocolContinueResult.Wait;

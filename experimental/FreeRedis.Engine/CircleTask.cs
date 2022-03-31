@@ -1,7 +1,7 @@
 ﻿using System.Buffers;
 using System.IO.Pipelines;
 
-public class TaskBuckets
+public sealed class TaskBuckets
 {
     //public static int Increment;
     //public int Index;
@@ -31,7 +31,7 @@ public class TaskBuckets
 
 public delegate void HandlerBufferDelegate(in ReadOnlySpan<byte> spans);
 
-public class CircleTask
+public sealed class CircleTask
 {
 
 #if DEBUG
@@ -134,7 +134,7 @@ public class CircleTask
 
     //private readonly PipeReader _protocolReader = new Pipe(null);
     //private readonly PipeWriter _protocolWriter = new Pipe(null);
-    private void LoopHandle(ref SequenceReader<byte> reader)
+    public void LoopHandle(ref SequenceReader<byte> reader)
     {
         var result = _currentRead[_read_offset].HandleBytes(ref reader);
         switch (result)
@@ -162,13 +162,6 @@ public class CircleTask
             default:
                 return;
         }
-    }
-
-    public SequencePosition HandleTask(in ReadOnlySequence<byte> revData)
-    {
-        var reader = new SequenceReader<byte>(revData);
-        LoopHandle(ref reader);
-        return reader.Position;
     }
 
     private void CollectBuffer()

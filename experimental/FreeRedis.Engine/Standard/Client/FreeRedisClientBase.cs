@@ -15,51 +15,69 @@ namespace FreeRedis.Engine
         protected readonly PipeReader _reciver;
         protected readonly CircleTask _taskBuffer;
         protected readonly Action<string>? errorLogger;
-        public FreeRedisClientBase(Action<string>? logger)
+
+#if DEBUG
+        private static long _bufferLength;
+
+        static FreeRedisClientBase()
+        {
+            System.Threading.Tasks.Task.Run(() =>
+            {
+
+                while (true)
+                {
+                    Thread.Sleep(5000);
+                    Console.WriteLine("已接收长度:" + _bufferLength);
+                }
+
+            });
+        }
+#endif
+
+        public FreeRedisClientBase(string ip, int port, Action<string>? logger)
         {
             _taskBuffer = new CircleTask();
             errorLogger = logger;
-            _sender = default!;
-            _reciver = default!;
-            _connection = default!;
-        }
-
-        public virtual void CreateConnection(string ip,int port)
-        {
-
             SocketConnectionFactory client = new(new SocketTransportOptions());
-            Unsafe.AsRef(_connection) = client.ConnectAsync(new IPEndPoint(IPAddress.Parse(ip), port)).Result;
-            Unsafe.AsRef(_sender) = _connection!.Transport.Output;
-            Unsafe.AsRef(_reciver) = _connection!.Transport.Input;
-            Init();
+            _connection = client.ConnectAsync(new IPEndPoint(IPAddress.Parse(ip), port)).Result;
+            _sender = _connection!.Transport.Output;
+            _reciver = _connection!.Transport.Input;
             RunReciver();
-
         }
 
+        private long _concurrentCount;
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Task<T> SendProtocal<T>(IRedisProtocal<T> redisProtocal)
         {
-
-            //EncodingExtensions.Convert(encoder, "A".AsSpan(), (IBufferWriter<byte>)_sender, false, out bool bytesUesd, out bool completed)
-            LockSend();
+            Interlocked.Increment(ref _concurrentCount);
+            WaitAndLockSend();
             redisProtocal.WriteBuffer(_sender);
-            //_sender.WriteAsync(redisProtocal.ReadBuffer).ConfigureAwait(false);
             _taskBuffer.WriteNext(redisProtocal);
             ReleaseSend();
+            Interlocked.Decrement(ref _concurrentCount);
+            if (_concurrentCount==0)
+            {
+                _sender.FlushAsync();
+            }
+
             return redisProtocal.WaitTask;
         }
 
+        private SequencePosition _postion;
 
-
-        private async void RunReciver()
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private async Task RunReciver()
         {
 
             while (true)
             {
                 var result = await _reciver.ReadAsync().ConfigureAwait(false);
                 var buffer = result.Buffer;
-                var position = _taskBuffer.HandleTask(in buffer);
-                _reciver.AdvanceTo(position);
+#if DEBUG
+                _bufferLength += buffer.Length;
+#endif
+                HandlerRecvData(in buffer);
+                _reciver.AdvanceTo(_postion);
                 if (result.IsCompleted)
                 {
                     return;
@@ -67,13 +85,18 @@ namespace FreeRedis.Engine
             }
         }
 
-        protected virtual void Init()
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void HandlerRecvData(in ReadOnlySequence<byte> revData)
         {
-
+            var reader = new SequenceReader<byte>(revData);
+            _taskBuffer.LoopHandle(ref reader);
+            _postion = reader.Position;
         }
+
 
         public bool AnalysisingFlag;
 
+        #region MyRegion
         private int _analysis_lock_flag;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -101,47 +124,6 @@ namespace FreeRedis.Engine
             _analysis_lock_flag = 0;
 
         }
-
-
-
-        private int _send_lock_flag;
-
-        public bool IsCompleted
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get
-            {
-                return _send_lock_flag != 1;
-
-            }
-        }
-        public int LockCount;
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        protected void LockSend()
-        {
-            
-            SpinWait wait = default;
-            while (Interlocked.CompareExchange(ref _send_lock_flag, 1, 0) != 0)
-            {
-                //Interlocked.Increment(ref LockCount);
-                wait.SpinOnce();
-            }
-
-        }
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        protected bool TryGetSendLock()
-        {
-            return Interlocked.CompareExchange(ref _send_lock_flag, 1, 0) == 0;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        protected void ReleaseSend()
-        {
-
-            _send_lock_flag = 0;
-
-        }
-
         private int _receiver_lock_flag;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -171,6 +153,50 @@ namespace FreeRedis.Engine
             _receiver_lock_flag = 0;
 
         }
+        #endregion
+
+
+
+
+        private int _send_lock_flag;
+
+        public bool IsCompleted
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get
+            {
+                return _send_lock_flag != 1;
+
+            }
+        }
+        public int LockCount;
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        protected void WaitAndLockSend()
+        {
+
+            SpinWait wait = default;
+            while (Interlocked.CompareExchange(ref _send_lock_flag, 1, 0) != 0)
+            {
+                //Interlocked.Increment(ref LockCount);
+                wait.SpinOnce();
+            }
+
+        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        protected bool TryGetSendLock()
+        {
+            return Interlocked.CompareExchange(ref _send_lock_flag, 1, 0) == 0;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        protected void ReleaseSend()
+        {
+
+            _send_lock_flag = 0;
+
+        }
+
+        
 
         public async ValueTask DisposeAsync()
         {
