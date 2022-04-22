@@ -14,7 +14,7 @@ using System.Reflection;
 
 namespace FreeRedis
 {
-    public partial class RedisClient : IDisposable
+    public partial class RedisClient : IDisposable, IRedisClient
     {
         internal protected BaseAdapter Adapter { get; }
         internal protected string Prefix { get; }
