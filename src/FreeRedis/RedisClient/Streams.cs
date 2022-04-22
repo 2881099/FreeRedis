@@ -297,6 +297,7 @@ namespace FreeRedis
                if (a?.Any() != true) return null;
                var ret = new StreamsXPendingResult { count = a[0].ConvertTo<long>(), minId = a[1].ConvertTo<string>(), maxId = a[2].ConvertTo<string>() };
                var objs1 = a[3] as object[];
+               if (objs1 == null) objs1 = new object[0];
                ret.consumers = new StreamsXPendingResult.Consumer[objs1.Length];
                for (var z = 0; z < objs1.Length; z++)
                {
