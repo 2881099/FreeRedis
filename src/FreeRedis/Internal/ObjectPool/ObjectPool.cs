@@ -279,7 +279,7 @@ namespace FreeRedis.Internal.ObjectPool
                 throw new ObjectDisposedException($"【{Policy.Name}】The ObjectPool has been disposed");
 
             if (checkAvailable && UnavailableException != null)
-                throw new Exception($"【{Policy.Name}】{UnavailableException?.Message}", UnavailableException);
+                throw new Exception($"【{Policy.Name}】Block access and wait for recovery: {UnavailableException?.Message}", UnavailableException);
 
             if ((_freeObjects.TryPop(out var obj) == false || obj == null) && _allObjects.Count < Policy.PoolSize)
             {
@@ -341,7 +341,7 @@ namespace FreeRedis.Internal.ObjectPool
                     Policy.OnGetTimeout();
 
                     if (Policy.IsThrowGetTimeoutException)
-                        throw new TimeoutException($"ObjectPool.Get() timeout {timeout.Value.TotalSeconds} seconds");
+                        throw new TimeoutException($"【{Policy.Name}】ObjectPool.Get() timeout {timeout.Value.TotalSeconds} seconds");
 
                     return null;
                 }
@@ -374,7 +374,7 @@ namespace FreeRedis.Internal.ObjectPool
             {
 
                 if (Policy.AsyncGetCapacity > 0 && _getAsyncQueue.Count >= Policy.AsyncGetCapacity - 1)
-                    throw new OutOfMemoryException($"ObjectPool.GetAsync() The queue is too long. Policy.AsyncGetCapacity = {Policy.AsyncGetCapacity}");
+                    throw new OutOfMemoryException($"【{Policy.Name}】ObjectPool.GetAsync() The queue is too long. Policy.AsyncGetCapacity = {Policy.AsyncGetCapacity}");
 
                 var tcs = new TaskCompletionSource<Object<T>>();
 
