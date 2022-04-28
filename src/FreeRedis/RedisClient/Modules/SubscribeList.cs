@@ -6,32 +6,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace FreeRedis.Internal
-{
-    public class SubscribeListObject : IDisposable
-    {
-        internal List<SubscribeListObject> OtherSubs = new List<SubscribeListObject>();
-        public bool IsUnsubscribed { get; set; }
-
-        public void Dispose()
-        {
-            this.IsUnsubscribed = true;
-            foreach (var sub in OtherSubs) sub.Dispose();
-        }
-    }
-    public class SubscribeListBroadcastObject : IDisposable
-    {
-        internal Action OnDispose;
-        internal List<SubscribeListObject> SubscribeLists = new List<SubscribeListObject>();
-
-        public void Dispose()
-        {
-            try { OnDispose?.Invoke(); } catch (ObjectDisposedException) { }
-            foreach (var sub in SubscribeLists) sub.Dispose();
-        }
-    }
-}
-
 namespace FreeRedis
 {
     partial class RedisClient
@@ -188,6 +162,32 @@ namespace FreeRedis
             catch { }
 
             return subobj;
+        }
+    }
+}
+
+namespace FreeRedis.Internal
+{
+    public class SubscribeListObject : IDisposable
+    {
+        internal List<SubscribeListObject> OtherSubs = new List<SubscribeListObject>();
+        public bool IsUnsubscribed { get; set; }
+
+        public void Dispose()
+        {
+            this.IsUnsubscribed = true;
+            foreach (var sub in OtherSubs) sub.Dispose();
+        }
+    }
+    public class SubscribeListBroadcastObject : IDisposable
+    {
+        internal Action OnDispose;
+        internal List<SubscribeListObject> SubscribeLists = new List<SubscribeListObject>();
+
+        public void Dispose()
+        {
+            try { OnDispose?.Invoke(); } catch (ObjectDisposedException) { }
+            foreach (var sub in SubscribeLists) sub.Dispose();
         }
     }
 }
