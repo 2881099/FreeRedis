@@ -1109,6 +1109,31 @@
             </summary>
             <returns>成功/失败</returns>
         </member>
+        <member name="M:FreeRedis.RedisClient.SubscribeList(System.String,System.Action{System.String})">
+            <summary>
+            使用lpush + blpop订阅端（多端争抢模式），只有一端收到消息
+            </summary>
+            <param name="listKey">list key（不含prefix前辍）</param>
+            <param name="onMessage">接收消息委托</param>
+            <returns></returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.SubscribeList(System.String[],System.Action{System.String,System.String})">
+            <summary>
+            使用lpush + blpop订阅端（多端争抢模式），只有一端收到消息
+            </summary>
+            <param name="listKeys">支持多个 key（不含prefix前辍）</param>
+            <param name="onMessage">接收消息委托，参数1：key；参数2：消息体</param>
+            <returns></returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.SubscribeListBroadcast(System.String,System.String,System.Action{System.String})">
+            <summary>
+            使用lpush + blpop订阅端（多端非争抢模式），都可以收到消息
+            </summary>
+            <param name="listKey">list key（不含prefix前辍）</param>
+            <param name="clientId">订阅端标识，若重复则争抢，若唯一必然收到消息</param>
+            <param name="onMessage">接收消息委托</param>
+            <returns></returns>
+        </member>
         <member name="M:FreeRedis.RedisClient.ZRandMember(System.String,System.Int32,System.Boolean)">
             <summary>
             随机返回N个元素

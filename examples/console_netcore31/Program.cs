@@ -27,6 +27,28 @@ namespace console_netcore31
         static void Main(string[] args)
         {
 
+            cli.SubscribeList("list01", msg =>
+            {
+                if (!string.IsNullOrEmpty(msg))
+                    Console.WriteLine("SubscribeList_list01: " + msg);
+            });
+            cli.SubscribeListBroadcast("list01", "client01", msg =>
+            {
+                if (!string.IsNullOrEmpty(msg))
+                    Console.WriteLine("SubscribeListBroadcast_client01_list01: " + msg);
+            });
+            cli.SubscribeListBroadcast("list01", "client01", msg =>
+            {
+                if (!string.IsNullOrEmpty(msg))
+                    Console.WriteLine("SubscribeListBroadcast_client01_list01: " + msg);
+            });
+            cli.SubscribeListBroadcast("list01", "client02", msg =>
+            {
+                if (!string.IsNullOrEmpty(msg))
+                    Console.WriteLine("SubscribeListBroadcast_client02_list01: " + msg);
+            });
+            Console.ReadKey();
+
             var info = cli.Info();
             var info1 = cli.Info("server");
 
