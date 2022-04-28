@@ -13646,6 +13646,162 @@ Available since 2.2.0.</p>
   </table>
   
   
+  <a id="FreeRedis_RedisClient_SubscribeList_" data-uid="FreeRedis.RedisClient.SubscribeList*"></a>
+  <h4 id="FreeRedis_RedisClient_SubscribeList_System_String_System_Action_System_String__" data-uid="FreeRedis.RedisClient.SubscribeList(System.String,System.Action{System.String})">SubscribeList(String, Action&lt;String&gt;)</h4>
+  <div class="markdown level1 summary"><p>使用lpush + blpop订阅端（多端争抢模式），只有一端收到消息</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public SubscribeListObject SubscribeList(string listKey, Action&lt;string&gt; onMessage)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">listKey</span></td>
+        <td><p>list key（不含prefix前辍）</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Action</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td><span class="parametername">onMessage</span></td>
+        <td><p>接收消息委托</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="FreeRedis.Internal.SubscribeListObject.html">SubscribeListObject</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="FreeRedis_RedisClient_SubscribeList_" data-uid="FreeRedis.RedisClient.SubscribeList*"></a>
+  <h4 id="FreeRedis_RedisClient_SubscribeList_System_String___System_Action_System_String_System_String__" data-uid="FreeRedis.RedisClient.SubscribeList(System.String[],System.Action{System.String,System.String})">SubscribeList(String[], Action&lt;String, String&gt;)</h4>
+  <div class="markdown level1 summary"><p>使用lpush + blpop订阅端（多端争抢模式），只有一端收到消息</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public SubscribeListObject SubscribeList(string[] listKeys, Action&lt;string, string&gt; onMessage)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span>[]</td>
+        <td><span class="parametername">listKeys</span></td>
+        <td><p>支持多个 key（不含prefix前辍）</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Action</span>&lt;<span class="xref">System.String</span>, <span class="xref">System.String</span>&gt;</td>
+        <td><span class="parametername">onMessage</span></td>
+        <td><p>接收消息委托，参数1：key；参数2：消息体</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="FreeRedis.Internal.SubscribeListObject.html">SubscribeListObject</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="FreeRedis_RedisClient_SubscribeListBroadcast_" data-uid="FreeRedis.RedisClient.SubscribeListBroadcast*"></a>
+  <h4 id="FreeRedis_RedisClient_SubscribeListBroadcast_System_String_System_String_System_Action_System_String__" data-uid="FreeRedis.RedisClient.SubscribeListBroadcast(System.String,System.String,System.Action{System.String})">SubscribeListBroadcast(String, String, Action&lt;String&gt;)</h4>
+  <div class="markdown level1 summary"><p>使用lpush + blpop订阅端（多端非争抢模式），都可以收到消息</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public SubscribeListBroadcastObject SubscribeListBroadcast(string listKey, string clientId, Action&lt;string&gt; onMessage)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">listKey</span></td>
+        <td><p>list key（不含prefix前辍）</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">clientId</span></td>
+        <td><p>订阅端标识，若重复则争抢，若唯一必然收到消息</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Action</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td><span class="parametername">onMessage</span></td>
+        <td><p>接收消息委托</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="FreeRedis.Internal.SubscribeListBroadcastObject.html">SubscribeListBroadcastObject</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
   <a id="FreeRedis_RedisClient_SUnion_" data-uid="FreeRedis.RedisClient.SUnion*"></a>
   <h4 id="FreeRedis_RedisClient_SUnion_System_String___" data-uid="FreeRedis.RedisClient.SUnion(System.String[])">SUnion(String[])</h4>
   <div class="markdown level1 summary"></div>
