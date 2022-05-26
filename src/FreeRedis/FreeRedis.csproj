@@ -32,7 +32,7 @@
 		<DefineConstants>net40</DefineConstants>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(TargetFramework)' != 'net40'">
-		<DefineConstants>isasync_close</DefineConstants>
+		<DefineConstants>isasync</DefineConstants>
 	</PropertyGroup>
 
 </Project>
