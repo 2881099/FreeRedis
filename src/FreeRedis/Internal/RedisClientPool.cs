@@ -227,7 +227,7 @@ namespace FreeRedis.Internal
             catch (Exception ex)
             {
                 initTestOk = false; //预热一次失败，后面将不进行
-                pool.SetUnavailable(ex);
+                pool.SetUnavailable(ex, DateTime.Now);
             }
             for (var a = 1; initTestOk && a < minPoolSize; a += 10)
             {

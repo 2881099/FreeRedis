@@ -182,7 +182,10 @@ namespace FreeRedis.Internal
             {
                 ResetHost(Host);
 
-                EndPoint endpoint = ParseEndPoint(_ip, _port);
+                EndPoint endpoint = IPAddress.TryParse(_ip, out var tryip) ?
+                    new IPEndPoint(tryip, _port) :
+                    new IPEndPoint(Dns.GetHostAddresses(_ip).FirstOrDefault() ?? IPAddress.Parse(_ip), _port);
+
                 var localSocket = endpoint.AddressFamily == AddressFamily.InterNetworkV6 ? 
                     new Socket(AddressFamily.InterNetworkV6, SocketType.Stream, ProtocolType.Tcp):
                     new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -267,21 +270,6 @@ namespace FreeRedis.Internal
             }
 
             return new KeyValuePair<string, int>(host, 6379);
-        }
-
-        private static EndPoint ParseEndPoint(string ip, int port)
-        {
-            if (IPAddress.TryParse(ip, out var tryip))
-            {
-                return new IPEndPoint(tryip, port);
-            }
-
-            if (Dns.GetHostAddresses(ip).Length == 0)
-            {
-                throw new Exception($"无法解析“{ip}”");
-            }
-
-            return new DnsEndPoint(ip, port);
         }
     }
 }

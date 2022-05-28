@@ -106,6 +106,7 @@ namespace FreeRedis
                     var protocolRetry = false;
                     using (var rds = GetRedisSocket(cmd))
                     {
+                        var getTime = DateTime.Now;
                         try
                         {
                             rds.Write(cmd);
@@ -127,7 +128,7 @@ namespace FreeRedis
                         catch (Exception ex)
                         {
                             var pool = (rds as DefaultRedisSocket.TempProxyRedisSocket)._pool;
-                            if (pool?.SetUnavailable(ex) == true)
+                            if (pool?.SetUnavailable(ex, getTime) == true)
                             {
                             }
                             throw;
