@@ -369,13 +369,13 @@
   
   
   <a id="FreeRedis_Internal_ObjectPool_IObjectPool_1_SetUnavailable_" data-uid="FreeRedis.Internal.ObjectPool.IObjectPool`1.SetUnavailable*"></a>
-  <h4 id="FreeRedis_Internal_ObjectPool_IObjectPool_1_SetUnavailable_System_Exception_" data-uid="FreeRedis.Internal.ObjectPool.IObjectPool`1.SetUnavailable(System.Exception)">SetUnavailable(Exception)</h4>
+  <h4 id="FreeRedis_Internal_ObjectPool_IObjectPool_1_SetUnavailable_System_Exception_System_DateTime_" data-uid="FreeRedis.Internal.ObjectPool.IObjectPool`1.SetUnavailable(System.Exception,System.DateTime)">SetUnavailable(Exception, DateTime)</h4>
   <div class="markdown level1 summary"><p>将对象池设置为不可用，后续 Get/GetAsync 均会报错，同时启动后台定时检查服务恢复可用</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">bool SetUnavailable(Exception exception)</code></pre>
+    <pre><code class="lang-csharp hljs">bool SetUnavailable(Exception exception, DateTime lastGetTime)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -390,6 +390,11 @@
       <tr>
         <td><span class="xref">System.Exception</span></td>
         <td><span class="parametername">exception</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.DateTime</span></td>
+        <td><span class="parametername">lastGetTime</span></td>
         <td></td>
       </tr>
     </tbody>

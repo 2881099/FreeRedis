@@ -3817,14 +3817,14 @@ references:
   fullName.vb: FreeRedis.Internal.ObjectPool.IObjectPool(Of T).Return
   nameWithType: IObjectPool<T>.Return
   nameWithType.vb: IObjectPool(Of T).Return
-- uid: FreeRedis.Internal.ObjectPool.IObjectPool`1.SetUnavailable(System.Exception)
-  name: SetUnavailable(Exception)
-  href: docs/api/FreeRedis.Internal.ObjectPool.IObjectPool-1.html#FreeRedis_Internal_ObjectPool_IObjectPool_1_SetUnavailable_System_Exception_
-  commentId: M:FreeRedis.Internal.ObjectPool.IObjectPool`1.SetUnavailable(System.Exception)
-  fullName: FreeRedis.Internal.ObjectPool.IObjectPool<T>.SetUnavailable(System.Exception)
-  fullName.vb: FreeRedis.Internal.ObjectPool.IObjectPool(Of T).SetUnavailable(System.Exception)
-  nameWithType: IObjectPool<T>.SetUnavailable(Exception)
-  nameWithType.vb: IObjectPool(Of T).SetUnavailable(Exception)
+- uid: FreeRedis.Internal.ObjectPool.IObjectPool`1.SetUnavailable(System.Exception,System.DateTime)
+  name: SetUnavailable(Exception, DateTime)
+  href: docs/api/FreeRedis.Internal.ObjectPool.IObjectPool-1.html#FreeRedis_Internal_ObjectPool_IObjectPool_1_SetUnavailable_System_Exception_System_DateTime_
+  commentId: M:FreeRedis.Internal.ObjectPool.IObjectPool`1.SetUnavailable(System.Exception,System.DateTime)
+  fullName: FreeRedis.Internal.ObjectPool.IObjectPool<T>.SetUnavailable(System.Exception, System.DateTime)
+  fullName.vb: FreeRedis.Internal.ObjectPool.IObjectPool(Of T).SetUnavailable(System.Exception, System.DateTime)
+  nameWithType: IObjectPool<T>.SetUnavailable(Exception, DateTime)
+  nameWithType.vb: IObjectPool(Of T).SetUnavailable(Exception, DateTime)
 - uid: FreeRedis.Internal.ObjectPool.IObjectPool`1.SetUnavailable*
   name: SetUnavailable
   href: docs/api/FreeRedis.Internal.ObjectPool.IObjectPool-1.html#FreeRedis_Internal_ObjectPool_IObjectPool_1_SetUnavailable_
@@ -4333,6 +4333,23 @@ references:
   fullName.vb: FreeRedis.Internal.ObjectPool.Object(Of T).LastGetTime
   nameWithType: Object<T>.LastGetTime
   nameWithType.vb: Object(Of T).LastGetTime
+- uid: FreeRedis.Internal.ObjectPool.Object`1.LastGetTimeCopy
+  name: LastGetTimeCopy
+  href: docs/api/FreeRedis.Internal.ObjectPool.Object-1.html#FreeRedis_Internal_ObjectPool_Object_1_LastGetTimeCopy
+  commentId: P:FreeRedis.Internal.ObjectPool.Object`1.LastGetTimeCopy
+  fullName: FreeRedis.Internal.ObjectPool.Object<T>.LastGetTimeCopy
+  fullName.vb: FreeRedis.Internal.ObjectPool.Object(Of T).LastGetTimeCopy
+  nameWithType: Object<T>.LastGetTimeCopy
+  nameWithType.vb: Object(Of T).LastGetTimeCopy
+- uid: FreeRedis.Internal.ObjectPool.Object`1.LastGetTimeCopy*
+  name: LastGetTimeCopy
+  href: docs/api/FreeRedis.Internal.ObjectPool.Object-1.html#FreeRedis_Internal_ObjectPool_Object_1_LastGetTimeCopy_
+  commentId: Overload:FreeRedis.Internal.ObjectPool.Object`1.LastGetTimeCopy
+  isSpec: "True"
+  fullName: FreeRedis.Internal.ObjectPool.Object<T>.LastGetTimeCopy
+  fullName.vb: FreeRedis.Internal.ObjectPool.Object(Of T).LastGetTimeCopy
+  nameWithType: Object<T>.LastGetTimeCopy
+  nameWithType.vb: Object(Of T).LastGetTimeCopy
 - uid: FreeRedis.Internal.ObjectPool.Object`1.LastReturnThreadId
   name: LastReturnThreadId
   href: docs/api/FreeRedis.Internal.ObjectPool.Object-1.html#FreeRedis_Internal_ObjectPool_Object_1_LastReturnThreadId
@@ -4471,22 +4488,23 @@ references:
   fullName.vb: FreeRedis.Internal.ObjectPool.ObjectPool(Of T).ObjectPool
   nameWithType: ObjectPool<T>.ObjectPool
   nameWithType.vb: ObjectPool(Of T).ObjectPool
-- uid: FreeRedis.Internal.ObjectPool.ObjectPool`1._allObjects
-  name: _allObjects
-  href: docs/api/FreeRedis.Internal.ObjectPool.ObjectPool-1.html#FreeRedis_Internal_ObjectPool_ObjectPool_1__allObjects
-  commentId: F:FreeRedis.Internal.ObjectPool.ObjectPool`1._allObjects
-  fullName: FreeRedis.Internal.ObjectPool.ObjectPool<T>._allObjects
-  fullName.vb: FreeRedis.Internal.ObjectPool.ObjectPool(Of T)._allObjects
-  nameWithType: ObjectPool<T>._allObjects
-  nameWithType.vb: ObjectPool(Of T)._allObjects
-- uid: FreeRedis.Internal.ObjectPool.ObjectPool`1._freeObjects
-  name: _freeObjects
-  href: docs/api/FreeRedis.Internal.ObjectPool.ObjectPool-1.html#FreeRedis_Internal_ObjectPool_ObjectPool_1__freeObjects
-  commentId: F:FreeRedis.Internal.ObjectPool.ObjectPool`1._freeObjects
-  fullName: FreeRedis.Internal.ObjectPool.ObjectPool<T>._freeObjects
-  fullName.vb: FreeRedis.Internal.ObjectPool.ObjectPool(Of T)._freeObjects
-  nameWithType: ObjectPool<T>._freeObjects
-  nameWithType.vb: ObjectPool(Of T)._freeObjects
+- uid: FreeRedis.Internal.ObjectPool.ObjectPool`1.AvailableTime
+  name: AvailableTime
+  href: docs/api/FreeRedis.Internal.ObjectPool.ObjectPool-1.html#FreeRedis_Internal_ObjectPool_ObjectPool_1_AvailableTime
+  commentId: P:FreeRedis.Internal.ObjectPool.ObjectPool`1.AvailableTime
+  fullName: FreeRedis.Internal.ObjectPool.ObjectPool<T>.AvailableTime
+  fullName.vb: FreeRedis.Internal.ObjectPool.ObjectPool(Of T).AvailableTime
+  nameWithType: ObjectPool<T>.AvailableTime
+  nameWithType.vb: ObjectPool(Of T).AvailableTime
+- uid: FreeRedis.Internal.ObjectPool.ObjectPool`1.AvailableTime*
+  name: AvailableTime
+  href: docs/api/FreeRedis.Internal.ObjectPool.ObjectPool-1.html#FreeRedis_Internal_ObjectPool_ObjectPool_1_AvailableTime_
+  commentId: Overload:FreeRedis.Internal.ObjectPool.ObjectPool`1.AvailableTime
+  isSpec: "True"
+  fullName: FreeRedis.Internal.ObjectPool.ObjectPool<T>.AvailableTime
+  fullName.vb: FreeRedis.Internal.ObjectPool.ObjectPool(Of T).AvailableTime
+  nameWithType: ObjectPool<T>.AvailableTime
+  nameWithType.vb: ObjectPool(Of T).AvailableTime
 - uid: FreeRedis.Internal.ObjectPool.ObjectPool`1.Dispose
   name: Dispose()
   href: docs/api/FreeRedis.Internal.ObjectPool.ObjectPool-1.html#FreeRedis_Internal_ObjectPool_ObjectPool_1_Dispose
@@ -4608,14 +4626,14 @@ references:
   fullName.vb: FreeRedis.Internal.ObjectPool.ObjectPool(Of T).Return
   nameWithType: ObjectPool<T>.Return
   nameWithType.vb: ObjectPool(Of T).Return
-- uid: FreeRedis.Internal.ObjectPool.ObjectPool`1.SetUnavailable(System.Exception)
-  name: SetUnavailable(Exception)
-  href: docs/api/FreeRedis.Internal.ObjectPool.ObjectPool-1.html#FreeRedis_Internal_ObjectPool_ObjectPool_1_SetUnavailable_System_Exception_
-  commentId: M:FreeRedis.Internal.ObjectPool.ObjectPool`1.SetUnavailable(System.Exception)
-  fullName: FreeRedis.Internal.ObjectPool.ObjectPool<T>.SetUnavailable(System.Exception)
-  fullName.vb: FreeRedis.Internal.ObjectPool.ObjectPool(Of T).SetUnavailable(System.Exception)
-  nameWithType: ObjectPool<T>.SetUnavailable(Exception)
-  nameWithType.vb: ObjectPool(Of T).SetUnavailable(Exception)
+- uid: FreeRedis.Internal.ObjectPool.ObjectPool`1.SetUnavailable(System.Exception,System.DateTime)
+  name: SetUnavailable(Exception, DateTime)
+  href: docs/api/FreeRedis.Internal.ObjectPool.ObjectPool-1.html#FreeRedis_Internal_ObjectPool_ObjectPool_1_SetUnavailable_System_Exception_System_DateTime_
+  commentId: M:FreeRedis.Internal.ObjectPool.ObjectPool`1.SetUnavailable(System.Exception,System.DateTime)
+  fullName: FreeRedis.Internal.ObjectPool.ObjectPool<T>.SetUnavailable(System.Exception, System.DateTime)
+  fullName.vb: FreeRedis.Internal.ObjectPool.ObjectPool(Of T).SetUnavailable(System.Exception, System.DateTime)
+  nameWithType: ObjectPool<T>.SetUnavailable(Exception, DateTime)
+  nameWithType.vb: ObjectPool(Of T).SetUnavailable(Exception, DateTime)
 - uid: FreeRedis.Internal.ObjectPool.ObjectPool`1.SetUnavailable*
   name: SetUnavailable
   href: docs/api/FreeRedis.Internal.ObjectPool.ObjectPool-1.html#FreeRedis_Internal_ObjectPool_ObjectPool_1_SetUnavailable_

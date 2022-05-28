@@ -204,58 +204,33 @@
       </tr>
     </tbody>
   </table>
-  <h3 id="fields">Fields
-  </h3>
-  
-  
-  <h4 id="FreeRedis_Internal_ObjectPool_ObjectPool_1__allObjects" data-uid="FreeRedis.Internal.ObjectPool.ObjectPool`1._allObjects">_allObjects</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected List&lt;Object&lt;T&gt;&gt; _allObjects</code></pre>
-  </div>
-  <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="FreeRedis.Internal.ObjectPool.Object-1.html">Object</a>&lt;T&gt;&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <h4 id="FreeRedis_Internal_ObjectPool_ObjectPool_1__freeObjects" data-uid="FreeRedis.Internal.ObjectPool.ObjectPool`1._freeObjects">_freeObjects</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected ConcurrentStack&lt;Object&lt;T&gt;&gt; _freeObjects</code></pre>
-  </div>
-  <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Collections.Concurrent.ConcurrentStack</span>&lt;<a class="xref" href="FreeRedis.Internal.ObjectPool.Object-1.html">Object</a>&lt;T&gt;&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
   <h3 id="properties">Properties
   </h3>
+  
+  
+  <a id="FreeRedis_Internal_ObjectPool_ObjectPool_1_AvailableTime_" data-uid="FreeRedis.Internal.ObjectPool.ObjectPool`1.AvailableTime*"></a>
+  <h4 id="FreeRedis_Internal_ObjectPool_ObjectPool_1_AvailableTime" data-uid="FreeRedis.Internal.ObjectPool.ObjectPool`1.AvailableTime">AvailableTime</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public DateTime? AvailableTime { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.DateTime</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   
   
   <a id="FreeRedis_Internal_ObjectPool_ObjectPool_1_IsAvailable_" data-uid="FreeRedis.Internal.ObjectPool.ObjectPool`1.IsAvailable*"></a>
@@ -545,12 +520,12 @@
   
   
   <a id="FreeRedis_Internal_ObjectPool_ObjectPool_1_SetUnavailable_" data-uid="FreeRedis.Internal.ObjectPool.ObjectPool`1.SetUnavailable*"></a>
-  <h4 id="FreeRedis_Internal_ObjectPool_ObjectPool_1_SetUnavailable_System_Exception_" data-uid="FreeRedis.Internal.ObjectPool.ObjectPool`1.SetUnavailable(System.Exception)">SetUnavailable(Exception)</h4>
+  <h4 id="FreeRedis_Internal_ObjectPool_ObjectPool_1_SetUnavailable_System_Exception_System_DateTime_" data-uid="FreeRedis.Internal.ObjectPool.ObjectPool`1.SetUnavailable(System.Exception,System.DateTime)">SetUnavailable(Exception, DateTime)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool SetUnavailable(Exception exception)</code></pre>
+    <pre><code class="lang-csharp hljs">public bool SetUnavailable(Exception exception, DateTime lastGetTime)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -565,6 +540,11 @@
       <tr>
         <td><span class="xref">System.Exception</span></td>
         <td><span class="parametername">exception</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.DateTime</span></td>
+        <td><span class="parametername">lastGetTime</span></td>
         <td></td>
       </tr>
     </tbody>

@@ -567,7 +567,7 @@
       "output": {
         ".html": {
           "relative_path": "docs/api/FreeRedis.Internal.ObjectPool.IObjectPool-1.html",
-          "hash": "VRO40/bpHLGkI8VA3Z0UmxS/hNHURPhtZtjl8kfsil0="
+          "hash": "TQ5oLtEAV1M/eaRa6OZhZl3oxvtVIj3FZkE2+MoZJlY="
         }
       },
       "is_incremental": false,
@@ -591,7 +591,7 @@
       "output": {
         ".html": {
           "relative_path": "docs/api/FreeRedis.Internal.ObjectPool.Object-1.html",
-          "hash": "qa0HVpWZgtSRm2EuP0br6h0igCOd19poT6LSuv6XT58="
+          "hash": "J5/EB1UfN6ofAGDizRupJu0afkFobnaiXUw7sI0wT58="
         }
       },
       "is_incremental": false,
@@ -603,7 +603,7 @@
       "output": {
         ".html": {
           "relative_path": "docs/api/FreeRedis.Internal.ObjectPool.ObjectPool-1.html",
-          "hash": "pom9zKPdpecwQjZGEb6uU2U60RReoxxtSYY+kCSU3VA="
+          "hash": "2aA8TyLkv815z/n3OyPql8uKENvN4VDHTwsUjz4lgpA="
         }
       },
       "is_incremental": false,
