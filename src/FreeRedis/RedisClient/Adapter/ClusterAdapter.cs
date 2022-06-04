@@ -207,11 +207,18 @@ namespace FreeRedis
                             for (var slotIndex = 8; slotIndex < dt.Length; slotIndex++)
                             {
                                 var slots = dt[slotIndex].Split('-');
-                                if (ushort.TryParse(slots[0], out var tryslotStart) &&
-                                    ushort.TryParse(slots[1], out var tryslotEnd))
+                                if (slots.Length == 2)
                                 {
-                                    for (var slot = tryslotStart; slot <= tryslotEnd; slot++)
-                                        _slotCache.AddOrUpdate(slot, connectionString.Host, (k1, v1) => connectionString.Host);
+                                    if (ushort.TryParse(slots[0], out var tryslotStart) &&
+                                        ushort.TryParse(slots[1], out var tryslotEnd))
+                                    {
+                                        for (var slot = tryslotStart; slot <= tryslotEnd; slot++)
+                                            _slotCache.AddOrUpdate(slot, connectionString.Host, (k1, v1) => connectionString.Host);
+                                    }
+                                }else
+                                {
+                                    ushort.TryParse(slots[0], out var tryslotStart);
+                                    _slotCache.AddOrUpdate(tryslotStart,connectionString.Host, (k1, v1) => connectionString.Host);
                                 }
                             }
                         }
