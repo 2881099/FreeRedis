@@ -30,6 +30,9 @@ namespace FreeRedis.Tests.RedisClientTests
 
             var r3 = cli.XAck(key1, "xack-group1", r2ids);
             Assert.Equal(2, r3);
+
+            var r4 = cli.XReadGroup("xack-group1", "xack-consumer", 1, key1, "0-0");
+            Assert.Null(r4);
         }
 
         [Fact]

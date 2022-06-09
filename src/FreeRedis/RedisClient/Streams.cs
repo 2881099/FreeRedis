@@ -239,7 +239,7 @@ namespace FreeRedis
                 .Input(keyIds.Values.ToArray()), rt => rt.ThrowOrValueToXRead());
         }
 
-        public StreamsEntry XReadGroup(string group, string consumer, long block, string key, string id) => XReadGroup(group, consumer, 1, block, false, key, id)?.FirstOrDefault()?.entries?.First();
+        public StreamsEntry XReadGroup(string group, string consumer, long block, string key, string id) => XReadGroup(group, consumer, 1, block, false, key, id)?.FirstOrDefault()?.entries?.FirstOrDefault();
         public StreamsEntryResult[] XReadGroup(string group, string consumer, long count, long block, bool noack, string key, string id, params string[] keyIds) {
             var kis = keyIds.MapToHash<string>(Encoding.UTF8);
             var kikeys = kis.Keys.ToArray();
