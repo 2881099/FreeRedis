@@ -2,17 +2,13 @@
 using FreeRedis.Transport;
 using System;
 using System.Buffers;
-using System.Buffers.Binary;
-using System.Collections.Generic;
 using System.IO.Pipelines;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading;
 
 namespace BytesReaderTest
 {
-    [MemoryDiagnoser, MarkdownExporter, RPlotExporter]
+    [MemoryDiagnoser]
     [MinColumn, MaxColumn, MeanColumn, MedianColumn]
     public class OnceTest
     {
@@ -22,6 +18,7 @@ namespace BytesReaderTest
         private readonly PipeWriter _writer;
         private static readonly Encoder Utf8Encoder;
         private const string _field = "abc\r\nurueue454456456465ab";
+
         static OnceTest()
         {
             _fixBuffer1 = Encoding.UTF8.GetBytes("4141\r\n");
@@ -43,37 +40,79 @@ namespace BytesReaderTest
         //    _writer.FlushAsync();
         //}
 
-        [Benchmark]
-        public void SelfDivConvert()
-        {
-            var chars = _data.AsSpan();
-            if (chars.Length <= 1048576)
-            {
-                int sizeHint = Utf8Encoder.GetByteCount(chars, true);
-                Span<byte> span = _writer.GetSpan(sizeHint);
-                Utf8Encoder.Convert(chars, span, true, out _, out var bytesUsed2, out _);
-                _writer.Advance(bytesUsed2);
-            }
-            else
-            {
-                do
-                {
-                    int sizeHint = Utf8Encoder.GetByteCount(chars.Slice(0, 1048576), flush: false);
-                    Span<byte> span = _writer.GetSpan(sizeHint);
-                    Utf8Encoder.Convert(chars, span, true, out var charsUsed, out var bytesUsed2, out _);
-                    chars = chars.Slice(charsUsed);
-                    _writer.Advance(bytesUsed2);
-                }
-                while (!chars.IsEmpty);
-            }
-            _writer.FlushAsync();
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal void WriteStringWithCrlf(string value)
+        {
+            var chars = value.AsSpan();
+            int sizeHint = Utf8Encoder.GetByteCount(chars, true);
+            Span<byte> span = _writer.GetSpan(sizeHint + 2);
+            Utf8Encoder.Convert(chars, span, true, out _, out var bytesUsed2, out _);
+            span[bytesUsed2++] = (byte)'\r';
+            span[bytesUsed2++] = (byte)'\n';
+            _writer.Advance(sizeHint + 2);
         }
 
         //[Benchmark]
+        //public void WriteWithCrlf()
+        //{
+        //    i += 1;
+        //    WriteStringWithCrlf(p1);
+        //    WriteStringWithCrlf(i.ToString());
+        //    WriteStringWithCrlf(p3);
+        //    _writer.FlushAsync();
+        //}
+        [Benchmark]
+        public void WriteWithCrlf1()
+        {
+            i += 1;
+            _writer.Write(_fixBuffer1);
+            WriteStringWithCrlf(i.ToString());
+            WriteStringWithCrlf(p3);
+            _writer.FlushAsync();
+        }
+
+        string p1 = "4141";
+        string p2 = "abc";
+        string p3 = "urueue6456465ab";
+
+        //[Benchmark]
+        //public void selfdivconvert()
+        //{
+        //    i += 1;
+        //    var data = $"{p1}\r\n{i}\r\n{p3}\r\n";
+        //    var chars = data.AsSpan();
+        //    if (chars.Length <= 1048576)
+        //    {
+        //        int sizehint = Utf8Encoder.GetByteCount(chars, true);
+        //        var span = _writer.GetSpan(sizehint);
+        //        Utf8Encoder.Convert(chars, span, true, out _, out var bytesused2, out _);
+        //        _writer.Advance(bytesused2);
+        //    }
+        //    else
+        //    {
+        //        do
+        //        {
+        //            int sizehint = Utf8Encoder.GetByteCount(chars.Slice(0, 1048576), flush: false);
+        //            var span = _writer.GetSpan(sizehint);
+        //            Utf8Encoder.Convert(chars, span, true, out var charsused, out var bytesused2, out _);
+        //            chars = chars.Slice(charsused);
+        //            _writer.Advance(bytesused2);
+        //        }
+
+        //        while (!chars.IsEmpty);
+        //    }
+        //    _writer.FlushAsync();
+
+        //}
+
+        private long i = 0;
+        //[Benchmark]
         //public void EncodingUtf8GetBytes()
         //{
-        //    _writer.WriteAsync(Encoding.UTF8.GetBytes(_data));
+        //    i += 1;
+        //    var data = $"{p1}\r\n{i}\r\n{p3}\r\n";
+        //    _writer.WriteAsync(Encoding.UTF8.GetBytes(data));
         //}
 
         //[Benchmark]

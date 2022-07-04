@@ -49,17 +49,17 @@ namespace FreeRedis.Engine
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Task<T> SendProtocal<T>(IRedisProtocal<T> redisProtocal)
         {
-            Interlocked.Increment(ref _concurrentCount);
+            //Interlocked.Increment(ref _concurrentCount);
             WaitAndLockSend();
             redisProtocal.WriteBuffer(_sender);
             _taskBuffer.WriteNext(redisProtocal);
             ReleaseSend();
-            Interlocked.Decrement(ref _concurrentCount);
-            if (_concurrentCount==0)
-            {
-                _sender.FlushAsync();
-            }
-
+            //Interlocked.Decrement(ref _concurrentCount);
+            _sender.FlushAsync();
+            //if (_concurrentCount==0)
+            //{
+            //    _sender.FlushAsync();
+            //}
             return redisProtocal.WaitTask;
         }
 
