@@ -730,7 +730,7 @@ namespace FreeRedis
             {
                 var name = list[a].ToString().Replace("-", "_");
                 var prop = ttype.GetPropertyOrFieldIgnoreCase(name);
-                if (prop == null) throw new ArgumentException($"{typeof(T).DisplayCsharp()} undefined Property {list[a]}");
+                if (prop == null) continue; // throw new ArgumentException($"{typeof(T).DisplayCsharp()} undefined Property {list[a]}");
                 if (list[a + 1] == null) continue;
                 ttype.SetPropertyOrFieldValue(ret, prop.Name, prop.GetPropertyOrFieldType().FromObject(list[a + 1], encoding));
             }

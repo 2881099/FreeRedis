@@ -56,63 +56,63 @@ namespace console_netcore31_vs
             var tasks = new List<Task>();
             var results = new ConcurrentQueue<string>();
 
-            cli.FlushDb();
-            results.Clear();
-            sw.Reset();
-            sw.Start();
-            for (var a = 0; a < 100000; a++)
-            {
-                var tmp = Guid.NewGuid().ToString();
-                sedb.StringSet(tmp, String);
-                var val = sedb.StringGet(tmp);
-                if (val != String) throw new Exception("not equal");
-                results.Enqueue(val);
-            }
-            sw.Stop();
-            Console.WriteLine("StackExchange(0-100000): " + sw.ElapsedMilliseconds + "ms results: " + results.Count);
-            tasks.Clear();
-            results.Clear();
-            cli.FlushDb();
+            //cli.FlushDb();
+            //results.Clear();
+            //sw.Reset();
+            //sw.Start();
+            //for (var a = 0; a < 100000; a++)
+            //{
+            //    var tmp = Guid.NewGuid().ToString();
+            //    sedb.StringSet(tmp, String);
+            //    var val = sedb.StringGet(tmp);
+            //    if (val != String) throw new Exception("not equal");
+            //    results.Enqueue(val);
+            //}
+            //sw.Stop();
+            //Console.WriteLine("StackExchange(0-100000): " + sw.ElapsedMilliseconds + "ms results: " + results.Count);
+            //tasks.Clear();
+            //results.Clear();
+            //cli.FlushDb();
 
-            sw.Reset();
-            sw.Start();
-            tasks = new List<Task>();
-            for (var a = 0; a < 100000; a++)
-            {
-                tasks.Add(Task.Run(() =>
-                {
-                    var tmp = Guid.NewGuid().ToString();
-                    sedb.StringSet(tmp, String);
-                    var val = sedb.StringGet(tmp);
-                    if (val != String) throw new Exception("not equal");
-                    results.Enqueue(val);
-                }));
-            }
-            Task.WaitAll(tasks.ToArray());
-            sw.Stop();
-            Console.WriteLine("StackExchange(Task.WaitAll 100000): " + sw.ElapsedMilliseconds + "ms results: " + results.Count);
-            tasks.Clear();
-            results.Clear();
-            cli.FlushDb();
+            //sw.Reset();
+            //sw.Start();
+            //tasks = new List<Task>();
+            //for (var a = 0; a < 100000; a++)
+            //{
+            //    tasks.Add(Task.Run(() =>
+            //    {
+            //        var tmp = Guid.NewGuid().ToString();
+            //        sedb.StringSet(tmp, String);
+            //        var val = sedb.StringGet(tmp);
+            //        if (val != String) throw new Exception("not equal");
+            //        results.Enqueue(val);
+            //    }));
+            //}
+            //Task.WaitAll(tasks.ToArray());
+            //sw.Stop();
+            //Console.WriteLine("StackExchange(Task.WaitAll 100000): " + sw.ElapsedMilliseconds + "ms results: " + results.Count);
+            //tasks.Clear();
+            //results.Clear();
+            //cli.FlushDb();
 
-            sw.Reset();
-            sw.Start();
-            Task.Run(async () =>
-            {
-                for (var a = 0; a < 100000; a++)
-                {
-                    var tmp = Guid.NewGuid().ToString();
-                    await sedb.StringSetAsync(tmp, String);
-                    var val = await sedb.StringGetAsync(tmp);
-                    if (val != String) throw new Exception("not equal");
-                    results.Enqueue(val);
-                }
-            }).Wait();
-            sw.Stop();
-            Console.WriteLine("StackExchangeAsync(0-100000): " + sw.ElapsedMilliseconds + "ms results: " + results.Count);
-            tasks.Clear();
-            results.Clear();
-            cli.FlushDb();
+            //sw.Reset();
+            //sw.Start();
+            //Task.Run(async () =>
+            //{
+            //    for (var a = 0; a < 100000; a++)
+            //    {
+            //        var tmp = Guid.NewGuid().ToString();
+            //        await sedb.StringSetAsync(tmp, String);
+            //        var val = await sedb.StringGetAsync(tmp);
+            //        if (val != String) throw new Exception("not equal");
+            //        results.Enqueue(val);
+            //    }
+            //}).Wait();
+            //sw.Stop();
+            //Console.WriteLine("StackExchangeAsync(0-100000): " + sw.ElapsedMilliseconds + "ms results: " + results.Count);
+            //tasks.Clear();
+            //results.Clear();
+            //cli.FlushDb();
 
             sw.Reset();
             sw.Start();
@@ -136,21 +136,21 @@ namespace console_netcore31_vs
             cli.FlushDb();
 
 
-            sw.Reset();
-            sw.Start();
-            for (var a = 0; a < 100000; a++)
-            {
-                var tmp = Guid.NewGuid().ToString();
-                cli.Set(tmp, String);
-                var val = cli.Get(tmp);
-                if (val != String) throw new Exception("not equal");
-                results.Enqueue(val);
-            }
-            sw.Stop();
-            Console.WriteLine("FreeRedis(0-100000): " + sw.ElapsedMilliseconds + "ms results: " + results.Count);
-            tasks.Clear();
-            results.Clear();
-            cli.FlushDb();
+            //sw.Reset();
+            //sw.Start();
+            //for (var a = 0; a < 100000; a++)
+            //{
+            //    var tmp = Guid.NewGuid().ToString();
+            //    cli.Set(tmp, String);
+            //    var val = cli.Get(tmp);
+            //    if (val != String) throw new Exception("not equal");
+            //    results.Enqueue(val);
+            //}
+            //sw.Stop();
+            //Console.WriteLine("FreeRedis(0-100000): " + sw.ElapsedMilliseconds + "ms results: " + results.Count);
+            //tasks.Clear();
+            //results.Clear();
+            //cli.FlushDb();
 
             sw.Reset();
             sw.Start();
@@ -172,6 +172,8 @@ namespace console_netcore31_vs
             tasks.Clear();
             results.Clear();
             cli.FlushDb();
+
+            return;
 
             //sw.Reset();
             //sw.Start();
