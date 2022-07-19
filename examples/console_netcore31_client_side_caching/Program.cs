@@ -15,12 +15,16 @@ namespace console_netcore31_client_side_caching
         {
             //var r = new RedisClient("127.0.0.1:6379", false); //redis 3.2 Single test
             //var r = new RedisClient("127.0.0.1:6379,database=1,min pool size=500,max pool size=500"); //redis 3.2
-            //var r = new RedisClient("127.0.0.1:6379,database=1", "127.0.0.1:6379,database=1");
-            var r = new RedisClient(new [] { (ConnectionStringBuilder)"192.168.164.10:6379,database=1", (ConnectionStringBuilder)"192.168.164.10:6379,database=2" },  null); //redis 6.0
+            var r = new RedisClient("127.0.0.1:6379,database=1", "127.0.0.1:6379,database=1");
+            //var r = new RedisClient(new [] { (ConnectionStringBuilder)"192.168.164.10:6379,database=1", (ConnectionStringBuilder)"192.168.164.10:6379,database=2" }); //redis 6.0
             r.Serialize = obj => JsonConvert.SerializeObject(obj);
             r.Deserialize = (json, type) => JsonConvert.DeserializeObject(json, type);
             r.Notice += (s, e) => Console.WriteLine(e.Log);
             return r;
+            // redis6 cluster
+            // https://www.cnblogs.com/sharktech/p/14475748.html
+            // /redis6-cluster.sh
+            // redis-cli --cluster create 0.0.0.0:6379 0.0.0.0:6380 0.0.0.0:6381 0.0.0.0:6382 0.0.0.0:6383 0.0.0.0:6384 --cluster-replicas 1 -a 123456
         });
         static RedisClient cli => _cliLazy.Value;
 

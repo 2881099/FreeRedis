@@ -72,6 +72,14 @@ namespace FreeRedis
                     var redirectId = GetOrAddClusterTrackingRedirectId(e.Host, e.Pool);
                     e.Client.ClientTracking(true, redirectId, null, false, false, false, false);
                 };
+                if (_cli.Adapter.UseType == RedisClient.UseType.Cluster)
+                {
+                    var adapter = _cli.Adapter as RedisClient.ClusterAdapter;
+                    adapter._ib.GetAll().ForEach(a =>
+                    {
+                        using (a.Get()) { }
+                    });
+                }
             }
             long GetOrAddClusterTrackingRedirectId(string host, RedisClientPool pool)
             {

@@ -1,17 +1,15 @@
 ﻿using FreeRedis.Internal;
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace FreeRedis
 {
     partial class RedisClient
     {
-        class ClusterAdapter : BaseAdapter
+        internal class ClusterAdapter : BaseAdapter
         {
             internal readonly IdleBus<RedisClientPool> _ib;
             internal readonly ConnectionStringBuilder[] _clusterConnectionStrings;
@@ -53,16 +51,18 @@ namespace FreeRedis
                 var poolkeys = slots?.Select(a => _slotCache.TryGetValue(a, out var trykey) ? trykey : null).Distinct().Where(a => a != null).ToArray();
                 //if (poolkeys.Length > 1) throw new RedisClientException($"CROSSSLOT Keys in request don't hash to the same slot: {cmd}");
                 var poolkey = poolkeys?.FirstOrDefault();
+                Exception poolUnavailableException = null;
             goto_getrndkey:
                 if (string.IsNullOrEmpty(poolkey))
                 {
                     var rndkeys = _ib.GetKeys(v => v == null || v.IsAvailable);
-                    if (rndkeys.Any() == false) throw new RedisClientException($"All nodes of the cluster failed to connect");
+                    if (rndkeys.Any() == false) throw poolUnavailableException ?? new RedisClientException($"All nodes of the cluster failed to connect");
                     poolkey = rndkeys[_rnd.Value.Next(0, rndkeys.Length)];
                 }
                 var pool = _ib.Get(poolkey);
                 if (pool.IsAvailable == false)
                 {
+                    poolUnavailableException = pool.UnavailableException;
                     poolkey = null;
                     goto goto_getrndkey;
                 }
@@ -177,6 +177,7 @@ namespace FreeRedis
 
             void RefershClusterNodes()
             {
+                Exception clusterException = null;
                 foreach (var testConnection in _clusterConnectionStrings)
                 {
                     RegisterClusterNode(testConnection);
@@ -224,14 +225,15 @@ namespace FreeRedis
                         }
                         break;
                     }
-                    catch
+                    catch (Exception ex)
                     {
+                        clusterException = ex;
                         _ib.TryRemove(testConnection.Host, true);
                     }
                 }
 
                 if (_ib.GetKeys().Length == 0)
-                    throw new RedisClientException($"All \"clusterConnectionStrings\" failed to connect");
+                    throw new RedisClientException($"All \"clusterConnectionStrings\" failed to connect. {(clusterException?.Message)}");
             }
             //closure connectionString
             void RegisterClusterNode(ConnectionStringBuilder connectionString)
