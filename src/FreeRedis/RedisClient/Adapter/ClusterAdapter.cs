@@ -1,6 +1,7 @@
 ﻿using FreeRedis.Internal;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -180,11 +181,14 @@ namespace FreeRedis
                 Exception clusterException = null;
                 foreach (var testConnection in _clusterConnectionStrings)
                 {
+                    var minPoolSize = testConnection.MinPoolSize;
+                    testConnection.MinPoolSize = 1;
                     RegisterClusterNode(testConnection);
                     //尝试求出其他节点，并缓存slot
                     try
                     {
                         var cnodes = AdapterCall<string>("CLUSTER".SubCommand("NODES"), rt => rt.ThrowOrValue<string>()).Split('\n');
+                        var cnodesDict = new Dictionary<string, bool>(StringComparer.OrdinalIgnoreCase);
                         foreach (var cnode in cnodes)
                         {
                             if (string.IsNullOrEmpty(cnode)) continue;
@@ -203,6 +207,7 @@ namespace FreeRedis
                                 endpoint = $"{DefaultRedisSocket.SplitHost(testConnection.Host).Key}:{endpoint.Substring(10)}";
                             ConnectionStringBuilder connectionString = testConnection.ToString();
                             connectionString.Host = endpoint;
+                            if (cnodesDict.ContainsKey(endpoint) == false) cnodesDict.Add(endpoint, true);
                             RegisterClusterNode(connectionString);
 
                             for (var slotIndex = 8; slotIndex < dt.Length; slotIndex++)
@@ -223,6 +228,10 @@ namespace FreeRedis
                                 }
                             }
                         }
+                        if (cnodesDict.ContainsKey(testConnection.Host))
+                            RedisClientPoolPolicy.PrevReheatConnectionPool(_ib.Get(testConnection.Host), minPoolSize);
+                        else
+                            _ib.TryRemove(testConnection.Host, true);
                         break;
                     }
                     catch (Exception ex)
