@@ -12,7 +12,7 @@ namespace FreeRedis
 {
     partial class RedisClient
     {
-        class NormanAdapter : BaseAdapter
+        internal class NormanAdapter : BaseAdapter
         {
             internal readonly IdleBus<RedisClientPool> _ib;
             readonly ConnectionStringBuilder[] _connectionStrings;

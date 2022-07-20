@@ -5,7 +5,7 @@ class Program
 {
     static RedisClient CreateRedisClient()
     {
-        var cli = new RedisClient(new[] { (ConnectionStringBuilder)"192.168.164.10:6380,password=123456" });
+        var cli = new RedisClient(new[] { (ConnectionStringBuilder)"192.168.164.10:6380,password=123456,min pool size=10" });
         cli.UseClientSideCaching(new ClientSideCachingOptions
         {
             //本地缓存的容量
@@ -16,13 +16,18 @@ class Program
             CheckExpired = (key, dt) => DateTime.Now.Subtract(dt) > TimeSpan.FromSeconds(600)
         });
         return cli;
+        // redis6 cluster
+        // https://www.cnblogs.com/sharktech/p/14475748.html
+        // /redis6-cluster.sh
+        // ps -ef | grep redis
+        // redis-cli --cluster create 0.0.0.0:6379 0.0.0.0:6380 0.0.0.0:6381 0.0.0.0:6382 0.0.0.0:6383 0.0.0.0:6384 --cluster-replicas 1 -a 123456
     }
 
 
     static void Main(string[] args)
     {
 
-        var testCount = 50;
+        var testCount = 10;
         Console.WriteLine($"测试 {testCount} 个 RedisClient Cluster 客户端缓存功能 client side cahcing");
         Console.WriteLine($"正在创建 {testCount} 个 RedisCient 对象...\r\n");
         var clis = new List<RedisClient>();

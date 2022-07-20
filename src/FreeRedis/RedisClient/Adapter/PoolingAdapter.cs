@@ -13,10 +13,10 @@ namespace FreeRedis
 {
     partial class RedisClient
     {
-        class PoolingAdapter : BaseAdapter
+        internal class PoolingAdapter : BaseAdapter
         {
-            readonly IdleBus<RedisClientPool> _ib;
-            readonly string _masterHost;
+            internal readonly IdleBus<RedisClientPool> _ib;
+            internal readonly string _masterHost;
             readonly bool _rw_splitting;
             readonly bool _is_single;
 

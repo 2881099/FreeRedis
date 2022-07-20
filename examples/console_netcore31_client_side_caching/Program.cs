@@ -24,6 +24,7 @@ namespace console_netcore31_client_side_caching
             // redis6 cluster
             // https://www.cnblogs.com/sharktech/p/14475748.html
             // /redis6-cluster.sh
+            // ps -ef | grep redis
             // redis-cli --cluster create 0.0.0.0:6379 0.0.0.0:6380 0.0.0.0:6381 0.0.0.0:6382 0.0.0.0:6383 0.0.0.0:6384 --cluster-replicas 1 -a 123456
         });
         static RedisClient cli => _cliLazy.Value;

@@ -12,10 +12,10 @@ namespace FreeRedis
 {
     partial class RedisClient
     {
-        class SentinelAdapter : BaseAdapter
+        internal class SentinelAdapter : BaseAdapter
         {
-            readonly IdleBus<RedisClientPool> _ib;
-            readonly ConnectionStringBuilder _connectionString;
+            internal readonly IdleBus<RedisClientPool> _ib;
+            internal readonly ConnectionStringBuilder _connectionString;
             readonly LinkedList<ConnectionStringBuilder> _sentinels;
             string _masterHost;
             readonly bool _rw_splitting;
@@ -144,7 +144,7 @@ namespace FreeRedis
             }
 #endif
 
-            string GetIdleBusKey(CommandPacket cmd)
+            internal string GetIdleBusKey(CommandPacket cmd)
             {
                 if (cmd != null && (_rw_splitting || !_is_single))
                 {
