@@ -292,6 +292,12 @@
             <param name="timeout">超时</param>
             <returns></returns>
         </member>
+        <member name="M:FreeRedis.Internal.ObjectPool.IObjectPool`1.GetAsync">
+            <summary>
+            获取资源
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:FreeRedis.Internal.ObjectPool.IObjectPool`1.Return(FreeRedis.Internal.ObjectPool.Object{`0},System.Boolean)">
             <summary>
             使用完毕后，归还资源
@@ -357,6 +363,12 @@
             </summary>
         </member>
         <member name="M:FreeRedis.Internal.ObjectPool.IPolicy`1.OnGet(FreeRedis.Internal.ObjectPool.Object{`0})">
+            <summary>
+            从对象池获取对象成功的时候触发，通过该方法统计或初始化对象
+            </summary>
+            <param name="obj">资源对象</param>
+        </member>
+        <member name="M:FreeRedis.Internal.ObjectPool.IPolicy`1.OnGetAsync(FreeRedis.Internal.ObjectPool.Object{`0})">
             <summary>
             从对象池获取对象成功的时候触发，通过该方法统计或初始化对象
             </summary>

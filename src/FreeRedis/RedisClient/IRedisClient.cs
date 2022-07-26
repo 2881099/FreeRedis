@@ -4,7 +4,7 @@ using System.IO;
 
 namespace FreeRedis
 {
-    public interface IRedisClient
+    public partial interface IRedisClient
     {
         List<Func<IInterceptor>> Interceptors { get; }
 
