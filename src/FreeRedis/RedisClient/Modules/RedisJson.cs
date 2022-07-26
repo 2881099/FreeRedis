@@ -8,14 +8,7 @@ namespace FreeRedis
 {
     partial class RedisClient
     {
-        public string JsonGet(string key, string path = "$", string indent = default, string newline = default, string space = default)
-            => Call("JSON.GET".InputKey(key)
-                .InputIf(indent != null, "INDENT", indent)
-                .InputIf(newline != null, "NEWLINE", newline)
-                .InputIf(space != null, "SPACE", space)
-                .Input(path), rt => rt.ThrowOrValue<string>());
-
-        public string JsonGetMult(string key, string indent = default, string newline = default, string space = default, params string[] paths)
+        public string JsonGet(string key, string indent = default, string newline = default, string space = default, params string[] paths)
             => Call("JSON.GET".InputKey(key)
                 .InputIf(indent != null, "INDENT", indent)
                 .InputIf(newline != null, "NEWLINE", newline)
@@ -34,22 +27,23 @@ namespace FreeRedis
 
         public long JsonDel(string key, string path = "$") => Call("JSON.DEL".InputKey(key, path), rt => rt.ThrowOrValue<long>());
 
-        public long[] JsonArrayInsert(string key, string path, long index = 0, params object[] values) => Call("JSON.ARRINSERT".InputKey(key, path, index).Input(values.Select(SerializeRedisValue).ToArray()), rt => rt.ThrowOrValue<long[]>());
+        public long[] JsonArrInsert(string key, string path, long index = 0, params object[] values) => Call("JSON.ARRINSERT".InputKey(key, path, index).Input(values.Select(SerializeRedisValue).ToArray()), rt => rt.ThrowOrValue<long[]>());
 
-        public long[] JsonArrayAppend(string key, string path, params object[] values) => Call("JSON.ARRAPPEND".InputKey(key, path).Input(values.Select(SerializeRedisValue).ToArray()), rt => rt.ThrowOrValue<long[]>());
+        public long[] JsonArrAppend(string key, string path, params object[] values) => Call("JSON.ARRAPPEND".InputKey(key, path).Input(values.Select(SerializeRedisValue).ToArray()), rt => rt.ThrowOrValue<long[]>());
 
-        public long[] JsonArrayIndex<T>(string key, string path, T value) where T : struct => Call("JSON.ARRINDEX".InputKey(key, path).InputRaw(SerializeRedisValue(value)), rt => rt.ThrowOrValue<long[]>());
+        public long[] JsonArrIndex<T>(string key, string path, T value) where T : struct => Call("JSON.ARRINDEX".InputKey(key, path).InputRaw(SerializeRedisValue(value)), rt => rt.ThrowOrValue<long[]>());
 
-        public long[] JsonArrayLen(string key, string path) => Call("JSON.ARRLEN".InputKey(key, path), rt => rt.ThrowOrValue<long[]>());
+        public long[] JsonArrLen(string key, string path) => Call("JSON.ARRLEN".InputKey(key, path), rt => rt.ThrowOrValue<long[]>());
 
-        public object[] JsonArrayPop(string key, string path, int index = -1) => HReadArray<object>("JSON.ARRPOP".InputKey(key, path, index));
+        public object[] JsonArrPop(string key, string path, int index = -1) => HReadArray<object>("JSON.ARRPOP".InputKey(key, path, index));
 
-        public long[] JsonArrayTrim(string key, string path, int start, int stop) => Call("JSON.ARRTRIM".InputKey(key, path).Input(start, stop), rt => rt.ThrowOrValue<long[]>());
+        public long[] JsonArrTrim(string key, string path, int start, int stop) => Call("JSON.ARRTRIM".InputKey(key, path).Input(start, stop), rt => rt.ThrowOrValue<long[]>());
         public long[] JsonClear(string key, string path = "$") => Call("JSON.CLEAR".InputKey(key, path), rt => rt.ThrowOrValue<long[]>());
-        public long[] JsonMemory(string key, string path = "$") => Call("JSON.DEBUG".InputKey("MEMORY", key, path), rt => rt.ThrowOrValue<long[]>());
+        public long[] JsonDebugMemory(string key, string path = "$") => Call("JSON.DEBUG".InputKey("MEMORY", key, path), rt => rt.ThrowOrValue<long[]>());
 
         public long JsonForget(string key, string path = "$") => Call("JSON.FORGET".InputKey(key, path), rt => rt.ThrowOrValue<long>());
         public string JsonNumIncrBy(string key, string path, double value) => Call("JSON.NUMINCRBY".InputKey(key, path).Input(value), rt => rt.ThrowOrValue<string>());
+        public string JsonNumMultBy(string key, string path, double value) => Call("JSON.NUMMULTBY".InputKey(key, path).Input(value), rt => rt.ThrowOrValue<string>());
 
         public string[][] JsonObjKeys(string key, string path = "$") => Call("JSON.OBJKEYS".InputKey(key, path), rt => rt.ThrowOrValue<string[][]>());
         public long[] JsonObjLen(string key, string path = "$") => Call("JSON.OBJLEN".InputKey(key, path), rt => rt.ThrowOrValue<long[]>());
