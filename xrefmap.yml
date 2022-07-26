@@ -6954,93 +6954,93 @@ references:
   isSpec: "True"
   fullName: FreeRedis.IRedisClient.Interceptors
   nameWithType: IRedisClient.Interceptors
-- uid: FreeRedis.IRedisClient.JsonArrayAppend(System.String,System.String,System.Object[])
-  name: JsonArrayAppend(String, String, Object[])
-  href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_JsonArrayAppend_System_String_System_String_System_Object___
-  commentId: M:FreeRedis.IRedisClient.JsonArrayAppend(System.String,System.String,System.Object[])
-  name.vb: JsonArrayAppend(String, String, Object())
-  fullName: FreeRedis.IRedisClient.JsonArrayAppend(System.String, System.String, System.Object[])
-  fullName.vb: FreeRedis.IRedisClient.JsonArrayAppend(System.String, System.String, System.Object())
-  nameWithType: IRedisClient.JsonArrayAppend(String, String, Object[])
-  nameWithType.vb: IRedisClient.JsonArrayAppend(String, String, Object())
-- uid: FreeRedis.IRedisClient.JsonArrayAppend*
-  name: JsonArrayAppend
-  href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_JsonArrayAppend_
-  commentId: Overload:FreeRedis.IRedisClient.JsonArrayAppend
+- uid: FreeRedis.IRedisClient.JsonArrAppend(System.String,System.String,System.Object[])
+  name: JsonArrAppend(String, String, Object[])
+  href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_JsonArrAppend_System_String_System_String_System_Object___
+  commentId: M:FreeRedis.IRedisClient.JsonArrAppend(System.String,System.String,System.Object[])
+  name.vb: JsonArrAppend(String, String, Object())
+  fullName: FreeRedis.IRedisClient.JsonArrAppend(System.String, System.String, System.Object[])
+  fullName.vb: FreeRedis.IRedisClient.JsonArrAppend(System.String, System.String, System.Object())
+  nameWithType: IRedisClient.JsonArrAppend(String, String, Object[])
+  nameWithType.vb: IRedisClient.JsonArrAppend(String, String, Object())
+- uid: FreeRedis.IRedisClient.JsonArrAppend*
+  name: JsonArrAppend
+  href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_JsonArrAppend_
+  commentId: Overload:FreeRedis.IRedisClient.JsonArrAppend
   isSpec: "True"
-  fullName: FreeRedis.IRedisClient.JsonArrayAppend
-  nameWithType: IRedisClient.JsonArrayAppend
-- uid: FreeRedis.IRedisClient.JsonArrayIndex*
-  name: JsonArrayIndex
-  href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_JsonArrayIndex_
-  commentId: Overload:FreeRedis.IRedisClient.JsonArrayIndex
+  fullName: FreeRedis.IRedisClient.JsonArrAppend
+  nameWithType: IRedisClient.JsonArrAppend
+- uid: FreeRedis.IRedisClient.JsonArrIndex*
+  name: JsonArrIndex
+  href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_JsonArrIndex_
+  commentId: Overload:FreeRedis.IRedisClient.JsonArrIndex
   isSpec: "True"
-  fullName: FreeRedis.IRedisClient.JsonArrayIndex
-  nameWithType: IRedisClient.JsonArrayIndex
-- uid: FreeRedis.IRedisClient.JsonArrayIndex``1(System.String,System.String,``0)
-  name: JsonArrayIndex<T>(String, String, T)
-  href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_JsonArrayIndex__1_System_String_System_String___0_
-  commentId: M:FreeRedis.IRedisClient.JsonArrayIndex``1(System.String,System.String,``0)
-  name.vb: JsonArrayIndex(Of T)(String, String, T)
-  fullName: FreeRedis.IRedisClient.JsonArrayIndex<T>(System.String, System.String, T)
-  fullName.vb: FreeRedis.IRedisClient.JsonArrayIndex(Of T)(System.String, System.String, T)
-  nameWithType: IRedisClient.JsonArrayIndex<T>(String, String, T)
-  nameWithType.vb: IRedisClient.JsonArrayIndex(Of T)(String, String, T)
-- uid: FreeRedis.IRedisClient.JsonArrayInsert(System.String,System.String,System.Int64,System.Object[])
-  name: JsonArrayInsert(String, String, Int64, Object[])
-  href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_JsonArrayInsert_System_String_System_String_System_Int64_System_Object___
-  commentId: M:FreeRedis.IRedisClient.JsonArrayInsert(System.String,System.String,System.Int64,System.Object[])
-  name.vb: JsonArrayInsert(String, String, Int64, Object())
-  fullName: FreeRedis.IRedisClient.JsonArrayInsert(System.String, System.String, System.Int64, System.Object[])
-  fullName.vb: FreeRedis.IRedisClient.JsonArrayInsert(System.String, System.String, System.Int64, System.Object())
-  nameWithType: IRedisClient.JsonArrayInsert(String, String, Int64, Object[])
-  nameWithType.vb: IRedisClient.JsonArrayInsert(String, String, Int64, Object())
-- uid: FreeRedis.IRedisClient.JsonArrayInsert*
-  name: JsonArrayInsert
-  href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_JsonArrayInsert_
-  commentId: Overload:FreeRedis.IRedisClient.JsonArrayInsert
+  fullName: FreeRedis.IRedisClient.JsonArrIndex
+  nameWithType: IRedisClient.JsonArrIndex
+- uid: FreeRedis.IRedisClient.JsonArrIndex``1(System.String,System.String,``0)
+  name: JsonArrIndex<T>(String, String, T)
+  href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_JsonArrIndex__1_System_String_System_String___0_
+  commentId: M:FreeRedis.IRedisClient.JsonArrIndex``1(System.String,System.String,``0)
+  name.vb: JsonArrIndex(Of T)(String, String, T)
+  fullName: FreeRedis.IRedisClient.JsonArrIndex<T>(System.String, System.String, T)
+  fullName.vb: FreeRedis.IRedisClient.JsonArrIndex(Of T)(System.String, System.String, T)
+  nameWithType: IRedisClient.JsonArrIndex<T>(String, String, T)
+  nameWithType.vb: IRedisClient.JsonArrIndex(Of T)(String, String, T)
+- uid: FreeRedis.IRedisClient.JsonArrInsert(System.String,System.String,System.Int64,System.Object[])
+  name: JsonArrInsert(String, String, Int64, Object[])
+  href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_JsonArrInsert_System_String_System_String_System_Int64_System_Object___
+  commentId: M:FreeRedis.IRedisClient.JsonArrInsert(System.String,System.String,System.Int64,System.Object[])
+  name.vb: JsonArrInsert(String, String, Int64, Object())
+  fullName: FreeRedis.IRedisClient.JsonArrInsert(System.String, System.String, System.Int64, System.Object[])
+  fullName.vb: FreeRedis.IRedisClient.JsonArrInsert(System.String, System.String, System.Int64, System.Object())
+  nameWithType: IRedisClient.JsonArrInsert(String, String, Int64, Object[])
+  nameWithType.vb: IRedisClient.JsonArrInsert(String, String, Int64, Object())
+- uid: FreeRedis.IRedisClient.JsonArrInsert*
+  name: JsonArrInsert
+  href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_JsonArrInsert_
+  commentId: Overload:FreeRedis.IRedisClient.JsonArrInsert
   isSpec: "True"
-  fullName: FreeRedis.IRedisClient.JsonArrayInsert
-  nameWithType: IRedisClient.JsonArrayInsert
-- uid: FreeRedis.IRedisClient.JsonArrayLen(System.String,System.String)
-  name: JsonArrayLen(String, String)
-  href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_JsonArrayLen_System_String_System_String_
-  commentId: M:FreeRedis.IRedisClient.JsonArrayLen(System.String,System.String)
-  fullName: FreeRedis.IRedisClient.JsonArrayLen(System.String, System.String)
-  nameWithType: IRedisClient.JsonArrayLen(String, String)
-- uid: FreeRedis.IRedisClient.JsonArrayLen*
-  name: JsonArrayLen
-  href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_JsonArrayLen_
-  commentId: Overload:FreeRedis.IRedisClient.JsonArrayLen
+  fullName: FreeRedis.IRedisClient.JsonArrInsert
+  nameWithType: IRedisClient.JsonArrInsert
+- uid: FreeRedis.IRedisClient.JsonArrLen(System.String,System.String)
+  name: JsonArrLen(String, String)
+  href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_JsonArrLen_System_String_System_String_
+  commentId: M:FreeRedis.IRedisClient.JsonArrLen(System.String,System.String)
+  fullName: FreeRedis.IRedisClient.JsonArrLen(System.String, System.String)
+  nameWithType: IRedisClient.JsonArrLen(String, String)
+- uid: FreeRedis.IRedisClient.JsonArrLen*
+  name: JsonArrLen
+  href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_JsonArrLen_
+  commentId: Overload:FreeRedis.IRedisClient.JsonArrLen
   isSpec: "True"
-  fullName: FreeRedis.IRedisClient.JsonArrayLen
-  nameWithType: IRedisClient.JsonArrayLen
-- uid: FreeRedis.IRedisClient.JsonArrayPop(System.String,System.String,System.Int32)
-  name: JsonArrayPop(String, String, Int32)
-  href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_JsonArrayPop_System_String_System_String_System_Int32_
-  commentId: M:FreeRedis.IRedisClient.JsonArrayPop(System.String,System.String,System.Int32)
-  fullName: FreeRedis.IRedisClient.JsonArrayPop(System.String, System.String, System.Int32)
-  nameWithType: IRedisClient.JsonArrayPop(String, String, Int32)
-- uid: FreeRedis.IRedisClient.JsonArrayPop*
-  name: JsonArrayPop
-  href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_JsonArrayPop_
-  commentId: Overload:FreeRedis.IRedisClient.JsonArrayPop
+  fullName: FreeRedis.IRedisClient.JsonArrLen
+  nameWithType: IRedisClient.JsonArrLen
+- uid: FreeRedis.IRedisClient.JsonArrPop(System.String,System.String,System.Int32)
+  name: JsonArrPop(String, String, Int32)
+  href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_JsonArrPop_System_String_System_String_System_Int32_
+  commentId: M:FreeRedis.IRedisClient.JsonArrPop(System.String,System.String,System.Int32)
+  fullName: FreeRedis.IRedisClient.JsonArrPop(System.String, System.String, System.Int32)
+  nameWithType: IRedisClient.JsonArrPop(String, String, Int32)
+- uid: FreeRedis.IRedisClient.JsonArrPop*
+  name: JsonArrPop
+  href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_JsonArrPop_
+  commentId: Overload:FreeRedis.IRedisClient.JsonArrPop
   isSpec: "True"
-  fullName: FreeRedis.IRedisClient.JsonArrayPop
-  nameWithType: IRedisClient.JsonArrayPop
-- uid: FreeRedis.IRedisClient.JsonArrayTrim(System.String,System.String,System.Int32,System.Int32)
-  name: JsonArrayTrim(String, String, Int32, Int32)
-  href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_JsonArrayTrim_System_String_System_String_System_Int32_System_Int32_
-  commentId: M:FreeRedis.IRedisClient.JsonArrayTrim(System.String,System.String,System.Int32,System.Int32)
-  fullName: FreeRedis.IRedisClient.JsonArrayTrim(System.String, System.String, System.Int32, System.Int32)
-  nameWithType: IRedisClient.JsonArrayTrim(String, String, Int32, Int32)
-- uid: FreeRedis.IRedisClient.JsonArrayTrim*
-  name: JsonArrayTrim
-  href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_JsonArrayTrim_
-  commentId: Overload:FreeRedis.IRedisClient.JsonArrayTrim
+  fullName: FreeRedis.IRedisClient.JsonArrPop
+  nameWithType: IRedisClient.JsonArrPop
+- uid: FreeRedis.IRedisClient.JsonArrTrim(System.String,System.String,System.Int32,System.Int32)
+  name: JsonArrTrim(String, String, Int32, Int32)
+  href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_JsonArrTrim_System_String_System_String_System_Int32_System_Int32_
+  commentId: M:FreeRedis.IRedisClient.JsonArrTrim(System.String,System.String,System.Int32,System.Int32)
+  fullName: FreeRedis.IRedisClient.JsonArrTrim(System.String, System.String, System.Int32, System.Int32)
+  nameWithType: IRedisClient.JsonArrTrim(String, String, Int32, Int32)
+- uid: FreeRedis.IRedisClient.JsonArrTrim*
+  name: JsonArrTrim
+  href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_JsonArrTrim_
+  commentId: Overload:FreeRedis.IRedisClient.JsonArrTrim
   isSpec: "True"
-  fullName: FreeRedis.IRedisClient.JsonArrayTrim
-  nameWithType: IRedisClient.JsonArrayTrim
+  fullName: FreeRedis.IRedisClient.JsonArrTrim
+  nameWithType: IRedisClient.JsonArrTrim
 - uid: FreeRedis.IRedisClient.JsonClear(System.String,System.String)
   name: JsonClear(String, String)
   href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_JsonClear_System_String_System_String_
@@ -7054,6 +7054,19 @@ references:
   isSpec: "True"
   fullName: FreeRedis.IRedisClient.JsonClear
   nameWithType: IRedisClient.JsonClear
+- uid: FreeRedis.IRedisClient.JsonDebugMemory(System.String,System.String)
+  name: JsonDebugMemory(String, String)
+  href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_JsonDebugMemory_System_String_System_String_
+  commentId: M:FreeRedis.IRedisClient.JsonDebugMemory(System.String,System.String)
+  fullName: FreeRedis.IRedisClient.JsonDebugMemory(System.String, System.String)
+  nameWithType: IRedisClient.JsonDebugMemory(String, String)
+- uid: FreeRedis.IRedisClient.JsonDebugMemory*
+  name: JsonDebugMemory
+  href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_JsonDebugMemory_
+  commentId: Overload:FreeRedis.IRedisClient.JsonDebugMemory
+  isSpec: "True"
+  fullName: FreeRedis.IRedisClient.JsonDebugMemory
+  nameWithType: IRedisClient.JsonDebugMemory
 - uid: FreeRedis.IRedisClient.JsonDel(System.String,System.String)
   name: JsonDel(String, String)
   href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_JsonDel_System_String_System_String_
@@ -7080,12 +7093,15 @@ references:
   isSpec: "True"
   fullName: FreeRedis.IRedisClient.JsonForget
   nameWithType: IRedisClient.JsonForget
-- uid: FreeRedis.IRedisClient.JsonGet(System.String,System.String,System.String,System.String,System.String)
-  name: JsonGet(String, String, String, String, String)
-  href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_JsonGet_System_String_System_String_System_String_System_String_System_String_
-  commentId: M:FreeRedis.IRedisClient.JsonGet(System.String,System.String,System.String,System.String,System.String)
-  fullName: FreeRedis.IRedisClient.JsonGet(System.String, System.String, System.String, System.String, System.String)
-  nameWithType: IRedisClient.JsonGet(String, String, String, String, String)
+- uid: FreeRedis.IRedisClient.JsonGet(System.String,System.String,System.String,System.String,System.String[])
+  name: JsonGet(String, String, String, String, String[])
+  href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_JsonGet_System_String_System_String_System_String_System_String_System_String___
+  commentId: M:FreeRedis.IRedisClient.JsonGet(System.String,System.String,System.String,System.String,System.String[])
+  name.vb: JsonGet(String, String, String, String, String())
+  fullName: FreeRedis.IRedisClient.JsonGet(System.String, System.String, System.String, System.String, System.String[])
+  fullName.vb: FreeRedis.IRedisClient.JsonGet(System.String, System.String, System.String, System.String, System.String())
+  nameWithType: IRedisClient.JsonGet(String, String, String, String, String[])
+  nameWithType.vb: IRedisClient.JsonGet(String, String, String, String, String())
 - uid: FreeRedis.IRedisClient.JsonGet*
   name: JsonGet
   href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_JsonGet_
@@ -7093,35 +7109,6 @@ references:
   isSpec: "True"
   fullName: FreeRedis.IRedisClient.JsonGet
   nameWithType: IRedisClient.JsonGet
-- uid: FreeRedis.IRedisClient.JsonGetMult(System.String,System.String,System.String,System.String,System.String[])
-  name: JsonGetMult(String, String, String, String, String[])
-  href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_JsonGetMult_System_String_System_String_System_String_System_String_System_String___
-  commentId: M:FreeRedis.IRedisClient.JsonGetMult(System.String,System.String,System.String,System.String,System.String[])
-  name.vb: JsonGetMult(String, String, String, String, String())
-  fullName: FreeRedis.IRedisClient.JsonGetMult(System.String, System.String, System.String, System.String, System.String[])
-  fullName.vb: FreeRedis.IRedisClient.JsonGetMult(System.String, System.String, System.String, System.String, System.String())
-  nameWithType: IRedisClient.JsonGetMult(String, String, String, String, String[])
-  nameWithType.vb: IRedisClient.JsonGetMult(String, String, String, String, String())
-- uid: FreeRedis.IRedisClient.JsonGetMult*
-  name: JsonGetMult
-  href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_JsonGetMult_
-  commentId: Overload:FreeRedis.IRedisClient.JsonGetMult
-  isSpec: "True"
-  fullName: FreeRedis.IRedisClient.JsonGetMult
-  nameWithType: IRedisClient.JsonGetMult
-- uid: FreeRedis.IRedisClient.JsonMemory(System.String,System.String)
-  name: JsonMemory(String, String)
-  href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_JsonMemory_System_String_System_String_
-  commentId: M:FreeRedis.IRedisClient.JsonMemory(System.String,System.String)
-  fullName: FreeRedis.IRedisClient.JsonMemory(System.String, System.String)
-  nameWithType: IRedisClient.JsonMemory(String, String)
-- uid: FreeRedis.IRedisClient.JsonMemory*
-  name: JsonMemory
-  href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_JsonMemory_
-  commentId: Overload:FreeRedis.IRedisClient.JsonMemory
-  isSpec: "True"
-  fullName: FreeRedis.IRedisClient.JsonMemory
-  nameWithType: IRedisClient.JsonMemory
 - uid: FreeRedis.IRedisClient.JsonMGet(System.String[],System.String)
   name: JsonMGet(String[], String)
   href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_JsonMGet_System_String___System_String_
@@ -7151,6 +7138,19 @@ references:
   isSpec: "True"
   fullName: FreeRedis.IRedisClient.JsonNumIncrBy
   nameWithType: IRedisClient.JsonNumIncrBy
+- uid: FreeRedis.IRedisClient.JsonNumMultBy(System.String,System.String,System.Double)
+  name: JsonNumMultBy(String, String, Double)
+  href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_JsonNumMultBy_System_String_System_String_System_Double_
+  commentId: M:FreeRedis.IRedisClient.JsonNumMultBy(System.String,System.String,System.Double)
+  fullName: FreeRedis.IRedisClient.JsonNumMultBy(System.String, System.String, System.Double)
+  nameWithType: IRedisClient.JsonNumMultBy(String, String, Double)
+- uid: FreeRedis.IRedisClient.JsonNumMultBy*
+  name: JsonNumMultBy
+  href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_JsonNumMultBy_
+  commentId: Overload:FreeRedis.IRedisClient.JsonNumMultBy
+  isSpec: "True"
+  fullName: FreeRedis.IRedisClient.JsonNumMultBy
+  nameWithType: IRedisClient.JsonNumMultBy
 - uid: FreeRedis.IRedisClient.JsonObjKeys(System.String,System.String)
   name: JsonObjKeys(String, String)
   href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_JsonObjKeys_System_String_System_String_
@@ -12259,93 +12259,93 @@ references:
   isSpec: "True"
   fullName: FreeRedis.RedisClient.Interceptors
   nameWithType: RedisClient.Interceptors
-- uid: FreeRedis.RedisClient.JsonArrayAppend(System.String,System.String,System.Object[])
-  name: JsonArrayAppend(String, String, Object[])
-  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_JsonArrayAppend_System_String_System_String_System_Object___
-  commentId: M:FreeRedis.RedisClient.JsonArrayAppend(System.String,System.String,System.Object[])
-  name.vb: JsonArrayAppend(String, String, Object())
-  fullName: FreeRedis.RedisClient.JsonArrayAppend(System.String, System.String, System.Object[])
-  fullName.vb: FreeRedis.RedisClient.JsonArrayAppend(System.String, System.String, System.Object())
-  nameWithType: RedisClient.JsonArrayAppend(String, String, Object[])
-  nameWithType.vb: RedisClient.JsonArrayAppend(String, String, Object())
-- uid: FreeRedis.RedisClient.JsonArrayAppend*
-  name: JsonArrayAppend
-  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_JsonArrayAppend_
-  commentId: Overload:FreeRedis.RedisClient.JsonArrayAppend
+- uid: FreeRedis.RedisClient.JsonArrAppend(System.String,System.String,System.Object[])
+  name: JsonArrAppend(String, String, Object[])
+  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_JsonArrAppend_System_String_System_String_System_Object___
+  commentId: M:FreeRedis.RedisClient.JsonArrAppend(System.String,System.String,System.Object[])
+  name.vb: JsonArrAppend(String, String, Object())
+  fullName: FreeRedis.RedisClient.JsonArrAppend(System.String, System.String, System.Object[])
+  fullName.vb: FreeRedis.RedisClient.JsonArrAppend(System.String, System.String, System.Object())
+  nameWithType: RedisClient.JsonArrAppend(String, String, Object[])
+  nameWithType.vb: RedisClient.JsonArrAppend(String, String, Object())
+- uid: FreeRedis.RedisClient.JsonArrAppend*
+  name: JsonArrAppend
+  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_JsonArrAppend_
+  commentId: Overload:FreeRedis.RedisClient.JsonArrAppend
   isSpec: "True"
-  fullName: FreeRedis.RedisClient.JsonArrayAppend
-  nameWithType: RedisClient.JsonArrayAppend
-- uid: FreeRedis.RedisClient.JsonArrayIndex*
-  name: JsonArrayIndex
-  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_JsonArrayIndex_
-  commentId: Overload:FreeRedis.RedisClient.JsonArrayIndex
+  fullName: FreeRedis.RedisClient.JsonArrAppend
+  nameWithType: RedisClient.JsonArrAppend
+- uid: FreeRedis.RedisClient.JsonArrIndex*
+  name: JsonArrIndex
+  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_JsonArrIndex_
+  commentId: Overload:FreeRedis.RedisClient.JsonArrIndex
   isSpec: "True"
-  fullName: FreeRedis.RedisClient.JsonArrayIndex
-  nameWithType: RedisClient.JsonArrayIndex
-- uid: FreeRedis.RedisClient.JsonArrayIndex``1(System.String,System.String,``0)
-  name: JsonArrayIndex<T>(String, String, T)
-  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_JsonArrayIndex__1_System_String_System_String___0_
-  commentId: M:FreeRedis.RedisClient.JsonArrayIndex``1(System.String,System.String,``0)
-  name.vb: JsonArrayIndex(Of T)(String, String, T)
-  fullName: FreeRedis.RedisClient.JsonArrayIndex<T>(System.String, System.String, T)
-  fullName.vb: FreeRedis.RedisClient.JsonArrayIndex(Of T)(System.String, System.String, T)
-  nameWithType: RedisClient.JsonArrayIndex<T>(String, String, T)
-  nameWithType.vb: RedisClient.JsonArrayIndex(Of T)(String, String, T)
-- uid: FreeRedis.RedisClient.JsonArrayInsert(System.String,System.String,System.Int64,System.Object[])
-  name: JsonArrayInsert(String, String, Int64, Object[])
-  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_JsonArrayInsert_System_String_System_String_System_Int64_System_Object___
-  commentId: M:FreeRedis.RedisClient.JsonArrayInsert(System.String,System.String,System.Int64,System.Object[])
-  name.vb: JsonArrayInsert(String, String, Int64, Object())
-  fullName: FreeRedis.RedisClient.JsonArrayInsert(System.String, System.String, System.Int64, System.Object[])
-  fullName.vb: FreeRedis.RedisClient.JsonArrayInsert(System.String, System.String, System.Int64, System.Object())
-  nameWithType: RedisClient.JsonArrayInsert(String, String, Int64, Object[])
-  nameWithType.vb: RedisClient.JsonArrayInsert(String, String, Int64, Object())
-- uid: FreeRedis.RedisClient.JsonArrayInsert*
-  name: JsonArrayInsert
-  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_JsonArrayInsert_
-  commentId: Overload:FreeRedis.RedisClient.JsonArrayInsert
+  fullName: FreeRedis.RedisClient.JsonArrIndex
+  nameWithType: RedisClient.JsonArrIndex
+- uid: FreeRedis.RedisClient.JsonArrIndex``1(System.String,System.String,``0)
+  name: JsonArrIndex<T>(String, String, T)
+  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_JsonArrIndex__1_System_String_System_String___0_
+  commentId: M:FreeRedis.RedisClient.JsonArrIndex``1(System.String,System.String,``0)
+  name.vb: JsonArrIndex(Of T)(String, String, T)
+  fullName: FreeRedis.RedisClient.JsonArrIndex<T>(System.String, System.String, T)
+  fullName.vb: FreeRedis.RedisClient.JsonArrIndex(Of T)(System.String, System.String, T)
+  nameWithType: RedisClient.JsonArrIndex<T>(String, String, T)
+  nameWithType.vb: RedisClient.JsonArrIndex(Of T)(String, String, T)
+- uid: FreeRedis.RedisClient.JsonArrInsert(System.String,System.String,System.Int64,System.Object[])
+  name: JsonArrInsert(String, String, Int64, Object[])
+  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_JsonArrInsert_System_String_System_String_System_Int64_System_Object___
+  commentId: M:FreeRedis.RedisClient.JsonArrInsert(System.String,System.String,System.Int64,System.Object[])
+  name.vb: JsonArrInsert(String, String, Int64, Object())
+  fullName: FreeRedis.RedisClient.JsonArrInsert(System.String, System.String, System.Int64, System.Object[])
+  fullName.vb: FreeRedis.RedisClient.JsonArrInsert(System.String, System.String, System.Int64, System.Object())
+  nameWithType: RedisClient.JsonArrInsert(String, String, Int64, Object[])
+  nameWithType.vb: RedisClient.JsonArrInsert(String, String, Int64, Object())
+- uid: FreeRedis.RedisClient.JsonArrInsert*
+  name: JsonArrInsert
+  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_JsonArrInsert_
+  commentId: Overload:FreeRedis.RedisClient.JsonArrInsert
   isSpec: "True"
-  fullName: FreeRedis.RedisClient.JsonArrayInsert
-  nameWithType: RedisClient.JsonArrayInsert
-- uid: FreeRedis.RedisClient.JsonArrayLen(System.String,System.String)
-  name: JsonArrayLen(String, String)
-  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_JsonArrayLen_System_String_System_String_
-  commentId: M:FreeRedis.RedisClient.JsonArrayLen(System.String,System.String)
-  fullName: FreeRedis.RedisClient.JsonArrayLen(System.String, System.String)
-  nameWithType: RedisClient.JsonArrayLen(String, String)
-- uid: FreeRedis.RedisClient.JsonArrayLen*
-  name: JsonArrayLen
-  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_JsonArrayLen_
-  commentId: Overload:FreeRedis.RedisClient.JsonArrayLen
+  fullName: FreeRedis.RedisClient.JsonArrInsert
+  nameWithType: RedisClient.JsonArrInsert
+- uid: FreeRedis.RedisClient.JsonArrLen(System.String,System.String)
+  name: JsonArrLen(String, String)
+  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_JsonArrLen_System_String_System_String_
+  commentId: M:FreeRedis.RedisClient.JsonArrLen(System.String,System.String)
+  fullName: FreeRedis.RedisClient.JsonArrLen(System.String, System.String)
+  nameWithType: RedisClient.JsonArrLen(String, String)
+- uid: FreeRedis.RedisClient.JsonArrLen*
+  name: JsonArrLen
+  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_JsonArrLen_
+  commentId: Overload:FreeRedis.RedisClient.JsonArrLen
   isSpec: "True"
-  fullName: FreeRedis.RedisClient.JsonArrayLen
-  nameWithType: RedisClient.JsonArrayLen
-- uid: FreeRedis.RedisClient.JsonArrayPop(System.String,System.String,System.Int32)
-  name: JsonArrayPop(String, String, Int32)
-  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_JsonArrayPop_System_String_System_String_System_Int32_
-  commentId: M:FreeRedis.RedisClient.JsonArrayPop(System.String,System.String,System.Int32)
-  fullName: FreeRedis.RedisClient.JsonArrayPop(System.String, System.String, System.Int32)
-  nameWithType: RedisClient.JsonArrayPop(String, String, Int32)
-- uid: FreeRedis.RedisClient.JsonArrayPop*
-  name: JsonArrayPop
-  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_JsonArrayPop_
-  commentId: Overload:FreeRedis.RedisClient.JsonArrayPop
+  fullName: FreeRedis.RedisClient.JsonArrLen
+  nameWithType: RedisClient.JsonArrLen
+- uid: FreeRedis.RedisClient.JsonArrPop(System.String,System.String,System.Int32)
+  name: JsonArrPop(String, String, Int32)
+  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_JsonArrPop_System_String_System_String_System_Int32_
+  commentId: M:FreeRedis.RedisClient.JsonArrPop(System.String,System.String,System.Int32)
+  fullName: FreeRedis.RedisClient.JsonArrPop(System.String, System.String, System.Int32)
+  nameWithType: RedisClient.JsonArrPop(String, String, Int32)
+- uid: FreeRedis.RedisClient.JsonArrPop*
+  name: JsonArrPop
+  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_JsonArrPop_
+  commentId: Overload:FreeRedis.RedisClient.JsonArrPop
   isSpec: "True"
-  fullName: FreeRedis.RedisClient.JsonArrayPop
-  nameWithType: RedisClient.JsonArrayPop
-- uid: FreeRedis.RedisClient.JsonArrayTrim(System.String,System.String,System.Int32,System.Int32)
-  name: JsonArrayTrim(String, String, Int32, Int32)
-  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_JsonArrayTrim_System_String_System_String_System_Int32_System_Int32_
-  commentId: M:FreeRedis.RedisClient.JsonArrayTrim(System.String,System.String,System.Int32,System.Int32)
-  fullName: FreeRedis.RedisClient.JsonArrayTrim(System.String, System.String, System.Int32, System.Int32)
-  nameWithType: RedisClient.JsonArrayTrim(String, String, Int32, Int32)
-- uid: FreeRedis.RedisClient.JsonArrayTrim*
-  name: JsonArrayTrim
-  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_JsonArrayTrim_
-  commentId: Overload:FreeRedis.RedisClient.JsonArrayTrim
+  fullName: FreeRedis.RedisClient.JsonArrPop
+  nameWithType: RedisClient.JsonArrPop
+- uid: FreeRedis.RedisClient.JsonArrTrim(System.String,System.String,System.Int32,System.Int32)
+  name: JsonArrTrim(String, String, Int32, Int32)
+  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_JsonArrTrim_System_String_System_String_System_Int32_System_Int32_
+  commentId: M:FreeRedis.RedisClient.JsonArrTrim(System.String,System.String,System.Int32,System.Int32)
+  fullName: FreeRedis.RedisClient.JsonArrTrim(System.String, System.String, System.Int32, System.Int32)
+  nameWithType: RedisClient.JsonArrTrim(String, String, Int32, Int32)
+- uid: FreeRedis.RedisClient.JsonArrTrim*
+  name: JsonArrTrim
+  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_JsonArrTrim_
+  commentId: Overload:FreeRedis.RedisClient.JsonArrTrim
   isSpec: "True"
-  fullName: FreeRedis.RedisClient.JsonArrayTrim
-  nameWithType: RedisClient.JsonArrayTrim
+  fullName: FreeRedis.RedisClient.JsonArrTrim
+  nameWithType: RedisClient.JsonArrTrim
 - uid: FreeRedis.RedisClient.JsonClear(System.String,System.String)
   name: JsonClear(String, String)
   href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_JsonClear_System_String_System_String_
@@ -12359,6 +12359,19 @@ references:
   isSpec: "True"
   fullName: FreeRedis.RedisClient.JsonClear
   nameWithType: RedisClient.JsonClear
+- uid: FreeRedis.RedisClient.JsonDebugMemory(System.String,System.String)
+  name: JsonDebugMemory(String, String)
+  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_JsonDebugMemory_System_String_System_String_
+  commentId: M:FreeRedis.RedisClient.JsonDebugMemory(System.String,System.String)
+  fullName: FreeRedis.RedisClient.JsonDebugMemory(System.String, System.String)
+  nameWithType: RedisClient.JsonDebugMemory(String, String)
+- uid: FreeRedis.RedisClient.JsonDebugMemory*
+  name: JsonDebugMemory
+  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_JsonDebugMemory_
+  commentId: Overload:FreeRedis.RedisClient.JsonDebugMemory
+  isSpec: "True"
+  fullName: FreeRedis.RedisClient.JsonDebugMemory
+  nameWithType: RedisClient.JsonDebugMemory
 - uid: FreeRedis.RedisClient.JsonDel(System.String,System.String)
   name: JsonDel(String, String)
   href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_JsonDel_System_String_System_String_
@@ -12385,12 +12398,15 @@ references:
   isSpec: "True"
   fullName: FreeRedis.RedisClient.JsonForget
   nameWithType: RedisClient.JsonForget
-- uid: FreeRedis.RedisClient.JsonGet(System.String,System.String,System.String,System.String,System.String)
-  name: JsonGet(String, String, String, String, String)
-  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_JsonGet_System_String_System_String_System_String_System_String_System_String_
-  commentId: M:FreeRedis.RedisClient.JsonGet(System.String,System.String,System.String,System.String,System.String)
-  fullName: FreeRedis.RedisClient.JsonGet(System.String, System.String, System.String, System.String, System.String)
-  nameWithType: RedisClient.JsonGet(String, String, String, String, String)
+- uid: FreeRedis.RedisClient.JsonGet(System.String,System.String,System.String,System.String,System.String[])
+  name: JsonGet(String, String, String, String, String[])
+  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_JsonGet_System_String_System_String_System_String_System_String_System_String___
+  commentId: M:FreeRedis.RedisClient.JsonGet(System.String,System.String,System.String,System.String,System.String[])
+  name.vb: JsonGet(String, String, String, String, String())
+  fullName: FreeRedis.RedisClient.JsonGet(System.String, System.String, System.String, System.String, System.String[])
+  fullName.vb: FreeRedis.RedisClient.JsonGet(System.String, System.String, System.String, System.String, System.String())
+  nameWithType: RedisClient.JsonGet(String, String, String, String, String[])
+  nameWithType.vb: RedisClient.JsonGet(String, String, String, String, String())
 - uid: FreeRedis.RedisClient.JsonGet*
   name: JsonGet
   href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_JsonGet_
@@ -12398,35 +12414,6 @@ references:
   isSpec: "True"
   fullName: FreeRedis.RedisClient.JsonGet
   nameWithType: RedisClient.JsonGet
-- uid: FreeRedis.RedisClient.JsonGetMult(System.String,System.String,System.String,System.String,System.String[])
-  name: JsonGetMult(String, String, String, String, String[])
-  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_JsonGetMult_System_String_System_String_System_String_System_String_System_String___
-  commentId: M:FreeRedis.RedisClient.JsonGetMult(System.String,System.String,System.String,System.String,System.String[])
-  name.vb: JsonGetMult(String, String, String, String, String())
-  fullName: FreeRedis.RedisClient.JsonGetMult(System.String, System.String, System.String, System.String, System.String[])
-  fullName.vb: FreeRedis.RedisClient.JsonGetMult(System.String, System.String, System.String, System.String, System.String())
-  nameWithType: RedisClient.JsonGetMult(String, String, String, String, String[])
-  nameWithType.vb: RedisClient.JsonGetMult(String, String, String, String, String())
-- uid: FreeRedis.RedisClient.JsonGetMult*
-  name: JsonGetMult
-  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_JsonGetMult_
-  commentId: Overload:FreeRedis.RedisClient.JsonGetMult
-  isSpec: "True"
-  fullName: FreeRedis.RedisClient.JsonGetMult
-  nameWithType: RedisClient.JsonGetMult
-- uid: FreeRedis.RedisClient.JsonMemory(System.String,System.String)
-  name: JsonMemory(String, String)
-  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_JsonMemory_System_String_System_String_
-  commentId: M:FreeRedis.RedisClient.JsonMemory(System.String,System.String)
-  fullName: FreeRedis.RedisClient.JsonMemory(System.String, System.String)
-  nameWithType: RedisClient.JsonMemory(String, String)
-- uid: FreeRedis.RedisClient.JsonMemory*
-  name: JsonMemory
-  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_JsonMemory_
-  commentId: Overload:FreeRedis.RedisClient.JsonMemory
-  isSpec: "True"
-  fullName: FreeRedis.RedisClient.JsonMemory
-  nameWithType: RedisClient.JsonMemory
 - uid: FreeRedis.RedisClient.JsonMGet(System.String[],System.String)
   name: JsonMGet(String[], String)
   href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_JsonMGet_System_String___System_String_
@@ -12456,6 +12443,19 @@ references:
   isSpec: "True"
   fullName: FreeRedis.RedisClient.JsonNumIncrBy
   nameWithType: RedisClient.JsonNumIncrBy
+- uid: FreeRedis.RedisClient.JsonNumMultBy(System.String,System.String,System.Double)
+  name: JsonNumMultBy(String, String, Double)
+  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_JsonNumMultBy_System_String_System_String_System_Double_
+  commentId: M:FreeRedis.RedisClient.JsonNumMultBy(System.String,System.String,System.Double)
+  fullName: FreeRedis.RedisClient.JsonNumMultBy(System.String, System.String, System.Double)
+  nameWithType: RedisClient.JsonNumMultBy(String, String, Double)
+- uid: FreeRedis.RedisClient.JsonNumMultBy*
+  name: JsonNumMultBy
+  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_JsonNumMultBy_
+  commentId: Overload:FreeRedis.RedisClient.JsonNumMultBy
+  isSpec: "True"
+  fullName: FreeRedis.RedisClient.JsonNumMultBy
+  nameWithType: RedisClient.JsonNumMultBy
 - uid: FreeRedis.RedisClient.JsonObjKeys(System.String,System.String)
   name: JsonObjKeys(String, String)
   href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_JsonObjKeys_System_String_System_String_
