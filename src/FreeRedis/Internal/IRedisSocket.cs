@@ -27,6 +27,7 @@ namespace FreeRedis.Internal
         RedisProtocol Protocol { get; set; }
         Encoding Encoding { get; set; }
 
+        CommandPacket LastCommand { get; }
         void Write(CommandPacket cmd);
         RedisResult Read(CommandPacket cmd);
         void ReadChunk(Stream destination, int bufferSize = 1024);

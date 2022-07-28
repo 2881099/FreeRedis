@@ -30,6 +30,7 @@ namespace FreeRedis.Internal
                 rds.Socket.ReceiveTimeout = (int)_policy._connectionStringBuilder.ReceiveTimeout.TotalMilliseconds;
                 rds.Socket.SendTimeout = (int)_policy._connectionStringBuilder.SendTimeout.TotalMilliseconds;
                 rds.Encoding = _policy._connectionStringBuilder.Encoding;
+                var isIgnoreAop = rds.LastCommand.IsIgnoreAop;
 
                 var cmds = new List<CommandPacket>();
                 if (_policy._connectionStringBuilder.Protocol == RedisProtocol.RESP3)
@@ -102,6 +103,7 @@ namespace FreeRedis.Internal
                 }
                 cmds.ForEach(cmd =>
                 {
+                    cmd.IsIgnoreAop = isIgnoreAop;
                     topOwner.LogCall(cmd, () =>
                     {
                         var rt = rds.Read(cmd);
@@ -111,7 +113,8 @@ namespace FreeRedis.Internal
 
                 connected?.Invoke(cli);
                 topOwner?.OnConnected(TopOwner, new ConnectedEventArgs(_policy._connectionStringBuilder.Host, this, cli));
-                topOwner?.OnNotice(TopOwner, new NoticeEventArgs(NoticeType.Info, null, $"{_policy._connectionStringBuilder.Host.PadRight(21)} > Connected, ClientId: {rds.ClientId}, Database: {rds.Database}, Pool: {_freeObjects.Count}/{_allObjects.Count}", cli));
+                if (isIgnoreAop == false)
+                    topOwner?.OnNotice(TopOwner, new NoticeEventArgs(NoticeType.Info, null, $"{_policy._connectionStringBuilder.Host.PadRight(21)} > Connected, ClientId: {rds.ClientId}, Database: {rds.Database}, Pool: {_freeObjects.Count}/{_allObjects.Count}", cli));
             };
             this.Policy = _policy;
             this.TopOwner = topOwner;
@@ -157,7 +160,7 @@ namespace FreeRedis.Internal
         public bool OnCheckAvailable(Object<RedisClient> obj)
         {
             obj.ResetValue();
-            return obj.Value.Ping() == "PONG";
+            return obj.Value.Ping("CheckAvailable") == "CheckAvailable";
         }
 
         public RedisClient OnCreate()

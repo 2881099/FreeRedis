@@ -55,6 +55,7 @@ namespace FreeRedis.Internal
             public ClientReplyType ClientReply => _owner.ClientReply;
             public long ClientId => _owner.ClientId;
             public int Database => _owner.Database;
+            public CommandPacket LastCommand => _owner.LastCommand;
 
             void IRedisSocketModify.SetClientReply(ClientReplyType value) => (_owner as IRedisSocketModify).SetClientReply(value);
             void IRedisSocketModify.SetClientId(long value) => (_owner as IRedisSocketModify).SetClientId(value);
@@ -103,6 +104,7 @@ namespace FreeRedis.Internal
         public ClientReplyType ClientReply { get; protected set; } = ClientReplyType.on;
         public long ClientId { get; protected set; }
         public int Database { get; protected set; } = 0;
+        public CommandPacket LastCommand { get; protected set; }
 
         void IRedisSocketModify.SetClientReply(ClientReplyType value) => this.ClientReply = value;
         void IRedisSocketModify.SetClientId(long value) => this.ClientId = value;
@@ -122,6 +124,7 @@ namespace FreeRedis.Internal
 
         public void Write(CommandPacket cmd)
         {
+            LastCommand = cmd;
             if (IsConnected == false) Connect();
             using (var ms = new MemoryStream()) //Writing data directly to will be very slow
             {
@@ -156,6 +159,7 @@ namespace FreeRedis.Internal
         }
         public RedisResult Read(CommandPacket cmd)
         {
+            LastCommand = cmd;
             if (ClientReply == ClientReplyType.on)
             {
                 if (IsConnected == false) Connect();

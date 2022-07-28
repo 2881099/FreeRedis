@@ -15,6 +15,13 @@ namespace FreeRedis
         public List<int> _keyIndexes { get; } = new List<int>();
         public string _prefix { get; private set; }
 
+        private bool? _IsIgnoreAop;
+        public bool IsIgnoreAop
+        {
+            get => _IsIgnoreAop ?? (_IsIgnoreAop = _command == "PING" && _input.Count == 2 && _input[1].ToString() == "CheckAvailable").Value;
+            set => _IsIgnoreAop = value;
+        }
+
         public string GetKey(int index, bool withoutPrefix = false)
         {
             if (withoutPrefix && !string.IsNullOrWhiteSpace(_prefix))

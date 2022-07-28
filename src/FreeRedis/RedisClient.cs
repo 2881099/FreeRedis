@@ -95,6 +95,7 @@ namespace FreeRedis
             cmd.Prefix(Prefix);
             var isnotice = this.Notice != null;
             if (isnotice == false && this.Interceptors.Any() == false) return func();
+            if (cmd.IsIgnoreAop) return func();
             Exception exception = null;
 
             T ret = default(T);

@@ -13,13 +13,16 @@ namespace console_netcore31
     {
         static Lazy<RedisClient> _cliLazy = new Lazy<RedisClient>(() =>
         {
-            //var r = new RedisClient("127.0.0.1:6379", false); //redis 3.2 Single test
-            var r = new RedisClient("localhost:6379,database=9,password=123456"); //redis 3.2
+            var r = new RedisClient("127.0.0.1:6379"); //redis 3.2 Single test
+            //var r = new RedisClient("localhost:6379,database=9,password=123456"); //redis 3.2
             //var r = new RedisClient("127.0.0.1:6379,database=1", "127.0.0.1:6379,database=1");
             //var r = new RedisClient("192.168.164.10:6379,database=1"); //redis 6.0
             r.Serialize = obj => JsonConvert.SerializeObject(obj);
             r.Deserialize = (json, type) => JsonConvert.DeserializeObject(json, type);
-            r.Notice += (s, e) => Trace.WriteLine(e.Log);
+            r.Notice += (s, e) => 
+            { 
+                Trace.WriteLine(e.Log); 
+            };
             return r;
         });
         static RedisClient cli => _cliLazy.Value;
@@ -28,6 +31,31 @@ namespace console_netcore31
 
         static void Main(string[] args)
         {
+            for (var a = 0; a < 200; a++)
+            {
+                new Thread(() =>
+                {
+                    while (true)
+                    {
+                        try
+                        {
+                            cli.Get("key" + a);
+                        }
+                        catch (Exception ex)
+                        {
+                            Trace.WriteLine($"线程{a}: [{DateTime.Now.ToString("HH:mm:ss")}] " + ex.ToString());
+                            //Thread.CurrentThread.Join(30000);
+                        }
+                        Thread.CurrentThread.Join(100);
+                    }
+                }).Start();
+            }
+            while(Console.ReadKey().Key != ConsoleKey.Escape)
+            {
+
+            }
+
+
             cli.JsonSet("freedis.test",System.Text.Json.JsonSerializer.Serialize( new TestClass
             {
                 Id = 1,
