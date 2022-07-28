@@ -653,6 +653,19 @@ references:
   isSpec: "True"
   fullName: FreeRedis.CommandPacket.InputRaw
   nameWithType: CommandPacket.InputRaw
+- uid: FreeRedis.CommandPacket.IsIgnoreAop
+  name: IsIgnoreAop
+  href: docs/api/FreeRedis.CommandPacket.html#FreeRedis_CommandPacket_IsIgnoreAop
+  commentId: P:FreeRedis.CommandPacket.IsIgnoreAop
+  fullName: FreeRedis.CommandPacket.IsIgnoreAop
+  nameWithType: CommandPacket.IsIgnoreAop
+- uid: FreeRedis.CommandPacket.IsIgnoreAop*
+  name: IsIgnoreAop
+  href: docs/api/FreeRedis.CommandPacket.html#FreeRedis_CommandPacket_IsIgnoreAop_
+  commentId: Overload:FreeRedis.CommandPacket.IsIgnoreAop
+  isSpec: "True"
+  fullName: FreeRedis.CommandPacket.IsIgnoreAop
+  nameWithType: CommandPacket.IsIgnoreAop
 - uid: FreeRedis.CommandPacket.OnData(System.Action{FreeRedis.RedisResult})
   name: OnData(Action<RedisResult>)
   href: docs/api/FreeRedis.CommandPacket.html#FreeRedis_CommandPacket_OnData_System_Action_FreeRedis_RedisResult__
@@ -1987,6 +2000,19 @@ references:
   isSpec: "True"
   fullName: FreeRedis.Internal.DefaultRedisSocket.IsConnected
   nameWithType: DefaultRedisSocket.IsConnected
+- uid: FreeRedis.Internal.DefaultRedisSocket.LastCommand
+  name: LastCommand
+  href: docs/api/FreeRedis.Internal.DefaultRedisSocket.html#FreeRedis_Internal_DefaultRedisSocket_LastCommand
+  commentId: P:FreeRedis.Internal.DefaultRedisSocket.LastCommand
+  fullName: FreeRedis.Internal.DefaultRedisSocket.LastCommand
+  nameWithType: DefaultRedisSocket.LastCommand
+- uid: FreeRedis.Internal.DefaultRedisSocket.LastCommand*
+  name: LastCommand
+  href: docs/api/FreeRedis.Internal.DefaultRedisSocket.html#FreeRedis_Internal_DefaultRedisSocket_LastCommand_
+  commentId: Overload:FreeRedis.Internal.DefaultRedisSocket.LastCommand
+  isSpec: "True"
+  fullName: FreeRedis.Internal.DefaultRedisSocket.LastCommand
+  nameWithType: DefaultRedisSocket.LastCommand
 - uid: FreeRedis.Internal.DefaultRedisSocket.Protocol
   name: Protocol
   href: docs/api/FreeRedis.Internal.DefaultRedisSocket.html#FreeRedis_Internal_DefaultRedisSocket_Protocol
@@ -2341,6 +2367,19 @@ references:
   isSpec: "True"
   fullName: FreeRedis.Internal.DefaultRedisSocket.TempProxyRedisSocket.IsConnected
   nameWithType: DefaultRedisSocket.TempProxyRedisSocket.IsConnected
+- uid: FreeRedis.Internal.DefaultRedisSocket.TempProxyRedisSocket.LastCommand
+  name: LastCommand
+  href: docs/api/FreeRedis.Internal.DefaultRedisSocket.TempProxyRedisSocket.html#FreeRedis_Internal_DefaultRedisSocket_TempProxyRedisSocket_LastCommand
+  commentId: P:FreeRedis.Internal.DefaultRedisSocket.TempProxyRedisSocket.LastCommand
+  fullName: FreeRedis.Internal.DefaultRedisSocket.TempProxyRedisSocket.LastCommand
+  nameWithType: DefaultRedisSocket.TempProxyRedisSocket.LastCommand
+- uid: FreeRedis.Internal.DefaultRedisSocket.TempProxyRedisSocket.LastCommand*
+  name: LastCommand
+  href: docs/api/FreeRedis.Internal.DefaultRedisSocket.TempProxyRedisSocket.html#FreeRedis_Internal_DefaultRedisSocket_TempProxyRedisSocket_LastCommand_
+  commentId: Overload:FreeRedis.Internal.DefaultRedisSocket.TempProxyRedisSocket.LastCommand
+  isSpec: "True"
+  fullName: FreeRedis.Internal.DefaultRedisSocket.TempProxyRedisSocket.LastCommand
+  nameWithType: DefaultRedisSocket.TempProxyRedisSocket.LastCommand
 - uid: FreeRedis.Internal.DefaultRedisSocket.TempProxyRedisSocket.Protocol
   name: Protocol
   href: docs/api/FreeRedis.Internal.DefaultRedisSocket.TempProxyRedisSocket.html#FreeRedis_Internal_DefaultRedisSocket_TempProxyRedisSocket_Protocol
@@ -3209,6 +3248,19 @@ references:
   isSpec: "True"
   fullName: FreeRedis.Internal.IRedisSocket.IsConnected
   nameWithType: IRedisSocket.IsConnected
+- uid: FreeRedis.Internal.IRedisSocket.LastCommand
+  name: LastCommand
+  href: docs/api/FreeRedis.Internal.IRedisSocket.html#FreeRedis_Internal_IRedisSocket_LastCommand
+  commentId: P:FreeRedis.Internal.IRedisSocket.LastCommand
+  fullName: FreeRedis.Internal.IRedisSocket.LastCommand
+  nameWithType: IRedisSocket.LastCommand
+- uid: FreeRedis.Internal.IRedisSocket.LastCommand*
+  name: LastCommand
+  href: docs/api/FreeRedis.Internal.IRedisSocket.html#FreeRedis_Internal_IRedisSocket_LastCommand_
+  commentId: Overload:FreeRedis.Internal.IRedisSocket.LastCommand
+  isSpec: "True"
+  fullName: FreeRedis.Internal.IRedisSocket.LastCommand
+  nameWithType: IRedisSocket.LastCommand
 - uid: FreeRedis.Internal.IRedisSocket.Protocol
   name: Protocol
   href: docs/api/FreeRedis.Internal.IRedisSocket.html#FreeRedis_Internal_IRedisSocket_Protocol
