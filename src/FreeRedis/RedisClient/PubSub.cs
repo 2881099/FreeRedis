@@ -193,6 +193,17 @@ namespace FreeRedis
                 }
                 if (isnew)
                 {
+                    _redisSocket.Connected += (_, e) =>
+                    {
+                        if (object.Equals(_, (_topOwner._pubsub._redisSocket as DefaultRedisSocket.TempProxyRedisSocket)?._owner))
+                        {
+                            var chans = _cancels.SelectMany(a => a.Value).ToList();
+                            var resub = chans.Where(a => !a.StartsWith(_psub_regkey_prefix)).ToArray();
+                            var repsub = chans.Where(a => a.StartsWith(_psub_regkey_prefix)).Select(a => a.Replace(_psub_regkey_prefix, "")).ToArray();
+                            if (resub.Any()) Call("SUBSCRIBE".Input(resub));
+                            if (repsub.Any()) Call("PSUBSCRIBE".Input(repsub));
+                        }
+                    };
                     new Thread(() =>
                     {
                         _redisSocketReceiveTimeoutOld = _redisSocket.ReceiveTimeout;
