@@ -323,6 +323,18 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "docs/api/FreeRedis.FreeRedisClusterCRC16.yml",
+      "output": {
+        ".html": {
+          "relative_path": "docs/api/FreeRedis.FreeRedisClusterCRC16.html",
+          "hash": "Xw6n/bHb9nMAGRanhEH2Zlx9kb3NvulDoFKsSnAX7bk="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "docs/api/FreeRedis.GeoMember.yml",
       "output": {
         ".html": {
@@ -759,7 +771,7 @@
       "output": {
         ".html": {
           "relative_path": "docs/api/FreeRedis.RedisClient.DatabaseHook.html",
-          "hash": "QLpp9zXuExVaM4jveBphfI8zvN73zimsl7SMYG4Jq8U="
+          "hash": "FNyx05nK7ahhO7yanTCDd1DUVGob7EUuZAYMs9v1mH4="
         }
       },
       "is_incremental": false,
@@ -783,7 +795,7 @@
       "output": {
         ".html": {
           "relative_path": "docs/api/FreeRedis.RedisClient.PipelineHook.html",
-          "hash": "aAhYozwN5ZVatUea7mGpHgn7mlVI95htQs7KYA02aEw="
+          "hash": "Z47jfFISy5n5iKre7tSjorrJapdZNGgm9MV3g0jRC2g="
         }
       },
       "is_incremental": false,
@@ -795,7 +807,7 @@
       "output": {
         ".html": {
           "relative_path": "docs/api/FreeRedis.RedisClient.TransactionHook.html",
-          "hash": "i9CFW03IUjDe/S47UEofQdQTGjtiN7H8XytxrBBNQr0="
+          "hash": "kEn/YBdyCgEq6YNxMPWtdCODU1YoCFA9EfEIa0gaSyE="
         }
       },
       "is_incremental": false,
@@ -819,7 +831,7 @@
       "output": {
         ".html": {
           "relative_path": "docs/api/FreeRedis.RedisClient.html",
-          "hash": "ODmHyG9oSxj39jBN9hEI5WsLuELsv/XqCMgibBty8S8="
+          "hash": "+n0lWDgaHFQ8CABBTOYKP8BIyAD3zI7CuDUHDhRVLnM="
         }
       },
       "is_incremental": false,
@@ -1263,7 +1275,7 @@
       "output": {
         ".html": {
           "relative_path": "docs/api/FreeRedis.html",
-          "hash": "IaZ6Q11fljbizY17mzJW8b7rO/q/eqbnWMIEpvmPW1A="
+          "hash": "LCAzimoD6naXwa5i0rt7jsU0BCS+zVuGFpaoI4QRzsw="
         }
       },
       "is_incremental": false,
@@ -1287,7 +1299,7 @@
       "output": {
         ".html": {
           "relative_path": "docs/api/toc.html",
-          "hash": "0CuiwPPoSe87hqTaPO6kutcIHzdA8VLU1tEDCXLcznw="
+          "hash": "9Oz3gKvodd3uz6oEya/ldEH/wMlVjtEs0JzyxH2BhXQ="
         }
       },
       "is_incremental": false,
@@ -1362,7 +1374,7 @@
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 103,
+          "total_file_count": 104,
           "skipped_file_count": 0
         },
         "TocDocumentProcessor": {

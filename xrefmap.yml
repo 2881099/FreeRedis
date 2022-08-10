@@ -1454,6 +1454,56 @@ references:
   isSpec: "True"
   fullName: FreeRedis.ConnectionStringBuilder.User
   nameWithType: ConnectionStringBuilder.User
+- uid: FreeRedis.FreeRedisClusterCRC16
+  name: FreeRedisClusterCRC16
+  href: docs/api/FreeRedis.FreeRedisClusterCRC16.html
+  commentId: T:FreeRedis.FreeRedisClusterCRC16
+  fullName: FreeRedis.FreeRedisClusterCRC16
+  nameWithType: FreeRedisClusterCRC16
+- uid: FreeRedis.FreeRedisClusterCRC16.GetCRC16(System.Byte[])
+  name: GetCRC16(Byte[])
+  href: docs/api/FreeRedis.FreeRedisClusterCRC16.html#FreeRedis_FreeRedisClusterCRC16_GetCRC16_System_Byte___
+  commentId: M:FreeRedis.FreeRedisClusterCRC16.GetCRC16(System.Byte[])
+  name.vb: GetCRC16(Byte())
+  fullName: FreeRedis.FreeRedisClusterCRC16.GetCRC16(System.Byte[])
+  fullName.vb: FreeRedis.FreeRedisClusterCRC16.GetCRC16(System.Byte())
+  nameWithType: FreeRedisClusterCRC16.GetCRC16(Byte[])
+  nameWithType.vb: FreeRedisClusterCRC16.GetCRC16(Byte())
+- uid: FreeRedis.FreeRedisClusterCRC16.GetCRC16(System.Byte[],System.Int32,System.Int32)
+  name: GetCRC16(Byte[], Int32, Int32)
+  href: docs/api/FreeRedis.FreeRedisClusterCRC16.html#FreeRedis_FreeRedisClusterCRC16_GetCRC16_System_Byte___System_Int32_System_Int32_
+  commentId: M:FreeRedis.FreeRedisClusterCRC16.GetCRC16(System.Byte[],System.Int32,System.Int32)
+  name.vb: GetCRC16(Byte(), Int32, Int32)
+  fullName: FreeRedis.FreeRedisClusterCRC16.GetCRC16(System.Byte[], System.Int32, System.Int32)
+  fullName.vb: FreeRedis.FreeRedisClusterCRC16.GetCRC16(System.Byte(), System.Int32, System.Int32)
+  nameWithType: FreeRedisClusterCRC16.GetCRC16(Byte[], Int32, Int32)
+  nameWithType.vb: FreeRedisClusterCRC16.GetCRC16(Byte(), Int32, Int32)
+- uid: FreeRedis.FreeRedisClusterCRC16.GetCRC16(System.String)
+  name: GetCRC16(String)
+  href: docs/api/FreeRedis.FreeRedisClusterCRC16.html#FreeRedis_FreeRedisClusterCRC16_GetCRC16_System_String_
+  commentId: M:FreeRedis.FreeRedisClusterCRC16.GetCRC16(System.String)
+  fullName: FreeRedis.FreeRedisClusterCRC16.GetCRC16(System.String)
+  nameWithType: FreeRedisClusterCRC16.GetCRC16(String)
+- uid: FreeRedis.FreeRedisClusterCRC16.GetCRC16*
+  name: GetCRC16
+  href: docs/api/FreeRedis.FreeRedisClusterCRC16.html#FreeRedis_FreeRedisClusterCRC16_GetCRC16_
+  commentId: Overload:FreeRedis.FreeRedisClusterCRC16.GetCRC16
+  isSpec: "True"
+  fullName: FreeRedis.FreeRedisClusterCRC16.GetCRC16
+  nameWithType: FreeRedisClusterCRC16.GetCRC16
+- uid: FreeRedis.FreeRedisClusterCRC16.GetSlot(System.String)
+  name: GetSlot(String)
+  href: docs/api/FreeRedis.FreeRedisClusterCRC16.html#FreeRedis_FreeRedisClusterCRC16_GetSlot_System_String_
+  commentId: M:FreeRedis.FreeRedisClusterCRC16.GetSlot(System.String)
+  fullName: FreeRedis.FreeRedisClusterCRC16.GetSlot(System.String)
+  nameWithType: FreeRedisClusterCRC16.GetSlot(String)
+- uid: FreeRedis.FreeRedisClusterCRC16.GetSlot*
+  name: GetSlot
+  href: docs/api/FreeRedis.FreeRedisClusterCRC16.html#FreeRedis_FreeRedisClusterCRC16_GetSlot_
+  commentId: Overload:FreeRedis.FreeRedisClusterCRC16.GetSlot
+  isSpec: "True"
+  fullName: FreeRedis.FreeRedisClusterCRC16.GetSlot
+  nameWithType: FreeRedisClusterCRC16.GetSlot
 - uid: FreeRedis.GeoMember
   name: GeoMember
   href: docs/api/FreeRedis.GeoMember.html
@@ -11275,6 +11325,12 @@ references:
   isSpec: "True"
   fullName: FreeRedis.RedisClient.ClientUnBlock
   nameWithType: RedisClient.ClientUnBlock
+- uid: FreeRedis.RedisClient.ClusterCRC16
+  name: ClusterCRC16
+  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_ClusterCRC16
+  commentId: F:FreeRedis.RedisClient.ClusterCRC16
+  fullName: FreeRedis.RedisClient.ClusterCRC16
+  nameWithType: RedisClient.ClusterCRC16
 - uid: FreeRedis.RedisClient.CmsIncrBy(System.String,System.Collections.Generic.Dictionary{System.String,System.Int64})
   name: CmsIncrBy(String, Dictionary<String, Int64>)
   href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_CmsIncrBy_System_String_System_Collections_Generic_Dictionary_System_String_System_Int64__
