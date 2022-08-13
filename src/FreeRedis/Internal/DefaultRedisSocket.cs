@@ -201,6 +201,7 @@ namespace FreeRedis.Internal
                     if (endpointString != $"{_ip}:{_port}") endpointString = $"{_ip}:{_port} -> {endpointString}";
                     throw new TimeoutException($"Connect to redis-server({endpointString}) timeout");
                 }
+                localSocket.EndConnect(asyncResult);
                 _socket = localSocket;
                 _stream = new NetworkStream(Socket, true);
                 _socket.ReceiveTimeout = (int)ReceiveTimeout.TotalMilliseconds;
