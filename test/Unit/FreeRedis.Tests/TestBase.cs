@@ -8,10 +8,10 @@ namespace FreeRedis.Tests
 {
     public class TestBase
     {
-	    protected static ConnectionStringBuilder Connection = new ConnectionStringBuilder()
-	    {
-		    Host = RedisEnvironmentHelper.GetHost("redis_single"),
-		    Password = "123456",
+		protected static ConnectionStringBuilder Connection = new ConnectionStringBuilder()
+		{
+			Host = "192.168.164.10", // RedisEnvironmentHelper.GetHost("redis_single"),
+		    //Password = "123456",
 		    Database = 1,
 		    MaxPoolSize = 10,
 		    Protocol = RedisProtocol.RESP2,
