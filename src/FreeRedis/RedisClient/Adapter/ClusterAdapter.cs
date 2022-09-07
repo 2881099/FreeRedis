@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace FreeRedis
 {
@@ -74,6 +75,7 @@ namespace FreeRedis
                 rdsproxy._pool = pool;
                 return rdsproxy;
             }
+
             public override TValue AdapterCall<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
             {
                 if (cmd._keyIndexes.Count > 1) //Multiple key slot values not equal
@@ -169,10 +171,99 @@ namespace FreeRedis
                 });
             }
 #if isasync
-            public override Task<TValue> AdapterCallAsync<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
+            async public override Task<TValue> AdapterCallAsync<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
             {
-                //Single socket not support Async Multiplexing
-                return Task.FromResult(AdapterCall<TValue>(cmd, parse));
+                if (cmd._keyIndexes.Count > 1) //Multiple key slot values not equal
+                {
+                    cmd.Prefix(TopOwner.Prefix);
+                    switch (cmd._command)
+                    {
+                        case "DEL":
+                        case "UNLINK":
+                            return cmd._keyIndexes.Select((_, idx) => AdapterCall(cmd._command.InputKey(cmd.GetKey(idx)), parse)).Sum(a => a.ConvertTo<long>()).ConvertTo<TValue>();
+                        case "MSET":
+                            cmd._keyIndexes.ForEach(idx => AdapterCall(cmd._command.InputKey(cmd._input[idx].ToInvariantCultureToString()).InputRaw(cmd._input[idx + 1]), parse));
+                            return default;
+                        case "MGET":
+                            return cmd._keyIndexes.Select((_, idx) =>
+                            {
+                                var rt = AdapterCall(cmd._command.InputKey(cmd.GetKey(idx)), parse);
+                                return rt.ConvertTo<object[]>().FirstOrDefault();
+                            }).ToArray().ConvertTo<TValue>();
+                        case "PFCOUNT":
+                            return cmd._keyIndexes.Select((_, idx) => AdapterCall(cmd._command.InputKey(cmd.GetKey(idx)), parse)).Sum(a => a.ConvertTo<long>()).ConvertTo<TValue>();
+                    }
+                }
+                return await TopOwner.LogCallAsync(cmd, async () =>
+                {
+                    RedisResult rt = null;
+                    RedisClientPool pool = null;
+                    var protocolRetry = false;
+                    using (var rds = GetRedisSocket(cmd))
+                    {
+                        var getTime = DateTime.Now;
+                        pool = (rds as DefaultRedisSocket.TempProxyRedisSocket)._pool;
+                        try
+                        {
+                            if (cmd._clusterMovedAsking)
+                            {
+                                cmd._clusterMovedAsking = false;
+                                var askingCmd = "ASKING".SubCommand(null).FlagReadbytes(false);
+                                await rds.WriteAsync(askingCmd);
+                                await rds.ReadAsync(askingCmd);
+                            }
+                            await rds.WriteAsync(cmd);
+                            rt = await rds.ReadAsync(cmd);
+                        }
+                        catch (ProtocolViolationException)
+                        {
+                            rds.ReleaseSocket();
+                            cmd._protocolErrorTryCount++;
+                            if (cmd._protocolErrorTryCount <= pool._policy._connectionStringBuilder.Retry)
+                                protocolRetry = true;
+                            else
+                            {
+                                if (cmd.IsReadOnlyCommand() == false || cmd._protocolErrorTryCount > 1) throw;
+                                protocolRetry = true;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            if (pool?.SetUnavailable(ex, getTime) == true)
+                            {
+                            }
+                            throw;
+                        }
+                    }
+                    if (protocolRetry) return await AdapterCallAsync(cmd, parse);
+                    if (rt.IsError && pool != null)
+                    {
+                        var moved = ClusterMoved.ParseSimpleError(rt.SimpleError);
+                        if (moved != null && cmd._clusterMovedTryCount < 3)
+                        {
+                            cmd._clusterMovedTryCount++;
+
+                            if (moved.endpoint.StartsWith("127.0.0.1"))
+                                moved.endpoint = $"{DefaultRedisSocket.SplitHost(pool._policy._connectionStringBuilder.Host).Key}:{moved.endpoint.Substring(10)}";
+                            else if (moved.endpoint.StartsWith("localhost", StringComparison.CurrentCultureIgnoreCase))
+                                moved.endpoint = $"{DefaultRedisSocket.SplitHost(pool._policy._connectionStringBuilder.Host).Key}:{moved.endpoint.Substring(10)}";
+
+                            ConnectionStringBuilder connectionString = pool._policy._connectionStringBuilder.ToString();
+                            connectionString.Host = moved.endpoint;
+                            RegisterClusterNode(connectionString);
+
+                            if (moved.ismoved)
+                                _slotCache.AddOrUpdate(moved.slot, connectionString.Host, (k1, v1) => connectionString.Host);
+
+                            if (moved.isask)
+                                cmd._clusterMovedAsking = true;
+
+                            TopOwner.OnNotice(null, new NoticeEventArgs(NoticeType.Info, null, $"{(cmd.WriteTarget ?? "Not connected").PadRight(21)} > {cmd}\r\n{rt.SimpleError} ", null));
+                            return await AdapterCallAsync(cmd, parse);
+                        }
+                    }
+                    return parse(rt);
+                });
             }
 #endif
 

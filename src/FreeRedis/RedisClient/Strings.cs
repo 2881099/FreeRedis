@@ -148,6 +148,34 @@ namespace FreeRedis
         public Task<T> GetAsync<T>(string key) => CallAsync("GET".InputKey(key).FlagReadbytes(true), rt => rt.ThrowOrValue(a => DeserializeRedisValue<T>(a.ConvertTo<byte[]>(), rt.Encoding)));
 
         /// <summary>
+        /// GET command (A Synchronized Version) <br /><br />
+        /// <br />
+        /// Get the value of key and write to the stream.. If the key does not exist the special value nil is returned. An error is returned if the value stored at key is not a string, because GET only handles string values.<br /><br />
+        /// <br />
+        /// 获得给定键的值并写入流中。若键不存在，则返回特殊的 nil 值。如果给定键的值不是字符串，则返回错误，因为 GET 指令只能处理字符串。 <br /><br />
+        /// <br />
+        /// Document link: https://redis.io/commands/get <br />
+        /// Available since 1.0.0.
+        /// </summary>
+        /// <param name="key">Key</param>
+        /// <param name="destination">Destination stream</param>
+        /// <param name="bufferSize">Size</param>
+        async public Task GetAsync(string key, Stream destination, int bufferSize = 1024)
+        {
+            var cmd = "GET".InputKey(key);
+            await Adapter.TopOwner.LogCallAsync(cmd, async () =>
+            {
+                using (var rds = Adapter.GetRedisSocket(cmd))
+                {
+                    await rds.WriteAsync(cmd);
+                    await rds.ReadChunkAsync(destination, bufferSize);
+                }
+
+                return default(string);
+            });
+        }
+
+        /// <summary>
         /// GETBIT command (An Asynchronous Version) <br /><br />
         /// <br />
         /// Returns the bit value at offset in the string value stored at key.<br /><br />

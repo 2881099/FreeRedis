@@ -67,6 +67,11 @@ namespace FreeRedis.Internal
             public void Write(CommandPacket cmd) => _owner.Write(cmd);
             public RedisResult Read(CommandPacket cmd) => _owner.Read(cmd);
             public void ReadChunk(Stream destination, int bufferSize = 1024) => _owner.ReadChunk(destination, bufferSize);
+#if isasync
+            public Task WriteAsync(CommandPacket cmd) => _owner.WriteAsync(cmd);
+            public Task<RedisResult> ReadAsync(CommandPacket cmd) => _owner.ReadAsync(cmd);
+            public Task ReadChunkAsync(Stream destination, int bufferSize = 1024) => _owner.ReadChunkAsync(destination, bufferSize);
+#endif
         }
 
         public string Host { get; private set; }
@@ -122,17 +127,8 @@ namespace FreeRedis.Internal
             Ssl = ssl;
         }
 
-        public void Write(CommandPacket cmd)
+        void WriteAfter(CommandPacket cmd)
         {
-            LastCommand = cmd;
-            if (IsConnected == false) Connect();
-            using (var ms = new MemoryStream()) //Writing data directly to will be very slow
-            {
-                new RespHelper.Resp3Writer(ms, Encoding, Protocol).WriteCommand(cmd);
-                ms.Position = 0;
-                ms.CopyTo(Stream);
-                ms.Close();
-            }
             switch (cmd._command)
             {
                 case "CLIENT":
@@ -157,6 +153,19 @@ namespace FreeRedis.Internal
             }
             cmd.WriteTarget = $"{this.Host}/{this.Database}";
         }
+        public void Write(CommandPacket cmd)
+        {
+            LastCommand = cmd;
+            if (IsConnected == false) Connect();
+            using (var ms = new MemoryStream()) //Writing data directly to will be very slow
+            {
+                new RespHelper.Resp3Writer(ms, Encoding, Protocol).WriteCommand(cmd);
+                ms.Position = 0;
+                ms.CopyTo(Stream);
+                ms.Close();
+            }
+            WriteAfter(cmd);
+        }
         public RedisResult Read(CommandPacket cmd)
         {
             LastCommand = cmd;
@@ -178,6 +187,42 @@ namespace FreeRedis.Internal
                 Reader.ReadBlobStringChunk(destination, bufferSize);
             }
         }
+#if isasync
+        async public Task WriteAsync(CommandPacket cmd)
+        {
+            LastCommand = cmd;
+            if (IsConnected == false) Connect();
+            using (var ms = new MemoryStream()) //Writing data directly to will be very slow
+            {
+                new RespHelper.Resp3Writer(ms, Encoding, Protocol).WriteCommand(cmd);
+                ms.Position = 0;
+                await ms.CopyToAsync(Stream);
+                ms.Close();
+            }
+            WriteAfter(cmd);
+        }
+        async public Task<RedisResult> ReadAsync(CommandPacket cmd)
+        {
+            LastCommand = cmd;
+            if (ClientReply == ClientReplyType.on)
+            {
+                if (IsConnected == false) Connect();
+                var rt = await Reader.ReadObjectAsync(cmd?._flagReadbytes == true ? null : Encoding);
+                rt.Encoding = Encoding;
+                cmd?.OnDataTrigger(rt);
+                return rt;
+            }
+            return new RedisResult(null, true, RedisMessageType.SimpleString) { Encoding = Encoding };
+        }
+        async public Task ReadChunkAsync(Stream destination, int bufferSize = 1024)
+        {
+            if (ClientReply == ClientReplyType.on)
+            {
+                if (IsConnected == false) Connect();
+                await Reader.ReadBlobStringChunkAsync(destination, bufferSize);
+            }
+        }
+#endif
 
         object _connectLock = new object();
         public void Connect()

@@ -140,10 +140,66 @@ namespace FreeRedis
             }
 
 #if isasync
-            public override Task<TValue> AdapterCallAsync<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
+            async public override Task<TValue> AdapterCallAsync<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
             {
-                //Single socket not support Async Multiplexing
-                return Task.FromResult(AdapterCall<TValue>(cmd, parse));
+                if (cmd._keyIndexes.Count > 1) //Multiple key slot values not equal
+                {
+                    cmd.Prefix(TopOwner.Prefix);
+                    switch (cmd._command)
+                    {
+                        case "DEL":
+                        case "UNLINK":
+                            return cmd._keyIndexes.Select((_, idx) => AdapterCall(new CommandPacket(cmd._command).InputKey(cmd.GetKey(idx)), parse)).Sum(a => a.ConvertTo<long>()).ConvertTo<TValue>();
+                        case "MSET":
+                            cmd._keyIndexes.ForEach(idx => AdapterCall(new CommandPacket(cmd._command).InputKey(cmd._input[idx].ToInvariantCultureToString()).InputRaw(cmd._input[idx + 1]), parse));
+                            return default;
+                        case "MGET":
+                            return cmd._keyIndexes.Select((_, idx) =>
+                            {
+                                var rt = AdapterCall(cmd._command.InputKey(cmd.GetKey(idx)), parse);
+                                return rt.ConvertTo<object[]>().FirstOrDefault();
+                            }).ToArray().ConvertTo<TValue>();
+                        case "PFCOUNT":
+                            return cmd._keyIndexes.Select((_, idx) => AdapterCall(new CommandPacket(cmd._command).InputKey(cmd.GetKey(idx)), parse)).Sum(a => a.ConvertTo<long>()).ConvertTo<TValue>();
+                    }
+                }
+                return await TopOwner.LogCallAsync(cmd, async () =>
+                {
+                    RedisResult rt = null;
+                    var protocolRetry = false;
+                    using (var rds = GetRedisSocket(cmd))
+                    {
+                        var getTime = DateTime.Now;
+                        try
+                        {
+                            await rds.WriteAsync(cmd);
+                            rt = await rds.ReadAsync(cmd);
+                        }
+                        catch (ProtocolViolationException)
+                        {
+                            var pool = (rds as DefaultRedisSocket.TempProxyRedisSocket)._pool;
+                            rds.ReleaseSocket();
+                            cmd._protocolErrorTryCount++;
+                            if (cmd._protocolErrorTryCount <= pool._policy._connectionStringBuilder.Retry)
+                                protocolRetry = true;
+                            else
+                            {
+                                if (cmd.IsReadOnlyCommand() == false || cmd._protocolErrorTryCount > 1) throw;
+                                protocolRetry = true;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            var pool = (rds as DefaultRedisSocket.TempProxyRedisSocket)._pool;
+                            if (pool?.SetUnavailable(ex, getTime) == true)
+                            {
+                            }
+                            throw;
+                        }
+                    }
+                    if (protocolRetry) return await AdapterCallAsync(cmd, parse);
+                    return parse(rt);
+                });
             }
 #endif
 

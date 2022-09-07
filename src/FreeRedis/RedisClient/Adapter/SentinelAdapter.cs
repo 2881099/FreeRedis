@@ -39,10 +39,6 @@ namespace FreeRedis
 
                 _ib = new IdleBus<RedisClientPool>(TimeSpan.FromMinutes(10));
                 ResetSentinel();
-
-#if isasync
-                _asyncManager = new AsyncRedisSocket.Manager(this);
-#endif
             }
 
             bool isdisposed = false;
@@ -117,29 +113,45 @@ namespace FreeRedis
                 });
             }
 #if isasync
-            AsyncRedisSocket.Manager _asyncManager;
             public override Task<TValue> AdapterCallAsync<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
             {
                 return TopOwner.LogCallAsync(cmd, async () =>
                 {
-                    var asyncRds = _asyncManager.GetAsyncRedisSocket(cmd);
-                    try
+                    RedisResult rt = null;
+                    var protocolRetry = false;
+                    using (var rds = GetRedisSocket(cmd))
                     {
-                        var rt = await asyncRds.WriteAsync(cmd);
-                        return parse(rt);
-                    }
-                    catch (ProtocolViolationException)
-                    {
-                        var pool = (asyncRds._rds as DefaultRedisSocket.TempProxyRedisSocket)?._pool;
-                        cmd._protocolErrorTryCount++;
-                        if (pool != null && cmd._protocolErrorTryCount <= pool._policy._connectionStringBuilder.Retry)
-                            return await AdapterCallAsync(cmd, parse);
-                        else
+                        var getTime = DateTime.Now;
+                        try
                         {
-                            if (cmd.IsReadOnlyCommand() == false || cmd._protocolErrorTryCount > 1) throw;
-                            return await AdapterCallAsync(cmd, parse);
+                            await rds.WriteAsync(cmd);
+                            rt = await rds.ReadAsync(cmd);
+                        }
+                        catch (ProtocolViolationException)
+                        {
+                            var pool = (rds as DefaultRedisSocket.TempProxyRedisSocket)._pool;
+                            rds.ReleaseSocket();
+                            cmd._protocolErrorTryCount++;
+                            if (cmd._protocolErrorTryCount <= pool._policy._connectionStringBuilder.Retry)
+                                protocolRetry = true;
+                            else
+                            {
+                                if (cmd.IsReadOnlyCommand() == false || cmd._protocolErrorTryCount > 1) throw;
+                                protocolRetry = true;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            var pool = (rds as DefaultRedisSocket.TempProxyRedisSocket)._pool;
+                            if (pool?.SetUnavailable(ex, getTime) == true)
+                            {
+                                RecoverySentinel();
+                            }
+                            throw;
                         }
                     }
+                    if (protocolRetry) return await AdapterCallAsync(cmd, parse);
+                    return parse(rt);
                 });
             }
 #endif

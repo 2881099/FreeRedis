@@ -232,55 +232,55 @@ namespace FreeRedis
                         default:
                             if (b == -1) return new RedisResult(null, true, RedisMessageType.Null);
                             //if (b == -1) return new RedisResult(null, true, RedisMessageType.Null);
-                            var allBytes = ReadAll();
+                            var allBytes = DebugReadAll();
                             throw new ProtocolViolationException($"Expecting fail MessageType '{b},{string.Join(",", allBytes)}'");
                     }
                 }
+            }
 
-                Byte[] ReadAll()
+            Byte[] DebugReadAll()
+            {
+                var ns = _stream as NetworkStream;
+                if (ns != null)
                 {
-                    var ns = _stream as NetworkStream;
-                    if (ns != null)
+                    using (var ms = new MemoryStream())
                     {
-                        using (var ms = new MemoryStream())
+                        try
                         {
-                            try
+                            var data = new byte[1024];
+                            while (ns.DataAvailable && ns.CanRead)
                             {
-                                var data = new byte[1024];
-                                while (ns.DataAvailable && ns.CanRead)
-                                {
-                                    int numBytesRead = numBytesRead = ns.Read(data, 0, data.Length);
-                                    if (numBytesRead <= 0) break;
-                                    ms.Write(data, 0, numBytesRead);
-                                    if (numBytesRead < data.Length) break;
-                                }
+                                int numBytesRead = numBytesRead = ns.Read(data, 0, data.Length);
+                                if (numBytesRead <= 0) break;
+                                ms.Write(data, 0, numBytesRead);
+                                if (numBytesRead < data.Length) break;
                             }
-                            catch { }
-                            return ms.ToArray();
                         }
+                        catch { }
+                        return ms.ToArray();
                     }
-                    var ss = _stream as SslStream;
-                    if (ss != null)
-                    {
-                        using (var ms = new MemoryStream())
-                        {
-                            try
-                            {
-                                var data = new byte[1024];
-                                while (ss.CanRead)
-                                {
-                                    int numBytesRead = numBytesRead = ss.Read(data, 0, data.Length);
-                                    if (numBytesRead <= 0) break;
-                                    ms.Write(data, 0, numBytesRead);
-                                    if (numBytesRead < data.Length) break;
-                                }
-                            }
-                            catch { }
-                            return ms.ToArray();
-                        }
-                    }
-                    return new byte[0];
                 }
+                var ss = _stream as SslStream;
+                if (ss != null)
+                {
+                    using (var ms = new MemoryStream())
+                    {
+                        try
+                        {
+                            var data = new byte[1024];
+                            while (ss.CanRead)
+                            {
+                                int numBytesRead = numBytesRead = ss.Read(data, 0, data.Length);
+                                if (numBytesRead <= 0) break;
+                                ms.Write(data, 0, numBytesRead);
+                                if (numBytesRead < data.Length) break;
+                            }
+                        }
+                        catch { }
+                        return ms.ToArray();
+                    }
+                }
+                return new byte[0];
             }
 
             void Read(Stream outStream, int len, int bufferSize = 1024)
