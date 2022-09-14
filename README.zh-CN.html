@@ -239,6 +239,15 @@ var value = cli.Get(&quot;key1&quot;);
 void ondata(string channel, string data) =&gt;
     Console.WriteLine($&quot;{channel} -&gt; {data}&quot;);
 </code></pre>
+<p>lpush + blpop：</p>
+<pre><code class="lang-csharp">using (cli.SubscribeList(&quot;list_key&quot;, ondata)) //wait .Dispose()
+{
+    Console.ReadKey();
+}
+
+void ondata(string listValue) =&gt;
+    Console.WriteLine(listValue);
+</code></pre>
 <h3 id="-scripting-脚本">📃 Scripting (脚本)</h3>
 <pre><code class="lang-csharp">var r1 = cli.Eval(&quot;return {KEYS[1],KEYS[2],ARGV[1],ARGV[2]}&quot;, 
     new[] { &quot;key1&quot;, &quot;key2&quot; }, &quot;first&quot;, &quot;second&quot;) as object[];
