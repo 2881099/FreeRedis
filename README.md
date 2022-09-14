@@ -129,6 +129,18 @@ void ondata(string channel, string data) =>
     Console.WriteLine($"{channel} -> {data}");
 ```
 
+lpush + blpop：
+
+```csharp
+using (cli.SubscribeList("list_key", ondata)) //wait .Dispose()
+{
+    Console.ReadKey();
+}
+
+void ondata(string listValue) =>
+    Console.WriteLine(listValue);
+```
+
 ### 📃 Scripting
 
 ```csharp
