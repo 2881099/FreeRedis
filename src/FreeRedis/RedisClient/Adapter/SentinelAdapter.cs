@@ -225,8 +225,9 @@ namespace FreeRedis
 
                             foreach (var sentinel in sentinelcli.Sentinels(_connectionString.Host))
                             {
-                                var remoteSentinelHost = $"{sentinel.ip}:{sentinel.port}";
-                                if (_sentinels.Contains(remoteSentinelHost)) continue;
+                                ConnectionStringBuilder remoteSentinelHost = _sentinels.First.Value.ToString();
+                                remoteSentinelHost.Host = $"{sentinel.ip}:{sentinel.port}";
+                                if (_sentinels.Any(a => string.Compare(a.Host, remoteSentinelHost.Host, true) == 0)) continue;
                                 _sentinels.AddLast(remoteSentinelHost);
                             }
                         }
