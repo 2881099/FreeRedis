@@ -86,18 +86,18 @@ namespace FreeRedis
                     {
                         case "DEL":
                         case "UNLINK":
-                            return cmd._keyIndexes.Select((_, idx) => AdapterCall(new CommandPacket(cmd._command).InputKey(cmd.GetKey(idx)), parse)).Sum(a => a.ConvertTo<long>()).ConvertTo<TValue>();
+                            return cmd._keyIndexes.Select((_, idx) => AdapterCall(cmd.Reset().InputKey(cmd.GetKey(idx)), parse)).Sum(a => a.ConvertTo<long>()).ConvertTo<TValue>();
                         case "MSET":
-                            cmd._keyIndexes.ForEach(idx => AdapterCall(new CommandPacket(cmd._command).InputKey(cmd._input[idx].ToInvariantCultureToString()).InputRaw(cmd._input[idx + 1]), parse));
+                            cmd._keyIndexes.ForEach(idx => AdapterCall(cmd.Reset().InputKey(cmd._input[idx].ToInvariantCultureToString()).InputRaw(cmd._input[idx + 1]), parse));
                             return default;
                         case "MGET":
                             return cmd._keyIndexes.Select((_, idx) =>
                             {
-                                var rt = AdapterCall(cmd._command.InputKey(cmd.GetKey(idx)), parse);
+                                var rt = AdapterCall(cmd.Reset().InputKey(cmd.GetKey(idx)), parse);
                                 return rt.ConvertTo<object[]>().FirstOrDefault();
                             }).ToArray().ConvertTo<TValue>();
                         case "PFCOUNT":
-                            return cmd._keyIndexes.Select((_, idx) => AdapterCall(new CommandPacket(cmd._command).InputKey(cmd.GetKey(idx)), parse)).Sum(a => a.ConvertTo<long>()).ConvertTo<TValue>();
+                            return cmd._keyIndexes.Select((_, idx) => AdapterCall(cmd.Reset().InputKey(cmd.GetKey(idx)), parse)).Sum(a => a.ConvertTo<long>()).ConvertTo<TValue>();
                     }
                 }
                 return TopOwner.LogCall(cmd, () =>
@@ -149,18 +149,18 @@ namespace FreeRedis
                     {
                         case "DEL":
                         case "UNLINK":
-                            return cmd._keyIndexes.Select((_, idx) => AdapterCall(new CommandPacket(cmd._command).InputKey(cmd.GetKey(idx)), parse)).Sum(a => a.ConvertTo<long>()).ConvertTo<TValue>();
+                            return cmd._keyIndexes.Select((_, idx) => AdapterCall(cmd.Reset().InputKey(cmd.GetKey(idx)), parse)).Sum(a => a.ConvertTo<long>()).ConvertTo<TValue>();
                         case "MSET":
-                            cmd._keyIndexes.ForEach(idx => AdapterCall(new CommandPacket(cmd._command).InputKey(cmd._input[idx].ToInvariantCultureToString()).InputRaw(cmd._input[idx + 1]), parse));
+                            cmd._keyIndexes.ForEach(idx => AdapterCall(cmd.Reset().InputKey(cmd._input[idx].ToInvariantCultureToString()).InputRaw(cmd._input[idx + 1]), parse));
                             return default;
                         case "MGET":
                             return cmd._keyIndexes.Select((_, idx) =>
                             {
-                                var rt = AdapterCall(cmd._command.InputKey(cmd.GetKey(idx)), parse);
+                                var rt = AdapterCall(cmd.Reset().InputKey(cmd.GetKey(idx)), parse);
                                 return rt.ConvertTo<object[]>().FirstOrDefault();
                             }).ToArray().ConvertTo<TValue>();
                         case "PFCOUNT":
-                            return cmd._keyIndexes.Select((_, idx) => AdapterCall(new CommandPacket(cmd._command).InputKey(cmd.GetKey(idx)), parse)).Sum(a => a.ConvertTo<long>()).ConvertTo<TValue>();
+                            return cmd._keyIndexes.Select((_, idx) => AdapterCall(cmd.Reset().InputKey(cmd.GetKey(idx)), parse)).Sum(a => a.ConvertTo<long>()).ConvertTo<TValue>();
                     }
                 }
                 return await TopOwner.LogCallAsync(cmd, async () =>

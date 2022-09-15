@@ -13,9 +13,9 @@ namespace FreeRedis
         public string _subcommand { get; private set; }
         public List<object> _input { get; } = new List<object>();
         public List<int> _keyIndexes { get; } = new List<int>();
-        public string _prefix { get; private set; }
+        public string _prefix { get; internal set; }
 
-        private bool? _IsIgnoreAop;
+        internal bool? _IsIgnoreAop;
         public bool IsIgnoreAop
         {
             get => _IsIgnoreAop ?? (_IsIgnoreAop = _command == "PING" && _input.Count == 2 && _input[1].ToString() == "CheckAvailable").Value;
@@ -208,6 +208,7 @@ namespace FreeRedis
     {
         public static CommandPacket SubCommand(this string cmd, string subcmd) => new CommandPacket(cmd, subcmd);
         public static CommandPacket InputKey(this string cmd, string key) => new CommandPacket(cmd).InputKey(key);
+        public static CommandPacket Reset(this CommandPacket cmd) => new CommandPacket(cmd._command, cmd._subcommand) { _prefix = cmd._prefix, _IsIgnoreAop = cmd._IsIgnoreAop };
 
         public static CommandPacket InputKey(this string cmd, string key, string arg1) => new CommandPacket(cmd).InputKey(key).InputRaw(arg1);
         public static CommandPacket InputKey(this string cmd, string key, string arg1, long arg2) => new CommandPacket(cmd).InputKey(key).InputRaw(arg1).InputRaw(arg2);
