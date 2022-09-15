@@ -20,6 +20,7 @@ namespace FreeRedis
             string _masterHost;
             readonly bool _rw_splitting;
             readonly bool _is_single;
+            Exception _switchingException;
 
             public SentinelAdapter(RedisClient topOwner, ConnectionStringBuilder sentinelConnectionString, string[] sentinels, bool rw_splitting)
             {
@@ -62,7 +63,7 @@ namespace FreeRedis
             public override IRedisSocket GetRedisSocket(CommandPacket cmd)
             {
                 var poolkey = GetIdleBusKey(cmd);
-                if (string.IsNullOrWhiteSpace(poolkey)) throw new RedisClientException($"【{_connectionString.Host}】Redis Sentinel is switching");
+                if (string.IsNullOrWhiteSpace(poolkey)) throw new RedisClientException($"【{_connectionString.Host}】Redis Sentinel is switching{(_switchingException == null ? "" : $", {_switchingException.Message}")}");
                 var pool = _ib.Get(poolkey);
                 var cli = pool.Get();
                 var rds = cli.Value.Adapter.GetRedisSocket(null);
@@ -191,6 +192,7 @@ namespace FreeRedis
                     Interlocked.Decrement(ref ResetSentinelFlag);
                     return;
                 }
+                _switchingException = null;
                 string masterhostEnd = _masterHost;
                 var allkeys = _ib.GetKeys().ToList();
 
@@ -230,7 +232,10 @@ namespace FreeRedis
                         }
                         break;
                     }
-                    catch { }
+                    catch (Exception ex)
+                    {
+                        _switchingException = ex;
+                    }
                 }
 
                 foreach (var spkey in allkeys) _ib.TryRemove(spkey, true);
