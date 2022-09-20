@@ -12,14 +12,15 @@ namespace FreeRedis
 {
     partial class RedisClient
     {
-        class SentinelAdapter : BaseAdapter
+        internal class SentinelAdapter : BaseAdapter
         {
-            readonly IdleBus<RedisClientPool> _ib;
-            readonly ConnectionStringBuilder _connectionString;
+            internal readonly IdleBus<RedisClientPool> _ib;
+            internal readonly ConnectionStringBuilder _connectionString;
             readonly LinkedList<ConnectionStringBuilder> _sentinels;
             string _masterHost;
             readonly bool _rw_splitting;
             readonly bool _is_single;
+            Exception _switchingException;
 
             public SentinelAdapter(RedisClient topOwner, ConnectionStringBuilder sentinelConnectionString, string[] sentinels, bool rw_splitting)
             {
@@ -39,10 +40,6 @@ namespace FreeRedis
 
                 _ib = new IdleBus<RedisClientPool>(TimeSpan.FromMinutes(10));
                 ResetSentinel();
-
-#if isasync
-                _asyncManager = new AsyncRedisSocket.Manager(this);
-#endif
             }
 
             bool isdisposed = false;
@@ -66,7 +63,7 @@ namespace FreeRedis
             public override IRedisSocket GetRedisSocket(CommandPacket cmd)
             {
                 var poolkey = GetIdleBusKey(cmd);
-                if (string.IsNullOrWhiteSpace(poolkey)) throw new RedisClientException($"【{_connectionString.Host}】Redis Sentinel is switching");
+                if (string.IsNullOrWhiteSpace(poolkey)) throw new RedisClientException($"【{_connectionString.Host}】Redis Sentinel is switching{(_switchingException == null ? "" : $", {_switchingException.Message}")}");
                 var pool = _ib.Get(poolkey);
                 var cli = pool.Get();
                 var rds = cli.Value.Adapter.GetRedisSocket(null);
@@ -83,6 +80,7 @@ namespace FreeRedis
                     var protocolRetry = false;
                     using (var rds = GetRedisSocket(cmd))
                     {
+                        var getTime = DateTime.Now;
                         try
                         {
                             rds.Write(cmd);
@@ -104,7 +102,7 @@ namespace FreeRedis
                         catch (Exception ex)
                         {
                             var pool = (rds as DefaultRedisSocket.TempProxyRedisSocket)._pool;
-                            if (pool?.SetUnavailable(ex) == true)
+                            if (pool?.SetUnavailable(ex, getTime) == true)
                             {
                                 RecoverySentinel();
                             }
@@ -116,34 +114,50 @@ namespace FreeRedis
                 });
             }
 #if isasync
-            AsyncRedisSocket.Manager _asyncManager;
             public override Task<TValue> AdapterCallAsync<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
             {
                 return TopOwner.LogCallAsync(cmd, async () =>
                 {
-                    var asyncRds = _asyncManager.GetAsyncRedisSocket(cmd);
-                    try
+                    RedisResult rt = null;
+                    var protocolRetry = false;
+                    using (var rds = GetRedisSocket(cmd))
                     {
-                        var rt = await asyncRds.WriteAsync(cmd);
-                        return parse(rt);
-                    }
-                    catch (ProtocolViolationException)
-                    {
-                        var pool = (asyncRds._rds as DefaultRedisSocket.TempProxyRedisSocket)?._pool;
-                        cmd._protocolErrorTryCount++;
-                        if (pool != null && cmd._protocolErrorTryCount <= pool._policy._connectionStringBuilder.Retry)
-                            return await AdapterCallAsync(cmd, parse);
-                        else
+                        var getTime = DateTime.Now;
+                        try
                         {
-                            if (cmd.IsReadOnlyCommand() == false || cmd._protocolErrorTryCount > 1) throw;
-                            return await AdapterCallAsync(cmd, parse);
+                            await rds.WriteAsync(cmd);
+                            rt = await rds.ReadAsync(cmd);
+                        }
+                        catch (ProtocolViolationException)
+                        {
+                            var pool = (rds as DefaultRedisSocket.TempProxyRedisSocket)._pool;
+                            rds.ReleaseSocket();
+                            cmd._protocolErrorTryCount++;
+                            if (cmd._protocolErrorTryCount <= pool._policy._connectionStringBuilder.Retry)
+                                protocolRetry = true;
+                            else
+                            {
+                                if (cmd.IsReadOnlyCommand() == false || cmd._protocolErrorTryCount > 1) throw;
+                                protocolRetry = true;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            var pool = (rds as DefaultRedisSocket.TempProxyRedisSocket)._pool;
+                            if (pool?.SetUnavailable(ex, getTime) == true)
+                            {
+                                RecoverySentinel();
+                            }
+                            throw;
                         }
                     }
+                    if (protocolRetry) return await AdapterCallAsync(cmd, parse);
+                    return parse(rt);
                 });
             }
 #endif
 
-            string GetIdleBusKey(CommandPacket cmd)
+            internal string GetIdleBusKey(CommandPacket cmd)
             {
                 if (cmd != null && (_rw_splitting || !_is_single))
                 {
@@ -178,6 +192,7 @@ namespace FreeRedis
                     Interlocked.Decrement(ref ResetSentinelFlag);
                     return;
                 }
+                _switchingException = null;
                 string masterhostEnd = _masterHost;
                 var allkeys = _ib.GetKeys().ToList();
 
@@ -210,14 +225,18 @@ namespace FreeRedis
 
                             foreach (var sentinel in sentinelcli.Sentinels(_connectionString.Host))
                             {
-                                var remoteSentinelHost = $"{sentinel.ip}:{sentinel.port}";
-                                if (_sentinels.Contains(remoteSentinelHost)) continue;
+                                ConnectionStringBuilder remoteSentinelHost = _sentinels.First.Value.ToString();
+                                remoteSentinelHost.Host = $"{sentinel.ip}:{sentinel.port}";
+                                if (_sentinels.Any(a => string.Compare(a.Host, remoteSentinelHost.Host, true) == 0)) continue;
                                 _sentinels.AddLast(remoteSentinelHost);
                             }
                         }
                         break;
                     }
-                    catch { }
+                    catch (Exception ex)
+                    {
+                        _switchingException = ex;
+                    }
                 }
 
                 foreach (var spkey in allkeys) _ib.TryRemove(spkey, true);

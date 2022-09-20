@@ -11,7 +11,7 @@ namespace FreeRedis
 {
     partial class RedisClient
     {
-        class ClusterAdapter : BaseAdapter
+        internal class ClusterAdapter : BaseAdapter
         {
             internal readonly IdleBus<RedisClientPool> _ib;
             internal readonly ConnectionStringBuilder[] _clusterConnectionStrings;
@@ -53,16 +53,18 @@ namespace FreeRedis
                 var poolkeys = slots?.Select(a => _slotCache.TryGetValue(a, out var trykey) ? trykey : null).Distinct().Where(a => a != null).ToArray();
                 //if (poolkeys.Length > 1) throw new RedisClientException($"CROSSSLOT Keys in request don't hash to the same slot: {cmd}");
                 var poolkey = poolkeys?.FirstOrDefault();
+                Exception poolUnavailableException = null;
             goto_getrndkey:
                 if (string.IsNullOrEmpty(poolkey))
                 {
                     var rndkeys = _ib.GetKeys(v => v == null || v.IsAvailable);
-                    if (rndkeys.Any() == false) throw new RedisClientException($"All nodes of the cluster failed to connect");
+                    if (rndkeys.Any() == false) throw poolUnavailableException ?? new RedisClientException($"All nodes of the cluster failed to connect");
                     poolkey = rndkeys[_rnd.Value.Next(0, rndkeys.Length)];
                 }
                 var pool = _ib.Get(poolkey);
                 if (pool.IsAvailable == false)
                 {
+                    poolUnavailableException = pool.UnavailableException;
                     poolkey = null;
                     goto goto_getrndkey;
                 }
@@ -73,6 +75,7 @@ namespace FreeRedis
                 rdsproxy._pool = pool;
                 return rdsproxy;
             }
+
             public override TValue AdapterCall<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
             {
                 if (cmd._keyIndexes.Count > 1) //Multiple key slot values not equal
@@ -82,18 +85,18 @@ namespace FreeRedis
                     {
                         case "DEL":
                         case "UNLINK":
-                            return cmd._keyIndexes.Select((_, idx) => AdapterCall(cmd._command.InputKey(cmd.GetKey(idx)), parse)).Sum(a => a.ConvertTo<long>()).ConvertTo<TValue>();
+                            return cmd._keyIndexes.Select((_, idx) => AdapterCall(cmd.Reset().InputKey(cmd.GetKey(idx)), parse)).Sum(a => a.ConvertTo<long>()).ConvertTo<TValue>();
                         case "MSET":
-                            cmd._keyIndexes.ForEach(idx => AdapterCall(cmd._command.InputKey(cmd._input[idx].ToInvariantCultureToString()).InputRaw(cmd._input[idx + 1]), parse));
+                            cmd._keyIndexes.ForEach(idx => AdapterCall(cmd.Reset().InputKey(cmd._input[idx].ToInvariantCultureToString()).InputRaw(cmd._input[idx + 1]), parse));
                             return default;
                         case "MGET":
                             return cmd._keyIndexes.Select((_, idx) =>
                             {
-                                var rt = AdapterCall(cmd._command.InputKey(cmd.GetKey(idx)), parse);
+                                var rt = AdapterCall(cmd.Reset().InputKey(cmd.GetKey(idx)), parse);
                                 return rt.ConvertTo<object[]>().FirstOrDefault();
                             }).ToArray().ConvertTo<TValue>();
                         case "PFCOUNT":
-                            return cmd._keyIndexes.Select((_, idx) => AdapterCall(cmd._command.InputKey(cmd.GetKey(idx)), parse)).Sum(a => a.ConvertTo<long>()).ConvertTo<TValue>();
+                            return cmd._keyIndexes.Select((_, idx) => AdapterCall(cmd.Reset().InputKey(cmd.GetKey(idx)), parse)).Sum(a => a.ConvertTo<long>()).ConvertTo<TValue>();
                     }
                 }
                 return TopOwner.LogCall(cmd, () =>
@@ -103,6 +106,7 @@ namespace FreeRedis
                     var protocolRetry = false;
                     using (var rds = GetRedisSocket(cmd))
                     {
+                        var getTime = DateTime.Now;
                         pool = (rds as DefaultRedisSocket.TempProxyRedisSocket)._pool;
                         try
                         {
@@ -130,7 +134,7 @@ namespace FreeRedis
                         }
                         catch (Exception ex)
                         {
-                            if (pool?.SetUnavailable(ex) == true)
+                            if (pool?.SetUnavailable(ex, getTime) == true)
                             {
                             }
                             throw;
@@ -167,22 +171,115 @@ namespace FreeRedis
                 });
             }
 #if isasync
-            public override Task<TValue> AdapterCallAsync<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
+            async public override Task<TValue> AdapterCallAsync<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
             {
-                //Single socket not support Async Multiplexing
-                return Task.FromResult(AdapterCall<TValue>(cmd, parse));
+                if (cmd._keyIndexes.Count > 1) //Multiple key slot values not equal
+                {
+                    cmd.Prefix(TopOwner.Prefix);
+                    switch (cmd._command)
+                    {
+                        case "DEL":
+                        case "UNLINK":
+                            return cmd._keyIndexes.Select((_, idx) => AdapterCall(cmd.Reset().InputKey(cmd.GetKey(idx)), parse)).Sum(a => a.ConvertTo<long>()).ConvertTo<TValue>();
+                        case "MSET":
+                            cmd._keyIndexes.ForEach(idx => AdapterCall(cmd.Reset().InputKey(cmd._input[idx].ToInvariantCultureToString()).InputRaw(cmd._input[idx + 1]), parse));
+                            return default;
+                        case "MGET":
+                            return cmd._keyIndexes.Select((_, idx) =>
+                            {
+                                var rt = AdapterCall(cmd.Reset().InputKey(cmd.GetKey(idx)), parse);
+                                return rt.ConvertTo<object[]>().FirstOrDefault();
+                            }).ToArray().ConvertTo<TValue>();
+                        case "PFCOUNT":
+                            return cmd._keyIndexes.Select((_, idx) => AdapterCall(cmd.Reset().InputKey(cmd.GetKey(idx)), parse)).Sum(a => a.ConvertTo<long>()).ConvertTo<TValue>();
+                    }
+                }
+                return await TopOwner.LogCallAsync(cmd, async () =>
+                {
+                    RedisResult rt = null;
+                    RedisClientPool pool = null;
+                    var protocolRetry = false;
+                    using (var rds = GetRedisSocket(cmd))
+                    {
+                        var getTime = DateTime.Now;
+                        pool = (rds as DefaultRedisSocket.TempProxyRedisSocket)._pool;
+                        try
+                        {
+                            if (cmd._clusterMovedAsking)
+                            {
+                                cmd._clusterMovedAsking = false;
+                                var askingCmd = "ASKING".SubCommand(null).FlagReadbytes(false);
+                                await rds.WriteAsync(askingCmd);
+                                await rds.ReadAsync(askingCmd);
+                            }
+                            await rds.WriteAsync(cmd);
+                            rt = await rds.ReadAsync(cmd);
+                        }
+                        catch (ProtocolViolationException)
+                        {
+                            rds.ReleaseSocket();
+                            cmd._protocolErrorTryCount++;
+                            if (cmd._protocolErrorTryCount <= pool._policy._connectionStringBuilder.Retry)
+                                protocolRetry = true;
+                            else
+                            {
+                                if (cmd.IsReadOnlyCommand() == false || cmd._protocolErrorTryCount > 1) throw;
+                                protocolRetry = true;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            if (pool?.SetUnavailable(ex, getTime) == true)
+                            {
+                            }
+                            throw;
+                        }
+                    }
+                    if (protocolRetry) return await AdapterCallAsync(cmd, parse);
+                    if (rt.IsError && pool != null)
+                    {
+                        var moved = ClusterMoved.ParseSimpleError(rt.SimpleError);
+                        if (moved != null && cmd._clusterMovedTryCount < 3)
+                        {
+                            cmd._clusterMovedTryCount++;
+
+                            if (moved.endpoint.StartsWith("127.0.0.1"))
+                                moved.endpoint = $"{DefaultRedisSocket.SplitHost(pool._policy._connectionStringBuilder.Host).Key}:{moved.endpoint.Substring(10)}";
+                            else if (moved.endpoint.StartsWith("localhost", StringComparison.CurrentCultureIgnoreCase))
+                                moved.endpoint = $"{DefaultRedisSocket.SplitHost(pool._policy._connectionStringBuilder.Host).Key}:{moved.endpoint.Substring(10)}";
+
+                            ConnectionStringBuilder connectionString = pool._policy._connectionStringBuilder.ToString();
+                            connectionString.Host = moved.endpoint;
+                            RegisterClusterNode(connectionString);
+
+                            if (moved.ismoved)
+                                _slotCache.AddOrUpdate(moved.slot, connectionString.Host, (k1, v1) => connectionString.Host);
+
+                            if (moved.isask)
+                                cmd._clusterMovedAsking = true;
+
+                            TopOwner.OnNotice(null, new NoticeEventArgs(NoticeType.Info, null, $"{(cmd.WriteTarget ?? "Not connected").PadRight(21)} > {cmd}\r\n{rt.SimpleError} ", null));
+                            return await AdapterCallAsync(cmd, parse);
+                        }
+                    }
+                    return parse(rt);
+                });
             }
 #endif
 
             void RefershClusterNodes()
             {
+                Exception clusterException = null;
                 foreach (var testConnection in _clusterConnectionStrings)
                 {
+                    var minPoolSize = testConnection.MinPoolSize;
+                    testConnection.MinPoolSize = 1;
                     RegisterClusterNode(testConnection);
                     //尝试求出其他节点，并缓存slot
                     try
                     {
                         var cnodes = AdapterCall<string>("CLUSTER".SubCommand("NODES"), rt => rt.ThrowOrValue<string>()).Split('\n');
+                        var cnodesDict = new Dictionary<string, bool>(StringComparer.OrdinalIgnoreCase);
                         foreach (var cnode in cnodes)
                         {
                             if (string.IsNullOrEmpty(cnode)) continue;
@@ -201,29 +298,42 @@ namespace FreeRedis
                                 endpoint = $"{DefaultRedisSocket.SplitHost(testConnection.Host).Key}:{endpoint.Substring(10)}";
                             ConnectionStringBuilder connectionString = testConnection.ToString();
                             connectionString.Host = endpoint;
+                            if (cnodesDict.ContainsKey(endpoint) == false) cnodesDict.Add(endpoint, true);
                             RegisterClusterNode(connectionString);
 
                             for (var slotIndex = 8; slotIndex < dt.Length; slotIndex++)
                             {
                                 var slots = dt[slotIndex].Split('-');
-                                if (ushort.TryParse(slots[0], out var tryslotStart) &&
-                                    ushort.TryParse(slots[1], out var tryslotEnd))
+                                if (slots.Length == 2)
                                 {
-                                    for (var slot = tryslotStart; slot <= tryslotEnd; slot++)
-                                        _slotCache.AddOrUpdate(slot, connectionString.Host, (k1, v1) => connectionString.Host);
+                                    if (ushort.TryParse(slots[0], out var tryslotStart) &&
+                                        ushort.TryParse(slots[1], out var tryslotEnd))
+                                    {
+                                        for (var slot = tryslotStart; slot <= tryslotEnd; slot++)
+                                            _slotCache.AddOrUpdate(slot, connectionString.Host, (k1, v1) => connectionString.Host);
+                                    }
+                                }else
+                                {
+                                    ushort.TryParse(slots[0], out var tryslotStart);
+                                    _slotCache.AddOrUpdate(tryslotStart,connectionString.Host, (k1, v1) => connectionString.Host);
                                 }
                             }
                         }
+                        if (cnodesDict.ContainsKey(testConnection.Host))
+                            RedisClientPoolPolicy.PrevReheatConnectionPool(_ib.Get(testConnection.Host), minPoolSize);
+                        else
+                            _ib.TryRemove(testConnection.Host, true);
                         break;
                     }
-                    catch
+                    catch (Exception ex)
                     {
+                        clusterException = ex;
                         _ib.TryRemove(testConnection.Host, true);
                     }
                 }
 
                 if (_ib.GetKeys().Length == 0)
-                    throw new RedisClientException($"All \"clusterConnectionStrings\" failed to connect");
+                    throw new RedisClientException($"All \"clusterConnectionStrings\" failed to connect. {(clusterException?.Message)}");
             }
             //closure connectionString
             void RegisterClusterNode(ConnectionStringBuilder connectionString)

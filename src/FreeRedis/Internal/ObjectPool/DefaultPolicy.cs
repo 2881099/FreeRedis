@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace FreeRedis.Internal.ObjectPool
@@ -16,7 +14,7 @@ namespace FreeRedis.Internal.ObjectPool
         public int AsyncGetCapacity { get; set; } = 10000;
         public bool IsThrowGetTimeoutException { get; set; } = true;
         public bool IsAutoDisposeWithSystem { get; set; } = true;
-        public int CheckAvailableInterval { get; set; } = 5;
+        public int CheckAvailableInterval { get; set; } = 3;
 
         public Func<T> CreateObject;
         public Action<Object<T>> OnGetObject;
@@ -36,7 +34,8 @@ namespace FreeRedis.Internal.ObjectPool
             OnGetObject?.Invoke(obj);
         }
 
-#if !NET40
+#if net40
+#else
         public Task OnGetAsync(Object<T> obj)
         {
             OnGetObject?.Invoke(obj);

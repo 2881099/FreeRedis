@@ -27,9 +27,15 @@ namespace FreeRedis.Internal
         RedisProtocol Protocol { get; set; }
         Encoding Encoding { get; set; }
 
+        CommandPacket LastCommand { get; }
         void Write(CommandPacket cmd);
         RedisResult Read(CommandPacket cmd);
         void ReadChunk(Stream destination, int bufferSize = 1024);
+#if isasync
+        Task WriteAsync(CommandPacket cmd);
+        Task<RedisResult> ReadAsync(CommandPacket cmd);
+        Task ReadChunkAsync(Stream destination, int bufferSize = 1024);
+#endif
         ClientReplyType ClientReply { get; }
         long ClientId { get; }
         int Database { get; }

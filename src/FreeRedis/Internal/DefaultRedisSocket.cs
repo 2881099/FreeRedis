@@ -55,6 +55,7 @@ namespace FreeRedis.Internal
             public ClientReplyType ClientReply => _owner.ClientReply;
             public long ClientId => _owner.ClientId;
             public int Database => _owner.Database;
+            public CommandPacket LastCommand => _owner.LastCommand;
 
             void IRedisSocketModify.SetClientReply(ClientReplyType value) => (_owner as IRedisSocketModify).SetClientReply(value);
             void IRedisSocketModify.SetClientId(long value) => (_owner as IRedisSocketModify).SetClientId(value);
@@ -66,6 +67,11 @@ namespace FreeRedis.Internal
             public void Write(CommandPacket cmd) => _owner.Write(cmd);
             public RedisResult Read(CommandPacket cmd) => _owner.Read(cmd);
             public void ReadChunk(Stream destination, int bufferSize = 1024) => _owner.ReadChunk(destination, bufferSize);
+#if isasync
+            public Task WriteAsync(CommandPacket cmd) => _owner.WriteAsync(cmd);
+            public Task<RedisResult> ReadAsync(CommandPacket cmd) => _owner.ReadAsync(cmd);
+            public Task ReadChunkAsync(Stream destination, int bufferSize = 1024) => _owner.ReadChunkAsync(destination, bufferSize);
+#endif
         }
 
         public string Host { get; private set; }
@@ -103,6 +109,7 @@ namespace FreeRedis.Internal
         public ClientReplyType ClientReply { get; protected set; } = ClientReplyType.on;
         public long ClientId { get; protected set; }
         public int Database { get; protected set; } = 0;
+        public CommandPacket LastCommand { get; protected set; }
 
         void IRedisSocketModify.SetClientReply(ClientReplyType value) => this.ClientReply = value;
         void IRedisSocketModify.SetClientId(long value) => this.ClientId = value;
@@ -120,16 +127,8 @@ namespace FreeRedis.Internal
             Ssl = ssl;
         }
 
-        public void Write(CommandPacket cmd)
+        void WriteAfter(CommandPacket cmd)
         {
-            if (IsConnected == false) Connect();
-            using (var ms = new MemoryStream()) //Writing data directly to will be very slow
-            {
-                new RespHelper.Resp3Writer(ms, Encoding, Protocol).WriteCommand(cmd);
-                ms.Position = 0;
-                ms.CopyTo(Stream);
-                ms.Close();
-            }
             switch (cmd._command)
             {
                 case "CLIENT":
@@ -154,8 +153,22 @@ namespace FreeRedis.Internal
             }
             cmd.WriteTarget = $"{this.Host}/{this.Database}";
         }
+        public void Write(CommandPacket cmd)
+        {
+            LastCommand = cmd;
+            if (IsConnected == false) Connect();
+            using (var ms = new MemoryStream()) //Writing data directly to will be very slow
+            {
+                new RespHelper.Resp3Writer(ms, Encoding, Protocol).WriteCommand(cmd);
+                ms.Position = 0;
+                ms.CopyTo(Stream);
+                ms.Close();
+            }
+            WriteAfter(cmd);
+        }
         public RedisResult Read(CommandPacket cmd)
         {
+            LastCommand = cmd;
             if (ClientReply == ClientReplyType.on)
             {
                 if (IsConnected == false) Connect();
@@ -174,6 +187,42 @@ namespace FreeRedis.Internal
                 Reader.ReadBlobStringChunk(destination, bufferSize);
             }
         }
+#if isasync
+        async public Task WriteAsync(CommandPacket cmd)
+        {
+            LastCommand = cmd;
+            if (IsConnected == false) Connect();
+            using (var ms = new MemoryStream()) //Writing data directly to will be very slow
+            {
+                new RespHelper.Resp3Writer(ms, Encoding, Protocol).WriteCommand(cmd);
+                ms.Position = 0;
+                await ms.CopyToAsync(Stream);
+                ms.Close();
+            }
+            WriteAfter(cmd);
+        }
+        async public Task<RedisResult> ReadAsync(CommandPacket cmd)
+        {
+            LastCommand = cmd;
+            if (ClientReply == ClientReplyType.on)
+            {
+                if (IsConnected == false) Connect();
+                var rt = await Reader.ReadObjectAsync(cmd?._flagReadbytes == true ? null : Encoding);
+                rt.Encoding = Encoding;
+                cmd?.OnDataTrigger(rt);
+                return rt;
+            }
+            return new RedisResult(null, true, RedisMessageType.SimpleString) { Encoding = Encoding };
+        }
+        async public Task ReadChunkAsync(Stream destination, int bufferSize = 1024)
+        {
+            if (ClientReply == ClientReplyType.on)
+            {
+                if (IsConnected == false) Connect();
+                await Reader.ReadBlobStringChunkAsync(destination, bufferSize);
+            }
+        }
+#endif
 
         object _connectLock = new object();
         public void Connect()
@@ -182,14 +231,22 @@ namespace FreeRedis.Internal
             {
                 ResetHost(Host);
 
-                EndPoint endpoint = ParseEndPoint(_ip, _port);
+                EndPoint endpoint = IPAddress.TryParse(_ip, out var tryip) ?
+                    new IPEndPoint(tryip, _port) :
+                    new IPEndPoint(Dns.GetHostAddresses(_ip).FirstOrDefault() ?? IPAddress.Parse(_ip), _port);
+
                 var localSocket = endpoint.AddressFamily == AddressFamily.InterNetworkV6 ? 
                     new Socket(AddressFamily.InterNetworkV6, SocketType.Stream, ProtocolType.Tcp):
                     new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
                 var asyncResult = localSocket.BeginConnect(endpoint, null, null);
                 if (!asyncResult.AsyncWaitHandle.WaitOne(ConnectTimeout, true))
-                    throw new TimeoutException("Connect to redis-server timeout");
+                {
+                    var endpointString = endpoint.ToString();
+                    if (endpointString != $"{_ip}:{_port}") endpointString = $"{_ip}:{_port} -> {endpointString}";
+                    throw new TimeoutException($"Connect to redis-server({endpointString}) timeout");
+                }
+                localSocket.EndConnect(asyncResult);
                 _socket = localSocket;
                 _stream = new NetworkStream(Socket, true);
                 _socket.ReceiveTimeout = (int)ReceiveTimeout.TotalMilliseconds;
@@ -267,21 +324,6 @@ namespace FreeRedis.Internal
             }
 
             return new KeyValuePair<string, int>(host, 6379);
-        }
-
-        private static EndPoint ParseEndPoint(string ip, int port)
-        {
-            if (IPAddress.TryParse(ip, out var tryip))
-            {
-                return new IPEndPoint(tryip, port);
-            }
-
-            if (Dns.GetHostAddresses(ip).Length == 0)
-            {
-                throw new Exception($"无法解析“{ip}”");
-            }
-
-            return new DnsEndPoint(ip, port);
         }
     }
 }

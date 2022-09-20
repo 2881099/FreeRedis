@@ -239,7 +239,7 @@ namespace FreeRedis
                 .Input(keyIds.Values.ToArray()), rt => rt.ThrowOrValueToXRead());
         }
 
-        public StreamsEntry XReadGroup(string group, string consumer, long block, string key, string id) => XReadGroup(group, consumer, 1, block, false, key, id)?.FirstOrDefault()?.entries?.First();
+        public StreamsEntry XReadGroup(string group, string consumer, long block, string key, string id) => XReadGroup(group, consumer, 1, block, false, key, id)?.FirstOrDefault()?.entries?.FirstOrDefault();
         public StreamsEntryResult[] XReadGroup(string group, string consumer, long count, long block, bool noack, string key, string id, params string[] keyIds) {
             var kis = keyIds.MapToHash<string>(Encoding.UTF8);
             var kikeys = kis.Keys.ToArray();
@@ -297,6 +297,7 @@ namespace FreeRedis
                if (a?.Any() != true) return null;
                var ret = new StreamsXPendingResult { count = a[0].ConvertTo<long>(), minId = a[1].ConvertTo<string>(), maxId = a[2].ConvertTo<string>() };
                var objs1 = a[3] as object[];
+               if (objs1 == null) objs1 = new object[0];
                ret.consumers = new StreamsXPendingResult.Consumer[objs1.Length];
                for (var z = 0; z < objs1.Length; z++)
                {

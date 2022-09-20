@@ -1,20 +1,13 @@
-﻿using FreeRedis.Internal;
-using FreeRedis.Internal.ObjectPool;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Collections.Concurrent;
-using System.IO;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using System.Diagnostics;
-using System.Collections;
-using System.Runtime.InteropServices;
-using System.Reflection;
 
 namespace FreeRedis
 {
-    public partial class RedisClient : IDisposable
+    public partial class RedisClient : IDisposable, IRedisClient
     {
         internal protected BaseAdapter Adapter { get; }
         internal protected string Prefix { get; }
@@ -95,6 +88,7 @@ namespace FreeRedis
             cmd.Prefix(Prefix);
             var isnotice = this.Notice != null;
             if (isnotice == false && this.Interceptors.Any() == false) return func();
+            if (cmd.IsIgnoreAop) return func();
             Exception exception = null;
 
             T ret = default(T);

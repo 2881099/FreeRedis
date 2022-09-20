@@ -60,7 +60,7 @@ namespace console_netcore31_vs
             results.Clear();
             sw.Reset();
             sw.Start();
-            for (var a = 0; a < 100000; a++)
+            for (var a = 0; a < 10000; a++)
             {
                 var tmp = Guid.NewGuid().ToString();
                 sedb.StringSet(tmp, String);
@@ -69,37 +69,37 @@ namespace console_netcore31_vs
                 results.Enqueue(val);
             }
             sw.Stop();
-            Console.WriteLine("StackExchange(0-100000): " + sw.ElapsedMilliseconds + "ms results: " + results.Count);
+            Console.WriteLine("StackExchange(0-10000): " + sw.ElapsedMilliseconds + "ms results: " + results.Count);
             tasks.Clear();
             results.Clear();
             cli.FlushDb();
 
-            sw.Reset();
-            sw.Start();
-            tasks = new List<Task>();
-            for (var a = 0; a < 100000; a++)
-            {
-                tasks.Add(Task.Run(() =>
-                {
-                    var tmp = Guid.NewGuid().ToString();
-                    sedb.StringSet(tmp, String);
-                    var val = sedb.StringGet(tmp);
-                    if (val != String) throw new Exception("not equal");
-                    results.Enqueue(val);
-                }));
-            }
-            Task.WaitAll(tasks.ToArray());
-            sw.Stop();
-            Console.WriteLine("StackExchange(Task.WaitAll 100000): " + sw.ElapsedMilliseconds + "ms results: " + results.Count);
-            tasks.Clear();
-            results.Clear();
-            cli.FlushDb();
+            //sw.Reset();
+            //sw.Start();
+            //tasks = new List<Task>();
+            //for (var a = 0; a < 100000; a++)
+            //{
+            //    tasks.Add(Task.Run(() =>
+            //    {
+            //        var tmp = Guid.NewGuid().ToString();
+            //        sedb.StringSet(tmp, String);
+            //        var val = sedb.StringGet(tmp);
+            //        if (val != String) throw new Exception("not equal");
+            //        results.Enqueue(val);
+            //    }));
+            //}
+            //Task.WaitAll(tasks.ToArray());
+            //sw.Stop();
+            //Console.WriteLine("StackExchange(Task.WaitAll 100000): " + sw.ElapsedMilliseconds + "ms results: " + results.Count);
+            //tasks.Clear();
+            //results.Clear();
+            //cli.FlushDb();
 
             sw.Reset();
             sw.Start();
             Task.Run(async () =>
             {
-                for (var a = 0; a < 100000; a++)
+                for (var a = 0; a < 10000; a++)
                 {
                     var tmp = Guid.NewGuid().ToString();
                     await sedb.StringSetAsync(tmp, String);
@@ -109,7 +109,7 @@ namespace console_netcore31_vs
                 }
             }).Wait();
             sw.Stop();
-            Console.WriteLine("StackExchangeAsync(0-100000): " + sw.ElapsedMilliseconds + "ms results: " + results.Count);
+            Console.WriteLine("StackExchangeAsync(0-10000): " + sw.ElapsedMilliseconds + "ms results: " + results.Count);
             tasks.Clear();
             results.Clear();
             cli.FlushDb();
@@ -138,7 +138,7 @@ namespace console_netcore31_vs
 
             sw.Reset();
             sw.Start();
-            for (var a = 0; a < 100000; a++)
+            for (var a = 0; a < 10000; a++)
             {
                 var tmp = Guid.NewGuid().ToString();
                 cli.Set(tmp, String);
@@ -147,7 +147,7 @@ namespace console_netcore31_vs
                 results.Enqueue(val);
             }
             sw.Stop();
-            Console.WriteLine("FreeRedis(0-100000): " + sw.ElapsedMilliseconds + "ms results: " + results.Count);
+            Console.WriteLine("FreeRedisSync(0-10000): " + sw.ElapsedMilliseconds + "ms results: " + results.Count);
             tasks.Clear();
             results.Clear();
             cli.FlushDb();
@@ -168,10 +168,53 @@ namespace console_netcore31_vs
             }
             Task.WaitAll(tasks.ToArray());
             sw.Stop();
-            Console.WriteLine("FreeRedis(Task.WaitAll 100000): " + sw.ElapsedMilliseconds + "ms results: " + results.Count);
+            Console.WriteLine("FreeRedisSync(Task.WaitAll 100000): " + sw.ElapsedMilliseconds + "ms results: " + results.Count);
             tasks.Clear();
             results.Clear();
             cli.FlushDb();
+
+
+            sw.Reset();
+            sw.Start();
+            Task.Run(async () =>
+            {
+                for (var a = 0; a < 10000; a++)
+                {
+                    var tmp = Guid.NewGuid().ToString();
+                    await cli.SetAsync(tmp, String);
+                    var val = await cli.GetAsync(tmp);
+                    if (val != String) throw new Exception("not equal");
+                    results.Enqueue(val);
+                }
+            }).Wait();
+            sw.Stop();
+            Console.WriteLine("FreeRedisAsync(0-10000): " + sw.ElapsedMilliseconds + "ms results: " + results.Count);
+            tasks.Clear();
+            results.Clear();
+            cli.FlushDb();
+
+            sw.Reset();
+            sw.Start();
+            tasks = new List<Task>();
+            for (var a = 0; a < 100000; a++)
+            {
+                tasks.Add(Task.Run(async () =>
+                {
+                    var tmp = Guid.NewGuid().ToString();
+                    await cli.SetAsync(tmp, String);
+                    var val = await cli.GetAsync(tmp);
+                    if (val != String) throw new Exception("not equal");
+                    results.Enqueue(val);
+                }));
+            }
+            Task.WaitAll(tasks.ToArray());
+            sw.Stop();
+            Console.WriteLine("FreeRedisAsync(Task.WaitAll 100000): " + sw.ElapsedMilliseconds + "ms results: " + results.Count);
+            tasks.Clear();
+            results.Clear();
+            cli.FlushDb();
+
+            return;
 
             //sw.Reset();
             //sw.Start();

@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.Concurrent;
-using System.Linq;
+using System.Collections.Generic;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Diagnostics;
 
 namespace FreeRedis.Internal.ObjectPool
 {
@@ -14,7 +11,7 @@ namespace FreeRedis.Internal.ObjectPool
     {
         internal static void WriteLine(string text, ConsoleColor backgroundColor)
         {
-            try
+            try //#643
             {
                 var bgcolor = Console.BackgroundColor;
                 var forecolor = Console.ForegroundColor;
@@ -22,7 +19,7 @@ namespace FreeRedis.Internal.ObjectPool
 
                 switch (backgroundColor)
                 {
-                    case ConsoleColor.DarkYellow:
+                    case ConsoleColor.Yellow:
                         Console.ForegroundColor = ConsoleColor.White;
                         break;
                     case ConsoleColor.DarkGreen:
@@ -53,9 +50,9 @@ namespace FreeRedis.Internal.ObjectPool
     {
         public IPolicy<T> Policy { get; protected set; }
 
-        internal protected List<Object<T>> _allObjects = new List<Object<T>>();
         private object _allObjectsLock = new object();
-        internal protected ConcurrentStack<Object<T>> _freeObjects = new ConcurrentStack<Object<T>>();
+        internal List<Object<T>> _allObjects = new List<Object<T>>();
+        internal ConcurrentStack<Object<T>> _freeObjects = new ConcurrentStack<Object<T>>();
 
         private ConcurrentQueue<GetSyncQueueInfo> _getSyncQueue = new ConcurrentQueue<GetSyncQueueInfo>();
         private ConcurrentQueue<TaskCompletionSource<Object<T>>> _getAsyncQueue = new ConcurrentQueue<TaskCompletionSource<Object<T>>>();
@@ -64,25 +61,23 @@ namespace FreeRedis.Internal.ObjectPool
         public bool IsAvailable => this.UnavailableException == null;
         public Exception UnavailableException { get; private set; }
         public DateTime? UnavailableTime { get; private set; }
+        public DateTime? AvailableTime { get; private set; }
         private object UnavailableLock = new object();
         private bool running = true;
 
-        public bool SetUnavailable(Exception exception)
+        public bool SetUnavailable(Exception exception, DateTime lastGetTime)
         {
-
             bool isseted = false;
-
             if (exception != null && UnavailableException == null)
             {
-
                 lock (UnavailableLock)
                 {
-
                     if (UnavailableException == null)
                     {
-
+                        if (lastGetTime < AvailableTime) return false; //已经恢复
                         UnavailableException = exception;
                         UnavailableTime = DateTime.Now;
+                        AvailableTime = null;
                         isseted = true;
                     }
                 }
@@ -90,7 +85,6 @@ namespace FreeRedis.Internal.ObjectPool
 
             if (isseted)
             {
-
                 Policy.OnUnavailable();
                 CheckAvailable(Policy.CheckAvailableInterval);
             }
@@ -104,41 +98,40 @@ namespace FreeRedis.Internal.ObjectPool
         /// <param name="interval"></param>
         private void CheckAvailable(int interval)
         {
-
             new Thread(() =>
             {
-
                 if (UnavailableException != null)
                     TestTrace.WriteLine($"【{Policy.Name}】Next recovery time：{DateTime.Now.AddSeconds(interval)}", ConsoleColor.DarkYellow);
 
                 while (UnavailableException != null)
                 {
-
                     if (running == false) return;
-
                     Thread.CurrentThread.Join(TimeSpan.FromSeconds(interval));
-
                     if (running == false) return;
 
                     try
                     {
-
                         var conn = GetFree(false);
-                        if (conn == null) throw new Exception($"CheckAvailable: Failed to get resource {this.Statistics}");
+                        if (conn == null) throw new Exception($"CheckAvailable 无法获得资源，{this.Statistics}");
 
                         try
                         {
-
-                            if (Policy.OnCheckAvailable(conn) == false) throw new Exception("CheckAvailable: An exception needs to be thrown");
+                            try
+                            {
+                                Policy.OnCheckAvailable(conn);
+                                break;
+                            }
+                            catch
+                            {
+                                conn.ResetValue();
+                            }
+                            if (Policy.OnCheckAvailable(conn) == false) throw new Exception("CheckAvailable 应抛出异常，代表仍然不可用。");
                             break;
-
                         }
                         finally
                         {
-
                             Return(conn);
                         }
-
                     }
                     catch (Exception ex)
                     {
@@ -157,15 +150,13 @@ namespace FreeRedis.Internal.ObjectPool
             bool isRestored = false;
             if (UnavailableException != null)
             {
-
                 lock (UnavailableLock)
                 {
-
                     if (UnavailableException != null)
                     {
-
                         UnavailableException = null;
                         UnavailableTime = null;
+                        AvailableTime = DateTime.Now;
                         isRestored = true;
                     }
                 }
@@ -173,37 +164,29 @@ namespace FreeRedis.Internal.ObjectPool
 
             if (isRestored)
             {
-
                 lock (_allObjectsLock)
                     _allObjects.ForEach(a => a.LastGetTime = a.LastReturnTime = new DateTime(2000, 1, 1));
 
                 Policy.OnAvailable();
-
                 TestTrace.WriteLine($"【{Policy.Name}】Recovered", ConsoleColor.DarkGreen);
             }
         }
 
         protected bool LiveCheckAvailable()
         {
-
             try
             {
-
                 var conn = GetFree(false);
-                if (conn == null) throw new Exception($"LiveCheckAvailable: Failed to get resource {this.Statistics}");
+                if (conn == null) throw new Exception($"LiveCheckAvailable 无法获得资源，{this.Statistics}");
 
                 try
                 {
-
-                    if (Policy.OnCheckAvailable(conn) == false) throw new Exception("LiveCheckAvailable: An exception needs to be thrown");
-
+                    if (Policy.OnCheckAvailable(conn) == false) throw new Exception("LiveCheckAvailable 应抛出异常，代表仍然不可用。");
                 }
                 finally
                 {
-
                     Return(conn);
                 }
-
             }
             catch
             {
@@ -211,7 +194,6 @@ namespace FreeRedis.Internal.ObjectPool
             }
 
             RestoreToAvailable();
-
             return true;
         }
 
@@ -276,14 +258,13 @@ namespace FreeRedis.Internal.ObjectPool
         {
 
             if (running == false)
-                throw new ObjectDisposedException($"【{Policy.Name}】The ObjectPool has been disposed");
+                throw new ObjectDisposedException($"【{Policy.Name}】对象池已释放，无法访问。");
 
             if (checkAvailable && UnavailableException != null)
-                throw new Exception($"【{Policy.Name}】{UnavailableException?.Message}", UnavailableException);
+                throw new Exception($"【{Policy.Name}】状态不可用，等待后台检查程序恢复方可使用。{UnavailableException?.Message}", UnavailableException);
 
             if ((_freeObjects.TryPop(out var obj) == false || obj == null) && _allObjects.Count < Policy.PoolSize)
             {
-
                 lock (_allObjectsLock)
                     if (_allObjects.Count < Policy.PoolSize)
                         _allObjects.Add(obj = new Object<T> { Pool = this, Id = _allObjects.Count + 1 });
@@ -311,12 +292,9 @@ namespace FreeRedis.Internal.ObjectPool
 
         public Object<T> Get(TimeSpan? timeout = null)
         {
-
             var obj = GetFree(true);
-
             if (obj == null)
             {
-
                 var queueItem = new GetSyncQueueInfo();
 
                 _getSyncQueue.Enqueue(queueItem);
@@ -337,11 +315,9 @@ namespace FreeRedis.Internal.ObjectPool
 
                 if (obj == null)
                 {
-
                     Policy.OnGetTimeout();
-
                     if (Policy.IsThrowGetTimeoutException)
-                        throw new TimeoutException($"ObjectPool.Get() timeout {timeout.Value.TotalSeconds} seconds");
+                        throw new TimeoutException($"ObjectPool.Get 获取超时（{timeout.Value.TotalSeconds}秒）。");
 
                     return null;
                 }
@@ -359,22 +335,21 @@ namespace FreeRedis.Internal.ObjectPool
 
             obj.LastGetThreadId = Thread.CurrentThread.ManagedThreadId;
             obj.LastGetTime = DateTime.Now;
+            obj.LastGetTimeCopy = DateTime.Now;
             Interlocked.Increment(ref obj._getTimes);
 
             return obj;
         }
 
-#if !NET40
+#if net40
+#else
         async public Task<Object<T>> GetAsync()
         {
-
             var obj = GetFree(true);
-
             if (obj == null)
             {
-
                 if (Policy.AsyncGetCapacity > 0 && _getAsyncQueue.Count >= Policy.AsyncGetCapacity - 1)
-                    throw new OutOfMemoryException($"ObjectPool.GetAsync() The queue is too long. Policy.AsyncGetCapacity = {Policy.AsyncGetCapacity}");
+                    throw new OutOfMemoryException($"ObjectPool.GetAsync 无可用资源且队列过长，Policy.AsyncGetCapacity = {Policy.AsyncGetCapacity}。");
 
                 var tcs = new TaskCompletionSource<Object<T>>();
 
@@ -386,17 +361,17 @@ namespace FreeRedis.Internal.ObjectPool
                 //if (timeout == null) timeout = Policy.SyncGetTimeout;
 
                 //if (tcs.Task.Wait(timeout.Value))
-                //    obj = tcs.Task.Result;
+                //	obj = tcs.Task.Result;
 
                 //if (obj == null) {
 
-                //    tcs.TrySetCanceled();
-                //    Policy.GetTimeout();
+                //	tcs.TrySetCanceled();
+                //	Policy.GetTimeout();
 
-                //    if (Policy.IsThrowGetTimeoutException)
-                //        throw new Exception($"ObjectPool.GetAsync() timeout {timeout.Value.TotalSeconds} seconds");
+                //	if (Policy.IsThrowGetTimeoutException)
+                //		throw new Exception($"ObjectPool.GetAsync 获取超时（{timeout.Value.TotalSeconds}秒）。");
 
-                //    return null;
+                //	return null;
                 //}
             }
 
@@ -412,6 +387,7 @@ namespace FreeRedis.Internal.ObjectPool
 
             obj.LastGetThreadId = Thread.CurrentThread.ManagedThreadId;
             obj.LastGetTime = DateTime.Now;
+            obj.LastGetTimeCopy = DateTime.Now;
             Interlocked.Increment(ref obj._getTimes);
 
             return obj;
@@ -420,40 +396,31 @@ namespace FreeRedis.Internal.ObjectPool
 
         public void Return(Object<T> obj, bool isReset = false)
         {
-
             if (obj == null) return;
-
             if (obj._isReturned) return;
 
             if (running == false)
             {
-
                 Policy.OnDestroy(obj.Value);
                 try { (obj.Value as IDisposable)?.Dispose(); } catch { }
-
                 return;
             }
 
             if (isReset) obj.ResetValue();
-
             bool isReturn = false;
 
             while (isReturn == false && _getQueue.TryDequeue(out var isAsync))
             {
-
                 if (isAsync == false)
                 {
-
                     if (_getSyncQueue.TryDequeue(out var queueItem) && queueItem != null)
                     {
-
                         lock (queueItem.Lock)
                             if (queueItem.IsTimeout == false)
                                 queueItem.ReturnValue = obj;
 
                         if (queueItem.ReturnValue != null)
                         {
-
                             obj.LastReturnThreadId = Thread.CurrentThread.ManagedThreadId;
                             obj.LastReturnTime = DateTime.Now;
 
@@ -469,14 +436,11 @@ namespace FreeRedis.Internal.ObjectPool
 
                         try { queueItem.Dispose(); } catch { }
                     }
-
                 }
                 else
                 {
-
                     if (_getAsyncQueue.TryDequeue(out var tcs) && tcs != null && tcs.Task.IsCanceled == false)
                     {
-
                         obj.LastReturnThreadId = Thread.CurrentThread.ManagedThreadId;
                         obj.LastReturnTime = DateTime.Now;
 
@@ -509,11 +473,9 @@ namespace FreeRedis.Internal.ObjectPool
 
         public void Dispose()
         {
-
             running = false;
 
             while (_freeObjects.TryPop(out var fo)) ;
-
             while (_getSyncQueue.TryDequeue(out var sync))
             {
                 try { sync.Wait.Set(); } catch { }
@@ -535,13 +497,9 @@ namespace FreeRedis.Internal.ObjectPool
 
         class GetSyncQueueInfo : IDisposable
         {
-
             internal ManualResetEventSlim Wait { get; set; } = new ManualResetEventSlim();
-
             internal Object<T> ReturnValue { get; set; }
-
             internal object Lock = new object();
-
             internal bool IsTimeout { get; set; } = false;
 
             public void Dispose()

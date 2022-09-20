@@ -82,8 +82,13 @@ namespace FreeRedis
 #if isasync
             public override Task<TValue> AdapterCallAsync<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
             {
-                //Single socket not support Async Multiplexing
-                return Task.FromResult(AdapterCall(cmd, parse));
+                return TopOwner.LogCallAsync(cmd, async () =>
+                {
+                    await _redisSocket.WriteAsync(cmd);
+                    var rt = await _redisSocket.ReadAsync(cmd);
+                    if (cmd._command == "QUIT") _redisSocket.ReleaseSocket();
+                    return parse(rt);
+                });
             }
 #endif
 

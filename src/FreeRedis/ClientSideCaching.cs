@@ -72,6 +72,28 @@ namespace FreeRedis
                     var redirectId = GetOrAddClusterTrackingRedirectId(e.Host, e.Pool);
                     e.Client.ClientTracking(true, redirectId, null, false, false, false, false);
                 };
+
+                //将已预热好的连接，执行 ClientTracking REDIRECT
+                if (_cli.Adapter is RedisClient.ClusterAdapter clusterAdapter) clusterAdapter._ib.GetAll().ForEach(pool => LocalTrackingRedirectPool(pool));
+                if (_cli.Adapter is RedisClient.NormanAdapter normanAdapter) normanAdapter._ib.GetAll().ForEach(pool => LocalTrackingRedirectPool(pool));
+                if (_cli.Adapter is RedisClient.PoolingAdapter poolingAdapter) LocalTrackingRedirectPool(poolingAdapter._ib.Get(poolingAdapter._masterHost));
+                if (_cli.Adapter is RedisClient.SentinelAdapter sentinelAdapter)
+                {
+                    var poolkey = sentinelAdapter.GetIdleBusKey(new CommandPacket("PING"));
+                    if (!string.IsNullOrWhiteSpace(poolkey)) LocalTrackingRedirectPool(sentinelAdapter._ib.Get(poolkey));
+                }
+
+                void LocalTrackingRedirectPool(RedisClientPool pool)
+                {
+                    if (pool == null) return;
+                    var redirectId = GetOrAddClusterTrackingRedirectId(pool._policy._connectionStringBuilder.Host, pool);
+                    Enumerable.Range(0, pool._freeObjects.Count).Select(b =>
+                    {
+                        var conn = pool.Get();
+                        conn.Value.ClientTracking(true, redirectId, null, false, false, false, false);
+                        return conn;
+                    }).ToList().ForEach(c => c.Dispose());
+                }
             }
             long GetOrAddClusterTrackingRedirectId(string host, RedisClientPool pool)
             {

@@ -11,7 +11,7 @@ namespace console_netcore31_sentinel
     {
         static Lazy<RedisClient> _cliLazy = new Lazy<RedisClient>(() =>
         {
-            var r = new RedisClient("mymaster,default=3", new[] { "127.0.0.1:26379", "127.0.0.1:26479", "127.0.0.1:26579" }, false);
+            var r = new RedisClient("mymaster,database=3", new[] { "127.0.0.1:26379", "127.0.0.1:26479", "127.0.0.1:26579" }, true);
             r.Serialize = obj => JsonConvert.SerializeObject(obj);
             r.Deserialize = (json, type) => JsonConvert.DeserializeObject(json, type);
             r.Notice += (s, e) => Console.WriteLine(e.Log);
@@ -26,6 +26,7 @@ namespace console_netcore31_sentinel
                 try
                 {
                     cli.Get(Guid.NewGuid().ToString());
+                    cli.Set(Guid.NewGuid().ToString(), Guid.NewGuid().ToString());
                 }
                 catch (Exception ex)
                 {
