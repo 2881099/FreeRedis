@@ -15,7 +15,7 @@ namespace console_netcore31_client_side_caching
         {
             //var r = new RedisClient("127.0.0.1:6379", false); //redis 3.2 Single test
             //var r = new RedisClient("127.0.0.1:6379,database=1,min pool size=500,max pool size=500"); //redis 3.2
-            var r = new RedisClient("127.0.0.1:6379,database=1", "127.0.0.1:6379,database=1");
+            var r = new RedisClient("127.0.0.1:6379,database=10", "127.0.0.1:6380,database=10", "127.0.0.1:6381,database=10");
             //var r = new RedisClient(new [] { (ConnectionStringBuilder)"192.168.164.10:6379,database=1", (ConnectionStringBuilder)"192.168.164.10:6379,database=2" }); //redis 6.0
             r.Serialize = obj => JsonConvert.SerializeObject(obj);
             r.Deserialize = (json, type) => JsonConvert.DeserializeObject(json, type);
@@ -72,7 +72,7 @@ namespace console_netcore31_client_side_caching
             var val0112 = cli.Get<TestClass>("Interceptor011"); //本地
             var val0113 = cli.Get<TestClass>("Interceptor011"); //断点等3秒，redis-server
 
-
+            Console.WriteLine("all test has done running");
             Console.ReadKey();
 
             cli.Dispose();

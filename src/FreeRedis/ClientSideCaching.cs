@@ -99,7 +99,7 @@ namespace FreeRedis
             {
                 var poolkey = pool.Key;
                 //return _sub.RedisSocket.ClientId;
-                if (_cli.Adapter.UseType != RedisClient.UseType.Cluster) return _sub.RedisSocket.ClientId;
+                if (_cli.Adapter.UseType != RedisClient.UseType.Cluster && _sub.RedisSocket.Host == host) return _sub.RedisSocket.ClientId;
 
                 ClusterTrackingInfo tracking = null;
                 lock (_clusterTrackingsLock)
