@@ -13,7 +13,8 @@ namespace FreeRedis
         public string Host
         {
             get => string.IsNullOrWhiteSpace(_Host) ? "127.0.0.1:6379" : _Host;
-            set => _Host = string.IsNullOrWhiteSpace(value) ? "127.0.0.1:6379" : value.StartsWith("localhost",StringComparison.OrdinalIgnoreCase) ? Regex.Replace(value,"localhost","127.0.0.1", RegexOptions.IgnoreCase) : value;
+            set => _Host = string.IsNullOrWhiteSpace(value) ? "127.0.0.1:6379" :
+                value.StartsWith("localhost", StringComparison.OrdinalIgnoreCase) ? Regex.Replace(value, "localhost", "127.0.0.1", RegexOptions.IgnoreCase) : value;
         }
         public bool Ssl { get; set; } = false;
         public RedisProtocol Protocol { get; set; } = RedisProtocol.RESP2;
