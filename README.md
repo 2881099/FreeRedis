@@ -25,7 +25,7 @@ FreeRedis is a redis client based on .NET, supports .NET Core 2.1+, .NET Framewo
 - 📰 Support Transaction
 - 🌴 Support Geo type commands (requires redis-server 3.2 and above)
 - 🌲 Support Streams type commands (requires redis-server 5.0 and above)
-- ⚡ Support Client-side-cahing (requires redis-server 6.0 and above)
+- ⚡ Support Client-side-caching (requires redis-server 6.0 and above)
 - 🌳 Support Redis 6 RESP3 Protocol
 
 QQ Groups：4336577(full)、**8578575(available)**、**52508226(available)**
@@ -101,7 +101,7 @@ public static RedisClient cli = new RedisClient(
     );
 ```
 
-### ⚡ Client-side-cahing
+### ⚡ Client-side-caching
 
 > requires redis-server 6.0 and above
 
