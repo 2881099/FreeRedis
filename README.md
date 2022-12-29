@@ -34,8 +34,8 @@ QQ Groups：4336577(full)、**8578575(available)**、**52508226(available)**
 
 ```csharp
 public static RedisClient cli = new RedisClient("127.0.0.1:6379,password=123,defaultDatabase=13");
-//cli.Serialize = obj => JsonConvert.SerializeObject(obj);
-//cli.Deserialize = (json, type) => JsonConvert.DeserializeObject(json, type);
+cli.Serialize = obj => JsonConvert.SerializeObject(obj);
+cli.Deserialize = (json, type) => JsonConvert.DeserializeObject(json, type);
 cli.Notice += (s, e) => Console.WriteLine(e.Log); //print command log
 
 cli.Set("key1", "value1");
@@ -66,6 +66,11 @@ string[] vals = cli.MGet("key1", "key2");
 | prefix            | \<empty\> | The prefix of the key, all methods will have this prefix. cli.Set(prefix + "key", 111); |
 
 > IPv6: [fe80::b164:55b3:4b4f:7ce6%15]:6379
+
+```csharp
+//FreeRedis.DistributedCache
+//services.AddSingleton<IDistributedCache>(new FreeRedis.DistributedCache(cli));
+```
 
 ### 🎣 Master-Slave
 

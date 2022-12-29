@@ -1,0 +1,44 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFrameworks>netstandard2.0;net70;net60;net50;netcoreapp31;netcoreapp21</TargetFrameworks>
+		<AssemblyName>FreeRedis.DistributedCache</AssemblyName>
+		<PackageId>FreeRedis.DistributedCache</PackageId>
+		<RootNamespace>FreeRedis.DistributedCache</RootNamespace>
+		<Version>1.0.0</Version>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<PackageProjectUrl>https://github.com/2881099/FreeRedis</PackageProjectUrl>
+		<Description>分布式缓存 FreeRedis 实现 Microsoft.Extensions.Caching</Description>
+		<RepositoryUrl>https://github.com/2881099/FreeRedis</RepositoryUrl>
+		<PackageTags>caching freeredis redis c# 分布式缓存 集群 负载 cluster Microsoft.Extensions.Caching</PackageTags>
+		<SignAssembly>true</SignAssembly>
+		<AssemblyOriginatorKeyFile>key.snk</AssemblyOriginatorKeyFile>
+		<DelaySign>false</DelaySign>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<DocumentationFile>bin\Debug\netstandard2.0\Caching.CSRedis.xml</DocumentationFile>
+		<WarningLevel>3</WarningLevel>
+		<NoWarn>1701;1702;1591</NoWarn>
+	</PropertyGroup>
+	
+	
+	<ItemGroup Condition="'$(TargetFramework)' == 'net70'">
+		<PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="7.0.0" />
+	</ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)' == 'net60' or '$(TargetFramework)' == 'netstandard2.0'">
+		<PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="6.0.0" />
+	</ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)' == 'net50'">
+		<PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="5.0.0" />
+	</ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp31'">
+		<PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="3.1.10" />
+	</ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp21'">
+		<PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="2.1.23" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\FreeRedis\FreeRedis.csproj" />
+	</ItemGroup>
+</Project>

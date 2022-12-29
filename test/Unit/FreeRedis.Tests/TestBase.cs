@@ -10,7 +10,7 @@ namespace FreeRedis.Tests
     {
 		protected static ConnectionStringBuilder Connection = new ConnectionStringBuilder()
 		{
-			Host = "192.168.164.10", // RedisEnvironmentHelper.GetHost("redis_single"),
+			Host = "127.0.0.1", // RedisEnvironmentHelper.GetHost("redis_single"),
 		    //Password = "123456",
 		    Database = 1,
 		    MaxPoolSize = 10,

@@ -273,6 +273,20 @@ namespace FreeRedis.Tests.RedisClientTests
                 keys.AddRange(rt);
             }
         }
+        [Fact]
+        public void HScan()
+        {
+            cli.Del("HScan01");
+            for (var a = 0; a < 11; a++)
+                cli.HSet("HScan01", Guid.NewGuid().ToString(), a);
+
+            var keys = new List<string>();
+            foreach (var rt in cli.HScan("HScan01", "*", 2))
+            {
+                keys.AddRange(rt);
+            }
+            Assert.Equal(11, keys.Count);
+        }
 
         [Fact]
         public void Sort()
