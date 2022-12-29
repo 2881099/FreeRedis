@@ -1454,6 +1454,135 @@ references:
   isSpec: "True"
   fullName: FreeRedis.ConnectionStringBuilder.User
   nameWithType: ConnectionStringBuilder.User
+- uid: FreeRedis.DistributedCache
+  name: DistributedCache
+  href: docs/api/FreeRedis.DistributedCache.html
+  commentId: T:FreeRedis.DistributedCache
+  fullName: FreeRedis.DistributedCache
+  nameWithType: DistributedCache
+- uid: FreeRedis.DistributedCache.#ctor(FreeRedis.RedisClient)
+  name: DistributedCache(RedisClient)
+  href: docs/api/FreeRedis.DistributedCache.html#FreeRedis_DistributedCache__ctor_FreeRedis_RedisClient_
+  commentId: M:FreeRedis.DistributedCache.#ctor(FreeRedis.RedisClient)
+  fullName: FreeRedis.DistributedCache.DistributedCache(FreeRedis.RedisClient)
+  nameWithType: DistributedCache.DistributedCache(RedisClient)
+- uid: FreeRedis.DistributedCache.#ctor*
+  name: DistributedCache
+  href: docs/api/FreeRedis.DistributedCache.html#FreeRedis_DistributedCache__ctor_
+  commentId: Overload:FreeRedis.DistributedCache.#ctor
+  isSpec: "True"
+  fullName: FreeRedis.DistributedCache.DistributedCache
+  nameWithType: DistributedCache.DistributedCache
+- uid: FreeRedis.DistributedCache.Get(System.String)
+  name: Get(String)
+  href: docs/api/FreeRedis.DistributedCache.html#FreeRedis_DistributedCache_Get_System_String_
+  commentId: M:FreeRedis.DistributedCache.Get(System.String)
+  fullName: FreeRedis.DistributedCache.Get(System.String)
+  nameWithType: DistributedCache.Get(String)
+- uid: FreeRedis.DistributedCache.Get*
+  name: Get
+  href: docs/api/FreeRedis.DistributedCache.html#FreeRedis_DistributedCache_Get_
+  commentId: Overload:FreeRedis.DistributedCache.Get
+  isSpec: "True"
+  fullName: FreeRedis.DistributedCache.Get
+  nameWithType: DistributedCache.Get
+- uid: FreeRedis.DistributedCache.GetAsync(System.String,System.Threading.CancellationToken)
+  name: GetAsync(String, CancellationToken)
+  href: docs/api/FreeRedis.DistributedCache.html#FreeRedis_DistributedCache_GetAsync_System_String_System_Threading_CancellationToken_
+  commentId: M:FreeRedis.DistributedCache.GetAsync(System.String,System.Threading.CancellationToken)
+  fullName: FreeRedis.DistributedCache.GetAsync(System.String, System.Threading.CancellationToken)
+  nameWithType: DistributedCache.GetAsync(String, CancellationToken)
+- uid: FreeRedis.DistributedCache.GetAsync*
+  name: GetAsync
+  href: docs/api/FreeRedis.DistributedCache.html#FreeRedis_DistributedCache_GetAsync_
+  commentId: Overload:FreeRedis.DistributedCache.GetAsync
+  isSpec: "True"
+  fullName: FreeRedis.DistributedCache.GetAsync
+  nameWithType: DistributedCache.GetAsync
+- uid: FreeRedis.DistributedCache.Refresh(System.String)
+  name: Refresh(String)
+  href: docs/api/FreeRedis.DistributedCache.html#FreeRedis_DistributedCache_Refresh_System_String_
+  commentId: M:FreeRedis.DistributedCache.Refresh(System.String)
+  fullName: FreeRedis.DistributedCache.Refresh(System.String)
+  nameWithType: DistributedCache.Refresh(String)
+- uid: FreeRedis.DistributedCache.Refresh*
+  name: Refresh
+  href: docs/api/FreeRedis.DistributedCache.html#FreeRedis_DistributedCache_Refresh_
+  commentId: Overload:FreeRedis.DistributedCache.Refresh
+  isSpec: "True"
+  fullName: FreeRedis.DistributedCache.Refresh
+  nameWithType: DistributedCache.Refresh
+- uid: FreeRedis.DistributedCache.RefreshAsync(System.String,System.Threading.CancellationToken)
+  name: RefreshAsync(String, CancellationToken)
+  href: docs/api/FreeRedis.DistributedCache.html#FreeRedis_DistributedCache_RefreshAsync_System_String_System_Threading_CancellationToken_
+  commentId: M:FreeRedis.DistributedCache.RefreshAsync(System.String,System.Threading.CancellationToken)
+  fullName: FreeRedis.DistributedCache.RefreshAsync(System.String, System.Threading.CancellationToken)
+  nameWithType: DistributedCache.RefreshAsync(String, CancellationToken)
+- uid: FreeRedis.DistributedCache.RefreshAsync*
+  name: RefreshAsync
+  href: docs/api/FreeRedis.DistributedCache.html#FreeRedis_DistributedCache_RefreshAsync_
+  commentId: Overload:FreeRedis.DistributedCache.RefreshAsync
+  isSpec: "True"
+  fullName: FreeRedis.DistributedCache.RefreshAsync
+  nameWithType: DistributedCache.RefreshAsync
+- uid: FreeRedis.DistributedCache.Remove(System.String)
+  name: Remove(String)
+  href: docs/api/FreeRedis.DistributedCache.html#FreeRedis_DistributedCache_Remove_System_String_
+  commentId: M:FreeRedis.DistributedCache.Remove(System.String)
+  fullName: FreeRedis.DistributedCache.Remove(System.String)
+  nameWithType: DistributedCache.Remove(String)
+- uid: FreeRedis.DistributedCache.Remove*
+  name: Remove
+  href: docs/api/FreeRedis.DistributedCache.html#FreeRedis_DistributedCache_Remove_
+  commentId: Overload:FreeRedis.DistributedCache.Remove
+  isSpec: "True"
+  fullName: FreeRedis.DistributedCache.Remove
+  nameWithType: DistributedCache.Remove
+- uid: FreeRedis.DistributedCache.RemoveAsync(System.String,System.Threading.CancellationToken)
+  name: RemoveAsync(String, CancellationToken)
+  href: docs/api/FreeRedis.DistributedCache.html#FreeRedis_DistributedCache_RemoveAsync_System_String_System_Threading_CancellationToken_
+  commentId: M:FreeRedis.DistributedCache.RemoveAsync(System.String,System.Threading.CancellationToken)
+  fullName: FreeRedis.DistributedCache.RemoveAsync(System.String, System.Threading.CancellationToken)
+  nameWithType: DistributedCache.RemoveAsync(String, CancellationToken)
+- uid: FreeRedis.DistributedCache.RemoveAsync*
+  name: RemoveAsync
+  href: docs/api/FreeRedis.DistributedCache.html#FreeRedis_DistributedCache_RemoveAsync_
+  commentId: Overload:FreeRedis.DistributedCache.RemoveAsync
+  isSpec: "True"
+  fullName: FreeRedis.DistributedCache.RemoveAsync
+  nameWithType: DistributedCache.RemoveAsync
+- uid: FreeRedis.DistributedCache.Set(System.String,System.Byte[],DistributedCacheEntryOptions)
+  name: Set(String, Byte[], DistributedCacheEntryOptions)
+  href: docs/api/FreeRedis.DistributedCache.html#FreeRedis_DistributedCache_Set_System_String_System_Byte___DistributedCacheEntryOptions_
+  commentId: M:FreeRedis.DistributedCache.Set(System.String,System.Byte[],DistributedCacheEntryOptions)
+  name.vb: Set(String, Byte(), DistributedCacheEntryOptions)
+  fullName: FreeRedis.DistributedCache.Set(System.String, System.Byte[], DistributedCacheEntryOptions)
+  fullName.vb: FreeRedis.DistributedCache.Set(System.String, System.Byte(), DistributedCacheEntryOptions)
+  nameWithType: DistributedCache.Set(String, Byte[], DistributedCacheEntryOptions)
+  nameWithType.vb: DistributedCache.Set(String, Byte(), DistributedCacheEntryOptions)
+- uid: FreeRedis.DistributedCache.Set*
+  name: Set
+  href: docs/api/FreeRedis.DistributedCache.html#FreeRedis_DistributedCache_Set_
+  commentId: Overload:FreeRedis.DistributedCache.Set
+  isSpec: "True"
+  fullName: FreeRedis.DistributedCache.Set
+  nameWithType: DistributedCache.Set
+- uid: FreeRedis.DistributedCache.SetAsync(System.String,System.Byte[],DistributedCacheEntryOptions,System.Threading.CancellationToken)
+  name: SetAsync(String, Byte[], DistributedCacheEntryOptions, CancellationToken)
+  href: docs/api/FreeRedis.DistributedCache.html#FreeRedis_DistributedCache_SetAsync_System_String_System_Byte___DistributedCacheEntryOptions_System_Threading_CancellationToken_
+  commentId: M:FreeRedis.DistributedCache.SetAsync(System.String,System.Byte[],DistributedCacheEntryOptions,System.Threading.CancellationToken)
+  name.vb: SetAsync(String, Byte(), DistributedCacheEntryOptions, CancellationToken)
+  fullName: FreeRedis.DistributedCache.SetAsync(System.String, System.Byte[], DistributedCacheEntryOptions, System.Threading.CancellationToken)
+  fullName.vb: FreeRedis.DistributedCache.SetAsync(System.String, System.Byte(), DistributedCacheEntryOptions, System.Threading.CancellationToken)
+  nameWithType: DistributedCache.SetAsync(String, Byte[], DistributedCacheEntryOptions, CancellationToken)
+  nameWithType.vb: DistributedCache.SetAsync(String, Byte(), DistributedCacheEntryOptions, CancellationToken)
+- uid: FreeRedis.DistributedCache.SetAsync*
+  name: SetAsync
+  href: docs/api/FreeRedis.DistributedCache.html#FreeRedis_DistributedCache_SetAsync_
+  commentId: Overload:FreeRedis.DistributedCache.SetAsync
+  isSpec: "True"
+  fullName: FreeRedis.DistributedCache.SetAsync
+  nameWithType: DistributedCache.SetAsync
 - uid: FreeRedis.FreeRedisClusterCRC16
   name: FreeRedisClusterCRC16
   href: docs/api/FreeRedis.FreeRedisClusterCRC16.html
@@ -6908,6 +7037,12 @@ references:
   commentId: M:FreeRedis.IRedisClient.HScan(System.String,System.Int64,System.String,System.Int64)
   fullName: FreeRedis.IRedisClient.HScan(System.String, System.Int64, System.String, System.Int64)
   nameWithType: IRedisClient.HScan(String, Int64, String, Int64)
+- uid: FreeRedis.IRedisClient.HScan(System.String,System.String,System.Int64)
+  name: HScan(String, String, Int64)
+  href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_HScan_System_String_System_String_System_Int64_
+  commentId: M:FreeRedis.IRedisClient.HScan(System.String,System.String,System.Int64)
+  fullName: FreeRedis.IRedisClient.HScan(System.String, System.String, System.Int64)
+  nameWithType: IRedisClient.HScan(String, String, Int64)
 - uid: FreeRedis.IRedisClient.HScan*
   name: HScan
   href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_HScan_
@@ -8853,6 +8988,12 @@ references:
   commentId: M:FreeRedis.IRedisClient.SScan(System.String,System.Int64,System.String,System.Int64)
   fullName: FreeRedis.IRedisClient.SScan(System.String, System.Int64, System.String, System.Int64)
   nameWithType: IRedisClient.SScan(String, Int64, String, Int64)
+- uid: FreeRedis.IRedisClient.SScan(System.String,System.String,System.Int64)
+  name: SScan(String, String, Int64)
+  href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_SScan_System_String_System_String_System_Int64_
+  commentId: M:FreeRedis.IRedisClient.SScan(System.String,System.String,System.Int64)
+  fullName: FreeRedis.IRedisClient.SScan(System.String, System.String, System.Int64)
+  nameWithType: IRedisClient.SScan(String, String, Int64)
 - uid: FreeRedis.IRedisClient.SScan*
   name: SScan
   href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_SScan_
@@ -12219,6 +12360,12 @@ references:
   commentId: M:FreeRedis.RedisClient.HScan(System.String,System.Int64,System.String,System.Int64)
   fullName: FreeRedis.RedisClient.HScan(System.String, System.Int64, System.String, System.Int64)
   nameWithType: RedisClient.HScan(String, Int64, String, Int64)
+- uid: FreeRedis.RedisClient.HScan(System.String,System.String,System.Int64)
+  name: HScan(String, String, Int64)
+  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_HScan_System_String_System_String_System_Int64_
+  commentId: M:FreeRedis.RedisClient.HScan(System.String,System.String,System.Int64)
+  fullName: FreeRedis.RedisClient.HScan(System.String, System.String, System.Int64)
+  nameWithType: RedisClient.HScan(String, String, Int64)
 - uid: FreeRedis.RedisClient.HScan*
   name: HScan
   href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_HScan_
@@ -14289,6 +14436,12 @@ references:
   commentId: M:FreeRedis.RedisClient.SScan(System.String,System.Int64,System.String,System.Int64)
   fullName: FreeRedis.RedisClient.SScan(System.String, System.Int64, System.String, System.Int64)
   nameWithType: RedisClient.SScan(String, Int64, String, Int64)
+- uid: FreeRedis.RedisClient.SScan(System.String,System.String,System.Int64)
+  name: SScan(String, String, Int64)
+  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_SScan_System_String_System_String_System_Int64_
+  commentId: M:FreeRedis.RedisClient.SScan(System.String,System.String,System.Int64)
+  fullName: FreeRedis.RedisClient.SScan(System.String, System.String, System.Int64)
+  nameWithType: RedisClient.SScan(String, String, Int64)
 - uid: FreeRedis.RedisClient.SScan*
   name: SScan
   href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_SScan_

@@ -89,8 +89,8 @@
 <p>QQ Groups：4336577(full)、<strong>8578575(available)</strong>、<strong>52508226(available)</strong></p>
 <h2 id="-quick-start">🚀 Quick start</h2>
 <pre><code class="lang-csharp">public static RedisClient cli = new RedisClient(&quot;127.0.0.1:6379,password=123,defaultDatabase=13&quot;);
-//cli.Serialize = obj =&gt; JsonConvert.SerializeObject(obj);
-//cli.Deserialize = (json, type) =&gt; JsonConvert.DeserializeObject(json, type);
+cli.Serialize = obj =&gt; JsonConvert.SerializeObject(obj);
+cli.Deserialize = (json, type) =&gt; JsonConvert.DeserializeObject(json, type);
 cli.Notice += (s, e) =&gt; Console.WriteLine(e.Log); //print command log
 
 cli.Set(&quot;key1&quot;, &quot;value1&quot;);
@@ -191,6 +191,9 @@ string[] vals = cli.MGet(&quot;key1&quot;, &quot;key2&quot;);
 <blockquote>
 <p>IPv6: [fe80::b164:55b3:4b4f:7ce6%15]:6379</p>
 </blockquote>
+<pre><code class="lang-csharp">//FreeRedis.DistributedCache
+//services.AddSingleton&lt;IDistributedCache&gt;(new FreeRedis.DistributedCache(cli));
+</code></pre>
 <h3 id="-master-slave">🎣 Master-Slave</h3>
 <pre><code class="lang-csharp">public static RedisClient cli = new RedisClient(
     &quot;127.0.0.1:6379,password=123,defaultDatabase=13&quot;,
