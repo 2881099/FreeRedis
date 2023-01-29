@@ -47,6 +47,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "console_net452_vs", "exampl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "console_net6_cluster_client_side_caching", "examples\console_net6_cluster_client_side_caching\console_net6_cluster_client_side_caching.csproj", "{AFA6EB33-8DD2-41CE-B2EF-917406F47D28}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FreeRedis.DistributedCache", "src\FreeRedis.DistributedCache\FreeRedis.DistributedCache.csproj", "{B0B0B55E-4D41-4419-83FE-309F72699A3A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -225,6 +227,18 @@ Global
 		{AFA6EB33-8DD2-41CE-B2EF-917406F47D28}.Release|x64.Build.0 = Release|Any CPU
 		{AFA6EB33-8DD2-41CE-B2EF-917406F47D28}.Release|x86.ActiveCfg = Release|Any CPU
 		{AFA6EB33-8DD2-41CE-B2EF-917406F47D28}.Release|x86.Build.0 = Release|Any CPU
+		{B0B0B55E-4D41-4419-83FE-309F72699A3A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B0B0B55E-4D41-4419-83FE-309F72699A3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B0B0B55E-4D41-4419-83FE-309F72699A3A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{B0B0B55E-4D41-4419-83FE-309F72699A3A}.Debug|x64.Build.0 = Debug|Any CPU
+		{B0B0B55E-4D41-4419-83FE-309F72699A3A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B0B0B55E-4D41-4419-83FE-309F72699A3A}.Debug|x86.Build.0 = Debug|Any CPU
+		{B0B0B55E-4D41-4419-83FE-309F72699A3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B0B0B55E-4D41-4419-83FE-309F72699A3A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B0B0B55E-4D41-4419-83FE-309F72699A3A}.Release|x64.ActiveCfg = Release|Any CPU
+		{B0B0B55E-4D41-4419-83FE-309F72699A3A}.Release|x64.Build.0 = Release|Any CPU
+		{B0B0B55E-4D41-4419-83FE-309F72699A3A}.Release|x86.ActiveCfg = Release|Any CPU
+		{B0B0B55E-4D41-4419-83FE-309F72699A3A}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -246,6 +260,7 @@ Global
 		{EF59B801-0228-436D-88DA-DCBD58C7E074} = {D8045351-59E4-45B9-81F5-D21CC0996344}
 		{7AC68251-83D4-423F-849C-04BD89F4BDFB} = {DD1426BF-F56F-49A8-9D4E-2BA0E3BEFC72}
 		{AFA6EB33-8DD2-41CE-B2EF-917406F47D28} = {DD1426BF-F56F-49A8-9D4E-2BA0E3BEFC72}
+		{B0B0B55E-4D41-4419-83FE-309F72699A3A} = {D8045351-59E4-45B9-81F5-D21CC0996344}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B36AD060-F6AE-49C7-A310-B58B8467CE69}

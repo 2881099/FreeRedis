@@ -144,6 +144,7 @@ namespace FreeRedis
         void HMSet<T>(string key, Dictionary<string, T> keyValues);
         void HMSet<T>(string key, string field, T value, params object[] fieldValues);
         ScanResult<string> HScan(string key, long cursor, string pattern, long count);
+        IEnumerable<string[]> HScan(string key, string pattern, long count);
         long HSet<T>(string key, Dictionary<string, T> keyValues);
         long HSet<T>(string key, string field, T value, params object[] fieldValues);
         bool HSetNx<T>(string key, string field, T value);
@@ -271,6 +272,7 @@ namespace FreeRedis
         T[] SRandMember<T>(string key, int count);
         long SRem(string key, params object[] members);
         ScanResult<string> SScan(string key, long cursor, string pattern, long count);
+        IEnumerable<string[]> SScan(string key, string pattern, long count);
         RedisClient.PipelineHook StartPipe();
         long StrLen(string key);
         IDisposable Subscribe(string channel, Action<string, object> handler);

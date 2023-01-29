@@ -67,6 +67,11 @@ string[] vals = cli.MGet("key1", "key2");
 
 > IPv6: [fe80::b164:55b3:4b4f:7ce6%15]:6379
 
+```csharp
+//FreeRedis.DistributedCache
+//services.AddSingleton<IDistributedCache>(new FreeRedis.DistributedCache(cli));
+```
+
 ### 🎣 Master-Slave (读写分离)
 
 ```csharp

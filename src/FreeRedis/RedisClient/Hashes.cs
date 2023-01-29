@@ -1,4 +1,6 @@
-﻿using System;
+﻿using FreeRedis.Internal;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -95,6 +97,7 @@ namespace FreeRedis
             .InputKey(key, cursor)
             .InputIf(!string.IsNullOrWhiteSpace(pattern), "MATCH", pattern)
             .InputIf(count != 0, "COUNT", count), rt => rt.ThrowOrValue((a, _) => new ScanResult<string>(a[0].ConvertTo<long>(), a[1].ConvertTo<string[]>())));
+        public IEnumerable<string[]> HScan(string key, string pattern, long count) => new ScanCollection(this, "hscan", (cli, cursor) => cli.HScan(key, cursor, pattern, count));
 
         public long HSet<T>(string key, string field, T value, params object[] fieldValues) => HSet(false, key, field, value, fieldValues);
         public long HSet<T>(string key, Dictionary<string, T> keyValues) => Call("HSET".InputKey(key).InputKv(keyValues, false, SerializeRedisValue), rt => rt.ThrowOrValue<long>());

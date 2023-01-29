@@ -924,14 +924,14 @@ namespace FreeRedis
             .InputIf(!string.IsNullOrWhiteSpace(type), "TYPE", type), rt => rt
             .ThrowOrValue((a, _) => new ScanResult<string>(a[0].ConvertTo<long>(), a[1].ConvertTo<string[]>())));
 
-        public IEnumerable<string[]> Scan(string pattern, long count, string type) => new ScanCollection(this, pattern, count, type);
+        public IEnumerable<string[]> Scan(string pattern, long count, string type) => new ScanCollection(this, "scan", (cli, cursor) => cli.Scan(cursor, pattern, count, type));
         #region Scan IEnumerable
         class ScanCollection : IEnumerable<string[]>
         {
             public IEnumerator<string[]> GetEnumerator()
             {
                 long cursor = 0;
-                if (_cli.Adapter.UseType == UseType.Cluster)
+                if (_cli.Adapter.UseType == UseType.Cluster && _scanName == "scan")
                 {
                     var cluster = (_cli.Adapter as ClusterAdapter);
                     var ibkeys = new List<string>();
@@ -973,7 +973,7 @@ namespace FreeRedis
 
                             while (true)
                             {
-                                var rt = cli.Value.Scan(cursor, _pattern, _count, _type);
+                                var rt = _scanFunc(cli.Value, cursor);
                                 cursor = rt.cursor;
                                 if (rt.length > 0) yield return rt.items;
                                 if (cursor <= 0) break;
@@ -986,7 +986,7 @@ namespace FreeRedis
                 {
                     while (true)
                     {
-                        var rt = _cli.Scan(cursor, _pattern, _count, _type);
+                        var rt = _scanFunc(_cli, cursor);
                         cursor = rt.cursor;
                         if (rt.length > 0) yield return rt.items;
                         if (cursor <= 0) break;
@@ -997,15 +997,13 @@ namespace FreeRedis
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
             readonly RedisClient _cli;
-            readonly string _pattern;
-            readonly long _count;
-            readonly string _type;
-            public ScanCollection(RedisClient cli, string pattern, long count, string type)
+            readonly string _scanName;
+            readonly Func<RedisClient, long, ScanResult<string>> _scanFunc;
+            public ScanCollection(RedisClient cli, string scanName, Func<RedisClient, long, ScanResult<string>> scanFunc)
             {
                 _cli = cli;
-                _pattern = pattern;
-                _count = count;
-                _type = type;
+                _scanName = scanName;
+                _scanFunc = scanFunc;
             }
         }
         #endregion

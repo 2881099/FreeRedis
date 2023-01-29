@@ -25,7 +25,7 @@ FreeRedis is a redis client based on .NET, supports .NET Core 2.1+, .NET Framewo
 - 📰 Support Transaction
 - 🌴 Support Geo type commands (requires redis-server 3.2 and above)
 - 🌲 Support Streams type commands (requires redis-server 5.0 and above)
-- ⚡ Support Client-side-cahing (requires redis-server 6.0 and above)
+- ⚡ Support Client-side-caching (requires redis-server 6.0 and above)
 - 🌳 Support Redis 6 RESP3 Protocol
 
 QQ Groups：4336577(full)、**8578575(available)**、**52508226(available)**
@@ -34,8 +34,8 @@ QQ Groups：4336577(full)、**8578575(available)**、**52508226(available)**
 
 ```csharp
 public static RedisClient cli = new RedisClient("127.0.0.1:6379,password=123,defaultDatabase=13");
-//cli.Serialize = obj => JsonConvert.SerializeObject(obj);
-//cli.Deserialize = (json, type) => JsonConvert.DeserializeObject(json, type);
+cli.Serialize = obj => JsonConvert.SerializeObject(obj);
+cli.Deserialize = (json, type) => JsonConvert.DeserializeObject(json, type);
 cli.Notice += (s, e) => Console.WriteLine(e.Log); //print command log
 
 cli.Set("key1", "value1");
@@ -66,6 +66,11 @@ string[] vals = cli.MGet("key1", "key2");
 | prefix            | \<empty\> | The prefix of the key, all methods will have this prefix. cli.Set(prefix + "key", 111); |
 
 > IPv6: [fe80::b164:55b3:4b4f:7ce6%15]:6379
+
+```csharp
+//FreeRedis.DistributedCache
+//services.AddSingleton<IDistributedCache>(new FreeRedis.DistributedCache(cli));
+```
 
 ### 🎣 Master-Slave
 
@@ -101,7 +106,7 @@ public static RedisClient cli = new RedisClient(
     );
 ```
 
-### ⚡ Client-side-cahing
+### ⚡ Client-side-caching
 
 > requires redis-server 6.0 and above
 
