@@ -479,6 +479,19 @@ references:
   isSpec: "True"
   fullName: FreeRedis.CommandPacket._subcommand
   nameWithType: CommandPacket._subcommand
+- uid: FreeRedis.CommandPacket.ClientId2
+  name: ClientId2
+  href: docs/api/FreeRedis.CommandPacket.html#FreeRedis_CommandPacket_ClientId2
+  commentId: P:FreeRedis.CommandPacket.ClientId2
+  fullName: FreeRedis.CommandPacket.ClientId2
+  nameWithType: CommandPacket.ClientId2
+- uid: FreeRedis.CommandPacket.ClientId2*
+  name: ClientId2
+  href: docs/api/FreeRedis.CommandPacket.html#FreeRedis_CommandPacket_ClientId2_
+  commentId: Overload:FreeRedis.CommandPacket.ClientId2
+  isSpec: "True"
+  fullName: FreeRedis.CommandPacket.ClientId2
+  nameWithType: CommandPacket.ClientId2
 - uid: FreeRedis.CommandPacket.Command(System.String,System.String)
   name: Command(String, String)
   href: docs/api/FreeRedis.CommandPacket.html#FreeRedis_CommandPacket_Command_System_String_System_String_
@@ -1454,6 +1467,64 @@ references:
   isSpec: "True"
   fullName: FreeRedis.ConnectionStringBuilder.User
   nameWithType: ConnectionStringBuilder.User
+- uid: FreeRedis.DisconnectedEventArgs
+  name: DisconnectedEventArgs
+  href: docs/api/FreeRedis.DisconnectedEventArgs.html
+  commentId: T:FreeRedis.DisconnectedEventArgs
+  fullName: FreeRedis.DisconnectedEventArgs
+  nameWithType: DisconnectedEventArgs
+- uid: FreeRedis.DisconnectedEventArgs.#ctor(System.String,FreeRedis.Internal.RedisClientPool,FreeRedis.RedisClient)
+  name: DisconnectedEventArgs(String, RedisClientPool, RedisClient)
+  href: docs/api/FreeRedis.DisconnectedEventArgs.html#FreeRedis_DisconnectedEventArgs__ctor_System_String_FreeRedis_Internal_RedisClientPool_FreeRedis_RedisClient_
+  commentId: M:FreeRedis.DisconnectedEventArgs.#ctor(System.String,FreeRedis.Internal.RedisClientPool,FreeRedis.RedisClient)
+  fullName: FreeRedis.DisconnectedEventArgs.DisconnectedEventArgs(System.String, FreeRedis.Internal.RedisClientPool, FreeRedis.RedisClient)
+  nameWithType: DisconnectedEventArgs.DisconnectedEventArgs(String, RedisClientPool, RedisClient)
+- uid: FreeRedis.DisconnectedEventArgs.#ctor*
+  name: DisconnectedEventArgs
+  href: docs/api/FreeRedis.DisconnectedEventArgs.html#FreeRedis_DisconnectedEventArgs__ctor_
+  commentId: Overload:FreeRedis.DisconnectedEventArgs.#ctor
+  isSpec: "True"
+  fullName: FreeRedis.DisconnectedEventArgs.DisconnectedEventArgs
+  nameWithType: DisconnectedEventArgs.DisconnectedEventArgs
+- uid: FreeRedis.DisconnectedEventArgs.Client
+  name: Client
+  href: docs/api/FreeRedis.DisconnectedEventArgs.html#FreeRedis_DisconnectedEventArgs_Client
+  commentId: P:FreeRedis.DisconnectedEventArgs.Client
+  fullName: FreeRedis.DisconnectedEventArgs.Client
+  nameWithType: DisconnectedEventArgs.Client
+- uid: FreeRedis.DisconnectedEventArgs.Client*
+  name: Client
+  href: docs/api/FreeRedis.DisconnectedEventArgs.html#FreeRedis_DisconnectedEventArgs_Client_
+  commentId: Overload:FreeRedis.DisconnectedEventArgs.Client
+  isSpec: "True"
+  fullName: FreeRedis.DisconnectedEventArgs.Client
+  nameWithType: DisconnectedEventArgs.Client
+- uid: FreeRedis.DisconnectedEventArgs.Host
+  name: Host
+  href: docs/api/FreeRedis.DisconnectedEventArgs.html#FreeRedis_DisconnectedEventArgs_Host
+  commentId: P:FreeRedis.DisconnectedEventArgs.Host
+  fullName: FreeRedis.DisconnectedEventArgs.Host
+  nameWithType: DisconnectedEventArgs.Host
+- uid: FreeRedis.DisconnectedEventArgs.Host*
+  name: Host
+  href: docs/api/FreeRedis.DisconnectedEventArgs.html#FreeRedis_DisconnectedEventArgs_Host_
+  commentId: Overload:FreeRedis.DisconnectedEventArgs.Host
+  isSpec: "True"
+  fullName: FreeRedis.DisconnectedEventArgs.Host
+  nameWithType: DisconnectedEventArgs.Host
+- uid: FreeRedis.DisconnectedEventArgs.Pool
+  name: Pool
+  href: docs/api/FreeRedis.DisconnectedEventArgs.html#FreeRedis_DisconnectedEventArgs_Pool
+  commentId: P:FreeRedis.DisconnectedEventArgs.Pool
+  fullName: FreeRedis.DisconnectedEventArgs.Pool
+  nameWithType: DisconnectedEventArgs.Pool
+- uid: FreeRedis.DisconnectedEventArgs.Pool*
+  name: Pool
+  href: docs/api/FreeRedis.DisconnectedEventArgs.html#FreeRedis_DisconnectedEventArgs_Pool_
+  commentId: Overload:FreeRedis.DisconnectedEventArgs.Pool
+  isSpec: "True"
+  fullName: FreeRedis.DisconnectedEventArgs.Pool
+  nameWithType: DisconnectedEventArgs.Pool
 - uid: FreeRedis.DistributedCache
   name: DistributedCache
   href: docs/api/FreeRedis.DistributedCache.html
@@ -2005,6 +2076,19 @@ references:
   isSpec: "True"
   fullName: FreeRedis.Internal.DefaultRedisSocket.ClientId
   nameWithType: DefaultRedisSocket.ClientId
+- uid: FreeRedis.Internal.DefaultRedisSocket.ClientId2
+  name: ClientId2
+  href: docs/api/FreeRedis.Internal.DefaultRedisSocket.html#FreeRedis_Internal_DefaultRedisSocket_ClientId2
+  commentId: P:FreeRedis.Internal.DefaultRedisSocket.ClientId2
+  fullName: FreeRedis.Internal.DefaultRedisSocket.ClientId2
+  nameWithType: DefaultRedisSocket.ClientId2
+- uid: FreeRedis.Internal.DefaultRedisSocket.ClientId2*
+  name: ClientId2
+  href: docs/api/FreeRedis.Internal.DefaultRedisSocket.html#FreeRedis_Internal_DefaultRedisSocket_ClientId2_
+  commentId: Overload:FreeRedis.Internal.DefaultRedisSocket.ClientId2
+  isSpec: "True"
+  fullName: FreeRedis.Internal.DefaultRedisSocket.ClientId2
+  nameWithType: DefaultRedisSocket.ClientId2
 - uid: FreeRedis.Internal.DefaultRedisSocket.ClientReply
   name: ClientReply
   href: docs/api/FreeRedis.Internal.DefaultRedisSocket.html#FreeRedis_Internal_DefaultRedisSocket_ClientReply
@@ -2076,6 +2160,12 @@ references:
   isSpec: "True"
   fullName: FreeRedis.Internal.DefaultRedisSocket.Database
   nameWithType: DefaultRedisSocket.Database
+- uid: FreeRedis.Internal.DefaultRedisSocket.Disconnected
+  name: Disconnected
+  href: docs/api/FreeRedis.Internal.DefaultRedisSocket.html#FreeRedis_Internal_DefaultRedisSocket_Disconnected
+  commentId: E:FreeRedis.Internal.DefaultRedisSocket.Disconnected
+  fullName: FreeRedis.Internal.DefaultRedisSocket.Disconnected
+  nameWithType: DefaultRedisSocket.Disconnected
 - uid: FreeRedis.Internal.DefaultRedisSocket.Dispose
   name: Dispose()
   href: docs/api/FreeRedis.Internal.DefaultRedisSocket.html#FreeRedis_Internal_DefaultRedisSocket_Dispose
@@ -2385,6 +2475,19 @@ references:
   isSpec: "True"
   fullName: FreeRedis.Internal.DefaultRedisSocket.TempProxyRedisSocket.ClientId
   nameWithType: DefaultRedisSocket.TempProxyRedisSocket.ClientId
+- uid: FreeRedis.Internal.DefaultRedisSocket.TempProxyRedisSocket.ClientId2
+  name: ClientId2
+  href: docs/api/FreeRedis.Internal.DefaultRedisSocket.TempProxyRedisSocket.html#FreeRedis_Internal_DefaultRedisSocket_TempProxyRedisSocket_ClientId2
+  commentId: P:FreeRedis.Internal.DefaultRedisSocket.TempProxyRedisSocket.ClientId2
+  fullName: FreeRedis.Internal.DefaultRedisSocket.TempProxyRedisSocket.ClientId2
+  nameWithType: DefaultRedisSocket.TempProxyRedisSocket.ClientId2
+- uid: FreeRedis.Internal.DefaultRedisSocket.TempProxyRedisSocket.ClientId2*
+  name: ClientId2
+  href: docs/api/FreeRedis.Internal.DefaultRedisSocket.TempProxyRedisSocket.html#FreeRedis_Internal_DefaultRedisSocket_TempProxyRedisSocket_ClientId2_
+  commentId: Overload:FreeRedis.Internal.DefaultRedisSocket.TempProxyRedisSocket.ClientId2
+  isSpec: "True"
+  fullName: FreeRedis.Internal.DefaultRedisSocket.TempProxyRedisSocket.ClientId2
+  nameWithType: DefaultRedisSocket.TempProxyRedisSocket.ClientId2
 - uid: FreeRedis.Internal.DefaultRedisSocket.TempProxyRedisSocket.ClientReply
   name: ClientReply
   href: docs/api/FreeRedis.Internal.DefaultRedisSocket.TempProxyRedisSocket.html#FreeRedis_Internal_DefaultRedisSocket_TempProxyRedisSocket_ClientReply
@@ -2443,6 +2546,12 @@ references:
   isSpec: "True"
   fullName: FreeRedis.Internal.DefaultRedisSocket.TempProxyRedisSocket.Database
   nameWithType: DefaultRedisSocket.TempProxyRedisSocket.Database
+- uid: FreeRedis.Internal.DefaultRedisSocket.TempProxyRedisSocket.Disconnected
+  name: Disconnected
+  href: docs/api/FreeRedis.Internal.DefaultRedisSocket.TempProxyRedisSocket.html#FreeRedis_Internal_DefaultRedisSocket_TempProxyRedisSocket_Disconnected
+  commentId: E:FreeRedis.Internal.DefaultRedisSocket.TempProxyRedisSocket.Disconnected
+  fullName: FreeRedis.Internal.DefaultRedisSocket.TempProxyRedisSocket.Disconnected
+  nameWithType: DefaultRedisSocket.TempProxyRedisSocket.Disconnected
 - uid: FreeRedis.Internal.DefaultRedisSocket.TempProxyRedisSocket.Dispose
   name: Dispose()
   href: docs/api/FreeRedis.Internal.DefaultRedisSocket.TempProxyRedisSocket.html#FreeRedis_Internal_DefaultRedisSocket_TempProxyRedisSocket_Dispose
@@ -3330,6 +3439,19 @@ references:
   isSpec: "True"
   fullName: FreeRedis.Internal.IRedisSocket.ClientId
   nameWithType: IRedisSocket.ClientId
+- uid: FreeRedis.Internal.IRedisSocket.ClientId2
+  name: ClientId2
+  href: docs/api/FreeRedis.Internal.IRedisSocket.html#FreeRedis_Internal_IRedisSocket_ClientId2
+  commentId: P:FreeRedis.Internal.IRedisSocket.ClientId2
+  fullName: FreeRedis.Internal.IRedisSocket.ClientId2
+  nameWithType: IRedisSocket.ClientId2
+- uid: FreeRedis.Internal.IRedisSocket.ClientId2*
+  name: ClientId2
+  href: docs/api/FreeRedis.Internal.IRedisSocket.html#FreeRedis_Internal_IRedisSocket_ClientId2_
+  commentId: Overload:FreeRedis.Internal.IRedisSocket.ClientId2
+  isSpec: "True"
+  fullName: FreeRedis.Internal.IRedisSocket.ClientId2
+  nameWithType: IRedisSocket.ClientId2
 - uid: FreeRedis.Internal.IRedisSocket.ClientReply
   name: ClientReply
   href: docs/api/FreeRedis.Internal.IRedisSocket.html#FreeRedis_Internal_IRedisSocket_ClientReply
@@ -3388,6 +3510,12 @@ references:
   isSpec: "True"
   fullName: FreeRedis.Internal.IRedisSocket.Database
   nameWithType: IRedisSocket.Database
+- uid: FreeRedis.Internal.IRedisSocket.Disconnected
+  name: Disconnected
+  href: docs/api/FreeRedis.Internal.IRedisSocket.html#FreeRedis_Internal_IRedisSocket_Disconnected
+  commentId: E:FreeRedis.Internal.IRedisSocket.Disconnected
+  fullName: FreeRedis.Internal.IRedisSocket.Disconnected
+  nameWithType: IRedisSocket.Disconnected
 - uid: FreeRedis.Internal.IRedisSocket.Encoding
   name: Encoding
   href: docs/api/FreeRedis.Internal.IRedisSocket.html#FreeRedis_Internal_IRedisSocket_Encoding
@@ -4948,15 +5076,12 @@ references:
   commentId: T:FreeRedis.Internal.RedisClientPool
   fullName: FreeRedis.Internal.RedisClientPool
   nameWithType: RedisClientPool
-- uid: FreeRedis.Internal.RedisClientPool.#ctor(System.String,System.Action{FreeRedis.RedisClient},FreeRedis.RedisClient)
-  name: RedisClientPool(String, Action<RedisClient>, RedisClient)
-  href: docs/api/FreeRedis.Internal.RedisClientPool.html#FreeRedis_Internal_RedisClientPool__ctor_System_String_System_Action_FreeRedis_RedisClient__FreeRedis_RedisClient_
-  commentId: M:FreeRedis.Internal.RedisClientPool.#ctor(System.String,System.Action{FreeRedis.RedisClient},FreeRedis.RedisClient)
-  name.vb: RedisClientPool(String, Action(Of RedisClient), RedisClient)
-  fullName: FreeRedis.Internal.RedisClientPool.RedisClientPool(System.String, System.Action<FreeRedis.RedisClient>, FreeRedis.RedisClient)
-  fullName.vb: FreeRedis.Internal.RedisClientPool.RedisClientPool(System.String, System.Action(Of FreeRedis.RedisClient), FreeRedis.RedisClient)
-  nameWithType: RedisClientPool.RedisClientPool(String, Action<RedisClient>, RedisClient)
-  nameWithType.vb: RedisClientPool.RedisClientPool(String, Action(Of RedisClient), RedisClient)
+- uid: FreeRedis.Internal.RedisClientPool.#ctor(System.String,FreeRedis.RedisClient)
+  name: RedisClientPool(String, RedisClient)
+  href: docs/api/FreeRedis.Internal.RedisClientPool.html#FreeRedis_Internal_RedisClientPool__ctor_System_String_FreeRedis_RedisClient_
+  commentId: M:FreeRedis.Internal.RedisClientPool.#ctor(System.String,FreeRedis.RedisClient)
+  fullName: FreeRedis.Internal.RedisClientPool.RedisClientPool(System.String, FreeRedis.RedisClient)
+  nameWithType: RedisClientPool.RedisClientPool(String, RedisClient)
 - uid: FreeRedis.Internal.RedisClientPool.#ctor*
   name: RedisClientPool
   href: docs/api/FreeRedis.Internal.RedisClientPool.html#FreeRedis_Internal_RedisClientPool__ctor_
@@ -10454,15 +10579,15 @@ references:
   fullName.vb: FreeRedis.RedisClient.RedisClient(FreeRedis.ConnectionStringBuilder(), System.Func(Of System.String, System.String))
   nameWithType: RedisClient.RedisClient(ConnectionStringBuilder[], Func<String, String>)
   nameWithType.vb: RedisClient.RedisClient(ConnectionStringBuilder(), Func(Of String, String))
-- uid: FreeRedis.RedisClient.#ctor(FreeRedis.RedisClient,System.String,System.Boolean,System.TimeSpan,System.TimeSpan,System.TimeSpan,System.Action{FreeRedis.RedisClient})
-  name: RedisClient(RedisClient, String, Boolean, TimeSpan, TimeSpan, TimeSpan, Action<RedisClient>)
-  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient__ctor_FreeRedis_RedisClient_System_String_System_Boolean_System_TimeSpan_System_TimeSpan_System_TimeSpan_System_Action_FreeRedis_RedisClient__
-  commentId: M:FreeRedis.RedisClient.#ctor(FreeRedis.RedisClient,System.String,System.Boolean,System.TimeSpan,System.TimeSpan,System.TimeSpan,System.Action{FreeRedis.RedisClient})
-  name.vb: RedisClient(RedisClient, String, Boolean, TimeSpan, TimeSpan, TimeSpan, Action(Of RedisClient))
-  fullName: FreeRedis.RedisClient.RedisClient(FreeRedis.RedisClient, System.String, System.Boolean, System.TimeSpan, System.TimeSpan, System.TimeSpan, System.Action<FreeRedis.RedisClient>)
-  fullName.vb: FreeRedis.RedisClient.RedisClient(FreeRedis.RedisClient, System.String, System.Boolean, System.TimeSpan, System.TimeSpan, System.TimeSpan, System.Action(Of FreeRedis.RedisClient))
-  nameWithType: RedisClient.RedisClient(RedisClient, String, Boolean, TimeSpan, TimeSpan, TimeSpan, Action<RedisClient>)
-  nameWithType.vb: RedisClient.RedisClient(RedisClient, String, Boolean, TimeSpan, TimeSpan, TimeSpan, Action(Of RedisClient))
+- uid: FreeRedis.RedisClient.#ctor(FreeRedis.RedisClient,System.String,System.Boolean,System.TimeSpan,System.TimeSpan,System.TimeSpan,System.Action{FreeRedis.RedisClient},System.Action{FreeRedis.RedisClient})
+  name: RedisClient(RedisClient, String, Boolean, TimeSpan, TimeSpan, TimeSpan, Action<RedisClient>, Action<RedisClient>)
+  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient__ctor_FreeRedis_RedisClient_System_String_System_Boolean_System_TimeSpan_System_TimeSpan_System_TimeSpan_System_Action_FreeRedis_RedisClient__System_Action_FreeRedis_RedisClient__
+  commentId: M:FreeRedis.RedisClient.#ctor(FreeRedis.RedisClient,System.String,System.Boolean,System.TimeSpan,System.TimeSpan,System.TimeSpan,System.Action{FreeRedis.RedisClient},System.Action{FreeRedis.RedisClient})
+  name.vb: RedisClient(RedisClient, String, Boolean, TimeSpan, TimeSpan, TimeSpan, Action(Of RedisClient), Action(Of RedisClient))
+  fullName: FreeRedis.RedisClient.RedisClient(FreeRedis.RedisClient, System.String, System.Boolean, System.TimeSpan, System.TimeSpan, System.TimeSpan, System.Action<FreeRedis.RedisClient>, System.Action<FreeRedis.RedisClient>)
+  fullName.vb: FreeRedis.RedisClient.RedisClient(FreeRedis.RedisClient, System.String, System.Boolean, System.TimeSpan, System.TimeSpan, System.TimeSpan, System.Action(Of FreeRedis.RedisClient), System.Action(Of FreeRedis.RedisClient))
+  nameWithType: RedisClient.RedisClient(RedisClient, String, Boolean, TimeSpan, TimeSpan, TimeSpan, Action<RedisClient>, Action<RedisClient>)
+  nameWithType.vb: RedisClient.RedisClient(RedisClient, String, Boolean, TimeSpan, TimeSpan, TimeSpan, Action(Of RedisClient), Action(Of RedisClient))
 - uid: FreeRedis.RedisClient.#ctor(FreeRedis.RedisClient.BaseAdapter)
   name: RedisClient(RedisClient.BaseAdapter)
   href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient__ctor_FreeRedis_RedisClient_BaseAdapter_
@@ -11770,6 +11895,12 @@ references:
   commentId: F:FreeRedis.RedisClient.DeserializeRaw
   fullName: FreeRedis.RedisClient.DeserializeRaw
   nameWithType: RedisClient.DeserializeRaw
+- uid: FreeRedis.RedisClient.Disconnected
+  name: Disconnected
+  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_Disconnected
+  commentId: E:FreeRedis.RedisClient.Disconnected
+  fullName: FreeRedis.RedisClient.Disconnected
+  nameWithType: RedisClient.Disconnected
 - uid: FreeRedis.RedisClient.Dispose
   name: Dispose()
   href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_Dispose

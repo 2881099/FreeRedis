@@ -5,10 +5,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Class RedisClientPool
+    <title>Class DisconnectedEventArgs
    </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Class RedisClientPool
+    <meta name="title" content="Class DisconnectedEventArgs
    ">
     <meta name="generator" content="docfx 2.59.4.0">
     
@@ -68,39 +68,63 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="FreeRedis.Internal.RedisClientPool">
+            <article class="content wrap" id="_content" data-uid="FreeRedis.DisconnectedEventArgs">
   
   
-  <h1 id="FreeRedis_Internal_RedisClientPool" data-uid="FreeRedis.Internal.RedisClientPool" class="text-break">Class RedisClientPool
+  <h1 id="FreeRedis_DisconnectedEventArgs" data-uid="FreeRedis.DisconnectedEventArgs" class="text-break">Class DisconnectedEventArgs
   </h1>
   <div class="markdown level0 summary"></div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
-    <div class="level1"><span class="xref">RedisClientPool</span></div>
+    <div class="level1"><span class="xref">System.EventArgs</span></div>
+    <div class="level2"><span class="xref">DisconnectedEventArgs</span></div>
   </div>
-  <div class="implements">
-    <h5>Implements</h5>
-    <div><span class="xref">System.IDisposable</span></div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <span class="xref">System.EventArgs.Empty</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
   </div>
-  <h6><strong>Namespace</strong>: <a class="xref" href="FreeRedis.Internal.html">FreeRedis.Internal</a></h6>
+  <h6><strong>Namespace</strong>: <a class="xref" href="FreeRedis.html">FreeRedis</a></h6>
   <h6><strong>Assembly</strong>: cs.temp.dll.dll</h6>
-  <h5 id="FreeRedis_Internal_RedisClientPool_syntax">Syntax</h5>
+  <h5 id="FreeRedis_DisconnectedEventArgs_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class RedisClientPool : ObjectPool&lt;RedisClient&gt;, IDisposable</code></pre>
+    <pre><code class="lang-csharp hljs">public class DisconnectedEventArgs : EventArgs</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
   
   
-  <a id="FreeRedis_Internal_RedisClientPool__ctor_" data-uid="FreeRedis.Internal.RedisClientPool.#ctor*"></a>
-  <h4 id="FreeRedis_Internal_RedisClientPool__ctor_System_String_FreeRedis_RedisClient_" data-uid="FreeRedis.Internal.RedisClientPool.#ctor(System.String,FreeRedis.RedisClient)">RedisClientPool(String, RedisClient)</h4>
+  <a id="FreeRedis_DisconnectedEventArgs__ctor_" data-uid="FreeRedis.DisconnectedEventArgs.#ctor*"></a>
+  <h4 id="FreeRedis_DisconnectedEventArgs__ctor_System_String_FreeRedis_Internal_RedisClientPool_FreeRedis_RedisClient_" data-uid="FreeRedis.DisconnectedEventArgs.#ctor(System.String,FreeRedis.Internal.RedisClientPool,FreeRedis.RedisClient)">DisconnectedEventArgs(String, RedisClientPool, RedisClient)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public RedisClientPool(string connectionString, RedisClient topOwner)</code></pre>
+    <pre><code class="lang-csharp hljs">public DisconnectedEventArgs(string host, RedisClientPool pool, RedisClient cli)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -114,12 +138,17 @@
     <tbody>
       <tr>
         <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">connectionString</span></td>
+        <td><span class="parametername">host</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="FreeRedis.Internal.RedisClientPool.html">RedisClientPool</a></td>
+        <td><span class="parametername">pool</span></td>
         <td></td>
       </tr>
       <tr>
         <td><a class="xref" href="FreeRedis.RedisClient.html">RedisClient</a></td>
-        <td><span class="parametername">topOwner</span></td>
+        <td><span class="parametername">cli</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -128,13 +157,38 @@
   </h3>
   
   
-  <a id="FreeRedis_Internal_RedisClientPool_Key_" data-uid="FreeRedis.Internal.RedisClientPool.Key*"></a>
-  <h4 id="FreeRedis_Internal_RedisClientPool_Key" data-uid="FreeRedis.Internal.RedisClientPool.Key">Key</h4>
+  <a id="FreeRedis_DisconnectedEventArgs_Client_" data-uid="FreeRedis.DisconnectedEventArgs.Client*"></a>
+  <h4 id="FreeRedis_DisconnectedEventArgs_Client" data-uid="FreeRedis.DisconnectedEventArgs.Client">Client</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string Key { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public RedisClient Client { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="FreeRedis.RedisClient.html">RedisClient</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="FreeRedis_DisconnectedEventArgs_Host_" data-uid="FreeRedis.DisconnectedEventArgs.Host*"></a>
+  <h4 id="FreeRedis_DisconnectedEventArgs_Host" data-uid="FreeRedis.DisconnectedEventArgs.Host">Host</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string Host { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -153,13 +207,13 @@
   </table>
   
   
-  <a id="FreeRedis_Internal_RedisClientPool_Prefix_" data-uid="FreeRedis.Internal.RedisClientPool.Prefix*"></a>
-  <h4 id="FreeRedis_Internal_RedisClientPool_Prefix" data-uid="FreeRedis.Internal.RedisClientPool.Prefix">Prefix</h4>
+  <a id="FreeRedis_DisconnectedEventArgs_Pool_" data-uid="FreeRedis.DisconnectedEventArgs.Pool*"></a>
+  <h4 id="FreeRedis_DisconnectedEventArgs_Pool" data-uid="FreeRedis.DisconnectedEventArgs.Pool">Pool</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string Prefix { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public RedisClientPool Pool { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -171,15 +225,11 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.String</span></td>
+        <td><a class="xref" href="FreeRedis.Internal.RedisClientPool.html">RedisClientPool</a></td>
         <td></td>
       </tr>
     </tbody>
   </table>
-  <h3 id="implements">Implements</h3>
-  <div>
-      <span class="xref">System.IDisposable</span>
-  </div>
 </article>
           </div>
           
