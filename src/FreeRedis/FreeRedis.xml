@@ -252,6 +252,16 @@
             连续多少秒都没存活的对象时，才退出扫描。
             </summary>
         </member>
+        <member name="P:FreeRedis.Internal.IRedisSocket.ClientId">
+            <summary>
+            Redis-server ClientID
+            </summary>
+        </member>
+        <member name="P:FreeRedis.Internal.IRedisSocket.ClientId2">
+            <summary>
+            FreeRedis 本地专用 ID
+            </summary>
+        </member>
         <member name="P:FreeRedis.Internal.ObjectPool.IObjectPool`1.IsAvailable">
             <summary>
             是否可用
@@ -580,7 +590,7 @@
             Sentinel RedisClient
             </summary>
         </member>
-        <member name="M:FreeRedis.RedisClient.#ctor(FreeRedis.RedisClient,System.String,System.Boolean,System.TimeSpan,System.TimeSpan,System.TimeSpan,System.Action{FreeRedis.RedisClient})">
+        <member name="M:FreeRedis.RedisClient.#ctor(FreeRedis.RedisClient,System.String,System.Boolean,System.TimeSpan,System.TimeSpan,System.TimeSpan,System.Action{FreeRedis.RedisClient},System.Action{FreeRedis.RedisClient})">
             <summary>
             Single inside RedisClient
             </summary>

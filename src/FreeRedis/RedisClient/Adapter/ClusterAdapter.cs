@@ -338,7 +338,7 @@ namespace FreeRedis
             //closure connectionString
             void RegisterClusterNode(ConnectionStringBuilder connectionString)
             {
-                _ib.TryRegister(connectionString.Host, () => new RedisClientPool(connectionString, null, TopOwner));
+                _ib.TryRegister(connectionString.Host, () => new RedisClientPool(connectionString, TopOwner));
             }
 
             ConcurrentDictionary<ushort, string> _slotCache = new ConcurrentDictionary<ushort, string>();

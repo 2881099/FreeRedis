@@ -14,6 +14,7 @@ namespace FreeRedis
         public List<Func<IInterceptor>> Interceptors { get; } = new List<Func<IInterceptor>>();
         public event EventHandler<NoticeEventArgs> Notice;
         public event EventHandler<ConnectedEventArgs> Connected;
+        public event EventHandler<DisconnectedEventArgs> Disconnected;
         public event EventHandler<UnavailableEventArgs> Unavailable;
 
         protected RedisClient(BaseAdapter adapter)
@@ -59,9 +60,12 @@ namespace FreeRedis
         /// <summary>
         /// Single inside RedisClient
         /// </summary>
-        protected internal RedisClient(RedisClient topOwner, string host, bool ssl, TimeSpan connectTimeout, TimeSpan receiveTimeout, TimeSpan sendTimeout, Action<RedisClient> connected)
+        protected internal RedisClient(RedisClient topOwner, string host, bool ssl, 
+            TimeSpan connectTimeout, TimeSpan receiveTimeout, TimeSpan sendTimeout, 
+            Action<RedisClient> connected, Action<RedisClient> disconnected)
         {
-            Adapter = new SingleInsideAdapter(topOwner ?? this, this, host, ssl, connectTimeout, receiveTimeout, sendTimeout, connected, disconnected);
+            Adapter = new SingleInsideAdapter(topOwner ?? this, this, host, ssl, 
+                connectTimeout, receiveTimeout, sendTimeout, connected, disconnected);
             Prefix = topOwner.Prefix;
         }
 
@@ -140,6 +144,13 @@ namespace FreeRedis
             var topOwner = Adapter?.TopOwner ?? cli;
             if (topOwner?.Connected == null) return false;
             topOwner.Connected(topOwner, e);
+            return true;
+        }
+        internal bool OnDisconnected(RedisClient cli, DisconnectedEventArgs e)
+        {
+            var topOwner = Adapter?.TopOwner ?? cli;
+            if (topOwner?.Disconnected == null) return false;
+            topOwner.Disconnected(topOwner, e);
             return true;
         }
         internal bool OnUnavailable(RedisClient cli, UnavailableEventArgs e)

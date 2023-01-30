@@ -29,11 +29,11 @@ namespace FreeRedis
                 _is_single = !_rw_splitting && connectionString.MaxPoolSize == 1;
 
                 _ib = new IdleBus<RedisClientPool>(TimeSpan.FromMinutes(10));
-                _ib.Register(_masterHost, () => new RedisClientPool(connectionString, null, TopOwner));
+                _ib.Register(_masterHost, () => new RedisClientPool(connectionString, TopOwner));
 
                 if (_rw_splitting)
                     foreach (var slave in slaveConnectionStrings)
-                        _ib.TryRegister($"slave_{slave.Host}", () => new RedisClientPool(slave, null, TopOwner));
+                        _ib.TryRegister($"slave_{slave.Host}", () => new RedisClientPool(slave, TopOwner));
             }
 
             bool isdisposed = false;

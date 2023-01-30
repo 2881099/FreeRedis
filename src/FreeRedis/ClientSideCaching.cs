@@ -72,6 +72,14 @@ namespace FreeRedis
                     var redirectId = GetOrAddClusterTrackingRedirectId(e.Host, e.Pool);
                     e.Client.ClientTracking(true, redirectId, null, false, false, false, false);
                 };
+                _cli.Disconnected += (_, e) =>
+                {
+                    var rds = e.Client.Adapter.GetRedisSocket(null);
+                    var keys = _dict.Where(a => a.Value.ClientId2Falgs.ContainsKey(rds.ClientId2)).Select(a => a.Key).ToArray();
+                    RemoveCache(keys);
+                    //例如：释放空闲链接，会导致已经 Tracking 的 key 失效，收不到 __redis__:invalidate
+                    //目前采用 FreeRedis 记录每个链接的 key 有关信息，链接释放的时候移除对应的 client side caching
+                };
 
                 //将已预热好的连接，执行 ClientTracking REDIRECT
                 if (_cli.Adapter is RedisClient.ClusterAdapter clusterAdapter) clusterAdapter._ib.GetAll().ForEach(pool => LocalTrackingRedirectPool(pool));
@@ -169,7 +177,7 @@ namespace FreeRedis
             readonly object _dictLock = new object();
             bool TryGetCacheValue(string key, Type valueType, out object value)
             {
-                if (_dict.TryGetValue(key, out var trydictval) && trydictval.Values.TryGetValue(valueType, out var tryval)
+                if (_dict.TryGetValue(key, out var cache) && cache.Values.TryGetValue(valueType, out var tryval)
                     //&& DateTime.Now.Subtract(_dt2020.AddSeconds(tryval.SetTime)) < TimeSpan.FromMinutes(5)
                     )
                 {
@@ -184,20 +192,20 @@ namespace FreeRedis
                     {
                         lock (_dictLock)
                         {
-                            _dictSort.Remove($"{trydictval.GetTime.ToString("X").PadLeft(16, '0')}{key}");
+                            _dictSort.Remove($"{cache.GetTime.ToString("X").PadLeft(16, '0')}{key}");
                             _dictSort.Add($"{time.ToString("X").PadLeft(16, '0')}{key}");
                         }
                     }
-                    Interlocked.Exchange(ref trydictval.GetTime, time);
+                    Interlocked.Exchange(ref cache.GetTime, time);
                     value = tryval.Value;
                     return true;
                 }
                 value = null;
                 return false;
             }
-            void SetCacheValue(string command, string key, Type valueType, object value)
+            void SetCacheValue(CommandPacket cmd, string command, string key, Type valueType, object value)
             {
-                _dict.GetOrAdd(key, keyTmp =>
+                var cache = _dict.GetOrAdd(key, keyTmp =>
                 {
                     var time = GetTime();
                     if (_options.Capacity > 0)
@@ -212,8 +220,9 @@ namespace FreeRedis
                             RemoveCache(removeKey);
                     }
                     return new DictValue(command, time);
-                }).Values
-                .AddOrUpdate(valueType, new DictValue.ObjectValue(value), (oldkey, oldval) => new DictValue.ObjectValue(value));
+                });
+                cache.Values.AddOrUpdate(valueType, new DictValue.ObjectValue(value), (oldkey, oldval) => new DictValue.ObjectValue(value));
+                cache.ClientId2Falgs.TryAdd(cmd.ClientId2, true);
             }
             void RemoveCache(params string[] keys)
             {
@@ -237,6 +246,7 @@ namespace FreeRedis
                 public readonly ConcurrentDictionary<Type, ObjectValue> Values = new ConcurrentDictionary<Type, ObjectValue>();
                 public readonly string Command;
                 public long GetTime;
+                public readonly ConcurrentDictionary<long, bool> ClientId2Falgs = new ConcurrentDictionary<long, bool>();
                 public DictValue(string command, long gettime)
                 {
                     this.Command = command;
@@ -294,7 +304,7 @@ namespace FreeRedis
                             {
                                 var getkey = args.Command.GetKey(0);
                                 if (_cscc._options.KeyFilter?.Invoke(getkey) != false)
-                                    _cscc.SetCacheValue(args.Command._command, getkey, args.ValueType, args.Value);
+                                    _cscc.SetCacheValue(args.Command, args.Command._command, getkey, args.ValueType, args.Value);
                             }
                             break;
                         case "MGET":
@@ -308,7 +318,7 @@ namespace FreeRedis
                                     {
                                         var getkey = args.Command.GetKey(a);
                                         if (_cscc._options.KeyFilter?.Invoke(getkey) != false)
-                                            _cscc.SetCacheValue("GET", getkey, valueArrElementType, valueArr.GetValue(a));
+                                            _cscc.SetCacheValue(args.Command, "GET", getkey, valueArrElementType, valueArr.GetValue(a));
                                     }
                                 }
                             }

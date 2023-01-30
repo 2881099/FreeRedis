@@ -16,7 +16,7 @@ namespace FreeRedis.Internal
 {
     public class RedisClientPool : ObjectPool<RedisClient>, IDisposable
     {
-        public RedisClientPool(string connectionString, Action<RedisClient> connected, RedisClient topOwner) : base(null)
+        public RedisClientPool(string connectionString, RedisClient topOwner) : base(null)
         {
             _policy = new RedisClientPoolPolicy
             {
@@ -111,7 +111,6 @@ namespace FreeRedis.Internal
                     });
                 });
 
-                connected?.Invoke(cli);
                 topOwner?.OnConnected(TopOwner, new ConnectedEventArgs(_policy._connectionStringBuilder.Host, this, cli));
                 if (isIgnoreAop == false)
                     topOwner?.OnNotice(TopOwner, new NoticeEventArgs(NoticeType.Info, null, $"{_policy._connectionStringBuilder.Host.PadRight(21)} > Connected, ClientId: {rds.ClientId}, Database: {rds.Database}, Pool: {_freeObjects.Count}/{_allObjects.Count}", cli));
@@ -165,8 +164,14 @@ namespace FreeRedis.Internal
 
         public RedisClient OnCreate()
         {
-            return new RedisClient(_pool.TopOwner, _connectionStringBuilder.Host, _connectionStringBuilder.Ssl, _connectionStringBuilder.ConnectTimeout,
-                _connectionStringBuilder.ReceiveTimeout, _connectionStringBuilder.SendTimeout, cli => Connected(cli, new EventArgs()));
+            return new RedisClient(_pool.TopOwner, _connectionStringBuilder.Host, _connectionStringBuilder.Ssl, 
+                _connectionStringBuilder.ConnectTimeout,
+                _connectionStringBuilder.ReceiveTimeout, _connectionStringBuilder.SendTimeout, 
+                cli => Connected(cli, new EventArgs()), 
+                cli =>
+                {
+                    _pool.TopOwner?.OnDisconnected(_pool.TopOwner, new DisconnectedEventArgs(_connectionStringBuilder.Host, _pool, cli));
+                });
         }
 
         public void OnDestroy(RedisClient obj)

@@ -14,12 +14,15 @@ namespace FreeRedis
         {
             readonly IRedisSocket _redisSocket;
 
-            public SingleInsideAdapter(RedisClient topOwner, RedisClient owner, string host, bool ssl, TimeSpan connectTimeout, TimeSpan receiveTimeout, TimeSpan sendTimeout, Action<RedisClient> connected)
+            public SingleInsideAdapter(RedisClient topOwner, RedisClient owner, string host, bool ssl, 
+                TimeSpan connectTimeout, TimeSpan receiveTimeout, TimeSpan sendTimeout, 
+                Action<RedisClient> connected, Action<RedisClient> disconnected)
             {
                 UseType = UseType.SingleInside;
                 TopOwner = topOwner;
                 _redisSocket = new DefaultRedisSocket(host, ssl);
                 _redisSocket.Connected += (s, e) => connected?.Invoke(owner);
+                _redisSocket.Disconnected += (s, e) => disconnected?.Invoke(owner);
                 _redisSocket.ConnectTimeout = connectTimeout;
                 _redisSocket.ReceiveTimeout = receiveTimeout;
                 _redisSocket.SendTimeout = sendTimeout;

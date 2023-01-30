@@ -52,8 +52,10 @@ namespace FreeRedis.Internal
             public RedisProtocol Protocol { get => _owner.Protocol; set => _owner.Protocol = value; }
             public Encoding Encoding { get => _owner.Encoding; set => _owner.Encoding = value; }
             public event EventHandler<EventArgs> Connected { add { _owner.Connected += value; } remove { _owner.Connected -= value; } }
+            public event EventHandler<EventArgs> Disconnected { add { _owner.Disconnected += value; } remove { _owner.Disconnected -= value; } }
             public ClientReplyType ClientReply => _owner.ClientReply;
             public long ClientId => _owner.ClientId;
+            public long ClientId2 => _owner.ClientId2;
             public int Database => _owner.Database;
             public CommandPacket LastCommand => _owner.LastCommand;
 
@@ -106,8 +108,11 @@ namespace FreeRedis.Internal
         public Stream Stream => _stream ?? throw new RedisClientException("Redis socket connection was not opened");
         public bool IsConnected => _socket?.Connected == true && _stream != null;
         public event EventHandler<EventArgs> Connected;
+        public event EventHandler<EventArgs> Disconnected;
         public ClientReplyType ClientReply { get; protected set; } = ClientReplyType.on;
         public long ClientId { get; protected set; }
+        public long ClientId2 { get; }
+        static long ClientId2_static = 0;
         public int Database { get; protected set; } = 0;
         public CommandPacket LastCommand { get; protected set; }
 
@@ -125,6 +130,7 @@ namespace FreeRedis.Internal
         {
             Host = host;
             Ssl = ssl;
+            ClientId2 = Interlocked.Increment(ref ClientId2_static);
         }
 
         void WriteAfter(CommandPacket cmd)
@@ -152,6 +158,7 @@ namespace FreeRedis.Internal
                     break;
             }
             cmd.WriteTarget = $"{this.Host}/{this.Database}";
+            cmd.ClientId2 = ClientId2;
         }
         public void Write(CommandPacket cmd)
         {
@@ -282,6 +289,7 @@ namespace FreeRedis.Internal
                     _stream = null;
                 }
                 _reader = null;
+                Disconnected?.Invoke(this, new EventArgs());
             }
         }
 
