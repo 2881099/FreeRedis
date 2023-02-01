@@ -246,7 +246,7 @@ namespace FreeRedis
                 public readonly ConcurrentDictionary<Type, ObjectValue> Values = new ConcurrentDictionary<Type, ObjectValue>();
                 public readonly string Command;
                 public long GetTime;
-                public readonly ConcurrentDictionary<long, bool> ClientId2Falgs = new ConcurrentDictionary<long, bool>();
+                public readonly ConcurrentDictionary<Guid, bool> ClientId2Falgs = new ConcurrentDictionary<Guid, bool>();
                 public DictValue(string command, long gettime)
                 {
                     this.Command = command;

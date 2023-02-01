@@ -82,7 +82,7 @@ namespace FreeRedis
         internal bool _clusterMovedAsking;
         internal int _clusterMovedTryCount;
         public string WriteTarget { get; internal set; }
-        public long ClientId2 { get; internal set; }
+        public Guid ClientId2 { get; internal set; }
         public bool _flagReadbytes;
         /// <summary>
         /// read byte[]

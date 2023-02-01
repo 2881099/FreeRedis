@@ -55,7 +55,7 @@ namespace FreeRedis.Internal
             public event EventHandler<EventArgs> Disconnected { add { _owner.Disconnected += value; } remove { _owner.Disconnected -= value; } }
             public ClientReplyType ClientReply => _owner.ClientReply;
             public long ClientId => _owner.ClientId;
-            public long ClientId2 => _owner.ClientId2;
+            public Guid ClientId2 => _owner.ClientId2;
             public int Database => _owner.Database;
             public CommandPacket LastCommand => _owner.LastCommand;
 
@@ -111,8 +111,7 @@ namespace FreeRedis.Internal
         public event EventHandler<EventArgs> Disconnected;
         public ClientReplyType ClientReply { get; protected set; } = ClientReplyType.on;
         public long ClientId { get; protected set; }
-        public long ClientId2 { get; }
-        static long ClientId2_static = 0;
+        public Guid ClientId2 { get; } = Guid.NewGuid();
         public int Database { get; protected set; } = 0;
         public CommandPacket LastCommand { get; protected set; }
 
@@ -130,7 +129,6 @@ namespace FreeRedis.Internal
         {
             Host = host;
             Ssl = ssl;
-            ClientId2 = Interlocked.Increment(ref ClientId2_static);
         }
 
         void WriteAfter(CommandPacket cmd)

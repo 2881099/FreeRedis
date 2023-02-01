@@ -45,7 +45,7 @@ namespace FreeRedis.Internal
         /// <summary>
         /// FreeRedis 本地专用 ID
         /// </summary>
-        long ClientId2 { get; }
+        Guid ClientId2 { get; }
         int Database { get; }
 
         void Connect();
