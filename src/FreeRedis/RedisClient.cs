@@ -87,9 +87,10 @@ namespace FreeRedis
         public object Call(CommandPacket cmd) => Adapter.AdapterCall(cmd, rt => rt.ThrowOrValue());
         protected TValue Call<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse) => Adapter.AdapterCall(cmd, parse);
 
-        internal protected virtual T LogCall<T>(CommandPacket cmd, Func<T> func)
+        internal protected virtual T LogCall<T>(CommandPacket cmd, Func<T> func) => LogCallCtrl(cmd, func, true, true);
+        internal protected virtual T LogCallCtrl<T>(CommandPacket cmd, Func<T> func, bool aopBefore, bool aopAfter)
         {
-            cmd.Prefix(Prefix);
+            if (aopBefore) cmd.Prefix(Prefix);
             var isnotice = this.Notice != null;
             if (isnotice == false && this.Interceptors.Any() == false) return func();
             if (cmd.IsIgnoreAop) return func();
@@ -103,7 +104,9 @@ namespace FreeRedis
             {
                 aopsws[idx] = new Stopwatch();
                 aopsws[idx].Start();
+                if (aopBefore == false && aopAfter == false) continue;
                 aops[idx] = isnotice && idx == aops.Length - 1 ? new NoticeCallInterceptor(this) : this.Interceptors[idx]?.Invoke();
+                if (aopBefore == false) continue;
                 var args = new InterceptorBeforeEventArgs(this, cmd, typeof(T));
                 aops[idx].Before(args);
                 if (args.ValueIsChanged && args.Value is T argsValue)
@@ -124,11 +127,14 @@ namespace FreeRedis
             }
             finally
             {
-                for (var idx = 0; idx < aops.Length; idx++)
+                if (aopAfter)
                 {
-                    aopsws[idx].Stop();
-                    var args = new InterceptorAfterEventArgs(this, cmd, typeof(T), ret, exception, aopsws[idx].ElapsedMilliseconds);
-                    aops[idx].After(args);
+                    for (var idx = 0; idx < aops.Length; idx++)
+                    {
+                        aopsws[idx].Stop();
+                        var args = new InterceptorAfterEventArgs(this, cmd, typeof(T), ret, exception, aopsws[idx].ElapsedMilliseconds);
+                        aops[idx].After(args);
+                    }
                 }
             }
         }

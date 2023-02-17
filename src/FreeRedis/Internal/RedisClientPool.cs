@@ -88,6 +88,10 @@ namespace FreeRedis.Internal
                         (rds as IRedisSocketModify).SetClientId(rt.ThrowOrValue<long>());
                     }));
 
+                cmds.ForEach(cmd =>
+                {
+                    topOwner.LogCallCtrl(cmd, () => 1, true, false); // aop before
+                });
                 using (var ms = new MemoryStream()) {
                     var writer = new RespHelper.Resp3Writer(ms, rds.Encoding, RedisProtocol.RESP2);
                     cmds.ForEach(cmd =>
@@ -103,12 +107,11 @@ namespace FreeRedis.Internal
                 }
                 cmds.ForEach(cmd =>
                 {
-                    cmd.IsIgnoreAop = isIgnoreAop;
-                    topOwner.LogCall(cmd, () =>
+                    topOwner.LogCallCtrl(cmd, () =>
                     {
                         var rt = rds.Read(cmd);
                         return rt.Value;
-                    });
+                    }, false, true); //aop after
                 });
 
                 topOwner?.OnConnected(TopOwner, new ConnectedEventArgs(_policy._connectionStringBuilder.Host, this, cli));
@@ -193,7 +196,7 @@ namespace FreeRedis.Internal
                 {
                     try
                     {
-                        obj.Value.Ping();
+                        obj.Value.Ping("CheckAvailable");
                     }
                     catch
                     {
@@ -230,7 +233,7 @@ namespace FreeRedis.Internal
             {
                 var conn = pool.Get();
                 initConns.Add(conn);
-                conn.Value.Ping();
+                conn.Value.Ping("CheckAvailable");
             }
             catch (Exception ex)
             {
