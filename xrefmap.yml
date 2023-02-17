@@ -13120,6 +13120,22 @@ references:
   fullName.vb: FreeRedis.RedisClient.LogCall(Of T)(FreeRedis.CommandPacket, System.Func(Of T))
   nameWithType: RedisClient.LogCall<T>(CommandPacket, Func<T>)
   nameWithType.vb: RedisClient.LogCall(Of T)(CommandPacket, Func(Of T))
+- uid: FreeRedis.RedisClient.LogCallCtrl*
+  name: LogCallCtrl
+  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_LogCallCtrl_
+  commentId: Overload:FreeRedis.RedisClient.LogCallCtrl
+  isSpec: "True"
+  fullName: FreeRedis.RedisClient.LogCallCtrl
+  nameWithType: RedisClient.LogCallCtrl
+- uid: FreeRedis.RedisClient.LogCallCtrl``1(FreeRedis.CommandPacket,System.Func{``0},System.Boolean,System.Boolean)
+  name: LogCallCtrl<T>(CommandPacket, Func<T>, Boolean, Boolean)
+  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_LogCallCtrl__1_FreeRedis_CommandPacket_System_Func___0__System_Boolean_System_Boolean_
+  commentId: M:FreeRedis.RedisClient.LogCallCtrl``1(FreeRedis.CommandPacket,System.Func{``0},System.Boolean,System.Boolean)
+  name.vb: LogCallCtrl(Of T)(CommandPacket, Func(Of T), Boolean, Boolean)
+  fullName: FreeRedis.RedisClient.LogCallCtrl<T>(FreeRedis.CommandPacket, System.Func<T>, System.Boolean, System.Boolean)
+  fullName.vb: FreeRedis.RedisClient.LogCallCtrl(Of T)(FreeRedis.CommandPacket, System.Func(Of T), System.Boolean, System.Boolean)
+  nameWithType: RedisClient.LogCallCtrl<T>(CommandPacket, Func<T>, Boolean, Boolean)
+  nameWithType.vb: RedisClient.LogCallCtrl(Of T)(CommandPacket, Func(Of T), Boolean, Boolean)
 - uid: FreeRedis.RedisClient.LPop(System.String)
   name: LPop(String)
   href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_LPop_System_String_
