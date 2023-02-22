@@ -37,6 +37,19 @@ namespace FreeRedis
             this.Client = cli;
         }
     }
+    public class DisconnectedEventArgs : EventArgs
+    {
+        public string Host { get; }
+        public RedisClientPool Pool { get; }
+        public RedisClient Client { get; }
+
+        public DisconnectedEventArgs(string host, RedisClientPool pool, RedisClient cli)
+        {
+            this.Host = host;
+            this.Pool = pool;
+            this.Client = cli;
+        }
+    }
     public class UnavailableEventArgs : EventArgs
     {
         public string Host { get; }

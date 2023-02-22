@@ -206,7 +206,7 @@ namespace FreeRedis
             //closure connectionString
             void RegisterClusterNode(ConnectionStringBuilder connectionString)
             {
-                _ib.TryRegister($"{connectionString.Host}/{connectionString.Database}", () => new RedisClientPool(connectionString, null, TopOwner));
+                _ib.TryRegister($"{connectionString.Host}/{connectionString.Database}", () => new RedisClientPool(connectionString, TopOwner));
             }
         }
 

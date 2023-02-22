@@ -86,14 +86,14 @@ namespace FreeRedis
                     case "clientname": if (kv.Length > 1) ret.ClientName = kv[1].Trim(); break;
                     case "encoding": if (kv.Length > 1) ret.Encoding = Encoding.GetEncoding(kv[1].Trim()); break;
 
-                    case "idletimeout": if (kv.Length > 1 && long.TryParse(kv[1].Trim(), out var idleTimeout) && idleTimeout > 0) ret.IdleTimeout = TimeSpan.FromMilliseconds(idleTimeout); break;
-                    case "connecttimeout": if (kv.Length > 1 && long.TryParse(kv[1].Trim(), out var connectTimeout) && connectTimeout > 0) ret.ConnectTimeout = TimeSpan.FromMilliseconds(connectTimeout); break;
-                    case "receivetimeout": if (kv.Length > 1 && long.TryParse(kv[1].Trim(), out var receiveTimeout) && receiveTimeout > 0) ret.ReceiveTimeout = TimeSpan.FromMilliseconds(receiveTimeout); break;
-                    case "sendtimeout": if (kv.Length > 1 && long.TryParse(kv[1].Trim(), out var sendTimeout) && sendTimeout > 0) ret.SendTimeout = TimeSpan.FromMilliseconds(sendTimeout); break;
+                    case "idletimeout": if (kv.Length > 1 && long.TryParse(kv[1].Trim(), out var idleTimeout) && idleTimeout >= 0) ret.IdleTimeout = TimeSpan.FromMilliseconds(idleTimeout); break;
+                    case "connecttimeout": if (kv.Length > 1 && long.TryParse(kv[1].Trim(), out var connectTimeout) && connectTimeout >= 0) ret.ConnectTimeout = TimeSpan.FromMilliseconds(connectTimeout); break;
+                    case "receivetimeout": if (kv.Length > 1 && long.TryParse(kv[1].Trim(), out var receiveTimeout) && receiveTimeout >= 0) ret.ReceiveTimeout = TimeSpan.FromMilliseconds(receiveTimeout); break;
+                    case "sendtimeout": if (kv.Length > 1 && long.TryParse(kv[1].Trim(), out var sendTimeout) && sendTimeout >= 0) ret.SendTimeout = TimeSpan.FromMilliseconds(sendTimeout); break;
 
                     case "poolsize":
-                    case "maxpoolsize": if (kv.Length > 1 && int.TryParse(kv[1].Trim(), out var maxPoolSize) && maxPoolSize > 0) ret.MaxPoolSize = maxPoolSize; break;
-                    case "minpoolsize": if (kv.Length > 1 && int.TryParse(kv[1].Trim(), out var minPoolSize) && minPoolSize > 0) ret.MinPoolSize = minPoolSize; break;
+                    case "maxpoolsize": if (kv.Length > 1 && int.TryParse(kv[1].Trim(), out var maxPoolSize) && maxPoolSize >= 0) ret.MaxPoolSize = maxPoolSize; break;
+                    case "minpoolsize": if (kv.Length > 1 && int.TryParse(kv[1].Trim(), out var minPoolSize) && minPoolSize >= 0) ret.MinPoolSize = minPoolSize; break;
                     case "retry": if (kv.Length > 1 && int.TryParse(kv[1].Trim(), out var retry) && retry > 0) ret.Retry = retry; break;
                 }
             }

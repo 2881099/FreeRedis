@@ -23,6 +23,7 @@ namespace FreeRedis.Internal
         Stream Stream { get; }
         bool IsConnected { get; }
         event EventHandler<EventArgs> Connected;
+        event EventHandler<EventArgs> Disconnected;
 
         RedisProtocol Protocol { get; set; }
         Encoding Encoding { get; set; }
@@ -37,7 +38,14 @@ namespace FreeRedis.Internal
         Task ReadChunkAsync(Stream destination, int bufferSize = 1024);
 #endif
         ClientReplyType ClientReply { get; }
+        /// <summary>
+        /// Redis-server ClientID
+        /// </summary>
         long ClientId { get; }
+        /// <summary>
+        /// FreeRedis 本地专用 ID
+        /// </summary>
+        Guid ClientId2 { get; }
         int Database { get; }
 
         void Connect();
