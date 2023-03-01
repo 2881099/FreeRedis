@@ -41,7 +41,9 @@ namespace FreeRedis.Internal
                              .Input(_policy._connectionStringBuilder.Password)
                              .OnData(rt =>
                              {
-                                 rt.ThrowOrNothing();
+                                 if (rt.IsError && rt.SimpleError != "ERR Client sent AUTH, but no password is set")
+                                     rt.ThrowOrNothing();
+                                 rds.Protocol = RedisProtocol.RESP3;
                              }));
                     cmds.Add("HELLO"
                         .Input(3)
