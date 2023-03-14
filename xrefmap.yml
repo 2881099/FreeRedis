@@ -3020,6 +3020,23 @@ references:
   fullName.vb: FreeRedis.Internal.IdleBus(Of TKey, TValue).GetKeys
   nameWithType: IdleBus<TKey, TValue>.GetKeys
   nameWithType.vb: IdleBus(Of TKey, TValue).GetKeys
+- uid: FreeRedis.Internal.IdleBus`2.IsDisposed
+  name: IsDisposed
+  href: docs/api/FreeRedis.Internal.IdleBus-2.html#FreeRedis_Internal_IdleBus_2_IsDisposed
+  commentId: P:FreeRedis.Internal.IdleBus`2.IsDisposed
+  fullName: FreeRedis.Internal.IdleBus<TKey, TValue>.IsDisposed
+  fullName.vb: FreeRedis.Internal.IdleBus(Of TKey, TValue).IsDisposed
+  nameWithType: IdleBus<TKey, TValue>.IsDisposed
+  nameWithType.vb: IdleBus(Of TKey, TValue).IsDisposed
+- uid: FreeRedis.Internal.IdleBus`2.IsDisposed*
+  name: IsDisposed
+  href: docs/api/FreeRedis.Internal.IdleBus-2.html#FreeRedis_Internal_IdleBus_2_IsDisposed_
+  commentId: Overload:FreeRedis.Internal.IdleBus`2.IsDisposed
+  isSpec: "True"
+  fullName: FreeRedis.Internal.IdleBus<TKey, TValue>.IsDisposed
+  fullName.vb: FreeRedis.Internal.IdleBus(Of TKey, TValue).IsDisposed
+  nameWithType: IdleBus<TKey, TValue>.IsDisposed
+  nameWithType.vb: IdleBus(Of TKey, TValue).IsDisposed
 - uid: FreeRedis.Internal.IdleBus`2.Notice
   name: Notice
   href: docs/api/FreeRedis.Internal.IdleBus-2.html#FreeRedis_Internal_IdleBus_2_Notice
