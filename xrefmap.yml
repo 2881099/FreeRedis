@@ -15914,6 +15914,19 @@ references:
   isSpec: "True"
   fullName: FreeRedis.RedisClient.ZRevRank
   nameWithType: RedisClient.ZRevRank
+- uid: FreeRedis.RedisClient.ZScan(System.String,System.Int64,System.String,System.Int64)
+  name: ZScan(String, Int64, String, Int64)
+  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_ZScan_System_String_System_Int64_System_String_System_Int64_
+  commentId: M:FreeRedis.RedisClient.ZScan(System.String,System.Int64,System.String,System.Int64)
+  fullName: FreeRedis.RedisClient.ZScan(System.String, System.Int64, System.String, System.Int64)
+  nameWithType: RedisClient.ZScan(String, Int64, String, Int64)
+- uid: FreeRedis.RedisClient.ZScan*
+  name: ZScan
+  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_ZScan_
+  commentId: Overload:FreeRedis.RedisClient.ZScan
+  isSpec: "True"
+  fullName: FreeRedis.RedisClient.ZScan
+  nameWithType: RedisClient.ZScan
 - uid: FreeRedis.RedisClient.ZScore(System.String,System.String)
   name: ZScore(String, String)
   href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_ZScore_System_String_System_String_
