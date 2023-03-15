@@ -6080,7 +6080,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">ScanResult&lt;string&gt; HScan(string key, long cursor, string pattern, long count)</code></pre>
+    <pre><code class="lang-csharp hljs">ScanResult&lt;KeyValuePair&lt;string, string&gt;&gt; HScan(string key, long cursor, string pattern, long count)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -6124,7 +6124,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="FreeRedis.ScanResult-1.html">ScanResult</a>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td><a class="xref" href="FreeRedis.ScanResult-1.html">ScanResult</a>&lt;<span class="xref">System.Collections.Generic.KeyValuePair</span>&lt;<span class="xref">System.String</span>, <span class="xref">System.String</span>&gt;&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -6137,7 +6137,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">IEnumerable&lt;string[]&gt; HScan(string key, string pattern, long count)</code></pre>
+    <pre><code class="lang-csharp hljs">IEnumerable&lt;KeyValuePair&lt;string, string&gt;[]&gt; HScan(string key, string pattern, long count)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -6176,7 +6176,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<span class="xref">System.String</span>[]&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<span class="xref">System.Collections.Generic.KeyValuePair</span>&lt;<span class="xref">System.String</span>, <span class="xref">System.String</span>&gt;[]&gt;</td>
         <td></td>
       </tr>
     </tbody>
