@@ -1646,6 +1646,16 @@
             <param name="repetition">是否允许有重复元素返回</param>
             <returns></returns>
         </member>
+        <member name="M:FreeRedis.RedisClient.ZScan(System.String,System.Int64,System.String,System.Int64)">
+            <summary>
+            ZSCAN key cursor [MATCH pattern] [COUNT count]
+            </summary>
+            <param name="key"></param>
+            <param name="cursor"></param>
+            <param name="pattern"></param>
+            <param name="count"></param>
+            <returns></returns>
+        </member>
         <member name="M:FreeRedis.RedisClient.AppendAsync``1(System.String,``0)">
             <summary>
             APPEND command (An Asynchronous Version)<br /><br />

@@ -143,8 +143,8 @@ namespace FreeRedis
         T[] HMGet<T>(string key, params string[] fields);
         void HMSet<T>(string key, Dictionary<string, T> keyValues);
         void HMSet<T>(string key, string field, T value, params object[] fieldValues);
-        ScanResult<string> HScan(string key, long cursor, string pattern, long count);
-        IEnumerable<string[]> HScan(string key, string pattern, long count);
+        ScanResult<KeyValuePair<string, string>> HScan(string key, long cursor, string pattern, long count);
+        IEnumerable<KeyValuePair<string, string>[]> HScan(string key, string pattern, long count);
         long HSet<T>(string key, Dictionary<string, T> keyValues);
         long HSet<T>(string key, string field, T value, params object[] fieldValues);
         bool HSetNx<T>(string key, string field, T value);

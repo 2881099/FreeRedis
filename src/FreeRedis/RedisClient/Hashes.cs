@@ -93,11 +93,12 @@ namespace FreeRedis
         public void HMSet<T>(string key, string field, T value, params object[] fieldValues) => HSet(true, key, field, value, fieldValues);
         public void HMSet<T>(string key, Dictionary<string, T> keyValues) => Call("HMSET".InputKey(key).InputKv(keyValues, false, SerializeRedisValue), rt => rt.ThrowOrValue<string>());
 
-        public ScanResult<string> HScan(string key, long cursor, string pattern, long count) => Call("HSCAN"
+        public ScanResult<KeyValuePair<string, string>> HScan(string key, long cursor, string pattern, long count) => Call("HSCAN"
             .InputKey(key, cursor)
             .InputIf(!string.IsNullOrWhiteSpace(pattern), "MATCH", pattern)
-            .InputIf(count != 0, "COUNT", count), rt => rt.ThrowOrValue((a, _) => new ScanResult<string>(a[0].ConvertTo<long>(), a[1].ConvertTo<string[]>())));
-        public IEnumerable<string[]> HScan(string key, string pattern, long count) => new ScanCollection(this, "hscan", (cli, cursor) => cli.HScan(key, cursor, pattern, count));
+            .InputIf(count != 0, "COUNT", count), rt => rt.ThrowOrValue((a, _) => new ScanResult<KeyValuePair<string, string>>(a[0].ConvertTo<long>(), 
+                a[1].ConvertTo<string[]>().MapToList((k, v) => new KeyValuePair<string, string>(k.ConvertTo<string>(), v.ConvertTo<string>())).ToArray())));
+        public IEnumerable<KeyValuePair<string, string>[]> HScan(string key, string pattern, long count) => new ScanCollection<KeyValuePair<string, string>>(this, "hscan", (cli, cursor) => cli.HScan(key, cursor, pattern, count));
 
         public long HSet<T>(string key, string field, T value, params object[] fieldValues) => HSet(false, key, field, value, fieldValues);
         public long HSet<T>(string key, Dictionary<string, T> keyValues) => Call("HSET".InputKey(key).InputKv(keyValues, false, SerializeRedisValue), rt => rt.ThrowOrValue<long>());

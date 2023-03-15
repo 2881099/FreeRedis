@@ -305,7 +305,8 @@ namespace FreeRedis
             .InputIf(!string.IsNullOrWhiteSpace(pattern), "MATCH", pattern)
             .InputIf(count != 0, "COUNT", count), rt => rt.ThrowOrValue((a, _) => new ScanResult<ZMember>(a[0].ConvertTo<long>(),
                 a[1] == null ? new ZMember[0] :
-                ((object[])a[1]).MapToHash<decimal>(rt.Encoding).Select(b => new ZMember(b.Key, b.Value)).ToArray())));
+                ((object[])a[1]).MapToList((k, v) => new ZMember(k.ConvertTo<string>(), v.ConvertTo<decimal>())).ToArray())));
+        public IEnumerable<ZMember[]> ZScan(string key, string pattern, long count) => new ScanCollection<ZMember>(this, "zscan", (cli, cursor) => cli.ZScan(key, cursor, pattern, count));
     }
 
     public class ZMember
