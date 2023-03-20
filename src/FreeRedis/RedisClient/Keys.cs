@@ -924,11 +924,11 @@ namespace FreeRedis
             .InputIf(!string.IsNullOrWhiteSpace(type), "TYPE", type), rt => rt
             .ThrowOrValue((a, _) => new ScanResult<string>(a[0].ConvertTo<long>(), a[1].ConvertTo<string[]>())));
 
-        public IEnumerable<string[]> Scan(string pattern, long count, string type) => new ScanCollection(this, "scan", (cli, cursor) => cli.Scan(cursor, pattern, count, type));
+        public IEnumerable<string[]> Scan(string pattern, long count, string type) => new ScanCollection<string>(this, "scan", (cli, cursor) => cli.Scan(cursor, pattern, count, type));
         #region Scan IEnumerable
-        class ScanCollection : IEnumerable<string[]>
+        class ScanCollection<T> : IEnumerable<T[]>
         {
-            public IEnumerator<string[]> GetEnumerator()
+            public IEnumerator<T[]> GetEnumerator()
             {
                 long cursor = 0;
                 if (_cli.Adapter.UseType == UseType.Cluster && _scanName == "scan")
@@ -998,8 +998,8 @@ namespace FreeRedis
 
             readonly RedisClient _cli;
             readonly string _scanName;
-            readonly Func<RedisClient, long, ScanResult<string>> _scanFunc;
-            public ScanCollection(RedisClient cli, string scanName, Func<RedisClient, long, ScanResult<string>> scanFunc)
+            readonly Func<RedisClient, long, ScanResult<T>> _scanFunc;
+            public ScanCollection(RedisClient cli, string scanName, Func<RedisClient, long, ScanResult<T>> scanFunc)
             {
                 _cli = cli;
                 _scanName = scanName;

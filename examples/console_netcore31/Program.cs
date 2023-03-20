@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 
 using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Text;
 using System.Threading;
 
@@ -47,6 +48,23 @@ namespace console_netcore31
 
         static void Main(string[] args)
         {
+            var keys = cli.Scan(0, "*", 100, null);
+            Console.WriteLine(string.Join(",", keys.items));
+            foreach (var ks in cli.Scan("*", 3, null)) Console.WriteLine(string.Join(",", ks));
+
+            var hkeys = cli.HScan("key1", 0, "*", 100);
+            Console.WriteLine(string.Join(",", hkeys.items.Select(a => $"{a.Key}={a.Value}")));
+            foreach (var ks in cli.HScan("key1", "*", 3)) Console.WriteLine(string.Join(",", ks.Select(a => $"{a.Key}={a.Value}")));
+
+            var skeys = cli.SScan("skey1", 0, "*", 100);
+            Console.WriteLine(string.Join(",", skeys.items));
+            foreach (var ks in cli.SScan("skey1", "*", 3)) Console.WriteLine(string.Join(",", ks));
+
+            var zkeys = cli.ZScan("zkey1", 0, "*", 100);
+            Console.WriteLine(string.Join(",", zkeys.items.Select(a => $"{a.member}={a.score}")));
+            foreach (var ks in cli.ZScan("zkey1", "*", 3)) Console.WriteLine(string.Join(",", ks.Select(a => $"{a.member}={a.score}")));
+
+
             cli.Ping();
 
             var cmd = new CommandPacket("AUTH").Input("user1", "password1")

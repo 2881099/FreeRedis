@@ -92,7 +92,7 @@ namespace FreeRedis
             .InputKey(key, cursor)
             .InputIf(!string.IsNullOrWhiteSpace(pattern), "MATCH", pattern)
             .InputIf(count != 0, "COUNT", count), rt => rt.ThrowOrValue((a, _) => new ScanResult<string>(a[0].ConvertTo<long>(), a[1].ConvertTo<string[]>())));
-        public IEnumerable<string[]> SScan(string key, string pattern, long count) => new ScanCollection(this, "sscan", (cli, cursor) => cli.SScan(key, cursor, pattern, count));
+        public IEnumerable<string[]> SScan(string key, string pattern, long count) => new ScanCollection<string>(this, "sscan", (cli, cursor) => cli.SScan(key, cursor, pattern, count));
 
         public string[] SUnion(params string[] keys) => Call("SUNION".InputKey(keys), rt => rt.ThrowOrValue<string[]>());
         public T[] SUnion<T>(params string[] keys) => SReadArray<T>("SUNION".InputKey(keys));

@@ -34,6 +34,17 @@ namespace FreeRedis.Internal
 
                 var cmds = new List<CommandPacket>();
                 if (_policy._connectionStringBuilder.Protocol == RedisProtocol.RESP3)
+                {
+                    //未开启 ACL 的情况
+                    if (string.IsNullOrWhiteSpace(_policy._connectionStringBuilder.User) && !string.IsNullOrWhiteSpace(_policy._connectionStringBuilder.Password))
+                        cmds.Add("AUTH".SubCommand(null)
+                             .Input(_policy._connectionStringBuilder.Password)
+                             .OnData(rt =>
+                             {
+                                 if (rt.IsError && rt.SimpleError != "ERR Client sent AUTH, but no password is set")
+                                     rt.ThrowOrNothing();
+                                 rds.Protocol = RedisProtocol.RESP3;
+                             }));
                     cmds.Add("HELLO"
                         .Input(3)
                         .InputIf(!string.IsNullOrWhiteSpace(_policy._connectionStringBuilder.User) && !string.IsNullOrWhiteSpace(_policy._connectionStringBuilder.Password), "AUTH", _policy._connectionStringBuilder.User, _policy._connectionStringBuilder.Password)
@@ -43,6 +54,7 @@ namespace FreeRedis.Internal
                             rt.ThrowOrNothing();
                             rds.Protocol = RedisProtocol.RESP3;
                         }));
+                }
                 else if (!string.IsNullOrEmpty(_policy._connectionStringBuilder.User) && !string.IsNullOrEmpty(_policy._connectionStringBuilder.Password))
                     cmds.Add("AUTH".SubCommand(null)
                         .InputIf(!string.IsNullOrWhiteSpace(_policy._connectionStringBuilder.User), _policy._connectionStringBuilder.User)

@@ -291,6 +291,22 @@ namespace FreeRedis
             .InputKey(key, repetition ? -count : count)
             .Input("WITHSCORES"), rt => rt
             .ThrowOrValue((a, _) => a == null || a.Length == 0 ? new ZMember[0] : a.MapToHash<decimal>(rt.Encoding).Select(b => new ZMember(b.Key, b.Value)).ToArray()));
+
+        /// <summary>
+        /// ZSCAN key cursor [MATCH pattern] [COUNT count]
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="cursor"></param>
+        /// <param name="pattern"></param>
+        /// <param name="count"></param>
+        /// <returns></returns>
+        public ScanResult<ZMember> ZScan(string key, long cursor, string pattern, long count = 0) => Call("ZSCAN"
+            .InputKey(key, cursor)
+            .InputIf(!string.IsNullOrWhiteSpace(pattern), "MATCH", pattern)
+            .InputIf(count != 0, "COUNT", count), rt => rt.ThrowOrValue((a, _) => new ScanResult<ZMember>(a[0].ConvertTo<long>(),
+                a[1] == null ? new ZMember[0] :
+                ((object[])a[1]).MapToList((k, v) => new ZMember(k.ConvertTo<string>(), v.ConvertTo<decimal>())).ToArray())));
+        public IEnumerable<ZMember[]> ZScan(string key, string pattern, long count) => new ScanCollection<ZMember>(this, "zscan", (cli, cursor) => cli.ZScan(key, cursor, pattern, count));
     }
 
     public class ZMember
