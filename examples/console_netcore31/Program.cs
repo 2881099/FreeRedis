@@ -48,6 +48,15 @@ namespace console_netcore31
 
         static void Main(string[] args)
         {
+            cli.Set("num", 10);
+            using (var tran = cli.Multi())
+            {
+                tran.Watch("num");
+                tran.IncrBy("num", 80);
+                tran.Exec();
+            }
+
+
             var keys = cli.Scan(0, "*", 100, null);
             Console.WriteLine(string.Join(",", keys.items));
             foreach (var ks in cli.Scan("*", 3, null)) Console.WriteLine(string.Join(",", ks));

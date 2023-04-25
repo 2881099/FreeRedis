@@ -84,6 +84,21 @@ namespace FreeRedis
         public Task<bool> ExpireAsync(string key, int seconds) => CallAsync("EXPIRE".InputKey(key, seconds), rt => rt.ThrowOrValue<bool>());
 
         /// <summary>
+        /// EXPIRE command (An Asynchronous Version) <br /><br />
+        /// <br />
+        /// Set a timeout on key. After the timeout has expired, the key will automatically be deleted. A key with an associated timeout is often said to be volatile in Redis terminology.<br /><br />
+        /// <br />
+        /// 设置键的超时时间。到期后，键将被自动删除。<br /><br />
+        /// <br />
+        /// Document link: https://redis.io/commands/expire <br />
+        /// Available since 1.0.0. 
+        /// </summary>
+        /// <param name="key">Key</param>
+        /// <param name="expire">Expires TimeSpan</param>
+        /// <returns>Specifically: True if the timeout was set.False if key does not exist.</returns>
+        public Task<bool> ExpireAsync(string key, TimeSpan expire) => CallAsync("EXPIRE".InputKey(key, (long)expire.TotalSeconds), rt => rt.ThrowOrValue<bool>());
+
+        /// <summary>
         /// EXPIREAT command (An Asynchronous Version) <br /><br />
         /// <br />
         /// EXPIREAT has the same effect and semantic as EXPIRE, but instead of specifying the number of seconds representing the TTL (time to live), it takes an absolute Unix timestamp (seconds since January 1, 1970). A timestamp in the past will delete the key immediately.<br /><br />

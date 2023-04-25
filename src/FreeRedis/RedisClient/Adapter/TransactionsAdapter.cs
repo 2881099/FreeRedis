@@ -74,12 +74,12 @@ namespace FreeRedis
             }
             public override IRedisSocket GetRedisSocket(CommandPacket cmd)
             {
-                TryMulti();
+                TryMulti(null);
                 return DefaultRedisSocket.CreateTempProxy(_redisSocket, null);
             }
             public override TValue AdapterCall<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
             {
-                TryMulti();
+                TryMulti(null);
                 return TopOwner.LogCall(cmd, () =>
                 {
                     _redisSocket.Write(cmd);
@@ -99,7 +99,7 @@ namespace FreeRedis
                 //The value returned by the callback is null :
                 //  tran.Get<Book>("key1").ContinueWith(t => t3 = t.Result)
                 var tsc = new TaskCompletionSource<object>();
-                TryMulti();
+                TryMulti(null);
                 TopOwner.LogCall(cmd, () =>
                 {
                     _redisSocket.Write(cmd);
@@ -125,11 +125,13 @@ namespace FreeRedis
                     return _redisSocket.Read(cmd).ThrowOrValue();
                 });
             }
-            public void TryMulti()
+            public void TryMulti(string[] watchKeys)
             {
                 if (_redisSocket == null)
                 {
                     _redisSocket = TopOwner.Adapter.GetRedisSocket(null);
+                    if (watchKeys?.Any() == true)
+                        SelfCall("WATCH".InputKey(watchKeys));
                     SelfCall("MULTI");
                 }
             }
@@ -156,6 +158,14 @@ namespace FreeRedis
                 try
                 {
                     var ret = SelfCall("EXEC") as object[];
+                    if (ret == null) //watch changed
+                    {
+#if isasync
+                        for (var a = 0; a < _commands.Count; a++)
+                            _commands[a].TrySetResult(null, null); //tryset Async
+#endif
+                        return null;
+                    }
 
                     var retparsed = new object[ret.Length];
                     for (var a = 0; a < ret.Length; a++)
@@ -179,8 +189,7 @@ namespace FreeRedis
             }
             public void Watch(params string[] keys)
             {
-                if (_redisSocket == null) return;
-                SelfCall("WATCH".InputKey(keys));
+                TryMulti(keys);
             }
         }
     }
