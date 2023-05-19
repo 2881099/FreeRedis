@@ -47,11 +47,23 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "docs/api/FreeRedis.AclGetUserResult.SelectorResult.yml",
+      "output": {
+        ".html": {
+          "relative_path": "docs/api/FreeRedis.AclGetUserResult.SelectorResult.html",
+          "hash": "ImjX+65Z1bmPoRG5l58QwofCHrfqhqUY9epafmy2uAc="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "docs/api/FreeRedis.AclGetUserResult.yml",
       "output": {
         ".html": {
           "relative_path": "docs/api/FreeRedis.AclGetUserResult.html",
-          "hash": "bUdHDZ1UI548cAk4Gz9M68lsCR0hHMW+kcLhPun5uaA="
+          "hash": "l9GRnzHA7qyM9x+HtFQdNTnfwKSYLrDWuwJSU5YvZYU="
         }
       },
       "is_incremental": false,
@@ -1299,7 +1311,7 @@
       "output": {
         ".html": {
           "relative_path": "docs/api/FreeRedis.html",
-          "hash": "E9Qr9oJtQa7ZZLAhmL5nZTkcIgms9HWjaBfAZ+6QEe0="
+          "hash": "JPlaahKeukAh402s1c/9Po/C7ym2Pv58/45PgxWToWU="
         }
       },
       "is_incremental": false,
@@ -1323,7 +1335,7 @@
       "output": {
         ".html": {
           "relative_path": "docs/api/toc.html",
-          "hash": "2f0Dr2RF4NmxIqgB2MF1A+wf96bgZpQcVCrwK0d0pGo="
+          "hash": "RHk0ll8RNnJ7p2Y/BnfN6hJeW4aBoF8GASOd3xE1R0o="
         }
       },
       "is_incremental": false,
@@ -1398,7 +1410,7 @@
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 106,
+          "total_file_count": 107,
           "skipped_file_count": 0
         },
         "TocDocumentProcessor": {

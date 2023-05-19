@@ -13,6 +13,12 @@ references:
   commentId: T:FreeRedis.AclGetUserResult
   fullName: FreeRedis.AclGetUserResult
   nameWithType: AclGetUserResult
+- uid: FreeRedis.AclGetUserResult.channels
+  name: channels
+  href: docs/api/FreeRedis.AclGetUserResult.html#FreeRedis_AclGetUserResult_channels
+  commentId: F:FreeRedis.AclGetUserResult.channels
+  fullName: FreeRedis.AclGetUserResult.channels
+  nameWithType: AclGetUserResult.channels
 - uid: FreeRedis.AclGetUserResult.commands
   name: commands
   href: docs/api/FreeRedis.AclGetUserResult.html#FreeRedis_AclGetUserResult_commands
@@ -37,6 +43,36 @@ references:
   commentId: F:FreeRedis.AclGetUserResult.passwords
   fullName: FreeRedis.AclGetUserResult.passwords
   nameWithType: AclGetUserResult.passwords
+- uid: FreeRedis.AclGetUserResult.SelectorResult
+  name: AclGetUserResult.SelectorResult
+  href: docs/api/FreeRedis.AclGetUserResult.SelectorResult.html
+  commentId: T:FreeRedis.AclGetUserResult.SelectorResult
+  fullName: FreeRedis.AclGetUserResult.SelectorResult
+  nameWithType: AclGetUserResult.SelectorResult
+- uid: FreeRedis.AclGetUserResult.SelectorResult.channels
+  name: channels
+  href: docs/api/FreeRedis.AclGetUserResult.SelectorResult.html#FreeRedis_AclGetUserResult_SelectorResult_channels
+  commentId: F:FreeRedis.AclGetUserResult.SelectorResult.channels
+  fullName: FreeRedis.AclGetUserResult.SelectorResult.channels
+  nameWithType: AclGetUserResult.SelectorResult.channels
+- uid: FreeRedis.AclGetUserResult.SelectorResult.commands
+  name: commands
+  href: docs/api/FreeRedis.AclGetUserResult.SelectorResult.html#FreeRedis_AclGetUserResult_SelectorResult_commands
+  commentId: F:FreeRedis.AclGetUserResult.SelectorResult.commands
+  fullName: FreeRedis.AclGetUserResult.SelectorResult.commands
+  nameWithType: AclGetUserResult.SelectorResult.commands
+- uid: FreeRedis.AclGetUserResult.SelectorResult.keys
+  name: keys
+  href: docs/api/FreeRedis.AclGetUserResult.SelectorResult.html#FreeRedis_AclGetUserResult_SelectorResult_keys
+  commentId: F:FreeRedis.AclGetUserResult.SelectorResult.keys
+  fullName: FreeRedis.AclGetUserResult.SelectorResult.keys
+  nameWithType: AclGetUserResult.SelectorResult.keys
+- uid: FreeRedis.AclGetUserResult.selectors
+  name: selectors
+  href: docs/api/FreeRedis.AclGetUserResult.html#FreeRedis_AclGetUserResult_selectors
+  commentId: F:FreeRedis.AclGetUserResult.selectors
+  fullName: FreeRedis.AclGetUserResult.selectors
+  nameWithType: AclGetUserResult.selectors
 - uid: FreeRedis.BitOpOperation
   name: BitOpOperation
   href: docs/api/FreeRedis.BitOpOperation.html
