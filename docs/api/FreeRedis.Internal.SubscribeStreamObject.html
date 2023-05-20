@@ -5,10 +5,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Namespace FreeRedis.Internal
+    <title>Class SubscribeStreamObject
    </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Namespace FreeRedis.Internal
+    <meta name="title" content="Class SubscribeStreamObject
    ">
     <meta name="generator" content="docfx 2.59.4.0">
     
@@ -68,54 +68,95 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="FreeRedis.Internal">
+            <article class="content wrap" id="_content" data-uid="FreeRedis.Internal.SubscribeStreamObject">
   
-  <h1 id="FreeRedis_Internal" data-uid="FreeRedis.Internal" class="text-break">Namespace FreeRedis.Internal
+  
+  <h1 id="FreeRedis_Internal_SubscribeStreamObject" data-uid="FreeRedis.Internal.SubscribeStreamObject" class="text-break">Class SubscribeStreamObject
   </h1>
   <div class="markdown level0 summary"></div>
   <div class="markdown level0 conceptual"></div>
-  <div class="markdown level0 remarks"></div>
-    <h3 id="classes">Classes
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><span class="xref">SubscribeStreamObject</span></div>
+  </div>
+  <div class="implements">
+    <h5>Implements</h5>
+    <div><span class="xref">System.IDisposable</span></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="FreeRedis.Internal.html">FreeRedis.Internal</a></h6>
+  <h6><strong>Assembly</strong>: cs.temp.dll.dll</h6>
+  <h5 id="FreeRedis_Internal_SubscribeStreamObject_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class SubscribeStreamObject : IDisposable</code></pre>
+  </div>
+  <h3 id="properties">Properties
   </h3>
-      <h4><a class="xref" href="FreeRedis.Internal.DefaultRedisSocket.html">DefaultRedisSocket</a></h4>
-      <section></section>
-      <h4><a class="xref" href="FreeRedis.Internal.DefaultRedisSocket.TempProxyRedisSocket.html">DefaultRedisSocket.TempProxyRedisSocket</a></h4>
-      <section></section>
-      <h4><a class="xref" href="FreeRedis.Internal.IdleBus.html">IdleBus</a></h4>
-      <section><p>空闲对象容器管理，可实现自动创建、销毁、扩张收缩，解决【实例】长时间占用问题</p>
-</section>
-      <h4><a class="xref" href="FreeRedis.Internal.IdleBus-1.html">IdleBus&lt;TValue&gt;</a></h4>
-      <section><p>空闲对象容器管理，可实现自动创建、销毁、扩张收缩，解决【实例】长时间占用问题</p>
-</section>
-      <h4><a class="xref" href="FreeRedis.Internal.IdleBus-2.html">IdleBus&lt;TKey, TValue&gt;</a></h4>
-      <section><p>空闲对象容器管理，可实现自动创建、销毁、扩张收缩，解决【实例】长时间占用问题</p>
-</section>
-      <h4><a class="xref" href="FreeRedis.Internal.IdleBus-2.NoticeEventArgs.html">IdleBus&lt;TKey, TValue&gt;.NoticeEventArgs</a></h4>
-      <section></section>
-      <h4><a class="xref" href="FreeRedis.Internal.IdleBus-2.TimeoutScanOptions.html">IdleBus&lt;TKey, TValue&gt;.TimeoutScanOptions</a></h4>
-      <section></section>
-      <h4><a class="xref" href="FreeRedis.Internal.RedisClientPool.html">RedisClientPool</a></h4>
-      <section></section>
-      <h4><a class="xref" href="FreeRedis.Internal.RedisClientPoolPolicy.html">RedisClientPoolPolicy</a></h4>
-      <section></section>
-      <h4><a class="xref" href="FreeRedis.Internal.SubscribeListBroadcastObject.html">SubscribeListBroadcastObject</a></h4>
-      <section></section>
-      <h4><a class="xref" href="FreeRedis.Internal.SubscribeListObject.html">SubscribeListObject</a></h4>
-      <section></section>
-      <h4><a class="xref" href="FreeRedis.Internal.SubscribeStreamObject.html">SubscribeStreamObject</a></h4>
-      <section></section>
-    <h3 id="interfaces">Interfaces
+  
+  
+  <a id="FreeRedis_Internal_SubscribeStreamObject_IsUnsubscribed_" data-uid="FreeRedis.Internal.SubscribeStreamObject.IsUnsubscribed*"></a>
+  <h4 id="FreeRedis_Internal_SubscribeStreamObject_IsUnsubscribed" data-uid="FreeRedis.Internal.SubscribeStreamObject.IsUnsubscribed">IsUnsubscribed</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool IsUnsubscribed { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
   </h3>
-      <h4><a class="xref" href="FreeRedis.Internal.IPubSubSubscriber.html">IPubSubSubscriber</a></h4>
-      <section></section>
-      <h4><a class="xref" href="FreeRedis.Internal.IRedisSocket.html">IRedisSocket</a></h4>
-      <section></section>
-      <h4><a class="xref" href="FreeRedis.Internal.IRedisSocketModify.html">IRedisSocketModify</a></h4>
-      <section></section>
-    <h3 id="enums">Enums
-  </h3>
-      <h4><a class="xref" href="FreeRedis.Internal.IdleBus-2.NoticeType.html">IdleBus&lt;TKey, TValue&gt;.NoticeType</a></h4>
-      <section></section>
+  
+  
+  <a id="FreeRedis_Internal_SubscribeStreamObject_Dispose_" data-uid="FreeRedis.Internal.SubscribeStreamObject.Dispose*"></a>
+  <h4 id="FreeRedis_Internal_SubscribeStreamObject_Dispose" data-uid="FreeRedis.Internal.SubscribeStreamObject.Dispose">Dispose()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Dispose()</code></pre>
+  </div>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <span class="xref">System.IDisposable</span>
+  </div>
 </article>
           </div>
           

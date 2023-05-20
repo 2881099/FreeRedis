@@ -5493,6 +5493,38 @@ references:
   isSpec: "True"
   fullName: FreeRedis.Internal.SubscribeListObject.IsUnsubscribed
   nameWithType: SubscribeListObject.IsUnsubscribed
+- uid: FreeRedis.Internal.SubscribeStreamObject
+  name: SubscribeStreamObject
+  href: docs/api/FreeRedis.Internal.SubscribeStreamObject.html
+  commentId: T:FreeRedis.Internal.SubscribeStreamObject
+  fullName: FreeRedis.Internal.SubscribeStreamObject
+  nameWithType: SubscribeStreamObject
+- uid: FreeRedis.Internal.SubscribeStreamObject.Dispose
+  name: Dispose()
+  href: docs/api/FreeRedis.Internal.SubscribeStreamObject.html#FreeRedis_Internal_SubscribeStreamObject_Dispose
+  commentId: M:FreeRedis.Internal.SubscribeStreamObject.Dispose
+  fullName: FreeRedis.Internal.SubscribeStreamObject.Dispose()
+  nameWithType: SubscribeStreamObject.Dispose()
+- uid: FreeRedis.Internal.SubscribeStreamObject.Dispose*
+  name: Dispose
+  href: docs/api/FreeRedis.Internal.SubscribeStreamObject.html#FreeRedis_Internal_SubscribeStreamObject_Dispose_
+  commentId: Overload:FreeRedis.Internal.SubscribeStreamObject.Dispose
+  isSpec: "True"
+  fullName: FreeRedis.Internal.SubscribeStreamObject.Dispose
+  nameWithType: SubscribeStreamObject.Dispose
+- uid: FreeRedis.Internal.SubscribeStreamObject.IsUnsubscribed
+  name: IsUnsubscribed
+  href: docs/api/FreeRedis.Internal.SubscribeStreamObject.html#FreeRedis_Internal_SubscribeStreamObject_IsUnsubscribed
+  commentId: P:FreeRedis.Internal.SubscribeStreamObject.IsUnsubscribed
+  fullName: FreeRedis.Internal.SubscribeStreamObject.IsUnsubscribed
+  nameWithType: SubscribeStreamObject.IsUnsubscribed
+- uid: FreeRedis.Internal.SubscribeStreamObject.IsUnsubscribed*
+  name: IsUnsubscribed
+  href: docs/api/FreeRedis.Internal.SubscribeStreamObject.html#FreeRedis_Internal_SubscribeStreamObject_IsUnsubscribed_
+  commentId: Overload:FreeRedis.Internal.SubscribeStreamObject.IsUnsubscribed
+  isSpec: "True"
+  fullName: FreeRedis.Internal.SubscribeStreamObject.IsUnsubscribed
+  nameWithType: SubscribeStreamObject.IsUnsubscribed
 - uid: FreeRedis.IRedisClient
   name: IRedisClient
   href: docs/api/FreeRedis.IRedisClient.html
@@ -14741,6 +14773,22 @@ references:
   isSpec: "True"
   fullName: FreeRedis.RedisClient.SubscribeListBroadcast
   nameWithType: RedisClient.SubscribeListBroadcast
+- uid: FreeRedis.RedisClient.SubscribeStream(System.String,System.Action{System.Collections.Generic.Dictionary{System.String,System.String}})
+  name: SubscribeStream(String, Action<Dictionary<String, String>>)
+  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_SubscribeStream_System_String_System_Action_System_Collections_Generic_Dictionary_System_String_System_String___
+  commentId: M:FreeRedis.RedisClient.SubscribeStream(System.String,System.Action{System.Collections.Generic.Dictionary{System.String,System.String}})
+  name.vb: SubscribeStream(String, Action(Of Dictionary(Of String, String)))
+  fullName: FreeRedis.RedisClient.SubscribeStream(System.String, System.Action<System.Collections.Generic.Dictionary<System.String, System.String>>)
+  fullName.vb: FreeRedis.RedisClient.SubscribeStream(System.String, System.Action(Of System.Collections.Generic.Dictionary(Of System.String, System.String)))
+  nameWithType: RedisClient.SubscribeStream(String, Action<Dictionary<String, String>>)
+  nameWithType.vb: RedisClient.SubscribeStream(String, Action(Of Dictionary(Of String, String)))
+- uid: FreeRedis.RedisClient.SubscribeStream*
+  name: SubscribeStream
+  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_SubscribeStream_
+  commentId: Overload:FreeRedis.RedisClient.SubscribeStream
+  isSpec: "True"
+  fullName: FreeRedis.RedisClient.SubscribeStream
+  nameWithType: RedisClient.SubscribeStream
 - uid: FreeRedis.RedisClient.SUnion(System.String[])
   name: SUnion(String[])
   href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_SUnion_System_String___
