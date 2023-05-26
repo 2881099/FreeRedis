@@ -1,7 +1,5 @@
-﻿using FreeRedis.Internal;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 namespace FreeRedis
@@ -19,9 +17,26 @@ namespace FreeRedis
 
         public AclGetUserResult AclGetUser(string username = "default") => Call("ACL".SubCommand("GETUSER").InputRaw(username), rt => rt.ThrowOrValue((a, _) =>
         {
-            a[1] = a[1]?.ConvertTo<string[]>();
-            a[3] = a[3]?.ConvertTo<string[]>();
-            a[7] = a[7]?.ConvertTo<string[]>();
+            for (var x = 0; x < a.Length; x += 2)
+            {
+                switch (a[x])
+                {
+                    case "flags":
+                    case "passwords":
+                        a[x + 1] = a[x + 1]?.ConvertTo<string[]>();
+                        break;
+                    case "selectors":
+                        var selectors = a[x + 1] as object[];
+                        if (selectors != null)
+                        {
+                            var selectorResults = new AclGetUserResult.SelectorResult[selectors.Length];
+                            for (var y = 0; y < selectors.Length; y++)
+                                selectorResults[y] = (selectors[y] as object[])?.MapToClass<AclGetUserResult.SelectorResult>(rt.Encoding);
+                            a[x + 1] = selectorResults;
+                        }
+                        break;
+                }
+            }
             return a.MapToClass<AclGetUserResult>(rt.Encoding);
         }));
         public string[] AclList() => Call("ACL".SubCommand("LIST"), rt => rt.ThrowOrValue<string[]>());
@@ -192,7 +207,16 @@ namespace FreeRedis
         public string[] flags;
         public string[] passwords;
         public string commands;
-        public string[] keys;
+        public string keys;
+        public string channels;
+        public SelectorResult[] selectors;
+
+        public class SelectorResult
+        {
+            public string commands;
+            public string keys;
+            public string channels;
+        }
     }
     public class LogResult
     {

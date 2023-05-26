@@ -29,11 +29,11 @@ namespace console_netcore31
     {
         static Lazy<RedisClient> _cliLazy = new Lazy<RedisClient>(() =>
         {
-            var r = new RedisClient("127.0.0.1"); //redis 3.2 Single test
-            r.Interceptors.Add(() => new ResetCommandAop());
+            //var r = new RedisClient("127.0.0.1:6379"); //redis 3.2 Single test
+            //r.Interceptors.Add(() => new ResetCommandAop());
             //var r = new RedisClient("localhost:6379,database=9,password=123456"); //redis 3.2
             //var r = new RedisClient("127.0.0.1:6379,database=1", "127.0.0.1:6379,database=1");
-            //var r = new RedisClient("192.168.164.10:6379,database=1"); //redis 6.0
+            var r = new RedisClient("192.168.164.10:63797,database=1"); //redis 6.0
             r.Serialize = obj => JsonConvert.SerializeObject(obj);
             r.Deserialize = (json, type) => JsonConvert.DeserializeObject(json, type);
             r.Notice += (s, e) => 
@@ -48,6 +48,8 @@ namespace console_netcore31
 
         static void Main(string[] args)
         {
+            var result7 = cli.AclGetUser("sample");
+
             cli.Set("num", 10);
             using (var tran = cli.Multi())
             {
