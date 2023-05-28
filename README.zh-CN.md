@@ -134,6 +134,21 @@ void ondata(string channel, string data) =>
     Console.WriteLine($"{channel} -> {data}");
 ```
 
+xadd + xreadgroup:
+
+```csharp
+using (cli.SubscribeStream("stream_key", ondata)) //wait .Dispose()
+{
+    Console.ReadKey();
+}
+
+void ondata(Dictionary<string, string> streamValue) =>
+    Console.WriteLine(JsonConvert.SerializeObject(streamValue));
+
+// NoAck xpending
+cli.XPending("stream_key", "FreeRedis__group", "-", "+", 10);
+```
+
 lpush + blpop：
 
 ```csharp

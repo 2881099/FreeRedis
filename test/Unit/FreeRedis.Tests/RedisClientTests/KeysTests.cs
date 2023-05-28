@@ -280,7 +280,7 @@ namespace FreeRedis.Tests.RedisClientTests
             for (var a = 0; a < 11; a++)
                 cli.HSet("HScan01", Guid.NewGuid().ToString(), a);
 
-            var keys = new List<string>();
+            var keys = new List<KeyValuePair<string, string>>();
             foreach (var rt in cli.HScan("HScan01", "*", 2))
             {
                 keys.AddRange(rt);

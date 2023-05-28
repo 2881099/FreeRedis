@@ -14,12 +14,28 @@ namespace FreeRedis
         public SubscribeStreamObject SubscribeStream(string streamKey, Action<Dictionary<string, string>> onMessage)
         {
             if (string.IsNullOrEmpty(streamKey)) throw new ArgumentException("Parameter streamKey cannot be empty");
+            var redis = this;
             var subobj = new SubscribeStreamObject();
 
-            var groupName = "__FreeRedis__SubscribeStream__group";
-            var consumerName = "__FreeRedis__SubscribeStream__consumer";
-            if (this.XInfoGroups(streamKey).Any(a => a.name == streamKey) == false) this.XGroupCreate(streamKey, groupName, "$", true);
-            if (this.XInfoConsumers(streamKey, groupName).Any(a => a.name == consumerName) == false) this.XGroupCreateConsumer(streamKey, groupName, consumerName);
+            var groupName = "FreeRedis__group";
+            var consumerName = "FreeRedis__consumer";
+            void CreateGroupAndConsumer()
+            {
+                using (var loc1 = redis.StartPipe())
+                {
+                    loc1.XGroupCreate(streamKey, groupName, "$", true);
+                    loc1.XGroupCreateConsumer(streamKey, groupName, consumerName);
+                    loc1.EndPipe();
+                }
+            }
+
+            if (redis.Exists(streamKey) == false) CreateGroupAndConsumer();
+            else
+            {
+                if (redis.Type(streamKey) != KeyType.stream) throw new ArgumentException($"'{streamKey}' type is not STREAM");
+                if (redis.XInfoGroups(streamKey).Any(a => a.name == groupName) == false) CreateGroupAndConsumer();
+                else if (redis.XInfoConsumers(streamKey, groupName).Any(a => a.name == consumerName) == false) redis.XGroupCreateConsumer(streamKey, groupName, consumerName);
+            }
             var bgcolor = Console.BackgroundColor;
             var forecolor = Console.ForegroundColor;
             Console.BackgroundColor = ConsoleColor.DarkGreen;
@@ -35,11 +51,31 @@ namespace FreeRedis
                 {
                     try
                     {
-                        var result = this.XReadGroup(groupName, consumerName, 5, streamKey, "$");
+                        //var result = redis.XReadGroup(groupName, consumerName, 5000, streamKey, ">");
+                        var result = Call("XREADGROUP"
+                            .Input("GROUP", groupName, consumerName)
+                            .Input("COUNT", 1)
+                            .Input("BLOCK", 5000)
+                            .InputRaw("STREAMS")
+                            .InputKey(streamKey)
+                            .Input(">"), rt =>
+                            {
+                                if (rt.IsError)
+                                {
+                                    if (
+                                        rt.SimpleError == $"UNBLOCKED the stream key no longer exists" ||
+                                        rt.SimpleError == $"NOGROUP No such key '{streamKey}' or consumer group '{groupName}' in XREADGROUP with GROUP option")
+                                    {
+                                        CreateGroupAndConsumer();
+                                        return null;
+                                    }
+                                }
+                                return rt.ThrowOrValueToXRead();
+                            })?.FirstOrDefault()?.entries?.FirstOrDefault();
                         if (result != null)
                         {
                             onMessage?.Invoke(result.fieldValues?.MapToHash<string>(Encoding.UTF8));
-                            this.XAck(streamKey, groupName, result.id);
+                            redis.XAck(streamKey, groupName, result.id);
                         }
                     }
                     catch (ObjectDisposedException)
