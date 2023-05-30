@@ -4900,6 +4900,23 @@ references:
   fullName.vb: FreeRedis.Internal.ObjectPool.ObjectPool(Of T).ObjectPool
   nameWithType: ObjectPool<T>.ObjectPool
   nameWithType.vb: ObjectPool(Of T).ObjectPool
+- uid: FreeRedis.Internal.ObjectPool.ObjectPool`1.AutoFree
+  name: AutoFree()
+  href: docs/api/FreeRedis.Internal.ObjectPool.ObjectPool-1.html#FreeRedis_Internal_ObjectPool_ObjectPool_1_AutoFree
+  commentId: M:FreeRedis.Internal.ObjectPool.ObjectPool`1.AutoFree
+  fullName: FreeRedis.Internal.ObjectPool.ObjectPool<T>.AutoFree()
+  fullName.vb: FreeRedis.Internal.ObjectPool.ObjectPool(Of T).AutoFree()
+  nameWithType: ObjectPool<T>.AutoFree()
+  nameWithType.vb: ObjectPool(Of T).AutoFree()
+- uid: FreeRedis.Internal.ObjectPool.ObjectPool`1.AutoFree*
+  name: AutoFree
+  href: docs/api/FreeRedis.Internal.ObjectPool.ObjectPool-1.html#FreeRedis_Internal_ObjectPool_ObjectPool_1_AutoFree_
+  commentId: Overload:FreeRedis.Internal.ObjectPool.ObjectPool`1.AutoFree
+  isSpec: "True"
+  fullName: FreeRedis.Internal.ObjectPool.ObjectPool<T>.AutoFree
+  fullName.vb: FreeRedis.Internal.ObjectPool.ObjectPool(Of T).AutoFree
+  nameWithType: ObjectPool<T>.AutoFree
+  nameWithType.vb: ObjectPool(Of T).AutoFree
 - uid: FreeRedis.Internal.ObjectPool.ObjectPool`1.AvailableTime
   name: AvailableTime
   href: docs/api/FreeRedis.Internal.ObjectPool.ObjectPool-1.html#FreeRedis_Internal_ObjectPool_ObjectPool_1_AvailableTime
