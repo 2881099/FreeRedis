@@ -2004,48 +2004,6 @@
   </table>
   
   
-  <a id="FreeRedis_IRedisClient_Call_" data-uid="FreeRedis.IRedisClient.Call*"></a>
-  <h4 id="FreeRedis_IRedisClient_Call_FreeRedis_CommandPacket_" data-uid="FreeRedis.IRedisClient.Call(FreeRedis.CommandPacket)">Call(CommandPacket)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">object Call(CommandPacket cmd)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="FreeRedis.CommandPacket.html">CommandPacket</a></td>
-        <td><span class="parametername">cmd</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Object</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
   <a id="FreeRedis_IRedisClient_CfAdd_" data-uid="FreeRedis.IRedisClient.CfAdd*"></a>
   <h4 id="FreeRedis_IRedisClient_CfAdd_System_String_System_String_" data-uid="FreeRedis.IRedisClient.CfAdd(System.String,System.String)">CfAdd(String, String)</h4>
   <div class="markdown level1 summary"></div>
@@ -3899,110 +3857,6 @@
     <tbody>
       <tr>
         <td><span class="xref">System.String</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <a id="FreeRedis_IRedisClient_Eval_" data-uid="FreeRedis.IRedisClient.Eval*"></a>
-  <h4 id="FreeRedis_IRedisClient_Eval_System_String_System_String___System_Object___" data-uid="FreeRedis.IRedisClient.Eval(System.String,System.String[],System.Object[])">Eval(String, String[], Object[])</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">object Eval(string script, string[] keys = null, params object[] arguments)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">script</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.String</span>[]</td>
-        <td><span class="parametername">keys</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Object</span>[]</td>
-        <td><span class="parametername">arguments</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Object</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <a id="FreeRedis_IRedisClient_EvalSha_" data-uid="FreeRedis.IRedisClient.EvalSha*"></a>
-  <h4 id="FreeRedis_IRedisClient_EvalSha_System_String_System_String___System_Object___" data-uid="FreeRedis.IRedisClient.EvalSha(System.String,System.String[],System.Object[])">EvalSha(String, String[], Object[])</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">object EvalSha(string sha1, string[] keys = null, params object[] arguments)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">sha1</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.String</span>[]</td>
-        <td><span class="parametername">keys</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Object</span>[]</td>
-        <td><span class="parametername">arguments</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Object</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -9889,100 +9743,6 @@
   </table>
   
   
-  <a id="FreeRedis_IRedisClient_PSubscribe_" data-uid="FreeRedis.IRedisClient.PSubscribe*"></a>
-  <h4 id="FreeRedis_IRedisClient_PSubscribe_System_String_System_Action_System_String_System_Object__" data-uid="FreeRedis.IRedisClient.PSubscribe(System.String,System.Action{System.String,System.Object})">PSubscribe(String, Action&lt;String, Object&gt;)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">IDisposable PSubscribe(string pattern, Action&lt;string, object&gt; handler)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">pattern</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Action</span>&lt;<span class="xref">System.String</span>, <span class="xref">System.Object</span>&gt;</td>
-        <td><span class="parametername">handler</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.IDisposable</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <a id="FreeRedis_IRedisClient_PSubscribe_" data-uid="FreeRedis.IRedisClient.PSubscribe*"></a>
-  <h4 id="FreeRedis_IRedisClient_PSubscribe_System_String___System_Action_System_String_System_Object__" data-uid="FreeRedis.IRedisClient.PSubscribe(System.String[],System.Action{System.String,System.Object})">PSubscribe(String[], Action&lt;String, Object&gt;)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">IDisposable PSubscribe(string[] pattern, Action&lt;string, object&gt; handler)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span>[]</td>
-        <td><span class="parametername">pattern</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Action</span>&lt;<span class="xref">System.String</span>, <span class="xref">System.Object</span>&gt;</td>
-        <td><span class="parametername">handler</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.IDisposable</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
   <a id="FreeRedis_IRedisClient_PTtl_" data-uid="FreeRedis.IRedisClient.PTtl*"></a>
   <h4 id="FreeRedis_IRedisClient_PTtl_System_String_" data-uid="FreeRedis.IRedisClient.PTtl(System.String)">PTtl(String)</h4>
   <div class="markdown level1 summary"></div>
@@ -12407,53 +12167,6 @@
   </table>
   
   
-  <a id="FreeRedis_IRedisClient_SlowLog_" data-uid="FreeRedis.IRedisClient.SlowLog*"></a>
-  <h4 id="FreeRedis_IRedisClient_SlowLog_System_String_System_String___" data-uid="FreeRedis.IRedisClient.SlowLog(System.String,System.String[])">SlowLog(String, String[])</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">object SlowLog(string subcommand, params string[] argument)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">subcommand</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.String</span>[]</td>
-        <td><span class="parametername">argument</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Object</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
   <a id="FreeRedis_IRedisClient_SMembers_" data-uid="FreeRedis.IRedisClient.SMembers*"></a>
   <h4 id="FreeRedis_IRedisClient_SMembers_System_String_" data-uid="FreeRedis.IRedisClient.SMembers(System.String)">SMembers(String)</h4>
   <div class="markdown level1 summary"></div>
@@ -13470,13 +13183,13 @@
   </table>
   
   
-  <a id="FreeRedis_IRedisClient_Subscribe_" data-uid="FreeRedis.IRedisClient.Subscribe*"></a>
-  <h4 id="FreeRedis_IRedisClient_Subscribe_System_String_System_Action_System_String_System_Object__" data-uid="FreeRedis.IRedisClient.Subscribe(System.String,System.Action{System.String,System.Object})">Subscribe(String, Action&lt;String, Object&gt;)</h4>
+  <a id="FreeRedis_IRedisClient_SubscribeList_" data-uid="FreeRedis.IRedisClient.SubscribeList*"></a>
+  <h4 id="FreeRedis_IRedisClient_SubscribeList_System_String_System_Action_System_String__" data-uid="FreeRedis.IRedisClient.SubscribeList(System.String,System.Action{System.String})">SubscribeList(String, Action&lt;String&gt;)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">IDisposable Subscribe(string channel, Action&lt;string, object&gt; handler)</code></pre>
+    <pre><code class="lang-csharp hljs">SubscribeListObject SubscribeList(string listKey, Action&lt;string&gt; onMessage)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -13490,12 +13203,12 @@
     <tbody>
       <tr>
         <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">channel</span></td>
+        <td><span class="parametername">listKey</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">System.Action</span>&lt;<span class="xref">System.String</span>, <span class="xref">System.Object</span>&gt;</td>
-        <td><span class="parametername">handler</span></td>
+        <td><span class="xref">System.Action</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td><span class="parametername">onMessage</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -13510,20 +13223,20 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.IDisposable</span></td>
+        <td><a class="xref" href="FreeRedis.Internal.SubscribeListObject.html">SubscribeListObject</a></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   
   
-  <a id="FreeRedis_IRedisClient_Subscribe_" data-uid="FreeRedis.IRedisClient.Subscribe*"></a>
-  <h4 id="FreeRedis_IRedisClient_Subscribe_System_String___System_Action_System_String_System_Object__" data-uid="FreeRedis.IRedisClient.Subscribe(System.String[],System.Action{System.String,System.Object})">Subscribe(String[], Action&lt;String, Object&gt;)</h4>
+  <a id="FreeRedis_IRedisClient_SubscribeList_" data-uid="FreeRedis.IRedisClient.SubscribeList*"></a>
+  <h4 id="FreeRedis_IRedisClient_SubscribeList_System_String___System_Action_System_String_System_String__" data-uid="FreeRedis.IRedisClient.SubscribeList(System.String[],System.Action{System.String,System.String})">SubscribeList(String[], Action&lt;String, String&gt;)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">IDisposable Subscribe(string[] channels, Action&lt;string, object&gt; handler)</code></pre>
+    <pre><code class="lang-csharp hljs">SubscribeListObject SubscribeList(string[] listKeys, Action&lt;string, string&gt; onMessage)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -13537,12 +13250,12 @@
     <tbody>
       <tr>
         <td><span class="xref">System.String</span>[]</td>
-        <td><span class="parametername">channels</span></td>
+        <td><span class="parametername">listKeys</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">System.Action</span>&lt;<span class="xref">System.String</span>, <span class="xref">System.Object</span>&gt;</td>
-        <td><span class="parametername">handler</span></td>
+        <td><span class="xref">System.Action</span>&lt;<span class="xref">System.String</span>, <span class="xref">System.String</span>&gt;</td>
+        <td><span class="parametername">onMessage</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -13557,7 +13270,106 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.IDisposable</span></td>
+        <td><a class="xref" href="FreeRedis.Internal.SubscribeListObject.html">SubscribeListObject</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="FreeRedis_IRedisClient_SubscribeListBroadcast_" data-uid="FreeRedis.IRedisClient.SubscribeListBroadcast*"></a>
+  <h4 id="FreeRedis_IRedisClient_SubscribeListBroadcast_System_String_System_String_System_Action_System_String__" data-uid="FreeRedis.IRedisClient.SubscribeListBroadcast(System.String,System.String,System.Action{System.String})">SubscribeListBroadcast(String, String, Action&lt;String&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">SubscribeListBroadcastObject SubscribeListBroadcast(string listKey, string clientId, Action&lt;string&gt; onMessage)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">listKey</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">clientId</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Action</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td><span class="parametername">onMessage</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="FreeRedis.Internal.SubscribeListBroadcastObject.html">SubscribeListBroadcastObject</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="FreeRedis_IRedisClient_SubscribeStream_" data-uid="FreeRedis.IRedisClient.SubscribeStream*"></a>
+  <h4 id="FreeRedis_IRedisClient_SubscribeStream_System_String_System_Action_System_Collections_Generic_Dictionary_System_String_System_String___" data-uid="FreeRedis.IRedisClient.SubscribeStream(System.String,System.Action{System.Collections.Generic.Dictionary{System.String,System.String}})">SubscribeStream(String, Action&lt;Dictionary&lt;String, String&gt;&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">SubscribeStreamObject SubscribeStream(string streamKey, Action&lt;Dictionary&lt;string, string&gt;&gt; onMessage)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">streamKey</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Action</span>&lt;<span class="xref">System.Collections.Generic.Dictionary</span>&lt;<span class="xref">System.String</span>, <span class="xref">System.String</span>&gt;&gt;</td>
+        <td><span class="parametername">onMessage</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="FreeRedis.Internal.SubscribeStreamObject.html">SubscribeStreamObject</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -18306,6 +18118,115 @@
     <tbody>
       <tr>
         <td><span class="xref">System.Int64</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="FreeRedis_IRedisClient_ZScan_" data-uid="FreeRedis.IRedisClient.ZScan*"></a>
+  <h4 id="FreeRedis_IRedisClient_ZScan_System_String_System_Int64_System_String_System_Int64_" data-uid="FreeRedis.IRedisClient.ZScan(System.String,System.Int64,System.String,System.Int64)">ZScan(String, Int64, String, Int64)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">ScanResult&lt;ZMember&gt; ZScan(string key, long cursor, string pattern, long count = 0L)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Int64</span></td>
+        <td><span class="parametername">cursor</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">pattern</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Int64</span></td>
+        <td><span class="parametername">count</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="FreeRedis.ScanResult-1.html">ScanResult</a>&lt;<a class="xref" href="FreeRedis.ZMember.html">ZMember</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="FreeRedis_IRedisClient_ZScan_" data-uid="FreeRedis.IRedisClient.ZScan*"></a>
+  <h4 id="FreeRedis_IRedisClient_ZScan_System_String_System_String_System_Int64_" data-uid="FreeRedis.IRedisClient.ZScan(System.String,System.String,System.Int64)">ZScan(String, String, Int64)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">IEnumerable&lt;ZMember[]&gt; ZScan(string key, string pattern, long count)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">pattern</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Int64</span></td>
+        <td><span class="parametername">count</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="FreeRedis.ZMember.html">ZMember</a>[]&gt;</td>
         <td></td>
       </tr>
     </tbody>

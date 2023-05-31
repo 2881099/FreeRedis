@@ -6078,19 +6078,6 @@ references:
   isSpec: "True"
   fullName: FreeRedis.IRedisClient.BZPopMin
   nameWithType: IRedisClient.BZPopMin
-- uid: FreeRedis.IRedisClient.Call(FreeRedis.CommandPacket)
-  name: Call(CommandPacket)
-  href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_Call_FreeRedis_CommandPacket_
-  commentId: M:FreeRedis.IRedisClient.Call(FreeRedis.CommandPacket)
-  fullName: FreeRedis.IRedisClient.Call(FreeRedis.CommandPacket)
-  nameWithType: IRedisClient.Call(CommandPacket)
-- uid: FreeRedis.IRedisClient.Call*
-  name: Call
-  href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_Call_
-  commentId: Overload:FreeRedis.IRedisClient.Call
-  isSpec: "True"
-  fullName: FreeRedis.IRedisClient.Call
-  nameWithType: IRedisClient.Call
 - uid: FreeRedis.IRedisClient.CfAdd(System.String,System.String)
   name: CfAdd(String, String)
   href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_CfAdd_System_String_System_String_
@@ -6726,38 +6713,6 @@ references:
   isSpec: "True"
   fullName: FreeRedis.IRedisClient.Echo
   nameWithType: IRedisClient.Echo
-- uid: FreeRedis.IRedisClient.Eval(System.String,System.String[],System.Object[])
-  name: Eval(String, String[], Object[])
-  href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_Eval_System_String_System_String___System_Object___
-  commentId: M:FreeRedis.IRedisClient.Eval(System.String,System.String[],System.Object[])
-  name.vb: Eval(String, String(), Object())
-  fullName: FreeRedis.IRedisClient.Eval(System.String, System.String[], System.Object[])
-  fullName.vb: FreeRedis.IRedisClient.Eval(System.String, System.String(), System.Object())
-  nameWithType: IRedisClient.Eval(String, String[], Object[])
-  nameWithType.vb: IRedisClient.Eval(String, String(), Object())
-- uid: FreeRedis.IRedisClient.Eval*
-  name: Eval
-  href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_Eval_
-  commentId: Overload:FreeRedis.IRedisClient.Eval
-  isSpec: "True"
-  fullName: FreeRedis.IRedisClient.Eval
-  nameWithType: IRedisClient.Eval
-- uid: FreeRedis.IRedisClient.EvalSha(System.String,System.String[],System.Object[])
-  name: EvalSha(String, String[], Object[])
-  href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_EvalSha_System_String_System_String___System_Object___
-  commentId: M:FreeRedis.IRedisClient.EvalSha(System.String,System.String[],System.Object[])
-  name.vb: EvalSha(String, String(), Object())
-  fullName: FreeRedis.IRedisClient.EvalSha(System.String, System.String[], System.Object[])
-  fullName.vb: FreeRedis.IRedisClient.EvalSha(System.String, System.String(), System.Object())
-  nameWithType: IRedisClient.EvalSha(String, String[], Object[])
-  nameWithType.vb: IRedisClient.EvalSha(String, String(), Object())
-- uid: FreeRedis.IRedisClient.EvalSha*
-  name: EvalSha
-  href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_EvalSha_
-  commentId: Overload:FreeRedis.IRedisClient.EvalSha
-  isSpec: "True"
-  fullName: FreeRedis.IRedisClient.EvalSha
-  nameWithType: IRedisClient.EvalSha
 - uid: FreeRedis.IRedisClient.Exists(System.String)
   name: Exists(String)
   href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_Exists_System_String_
@@ -8321,31 +8276,6 @@ references:
   fullName.vb: FreeRedis.IRedisClient.PSetEx(Of T)(System.String, System.Int64, T)
   nameWithType: IRedisClient.PSetEx<T>(String, Int64, T)
   nameWithType.vb: IRedisClient.PSetEx(Of T)(String, Int64, T)
-- uid: FreeRedis.IRedisClient.PSubscribe(System.String,System.Action{System.String,System.Object})
-  name: PSubscribe(String, Action<String, Object>)
-  href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_PSubscribe_System_String_System_Action_System_String_System_Object__
-  commentId: M:FreeRedis.IRedisClient.PSubscribe(System.String,System.Action{System.String,System.Object})
-  name.vb: PSubscribe(String, Action(Of String, Object))
-  fullName: FreeRedis.IRedisClient.PSubscribe(System.String, System.Action<System.String, System.Object>)
-  fullName.vb: FreeRedis.IRedisClient.PSubscribe(System.String, System.Action(Of System.String, System.Object))
-  nameWithType: IRedisClient.PSubscribe(String, Action<String, Object>)
-  nameWithType.vb: IRedisClient.PSubscribe(String, Action(Of String, Object))
-- uid: FreeRedis.IRedisClient.PSubscribe(System.String[],System.Action{System.String,System.Object})
-  name: PSubscribe(String[], Action<String, Object>)
-  href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_PSubscribe_System_String___System_Action_System_String_System_Object__
-  commentId: M:FreeRedis.IRedisClient.PSubscribe(System.String[],System.Action{System.String,System.Object})
-  name.vb: PSubscribe(String(), Action(Of String, Object))
-  fullName: FreeRedis.IRedisClient.PSubscribe(System.String[], System.Action<System.String, System.Object>)
-  fullName.vb: FreeRedis.IRedisClient.PSubscribe(System.String(), System.Action(Of System.String, System.Object))
-  nameWithType: IRedisClient.PSubscribe(String[], Action<String, Object>)
-  nameWithType.vb: IRedisClient.PSubscribe(String(), Action(Of String, Object))
-- uid: FreeRedis.IRedisClient.PSubscribe*
-  name: PSubscribe
-  href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_PSubscribe_
-  commentId: Overload:FreeRedis.IRedisClient.PSubscribe
-  isSpec: "True"
-  fullName: FreeRedis.IRedisClient.PSubscribe
-  nameWithType: IRedisClient.PSubscribe
 - uid: FreeRedis.IRedisClient.PTtl(System.String)
   name: PTtl(String)
   href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_PTtl_System_String_
@@ -9017,22 +8947,6 @@ references:
   isSpec: "True"
   fullName: FreeRedis.IRedisClient.SlaveOf
   nameWithType: IRedisClient.SlaveOf
-- uid: FreeRedis.IRedisClient.SlowLog(System.String,System.String[])
-  name: SlowLog(String, String[])
-  href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_SlowLog_System_String_System_String___
-  commentId: M:FreeRedis.IRedisClient.SlowLog(System.String,System.String[])
-  name.vb: SlowLog(String, String())
-  fullName: FreeRedis.IRedisClient.SlowLog(System.String, System.String[])
-  fullName.vb: FreeRedis.IRedisClient.SlowLog(System.String, System.String())
-  nameWithType: IRedisClient.SlowLog(String, String[])
-  nameWithType.vb: IRedisClient.SlowLog(String, String())
-- uid: FreeRedis.IRedisClient.SlowLog*
-  name: SlowLog
-  href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_SlowLog_
-  commentId: Overload:FreeRedis.IRedisClient.SlowLog
-  isSpec: "True"
-  fullName: FreeRedis.IRedisClient.SlowLog
-  nameWithType: IRedisClient.SlowLog
 - uid: FreeRedis.IRedisClient.SMembers(System.String)
   name: SMembers(String)
   href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_SMembers_System_String_
@@ -9254,31 +9168,63 @@ references:
   isSpec: "True"
   fullName: FreeRedis.IRedisClient.StrLen
   nameWithType: IRedisClient.StrLen
-- uid: FreeRedis.IRedisClient.Subscribe(System.String,System.Action{System.String,System.Object})
-  name: Subscribe(String, Action<String, Object>)
-  href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_Subscribe_System_String_System_Action_System_String_System_Object__
-  commentId: M:FreeRedis.IRedisClient.Subscribe(System.String,System.Action{System.String,System.Object})
-  name.vb: Subscribe(String, Action(Of String, Object))
-  fullName: FreeRedis.IRedisClient.Subscribe(System.String, System.Action<System.String, System.Object>)
-  fullName.vb: FreeRedis.IRedisClient.Subscribe(System.String, System.Action(Of System.String, System.Object))
-  nameWithType: IRedisClient.Subscribe(String, Action<String, Object>)
-  nameWithType.vb: IRedisClient.Subscribe(String, Action(Of String, Object))
-- uid: FreeRedis.IRedisClient.Subscribe(System.String[],System.Action{System.String,System.Object})
-  name: Subscribe(String[], Action<String, Object>)
-  href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_Subscribe_System_String___System_Action_System_String_System_Object__
-  commentId: M:FreeRedis.IRedisClient.Subscribe(System.String[],System.Action{System.String,System.Object})
-  name.vb: Subscribe(String(), Action(Of String, Object))
-  fullName: FreeRedis.IRedisClient.Subscribe(System.String[], System.Action<System.String, System.Object>)
-  fullName.vb: FreeRedis.IRedisClient.Subscribe(System.String(), System.Action(Of System.String, System.Object))
-  nameWithType: IRedisClient.Subscribe(String[], Action<String, Object>)
-  nameWithType.vb: IRedisClient.Subscribe(String(), Action(Of String, Object))
-- uid: FreeRedis.IRedisClient.Subscribe*
-  name: Subscribe
-  href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_Subscribe_
-  commentId: Overload:FreeRedis.IRedisClient.Subscribe
+- uid: FreeRedis.IRedisClient.SubscribeList(System.String,System.Action{System.String})
+  name: SubscribeList(String, Action<String>)
+  href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_SubscribeList_System_String_System_Action_System_String__
+  commentId: M:FreeRedis.IRedisClient.SubscribeList(System.String,System.Action{System.String})
+  name.vb: SubscribeList(String, Action(Of String))
+  fullName: FreeRedis.IRedisClient.SubscribeList(System.String, System.Action<System.String>)
+  fullName.vb: FreeRedis.IRedisClient.SubscribeList(System.String, System.Action(Of System.String))
+  nameWithType: IRedisClient.SubscribeList(String, Action<String>)
+  nameWithType.vb: IRedisClient.SubscribeList(String, Action(Of String))
+- uid: FreeRedis.IRedisClient.SubscribeList(System.String[],System.Action{System.String,System.String})
+  name: SubscribeList(String[], Action<String, String>)
+  href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_SubscribeList_System_String___System_Action_System_String_System_String__
+  commentId: M:FreeRedis.IRedisClient.SubscribeList(System.String[],System.Action{System.String,System.String})
+  name.vb: SubscribeList(String(), Action(Of String, String))
+  fullName: FreeRedis.IRedisClient.SubscribeList(System.String[], System.Action<System.String, System.String>)
+  fullName.vb: FreeRedis.IRedisClient.SubscribeList(System.String(), System.Action(Of System.String, System.String))
+  nameWithType: IRedisClient.SubscribeList(String[], Action<String, String>)
+  nameWithType.vb: IRedisClient.SubscribeList(String(), Action(Of String, String))
+- uid: FreeRedis.IRedisClient.SubscribeList*
+  name: SubscribeList
+  href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_SubscribeList_
+  commentId: Overload:FreeRedis.IRedisClient.SubscribeList
   isSpec: "True"
-  fullName: FreeRedis.IRedisClient.Subscribe
-  nameWithType: IRedisClient.Subscribe
+  fullName: FreeRedis.IRedisClient.SubscribeList
+  nameWithType: IRedisClient.SubscribeList
+- uid: FreeRedis.IRedisClient.SubscribeListBroadcast(System.String,System.String,System.Action{System.String})
+  name: SubscribeListBroadcast(String, String, Action<String>)
+  href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_SubscribeListBroadcast_System_String_System_String_System_Action_System_String__
+  commentId: M:FreeRedis.IRedisClient.SubscribeListBroadcast(System.String,System.String,System.Action{System.String})
+  name.vb: SubscribeListBroadcast(String, String, Action(Of String))
+  fullName: FreeRedis.IRedisClient.SubscribeListBroadcast(System.String, System.String, System.Action<System.String>)
+  fullName.vb: FreeRedis.IRedisClient.SubscribeListBroadcast(System.String, System.String, System.Action(Of System.String))
+  nameWithType: IRedisClient.SubscribeListBroadcast(String, String, Action<String>)
+  nameWithType.vb: IRedisClient.SubscribeListBroadcast(String, String, Action(Of String))
+- uid: FreeRedis.IRedisClient.SubscribeListBroadcast*
+  name: SubscribeListBroadcast
+  href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_SubscribeListBroadcast_
+  commentId: Overload:FreeRedis.IRedisClient.SubscribeListBroadcast
+  isSpec: "True"
+  fullName: FreeRedis.IRedisClient.SubscribeListBroadcast
+  nameWithType: IRedisClient.SubscribeListBroadcast
+- uid: FreeRedis.IRedisClient.SubscribeStream(System.String,System.Action{System.Collections.Generic.Dictionary{System.String,System.String}})
+  name: SubscribeStream(String, Action<Dictionary<String, String>>)
+  href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_SubscribeStream_System_String_System_Action_System_Collections_Generic_Dictionary_System_String_System_String___
+  commentId: M:FreeRedis.IRedisClient.SubscribeStream(System.String,System.Action{System.Collections.Generic.Dictionary{System.String,System.String}})
+  name.vb: SubscribeStream(String, Action(Of Dictionary(Of String, String)))
+  fullName: FreeRedis.IRedisClient.SubscribeStream(System.String, System.Action<System.Collections.Generic.Dictionary<System.String, System.String>>)
+  fullName.vb: FreeRedis.IRedisClient.SubscribeStream(System.String, System.Action(Of System.Collections.Generic.Dictionary(Of System.String, System.String)))
+  nameWithType: IRedisClient.SubscribeStream(String, Action<Dictionary<String, String>>)
+  nameWithType.vb: IRedisClient.SubscribeStream(String, Action(Of Dictionary(Of String, String)))
+- uid: FreeRedis.IRedisClient.SubscribeStream*
+  name: SubscribeStream
+  href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_SubscribeStream_
+  commentId: Overload:FreeRedis.IRedisClient.SubscribeStream
+  isSpec: "True"
+  fullName: FreeRedis.IRedisClient.SubscribeStream
+  nameWithType: IRedisClient.SubscribeStream
 - uid: FreeRedis.IRedisClient.SUnion(System.String[])
   name: SUnion(String[])
   href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_SUnion_System_String___
@@ -10383,6 +10329,25 @@ references:
   isSpec: "True"
   fullName: FreeRedis.IRedisClient.ZRevRank
   nameWithType: IRedisClient.ZRevRank
+- uid: FreeRedis.IRedisClient.ZScan(System.String,System.Int64,System.String,System.Int64)
+  name: ZScan(String, Int64, String, Int64)
+  href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ZScan_System_String_System_Int64_System_String_System_Int64_
+  commentId: M:FreeRedis.IRedisClient.ZScan(System.String,System.Int64,System.String,System.Int64)
+  fullName: FreeRedis.IRedisClient.ZScan(System.String, System.Int64, System.String, System.Int64)
+  nameWithType: IRedisClient.ZScan(String, Int64, String, Int64)
+- uid: FreeRedis.IRedisClient.ZScan(System.String,System.String,System.Int64)
+  name: ZScan(String, String, Int64)
+  href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ZScan_System_String_System_String_System_Int64_
+  commentId: M:FreeRedis.IRedisClient.ZScan(System.String,System.String,System.Int64)
+  fullName: FreeRedis.IRedisClient.ZScan(System.String, System.String, System.Int64)
+  nameWithType: IRedisClient.ZScan(String, String, Int64)
+- uid: FreeRedis.IRedisClient.ZScan*
+  name: ZScan
+  href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ZScan_
+  commentId: Overload:FreeRedis.IRedisClient.ZScan
+  isSpec: "True"
+  fullName: FreeRedis.IRedisClient.ZScan
+  nameWithType: IRedisClient.ZScan
 - uid: FreeRedis.IRedisClient.ZScore(System.String,System.String)
   name: ZScore(String, String)
   href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ZScore_System_String_System_String_
