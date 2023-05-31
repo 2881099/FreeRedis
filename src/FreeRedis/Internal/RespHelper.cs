@@ -648,8 +648,27 @@ namespace FreeRedis
                     .Append(string.Join(", ", genericParameters.Select(a => a.DisplayCsharp())))
                     .Append(">");
 
-            sb.Append("(").Append(string.Join(", ", method.GetParameters().Select(a => $"{a.ParameterType.DisplayCsharp()} {a.Name}"))).Append(")");
+            sb.Append("(").Append(string.Join(", ", method.GetParameters().Select(a => LocalDisplayCsharpParameter(a)))).Append(")");
             return sb.ToString();
+
+            string LocalDisplayCsharpParameter(ParameterInfo lp)
+            {
+                var pstr = "";
+                object[] pattrs = new object[0];
+                try { pattrs = lp.GetCustomAttributes(false); } catch { }
+                if (pattrs.Any(a => a is ParamArrayAttribute)) pstr = "params ";
+                pstr = $"{pstr}{lp.ParameterType.DisplayCsharp()} {lp.Name}";
+#if net40
+                if (pattrs.Any(a => a is System.Runtime.InteropServices.OptionalAttribute) == false) return pstr;
+#else
+                if (lp.HasDefaultValue == false) return pstr;
+#endif
+                if (lp.DefaultValue == null) return $"{pstr} = null";
+                if (lp.ParameterType == typeof(string)) return $"{pstr} = \"{lp.DefaultValue.ToString().Replace("\"", "\\\"").Replace("\r\n", "\\r\\n").Replace("\n", "\\n")}\"";
+                if (lp.ParameterType == typeof(bool) || lp.ParameterType == typeof(bool?)) return $"{pstr} = {lp.DefaultValue.ToString().Replace("False", "false").Replace("True", "true")}";
+                if (lp.ParameterType.IsEnum) return $"{pstr} = {lp.ParameterType.DisplayCsharp(false)}.{lp.DefaultValue}";
+                return $"{pstr} = {lp.DefaultValue}";
+            }
         }
         internal static object CreateInstanceGetDefaultValue(this Type that)
         {
@@ -716,9 +735,9 @@ namespace FreeRedis
             if (that is FieldInfo field) return field.FieldType;
             return null;
         }
-        #endregion
+#endregion
 
-        #region 类型转换
+#region 类型转换
         internal static string ToInvariantCultureToString(this object obj) => obj is string objstr ?  objstr : string.Format(CultureInfo.InvariantCulture, @"{0}", obj);
         public static T MapToClass<T>(this object[] list, Encoding encoding)
         {
@@ -915,7 +934,7 @@ namespace FreeRedis
             var valueStr = valueIsNull ? null : (valueType == typeof(byte[]) ? encoding.GetString(value as byte[]) : value.ToInvariantCultureToString());
             return func(valueStr);
         }
-        #endregion
+#endregion
     }
 
     public class RedisServerException : Exception
