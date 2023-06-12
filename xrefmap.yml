@@ -12093,19 +12093,6 @@ references:
   isSpec: "True"
   fullName: FreeRedis.RedisClient.ExpireAt
   nameWithType: RedisClient.ExpireAt
-- uid: FreeRedis.RedisClient.Finalize
-  name: Finalize()
-  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_Finalize
-  commentId: M:FreeRedis.RedisClient.Finalize
-  fullName: FreeRedis.RedisClient.Finalize()
-  nameWithType: RedisClient.Finalize()
-- uid: FreeRedis.RedisClient.Finalize*
-  name: Finalize
-  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_Finalize_
-  commentId: Overload:FreeRedis.RedisClient.Finalize
-  isSpec: "True"
-  fullName: FreeRedis.RedisClient.Finalize
-  nameWithType: RedisClient.Finalize
 - uid: FreeRedis.RedisClient.FlushAll(System.Boolean)
   name: FlushAll(Boolean)
   href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_FlushAll_System_Boolean_
