@@ -69,11 +69,8 @@ namespace FreeRedis
             Prefix = topOwner.Prefix;
         }
 
-        ~RedisClient() => this.Dispose();
-        int _disposeCounter;
         public void Dispose()
         {
-            if (Interlocked.Increment(ref _disposeCounter) != 1) return;
             Adapter.Dispose();
             _pubsubPriv?.Dispose();
         }
