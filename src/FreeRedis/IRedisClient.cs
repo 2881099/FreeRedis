@@ -187,7 +187,7 @@ namespace FreeRedis
         string[] PubSubChannels(string pattern);
         long PubSubNumSub(string channel);
         long[] PubSubNumSub(string[] channels);
-        long PubSubNumPat(string message);
+        long PubSubNumPat();
         void PUnSubscribe(params string[] pattern);
         void UnSubscribe(params string[] channels);
         bool ScriptExists(string sha1);
@@ -535,7 +535,7 @@ namespace FreeRedis
         Task<string[]> PubSubChannelsAsync(string pattern);
         Task<long> PubSubNumSubAsync(string channel);
         Task<long[]> PubSubNumSubAsync(string[] channels);
-        Task<long> PubSubNumPatAsync(string message);
+        Task<long> PubSubNumPatAsync();
         IDisposable PSubscribe(string pattern, Action<string, object> handler);
         IDisposable PSubscribe(string[] pattern, Action<string, object> handler);
         IDisposable Subscribe(string[] channels, Action<string, object> handler);

@@ -40,7 +40,7 @@ namespace FreeRedis
         public Task<string[]> PubSubChannelsAsync(string pattern) => CallAsync("PUBSUB".SubCommand("CHANNELS").Input(pattern), rt => rt.ThrowOrValue<string[]>());
         public Task<long> PubSubNumSubAsync(string channel) => CallAsync("PUBSUB".SubCommand("NUMSUB").Input(channel), rt => rt.ThrowOrValue((a, _) => a.MapToList((x, y) => y.ConvertTo<long>()).FirstOrDefault()));
         public Task<long[]> PubSubNumSubAsync(string[] channels) => CallAsync("PUBSUB".SubCommand("NUMSUB").Input(channels), rt => rt.ThrowOrValue((a, _) => a.MapToList((x, y) => y.ConvertTo<long>()).ToArray()));
-        public Task<long> PubSubNumPatAsync(string message) => CallAsync("PUBLISH".SubCommand("NUMPAT").InputRaw(message), rt => rt.ThrowOrValue<long>());
+        public Task<long> PubSubNumPatAsync() => CallAsync("PUBLISH".SubCommand("NUMPAT"), rt => rt.ThrowOrValue<long>());
         #endregion
 #endif
 
@@ -61,7 +61,7 @@ namespace FreeRedis
         public string[] PubSubChannels(string pattern) => Call("PUBSUB".SubCommand("CHANNELS").Input(pattern), rt => rt.ThrowOrValue<string[]>());
         public long PubSubNumSub(string channel) => Call("PUBSUB".SubCommand("NUMSUB").Input(channel), rt => rt.ThrowOrValue((a, _) => a.MapToList((x, y) => y.ConvertTo<long>()).FirstOrDefault()));
         public long[] PubSubNumSub(string[] channels) => Call("PUBSUB".SubCommand("NUMSUB").Input(channels), rt => rt.ThrowOrValue((a, _) => a.MapToList((x, y) => y.ConvertTo<long>()).ToArray()));
-        public long PubSubNumPat(string message) => Call("PUBLISH".SubCommand("NUMPAT").InputRaw(message), rt => rt.ThrowOrValue<long>());
+        public long PubSubNumPat() => Call("PUBLISH".SubCommand("NUMPAT"), rt => rt.ThrowOrValue<long>());
 
 
         public void PUnSubscribe(params string[] pattern) => _pubsub.UnSubscribe(true, pattern);
