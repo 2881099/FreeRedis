@@ -8315,12 +8315,12 @@ references:
   isSpec: "True"
   fullName: FreeRedis.IRedisClient.PubSubChannels
   nameWithType: IRedisClient.PubSubChannels
-- uid: FreeRedis.IRedisClient.PubSubNumPat(System.String)
-  name: PubSubNumPat(String)
-  href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_PubSubNumPat_System_String_
-  commentId: M:FreeRedis.IRedisClient.PubSubNumPat(System.String)
-  fullName: FreeRedis.IRedisClient.PubSubNumPat(System.String)
-  nameWithType: IRedisClient.PubSubNumPat(String)
+- uid: FreeRedis.IRedisClient.PubSubNumPat
+  name: PubSubNumPat()
+  href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_PubSubNumPat
+  commentId: M:FreeRedis.IRedisClient.PubSubNumPat
+  fullName: FreeRedis.IRedisClient.PubSubNumPat()
+  nameWithType: IRedisClient.PubSubNumPat()
 - uid: FreeRedis.IRedisClient.PubSubNumPat*
   name: PubSubNumPat
   href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_PubSubNumPat_
@@ -13801,12 +13801,12 @@ references:
   isSpec: "True"
   fullName: FreeRedis.RedisClient.PubSubChannels
   nameWithType: RedisClient.PubSubChannels
-- uid: FreeRedis.RedisClient.PubSubNumPat(System.String)
-  name: PubSubNumPat(String)
-  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_PubSubNumPat_System_String_
-  commentId: M:FreeRedis.RedisClient.PubSubNumPat(System.String)
-  fullName: FreeRedis.RedisClient.PubSubNumPat(System.String)
-  nameWithType: RedisClient.PubSubNumPat(String)
+- uid: FreeRedis.RedisClient.PubSubNumPat
+  name: PubSubNumPat()
+  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_PubSubNumPat
+  commentId: M:FreeRedis.RedisClient.PubSubNumPat
+  fullName: FreeRedis.RedisClient.PubSubNumPat()
+  nameWithType: RedisClient.PubSubNumPat()
 - uid: FreeRedis.RedisClient.PubSubNumPat*
   name: PubSubNumPat
   href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_PubSubNumPat_
