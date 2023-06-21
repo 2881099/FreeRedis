@@ -184,7 +184,7 @@ namespace FreeRedis
         SubscribeListBroadcastObject SubscribeListBroadcast(string listKey, string clientId, Action<string> onMessage);
         SubscribeStreamObject SubscribeStream(string streamKey, Action<Dictionary<string, string>> onMessage);
         long Publish(string channel, string message);
-        string[] PubSubChannels(string pattern);
+        string[] PubSubChannels(string pattern = "*");
         long PubSubNumSub(string channel);
         long[] PubSubNumSub(string[] channels);
         long PubSubNumPat();
@@ -532,7 +532,7 @@ namespace FreeRedis
         Task<bool[]> JsonToggleAsync(string key, string path = "$");
         Task<string[]> JsonTypeAsync(string key, string path = "$");
         Task<long> PublishAsync(string channel, string message);
-        Task<string[]> PubSubChannelsAsync(string pattern);
+        Task<string[]> PubSubChannelsAsync(string pattern = "*");
         Task<long> PubSubNumSubAsync(string channel);
         Task<long[]> PubSubNumSubAsync(string[] channels);
         Task<long> PubSubNumPatAsync();
