@@ -423,7 +423,7 @@
       "output": {
         ".html": {
           "relative_path": "docs/api/FreeRedis.IRedisClient.html",
-          "hash": "FK9GMk+QMRTix3/Vk3zHKQ92Ue+3uqRgOtGS7OGFx18="
+          "hash": "3WFRX0kH9tdRyKQ92LZrpjXC1P9m1MtwP+VC+XMYEMM="
         }
       },
       "is_incremental": false,
@@ -879,7 +879,7 @@
       "output": {
         ".html": {
           "relative_path": "docs/api/FreeRedis.RedisClient.html",
-          "hash": "dOW5u3ZrKJ6eMRXSZOV2zEZ8VqGWvHtGggiTFivh0Ps="
+          "hash": "5MdUc+gq5RqliQzg3J1OH0IIf6/8UtdRF+dC1xij80A="
         }
       },
       "is_incremental": false,
