@@ -739,6 +739,19 @@ namespace FreeRedis
 
 #region 类型转换
         internal static string ToInvariantCultureToString(this object obj) => obj is string objstr ?  objstr : string.Format(CultureInfo.InvariantCulture, @"{0}", obj);
+        public static void MapSetListValue(this object[] list, Dictionary<string, Func<object[], object>> valueHandlers)
+        {
+            if (list == null) return;
+            for (int idx = list.Length - 2, c = 0; idx >= 0 && c < 2; idx -= 2)
+            {
+                if (valueHandlers.TryGetValue(list[idx]?.ToString(), out var tryFunc))
+                {
+                    c++;
+                    var value = list[idx + 1] as object[];
+                    if (value != null) list[idx + 1] = tryFunc(value);
+                }
+            }
+        }
         public static T MapToClass<T>(this object[] list, Encoding encoding)
         {
             if (list == null) return default(T);

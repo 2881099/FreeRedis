@@ -323,36 +323,36 @@ namespace FreeRedis
            rt.ThrowOrValue((a, _) =>
            {
                if (a == null) return null;
-               var objs1 = a[11] as object[];
-               a[11] = objs1 == null ? null : new StreamsEntry { id = objs1[0].ConvertTo<string>(), fieldValues = objs1[1] as object[] };
-               var objs2 = a[13] as object[];
-               a[13] = objs2 == null ? null : new StreamsEntry { id = objs2[0].ConvertTo<string>(), fieldValues = objs2[1] as object[] };
+               a.MapSetListValue(new Dictionary<string, Func<object[], object>>
+               {
+                   ["first-entry"] = ThrowOrValueToXInfoStreamMapSet,
+                   ["last-entry"] = ThrowOrValueToXInfoStreamMapSet
+               });
                return a.MapToClass<StreamsXInfoStreamResult>(rt.Encoding);
            });
+        static object ThrowOrValueToXInfoStreamMapSet(object[] value)
+        {
+            var objs1 = value as object[];
+            return objs1 == null ? null : new StreamsEntry { id = objs1[0].ConvertTo<string>(), fieldValues = objs1[1] as object[] };
+        }
         public static StreamsXInfoStreamFullResult ThrowOrValueToXInfoStreamFullResult(this RedisResult rt) =>
            rt.ThrowOrValue((objs_full, _) =>
            {
                if (objs_full == null) return null;
-               var objs_entries = objs_full[9] as object[];
-               if (objs_entries != null)
+               objs_full.MapSetListValue(new Dictionary<string, Func<object[], object>>
                {
-                   objs_full[9] = objs_entries.Select(z =>
+                   ["entries"] = value => value.Select(z =>
                    {
                        var objs_entry = z as object[];
                        return objs_entry == null ? null : new StreamsEntry { id = objs_entry[0].ConvertTo<string>(), fieldValues = objs_entry[1] as object[] };
-                   }).ToArray();
-               }
-               var objs_groups = objs_full[11] as object[];
-               if (objs_groups != null)
-               {
-                   objs_full[11] = objs_groups.Select(z =>
+                   }).ToArray(),
+                   ["groups"] = value => value.Select(z =>
                    {
                        var objs_group = z as object[];
                        if (objs_group == null) return null;
-                       var objs_pendings = objs_group[7] as object[];
-                       if (objs_pendings != null)
+                       objs_group.MapSetListValue(new Dictionary<string, Func<object[], object>>
                        {
-                           objs_group[7] = objs_pendings.Select(y =>
+                           ["pending"] = value1 => value1.Select(y =>
                            {
                                var objs_pending = y as object[];
                                if (objs_pending == null) return null;
@@ -363,19 +363,14 @@ namespace FreeRedis
                                    seen_time = objs_pending[2].ConvertTo<long>(),
                                    pel_count = objs_pending[3].ConvertTo<long>()
                                };
-                           }).ToArray();
-                       }
-                       var objs_consumers = objs_group[9] as object[];
-                       if (objs_consumers != null)
-                       {
-                           objs_group[9] = objs_consumers.Select(y =>
+                           }).ToArray(),
+                           ["consumers"] = value1 => value1.Select(y =>
                            {
                                var objs_consumer = y as object[];
                                if (objs_consumer == null) return null;
-                               var objs_consumer_pendings = objs_consumer[7] as object[];
-                               if (objs_consumer_pendings != null)
+                               objs_consumer.MapSetListValue(new Dictionary<string, Func<object[], object>>
                                {
-                                   objs_consumer[7] = objs_consumer_pendings.Select(x =>
+                                   ["pending"] = value2 => value2.Select(x =>
                                    {
                                        var objs_consumer_pending = x as object[];
                                        if (objs_consumer_pending == null) return null;
@@ -386,14 +381,14 @@ namespace FreeRedis
                                            seen_time = objs_consumer_pending[1].ConvertTo<long>(),
                                            pel_count = objs_consumer_pending[2].ConvertTo<long>()
                                        };
-                                   }).ToArray();
-                               }
+                                   }).ToArray()
+                               });
                                return objs_consumer.MapToClass<StreamsXInfoStreamFullResult.Group.Consumer>(rt.Encoding);
-                           }).ToArray();
-                       }
+                           }).ToArray()
+                       });
                        return objs_group.MapToClass<StreamsXInfoStreamFullResult.Group>(rt.Encoding);
-                   }).ToArray();
-               }
+                   }).ToArray()
+               });
                return objs_full.MapToClass<StreamsXInfoStreamFullResult>(rt.Encoding);
            });
 

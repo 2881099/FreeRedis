@@ -70,7 +70,7 @@ namespace FreeRedis.Tests.RedisClientTests.Other
         [Fact]
         public void PubSubNumPat()
         {
-            cli.PubSubNumPat("123");
+            cli.PubSubNumPat();
         }
 
         [Fact]
