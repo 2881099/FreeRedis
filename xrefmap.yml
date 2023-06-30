@@ -16699,6 +16699,22 @@ references:
   isSpec: "True"
   fullName: FreeRedis.RespHelper.GetPropertyOrFieldType
   nameWithType: RespHelper.GetPropertyOrFieldType
+- uid: FreeRedis.RespHelper.MapSetListValue(System.Object[],System.Collections.Generic.Dictionary{System.String,System.Func{System.Object[],System.Object}})
+  name: MapSetListValue(Object[], Dictionary<String, Func<Object[], Object>>)
+  href: docs/api/FreeRedis.RespHelper.html#FreeRedis_RespHelper_MapSetListValue_System_Object___System_Collections_Generic_Dictionary_System_String_System_Func_System_Object___System_Object___
+  commentId: M:FreeRedis.RespHelper.MapSetListValue(System.Object[],System.Collections.Generic.Dictionary{System.String,System.Func{System.Object[],System.Object}})
+  name.vb: MapSetListValue(Object(), Dictionary(Of String, Func(Of Object(), Object)))
+  fullName: FreeRedis.RespHelper.MapSetListValue(System.Object[], System.Collections.Generic.Dictionary<System.String, System.Func<System.Object[], System.Object>>)
+  fullName.vb: FreeRedis.RespHelper.MapSetListValue(System.Object(), System.Collections.Generic.Dictionary(Of System.String, System.Func(Of System.Object(), System.Object)))
+  nameWithType: RespHelper.MapSetListValue(Object[], Dictionary<String, Func<Object[], Object>>)
+  nameWithType.vb: RespHelper.MapSetListValue(Object(), Dictionary(Of String, Func(Of Object(), Object)))
+- uid: FreeRedis.RespHelper.MapSetListValue*
+  name: MapSetListValue
+  href: docs/api/FreeRedis.RespHelper.html#FreeRedis_RespHelper_MapSetListValue_
+  commentId: Overload:FreeRedis.RespHelper.MapSetListValue
+  isSpec: "True"
+  fullName: FreeRedis.RespHelper.MapSetListValue
+  nameWithType: RespHelper.MapSetListValue
 - uid: FreeRedis.RespHelper.MapToClass*
   name: MapToClass
   href: docs/api/FreeRedis.RespHelper.html#FreeRedis_RespHelper_MapToClass_
