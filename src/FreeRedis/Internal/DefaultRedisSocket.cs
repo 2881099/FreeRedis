@@ -249,7 +249,10 @@ namespace FreeRedis.Internal
                 {
                     var endpointString = endpoint.ToString();
                     if (endpointString != $"{_ip}:{_port}") endpointString = $"{_ip}:{_port} -> {endpointString}";
-                    throw new TimeoutException($"Connect to redis-server({endpointString}) timeout");
+                    var debugString = "";
+                    try { debugString = $", DEBUG: Dns.GetHostEntry({_ip})={Dns.GetHostEntry(_ip)}"; }
+                    catch (Exception ex) { debugString = $", DEBUG: {ex.Message}"; }
+                    throw new TimeoutException($"Connect to redis-server({endpointString}) timeout{debugString}");
                 }
                 localSocket.EndConnect(asyncResult);
                 _socket = localSocket;
