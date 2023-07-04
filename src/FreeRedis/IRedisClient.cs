@@ -56,6 +56,7 @@ namespace FreeRedis
         string XAdd<T>(string key, long maxlen, string id, string field, T value, params object[] fieldValues);
         string XAdd<T>(string key, Dictionary<string, T> fieldValues);
         string XAdd<T>(string key, long maxlen, string id, Dictionary<string, T> fieldValues);
+        StreamsXAutoClaimResult XAutoClaim(string key, string group, string consumer, long minIdleTime, string start, long count = 0);
         StreamsEntry[] XClaim(string key, string group, string consumer, long minIdleTime, params string[] id);
         StreamsEntry[] XClaim(string key, string group, string consumer, long minIdleTime, string[] id, long idle, long retryCount, bool force);
         string[] XClaimJustId(string key, string group, string consumer, long minIdleTime, params string[] id);
@@ -472,6 +473,7 @@ namespace FreeRedis
         Task<string> XAddAsync<T>(string key, long maxlen, string id, string field, T value, params object[] fieldValues);
         Task<string> XAddAsync<T>(string key, Dictionary<string, T> fieldValues);
         Task<string> XAddAsync<T>(string key, long maxlen, string id, Dictionary<string, T> fieldValues);
+        Task<StreamsXAutoClaimResult> XAutoClaimAsync(string key, string group, string consumer, long minIdleTime, string start, long count = 0);
         Task<StreamsEntry[]> XClaimAsync(string key, string group, string consumer, long minIdleTime, params string[] id);
         Task<StreamsEntry[]> XClaimAsync(string key, string group, string consumer, long minIdleTime, string[] id, long idle, long retryCount, bool force);
         Task<string[]> XClaimJustIdAsync(string key, string group, string consumer, long minIdleTime, params string[] id);
