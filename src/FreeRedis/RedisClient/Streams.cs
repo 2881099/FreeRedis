@@ -29,6 +29,11 @@ namespace FreeRedis
             .Input(string.IsNullOrEmpty(id) ? "*" : id)
             .InputKv(fieldValues, false, SerializeRedisValue), rt => rt.ThrowOrValue<string>());
 
+        public Task<StreamsXAutoClaimResult> XAutoClaimAsync(string key, string group, string consumer, long minIdleTime, string start, long count = 0) => CallAsync("XAUTOCLAIM"
+            .InputKey(key, group, consumer)
+            .Input(minIdleTime, start)
+            .InputIf(count > 0, "COUNT", count), rt => rt.ThrowOrValueToXAutoClaim());
+
         public Task<StreamsEntry[]> XClaimAsync(string key, string group, string consumer, long minIdleTime, params string[] id) => CallAsync("XCLAIM"
             .InputKey(key, group, consumer)
             .Input(minIdleTime, id), rt => rt.ThrowOrValueToStreamsEntryArray());
@@ -161,6 +166,11 @@ namespace FreeRedis
             .Input(string.IsNullOrEmpty(id) ? "*" : id)
             .InputKv(fieldValues, false, SerializeRedisValue), rt => rt.ThrowOrValue<string>());
 
+        public StreamsXAutoClaimResult XAutoClaim(string key, string group, string consumer, long minIdleTime, string start, long count = 0) => Call("XAUTOCLAIM"
+            .InputKey(key, group, consumer)
+            .Input(minIdleTime, start)
+            .InputIf(count > 0, "COUNT", count), rt => rt.ThrowOrValueToXAutoClaim());
+
         public StreamsEntry[] XClaim(string key, string group, string consumer, long minIdleTime, params string[] id) => Call("XCLAIM"
             .InputKey(key, group, consumer)
             .Input(minIdleTime, id), rt => rt.ThrowOrValueToStreamsEntryArray());
@@ -276,6 +286,20 @@ namespace FreeRedis
     #region Model
     static partial class RedisResultThrowOrValueExtensions
     {
+        public static StreamsXAutoClaimResult ThrowOrValueToXAutoClaim(this RedisResult rt) =>
+           rt.ThrowOrValue((a, _) =>
+           {
+               if (a == null) return null;
+               var a1 = a[1] as object[];
+               var entries = new StreamsEntry[a.Length];
+               for (var z = 0; z < a1.Length; z++)
+               {
+                   var objs1 = a1[z] as object[];
+                   if (objs1 == null) continue;
+                   entries[z] = new StreamsEntry { id = objs1[0].ConvertTo<string>(), fieldValues = objs1[1] as object[] };
+               }
+               return new StreamsXAutoClaimResult { start = a[0].ConvertTo<string>(), entries = entries, delIds = (a[2] as object[])?.Select(z => z.ConvertTo<string>()).ToArray() };
+           });
 
         public static StreamsEntry[] ThrowOrValueToStreamsEntryArray(this RedisResult rt) =>
            rt.ThrowOrValue((a, _) =>
@@ -414,6 +438,14 @@ namespace FreeRedis
            });
     }
 
+    public class StreamsXAutoClaimResult
+    {
+        public string start;
+        public StreamsEntry[] entries;
+        public string[] delIds;
+
+        public override string ToString() => $"{start}, [{string.Join("], [", entries.Select(a => a?.ToString()))}], [{string.Join(", ", delIds)}]";
+    }
     public class StreamsXPendingResult
     {
         public long count;
@@ -517,7 +549,7 @@ namespace FreeRedis
         public string key;
         public StreamsEntry[] entries;
 
-        public override string ToString() => $"{key}, {string.Join("], [", entries.Select(a => a?.ToString()))}";
+        public override string ToString() => $"{key}, [{string.Join("], [", entries.Select(a => a?.ToString()))}]";
     }
     public class StreamsEntry
     {
