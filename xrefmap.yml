@@ -15208,6 +15208,19 @@ references:
   fullName.vb: FreeRedis.RedisClient.XAdd(Of T)(System.String, System.String, T, System.Object())
   nameWithType: RedisClient.XAdd<T>(String, String, T, Object[])
   nameWithType.vb: RedisClient.XAdd(Of T)(String, String, T, Object())
+- uid: FreeRedis.RedisClient.XAutoClaim(System.String,System.String,System.String,System.Int64,System.String,System.Int64)
+  name: XAutoClaim(String, String, String, Int64, String, Int64)
+  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_XAutoClaim_System_String_System_String_System_String_System_Int64_System_String_System_Int64_
+  commentId: M:FreeRedis.RedisClient.XAutoClaim(System.String,System.String,System.String,System.Int64,System.String,System.Int64)
+  fullName: FreeRedis.RedisClient.XAutoClaim(System.String, System.String, System.String, System.Int64, System.String, System.Int64)
+  nameWithType: RedisClient.XAutoClaim(String, String, String, Int64, String, Int64)
+- uid: FreeRedis.RedisClient.XAutoClaim*
+  name: XAutoClaim
+  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_XAutoClaim_
+  commentId: Overload:FreeRedis.RedisClient.XAutoClaim
+  isSpec: "True"
+  fullName: FreeRedis.RedisClient.XAutoClaim
+  nameWithType: RedisClient.XAutoClaim
 - uid: FreeRedis.RedisClient.XClaim(System.String,System.String,System.String,System.Int64,System.String[])
   name: XClaim(String, String, String, Int64, String[])
   href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_XClaim_System_String_System_String_System_String_System_Int64_System_String___
@@ -17579,6 +17592,43 @@ references:
   isSpec: "True"
   fullName: FreeRedis.StreamsEntryResult.ToString
   nameWithType: StreamsEntryResult.ToString
+- uid: FreeRedis.StreamsXAutoClaimResult
+  name: StreamsXAutoClaimResult
+  href: docs/api/FreeRedis.StreamsXAutoClaimResult.html
+  commentId: T:FreeRedis.StreamsXAutoClaimResult
+  fullName: FreeRedis.StreamsXAutoClaimResult
+  nameWithType: StreamsXAutoClaimResult
+- uid: FreeRedis.StreamsXAutoClaimResult.delIds
+  name: delIds
+  href: docs/api/FreeRedis.StreamsXAutoClaimResult.html#FreeRedis_StreamsXAutoClaimResult_delIds
+  commentId: F:FreeRedis.StreamsXAutoClaimResult.delIds
+  fullName: FreeRedis.StreamsXAutoClaimResult.delIds
+  nameWithType: StreamsXAutoClaimResult.delIds
+- uid: FreeRedis.StreamsXAutoClaimResult.entries
+  name: entries
+  href: docs/api/FreeRedis.StreamsXAutoClaimResult.html#FreeRedis_StreamsXAutoClaimResult_entries
+  commentId: F:FreeRedis.StreamsXAutoClaimResult.entries
+  fullName: FreeRedis.StreamsXAutoClaimResult.entries
+  nameWithType: StreamsXAutoClaimResult.entries
+- uid: FreeRedis.StreamsXAutoClaimResult.start
+  name: start
+  href: docs/api/FreeRedis.StreamsXAutoClaimResult.html#FreeRedis_StreamsXAutoClaimResult_start
+  commentId: F:FreeRedis.StreamsXAutoClaimResult.start
+  fullName: FreeRedis.StreamsXAutoClaimResult.start
+  nameWithType: StreamsXAutoClaimResult.start
+- uid: FreeRedis.StreamsXAutoClaimResult.ToString
+  name: ToString()
+  href: docs/api/FreeRedis.StreamsXAutoClaimResult.html#FreeRedis_StreamsXAutoClaimResult_ToString
+  commentId: M:FreeRedis.StreamsXAutoClaimResult.ToString
+  fullName: FreeRedis.StreamsXAutoClaimResult.ToString()
+  nameWithType: StreamsXAutoClaimResult.ToString()
+- uid: FreeRedis.StreamsXAutoClaimResult.ToString*
+  name: ToString
+  href: docs/api/FreeRedis.StreamsXAutoClaimResult.html#FreeRedis_StreamsXAutoClaimResult_ToString_
+  commentId: Overload:FreeRedis.StreamsXAutoClaimResult.ToString
+  isSpec: "True"
+  fullName: FreeRedis.StreamsXAutoClaimResult.ToString
+  nameWithType: StreamsXAutoClaimResult.ToString
 - uid: FreeRedis.StreamsXInfoConsumersResult
   name: StreamsXInfoConsumersResult
   href: docs/api/FreeRedis.StreamsXInfoConsumersResult.html
