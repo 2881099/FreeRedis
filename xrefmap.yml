@@ -9553,6 +9553,19 @@ references:
   fullName.vb: FreeRedis.IRedisClient.XAdd(Of T)(System.String, System.String, T, System.Object())
   nameWithType: IRedisClient.XAdd<T>(String, String, T, Object[])
   nameWithType.vb: IRedisClient.XAdd(Of T)(String, String, T, Object())
+- uid: FreeRedis.IRedisClient.XAutoClaim(System.String,System.String,System.String,System.Int64,System.String,System.Int64)
+  name: XAutoClaim(String, String, String, Int64, String, Int64)
+  href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_XAutoClaim_System_String_System_String_System_String_System_Int64_System_String_System_Int64_
+  commentId: M:FreeRedis.IRedisClient.XAutoClaim(System.String,System.String,System.String,System.Int64,System.String,System.Int64)
+  fullName: FreeRedis.IRedisClient.XAutoClaim(System.String, System.String, System.String, System.Int64, System.String, System.Int64)
+  nameWithType: IRedisClient.XAutoClaim(String, String, String, Int64, String, Int64)
+- uid: FreeRedis.IRedisClient.XAutoClaim*
+  name: XAutoClaim
+  href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_XAutoClaim_
+  commentId: Overload:FreeRedis.IRedisClient.XAutoClaim
+  isSpec: "True"
+  fullName: FreeRedis.IRedisClient.XAutoClaim
+  nameWithType: IRedisClient.XAutoClaim
 - uid: FreeRedis.IRedisClient.XClaim(System.String,System.String,System.String,System.Int64,System.String[])
   name: XClaim(String, String, String, Int64, String[])
   href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_XClaim_System_String_System_String_System_String_System_Int64_System_String___
