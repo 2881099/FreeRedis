@@ -6,9 +6,9 @@ namespace FreeRedis
 {
 
 
-    public sealed class FreeRedisClient : FreeRedisClientBase
+    public sealed class FreeRedisClient2 : FreeRedisClientBase2
     {
-        public FreeRedisClient(ConnectionStringBuilder connectionString, Action<string>? logger = null) : base(connectionString.Ip, connectionString.Port, logger)
+        public FreeRedisClient2(ConnectionStringBuilder connectionString, Action<string>? logger = null) : base(connectionString.Ip, connectionString.Port, logger)
         {
             try
             {

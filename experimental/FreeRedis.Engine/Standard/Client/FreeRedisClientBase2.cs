@@ -1,49 +1,88 @@
 ﻿using FreeRedis.Transport;
 using System.Buffers;
+using System.Buffers.Binary;
 using System.IO.Pipelines;
 using System.Net;
 using System.Runtime.CompilerServices;
+using System.Text;
 
 namespace FreeRedis.Engine
 {
-    public abstract class FreeRedisClientBase : IAsyncDisposable
+    public abstract class FreeRedisClientBase2 : IAsyncDisposable
     {
         protected readonly SocketConnection? _connection;
         protected readonly PipeWriter _sender;
         protected readonly PipeReader _reciver;
-        protected readonly CircleBuffer _taskBuffer;
-
+        protected readonly CircleTask2 _taskBuffer;
         protected readonly Action<string>? errorLogger;
+        private static readonly Encoder Utf8Encoder;
 
-        public FreeRedisClientBase(string ip, int port, Action<string>? logger)
+#if DEBUG
+        private static long _bufferLength;
+
+        static FreeRedisClientBase2()
         {
-            _taskBuffer = new CircleBuffer(2,4096);
+            System.Threading.Tasks.Task.Run(() =>
+            {
+
+                while (true)
+                {
+                    Thread.Sleep(5000);
+                    Console.WriteLine("已接收长度:" + _bufferLength);
+                }
+
+            });
+        }
+#endif
+        static FreeRedisClientBase2()
+        {
+            Utf8Encoder = Encoding.UTF8.GetEncoder();
+        }
+        public FreeRedisClientBase2(string ip, int port, Action<string>? logger)
+        {
+            _taskBuffer = new CircleTask2();
             errorLogger = logger;
             SocketConnectionFactory client = new(new SocketTransportOptions());
             _connection = client.ConnectAsync(new IPEndPoint(IPAddress.Parse(ip), port)).Result;
             _sender = _connection!.Transport.Output;
             _reciver = _connection!.Transport.Input;
-            Task.Run(RunReciver);
+            RunReciver();
         }
 
+        private long _concurrentCount;
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Task<T> SendAndReceive<T>(string command, HandlerBufferDelegate2 redisProtocalHandler)
+        {
+            //Interlocked.Increment(ref _concurrentCount);
+            WaitAndLockSend();
+            _sender.WriteUtf8String(command);
+            //Utf8Encoder.Convert(command, _sender, false, out _, out _);
+            ////Utf8Encoder.Convert(Command, bufferWriter, false, out _, out _);
+            //redisProtocal.WriteBuffer(_sender);
+            _sender.FlushAsync();
+            _taskBuffer.WriteNext(redisProtocalHandler);
+            ReleaseSend();
+            //Interlocked.Decrement(ref _concurrentCount);
 
-        
+            //if (_concurrentCount==0)
+            //{
+            //    _sender.FlushAsync();
+            //}
+            return redisProtocal.WaitTask;
+        }
+
+        private SequencePosition _postion;
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private async Task RunReciver()
         {
-            SequencePosition _postion;
 
             while (true)
             {
-
-#if DEBUG
-                FreeRedisTracer.CurrentStep = $"等待接收字节!";
-#endif
                 var result = await _reciver.ReadAsync().ConfigureAwait(false);
                 var buffer = result.Buffer;
 #if DEBUG
-                FreeRedisTracer.CurrentStep = $"准备解析比特!";
-                FreeRedisTracer.PreBytesLength = buffer.Length;
+                _bufferLength += buffer.Length;
 #endif
                 HandlerRecvData(in buffer);
                 _reciver.AdvanceTo(_postion);
@@ -51,89 +90,46 @@ namespace FreeRedis.Engine
                 {
                     return;
                 }
-#if DEBUG
-                FreeRedisTracer.CurrentStep = $"已解析完当前比特!";
-#endif
             }
-
-            void HandlerRecvData(in ReadOnlySequence<byte> recvData)
-            {
-                var reader = new SequenceReader<byte>(recvData);
-#if DEBUG
-                FreeRedisTracer.CurrentStep = $"准备解析字节共:{recvData.Length}";
-#endif
-                LoopHandle(ref reader);
-                _postion = reader.Position;
-            }
-
         }
 
-
-
-        /// <summary>
-        /// 外界拿到数据后包装 Reader, 调用该方法:
-        /// 处理结果是: 
-        ///     ProtocolContinueResult.Completed 则进行下一个任务
-        ///     ProtocolContinueResult.Wait 则返回方法,等下一个新的 reader.
-        ///     ProtocolContinueResult.Continue 如果 reader 被动态包装,动态增加内容,可使用 Continue 等待当前 reader 包装结果.
-        /// 
-        /// </summary>
-        /// <param name="reader"></param>
-        public void LoopHandle(ref SequenceReader<byte> reader)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void HandlerRecvData(in ReadOnlySequence<byte> revData)
         {
-            ProtocolContinueResult result = ProtocolContinueResult.Completed;
-            while (reader.Remaining > 5)
-            {
-
-                result = _taskBuffer.CurrentValue(ref reader);
-                if (result == ProtocolContinueResult.Completed)
-                {
-#if DEBUG
-                FreeRedisTracer.CurrentCompletedTaskCount += 1;
-#endif
-                    _taskBuffer.MoveNext();
-                }
-                else if (result == ProtocolContinueResult.Wait)
-                {
-#if DEBUG
-                Interlocked.Increment(ref FreeRedisTracer.WaitBytesCount);
-#endif
-                    return;
-                }
-            }
-
+            var reader = new SequenceReader<byte>(revData);
+            _taskBuffer.LoopHandle(ref reader);
+            _postion = reader.Position;
         }
-
 
 
         public bool AnalysisingFlag;
 
         #region MyRegion
-        private int _flush_lock_flag;
+        private int _analysis_lock_flag;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        protected void WaitFlushLock()
+        protected void LockAnalysis()
         {
 
             SpinWait wait = default;
-            while (Interlocked.CompareExchange(ref _flush_lock_flag, 1, 0) != 0)
+            while (Interlocked.CompareExchange(ref _analysis_lock_flag, 1, 0) != 0)
             {
                 //Interlocked.Increment(ref LockCount);
-                wait.SpinOnce();
+                wait.SpinOnce(8);
             }
 
         }
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        protected bool TryGetFlushLock()
+        protected bool TryGetLockAnalysisLock()
         {
-            return Interlocked.CompareExchange(ref _flush_lock_flag, 1, 0) == 0;
+            return Interlocked.CompareExchange(ref _analysis_lock_flag, 1, 0) == 0;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        protected void ReleaseFlushLock()
+        protected void ReleaseLockAnalysis()
         {
 
-            _flush_lock_flag = 0;
+            _analysis_lock_flag = 0;
 
         }
         private int _receiver_lock_flag;
@@ -182,18 +178,15 @@ namespace FreeRedis.Engine
             }
         }
         public int LockCount;
-
-        private SpinWait _send_waiter;
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        protected void WaitSendLock()
+        protected void WaitAndLockSend()
         {
 
+            SpinWait wait = default;
             while (Interlocked.CompareExchange(ref _send_lock_flag, 1, 0) != 0)
             {
-#if DEBUG
-             Interlocked.Increment(ref FreeRedisTracer.SenderLockLootCount);
-#endif
-                _send_waiter.SpinOnce();
+                //Interlocked.Increment(ref LockCount);
+                wait.SpinOnce();
             }
 
         }
@@ -204,11 +197,11 @@ namespace FreeRedis.Engine
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        protected void ReleaseSendLock()
+        protected void ReleaseSend()
         {
 
             _send_lock_flag = 0;
-            _send_waiter.Reset();
+
         }
 
         

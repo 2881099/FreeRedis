@@ -4,7 +4,19 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+	  <LangVersion>preview</LangVersion>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="CircleBuffer2.cs" />
+    <Compile Remove="CircleTask.cs" />
+    <Compile Remove="CircleTask3.cs" />
+    <Compile Remove="Standard\Client\FreeRedisClientBase2.cs" />
+    <Compile Remove="Standard\Client\FreeRedisClientBase3.cs" />
+    <Compile Remove="Standard\Protocol\IRedisProtocol.cs" />
+    <Compile Remove="Standard\Protocol\IRedisProtocol_Task.cs" />
+    <Compile Remove="Standard\RedisTask.cs" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\FreeRedis.Transport\FreeRedis.Transport.csproj" />

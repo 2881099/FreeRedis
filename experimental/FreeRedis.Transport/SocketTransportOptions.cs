@@ -53,7 +53,7 @@ public class SocketTransportOptions
     /// <summary>
     /// Gets or sets the maximum outgoing bytes the transport will buffer before applying write backpressure.
     /// </summary>
-    public long? MaxWriteBufferSize { get; set; } = 64 * 1024;
+    public long? MaxWriteBufferSize { get; set; } = 128 * 1024;
 
     /// <summary>
     /// Inline application and transport continuations instead of dispatching to the threadpool.

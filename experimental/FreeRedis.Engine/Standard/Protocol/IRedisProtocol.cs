@@ -3,7 +3,7 @@ using System.IO.Pipelines;
 using System.Runtime.CompilerServices;
 using System.Text;
 
-public abstract class IRedisProtocol
+public class IRedisProtocol
 {
     public const byte TAIL = 10;
     public const byte OK_HEAD = 43;
@@ -48,7 +48,7 @@ public abstract class IRedisProtocol
 
     public string? ErrorMessage { get { return _error == null ? null : _error.ToString(); } }
 
-    public virtual ProtocolContinueResult HandleBytes(ref SequenceReader<byte> recvReader)
+    public ProtocolContinueResult HandleBytes(ref SequenceReader<byte> recvReader)
     {
         //recvReader.IsNext(ERROR_HEAD, false)
         if (!recvReader.IsNext(ERROR_HEAD, false))

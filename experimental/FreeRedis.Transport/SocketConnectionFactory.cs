@@ -35,8 +35,8 @@ public class SocketConnectionFactory : IAsyncDisposable
         // https://github.com/aspnet/KestrelHttpServer/issues/2573
         var awaiterScheduler = OperatingSystem.IsWindows() ? transportScheduler : PipeScheduler.Inline;
 
-        _inputOptions = new PipeOptions(_memoryPool, applicationScheduler, transportScheduler, maxReadBufferSize, maxReadBufferSize / 2, useSynchronizationContext: false);
-        _outputOptions = new PipeOptions(_memoryPool, transportScheduler, applicationScheduler, maxWriteBufferSize, maxWriteBufferSize / 2, useSynchronizationContext: false);
+        _inputOptions = new PipeOptions(_memoryPool, applicationScheduler, transportScheduler, maxReadBufferSize, maxReadBufferSize / 2, 8192, useSynchronizationContext: false);
+        _outputOptions = new PipeOptions(_memoryPool, transportScheduler, applicationScheduler, maxWriteBufferSize, maxWriteBufferSize / 2, 8192, useSynchronizationContext: false);
         _socketSenderPool = new SocketSenderPool(awaiterScheduler);
     }
 

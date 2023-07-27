@@ -1,14 +1,12 @@
 ﻿using BenchmarkDotNet.Running;
-using System;
-using System.Text;
 
-namespace BytesReaderTest
+namespace CircleBufferTest
 {
-    class Program
+    internal class Program
     {
         static void Main(string[] args)
         {
-            BenchmarkRunner.Run<OnceTest>();
+            BenchmarkRunner.Run<CompareTest>();
             Console.ReadKey();
         }
     }

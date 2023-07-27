@@ -52,6 +52,7 @@ internal sealed class PinnedBlockMemoryPool : MemoryPool<byte>
     /// </summary>
     private const int AnySize = -1;
 
+    private MemoryPoolBlock? _temp;
     public override IMemoryOwner<byte> Rent(int size = AnySize)
     {
         if (size > _blockSize)
@@ -69,6 +70,15 @@ internal sealed class PinnedBlockMemoryPool : MemoryPool<byte>
             // block successfully taken from the stack - return it
             return block;
         }
+
+        /*
+        if (_temp==null)
+        {
+            _temp = new MemoryPoolBlock(this, BlockSize);
+        }
+        return _temp;
+        
+        //*/
         return new MemoryPoolBlock(this, BlockSize);
     }
 

@@ -36,6 +36,7 @@ namespace FreeRedis.Client.Protocol
         /// <returns>false:继续使用当前实例处理下一个数据流</returns>
         protected override ProtocolContinueResult HandleOkBytes(ref SequenceReader<byte> recvReader)
         {
+
             if (recvReader.IsNext(OK_HEAD))
             {
                 if (recvReader.TryReadTo(out ReadOnlySpan<byte> _, TAIL, true))
@@ -46,6 +47,7 @@ namespace FreeRedis.Client.Protocol
                 return ProtocolContinueResult.Wait;
             }
             throw new Exception($"{this.GetType()}协议未解析到标准协议头!下一个协议字段为:{recvReader.UnreadSpan[0]}");
+
         }
 
     }

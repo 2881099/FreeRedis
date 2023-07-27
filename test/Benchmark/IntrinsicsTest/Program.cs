@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BenchmarkDotNet.Running;
+using System;
 
 namespace IntrinsicsTest
 {
@@ -6,7 +7,11 @@ namespace IntrinsicsTest
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            //EncodingGetCountTest encodingGetCountTest = new EncodingGetCountTest();
+            //encodingGetCountTest.Normal();
+            //encodingGetCountTest.Optimic();
+            BenchmarkRunner.Run<EncodingGetCountTest>();
+            Console.ReadKey();
         }
     }
 }

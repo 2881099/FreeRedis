@@ -3,21 +3,24 @@ using System.Buffers;
 using System.IO.Pipelines;
 using System.Net;
 using System.Runtime.CompilerServices;
+using System.Text;
+using System.Text.Unicode;
+using System.Threading.Tasks;
 
 namespace FreeRedis.Engine
 {
-    public abstract class FreeRedisClientBase : IAsyncDisposable
+    public abstract class FreeRedisClientBase3 : IAsyncDisposable
     {
         protected readonly SocketConnection? _connection;
         protected readonly PipeWriter _sender;
         protected readonly PipeReader _reciver;
-        protected readonly CircleBuffer _taskBuffer;
+        protected readonly CircleBuffer2 _taskBuffer;
 
         protected readonly Action<string>? errorLogger;
 
-        public FreeRedisClientBase(string ip, int port, Action<string>? logger)
+        public FreeRedisClientBase3(string ip, int port, Action<string>? logger)
         {
-            _taskBuffer = new CircleBuffer(2,4096);
+            _taskBuffer = new CircleBuffer2(2,4096);
             errorLogger = logger;
             SocketConnectionFactory client = new(new SocketTransportOptions());
             _connection = client.ConnectAsync(new IPEndPoint(IPAddress.Parse(ip), port)).Result;
@@ -69,6 +72,16 @@ namespace FreeRedis.Engine
         }
 
 
+        public const byte TAIL = 10;
+        public const byte OK_HEAD = 43;
+        public const byte ERR_HEAD = 45;
+        public const byte NUMBER_HEAD = 58;
+        public readonly byte[] OK_HEAD_RESULT = "+"u8.ToArray();
+        private static readonly Encoding _utf8;
+        static FreeRedisClientBase3()
+        {
+            _utf8 = Encoding.UTF8;
+        }
 
         /// <summary>
         /// 外界拿到数据后包装 Reader, 调用该方法:
@@ -81,26 +94,56 @@ namespace FreeRedis.Engine
         /// <param name="reader"></param>
         public void LoopHandle(ref SequenceReader<byte> reader)
         {
-            ProtocolContinueResult result = ProtocolContinueResult.Completed;
-            while (reader.Remaining > 5)
+            do
             {
-
-                result = _taskBuffer.CurrentValue(ref reader);
-                if (result == ProtocolContinueResult.Completed)
-                {
-#if DEBUG
-                FreeRedisTracer.CurrentCompletedTaskCount += 1;
-#endif
-                    _taskBuffer.MoveNext();
-                }
-                else if (result == ProtocolContinueResult.Wait)
+                if (reader.Remaining<5)
                 {
 #if DEBUG
                 Interlocked.Increment(ref FreeRedisTracer.WaitBytesCount);
 #endif
                     return;
                 }
-            }
+                var task = _taskBuffer.CurrentValue;
+                switch (reader.CurrentSpan[reader.CurrentSpanIndex])
+                {
+                    case OK_HEAD:
+                        reader.Advance(5);
+#if DEBUG
+                FreeRedisTracer.CurrentCompletedTaskCount += 1;
+#endif
+                        _taskBuffer.HandlerCurrentTask(OK_HEAD_RESULT);
+                        break;
+                    case NUMBER_HEAD:
+                        if (reader.TryReadTo(out ReadOnlySpan<byte> sequenceNUM, TAIL, true))
+                        {
+#if DEBUG
+                FreeRedisTracer.CurrentCompletedTaskCount += 1;
+#endif
+                            _taskBuffer.HandlerCurrentTask(sequenceNUM.ToArray());
+                        }
+                        break;
+                    case ERR_HEAD:
+                        if (reader.TryReadTo(out ReadOnlySpan<byte> sequence, TAIL, true))
+                        {
+#if DEBUG
+                FreeRedisTracer.CurrentCompletedTaskCount += 1;
+#endif
+                            _taskBuffer.HandlerCurrentTask(sequence.ToArray());
+                            break;
+                        }
+                        else
+                        {
+#if DEBUG
+                Interlocked.Increment(ref FreeRedisTracer.WaitBytesCount);
+#endif
+                            return;
+                        }
+ 
+                    default:
+                        break;
+                }
+
+            } while (!reader.End);
 
         }
 
