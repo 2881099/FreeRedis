@@ -12883,6 +12883,22 @@ references:
   isSpec: "True"
   fullName: FreeRedis.RedisClient.JsonMGet
   nameWithType: RedisClient.JsonMGet
+- uid: FreeRedis.RedisClient.JsonMSet(System.String[],System.String[],System.String[])
+  name: JsonMSet(String[], String[], String[])
+  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_JsonMSet_System_String___System_String___System_String___
+  commentId: M:FreeRedis.RedisClient.JsonMSet(System.String[],System.String[],System.String[])
+  name.vb: JsonMSet(String(), String(), String())
+  fullName: FreeRedis.RedisClient.JsonMSet(System.String[], System.String[], System.String[])
+  fullName.vb: FreeRedis.RedisClient.JsonMSet(System.String(), System.String(), System.String())
+  nameWithType: RedisClient.JsonMSet(String[], String[], String[])
+  nameWithType.vb: RedisClient.JsonMSet(String(), String(), String())
+- uid: FreeRedis.RedisClient.JsonMSet*
+  name: JsonMSet
+  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_JsonMSet_
+  commentId: Overload:FreeRedis.RedisClient.JsonMSet
+  isSpec: "True"
+  fullName: FreeRedis.RedisClient.JsonMSet
+  nameWithType: RedisClient.JsonMSet
 - uid: FreeRedis.RedisClient.JsonNumIncrBy(System.String,System.String,System.Double)
   name: JsonNumIncrBy(String, String, Double)
   href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_JsonNumIncrBy_System_String_System_String_System_Double_
