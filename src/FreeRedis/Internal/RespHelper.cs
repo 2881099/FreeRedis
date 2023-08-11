@@ -214,7 +214,13 @@ namespace FreeRedis
                         case '$': return new RedisResult(ReadBlobString(c, encoding, null, 1024), false, RedisMessageType.BlobString);
                         case '+': return new RedisResult(ReadSimpleString(), false, RedisMessageType.SimpleString);
                         case '=': return new RedisResult(ReadBlobString(c, encoding, null, 1024), false, RedisMessageType.VerbatimString);
-                        case '-': return new RedisResult(ReadSimpleString(), false, RedisMessageType.SimpleError);
+                        case '-':
+                            {
+                                var simpleError = ReadSimpleString();
+                                if (simpleError == "NOAUTH Authentication required.")
+                                    throw new ProtocolViolationException(simpleError);
+                                return new RedisResult(simpleError, false, RedisMessageType.SimpleError);
+                            }
                         case '!': return new RedisResult(ReadBlobString(c, encoding, null, 1024), false, RedisMessageType.BlobError);
                         case ':': return new RedisResult(ReadNumber(c), false, RedisMessageType.Number);
                         case '(': return new RedisResult(ReadBigNumber(c), false, RedisMessageType.BigNumber);
