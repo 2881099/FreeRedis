@@ -24,7 +24,7 @@ namespace FreeRedis
         public Task<bool> SIsMemberAsync<T>(string key, T member) => CallAsync("SISMEMBER".InputKey(key).InputRaw(SerializeRedisValue(member)), rt => rt.ThrowOrValue<bool>());
         public Task<string[]> SMembersAsync(string key) => CallAsync("SMEMBERS".InputKey(key), rt => rt.ThrowOrValue<string[]>());
         public Task<T[]> SMembersAsync<T>(string key) => SReadArrayAsync<T>("SMEMBERS".InputKey(key));
-        public Task<bool[]> SMIsMemberAsync<T>(string key, params object[] members) => CallAsync("SMISMEMBER".InputKey(key).Input(members.Select(a => SerializeRedisValue(a)).ToArray()), rt => rt.ThrowOrValue<bool[]>());
+        public Task<bool[]> SMIsMemberAsync(string key, params object[] members) => CallAsync("SMISMEMBER".InputKey(key).Input(members.Select(a => SerializeRedisValue(a)).ToArray()), rt => rt.ThrowOrValue<bool[]>());
 
         public Task<bool> SMoveAsync<T>(string source, string destination, T member) => CallAsync("SMOVE"
             .InputKey(source)
@@ -70,7 +70,7 @@ namespace FreeRedis
         public bool SIsMember<T>(string key, T member) => Call("SISMEMBER".InputKey(key).InputRaw(SerializeRedisValue(member)), rt => rt.ThrowOrValue<bool>());
         public string[] SMembers(string key) => Call("SMEMBERS".InputKey(key), rt => rt.ThrowOrValue<string[]>());
         public T[] SMembers<T>(string key) => SReadArray<T>("SMEMBERS".InputKey(key));
-        public bool[] SMIsMember<T>(string key, params object[] members) => Call("SMISMEMBER".InputKey(key).Input(members.Select(a => SerializeRedisValue(a)).ToArray()), rt => rt.ThrowOrValue<bool[]>());
+        public bool[] SMIsMember(string key, params object[] members) => Call("SMISMEMBER".InputKey(key).Input(members.Select(a => SerializeRedisValue(a)).ToArray()), rt => rt.ThrowOrValue<bool[]>());
 
         public bool SMove<T>(string source, string destination, T member) => Call("SMOVE"
             .InputKey(source)

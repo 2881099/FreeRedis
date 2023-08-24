@@ -142,7 +142,7 @@ namespace FreeRedis
         bool SIsMember<T>(string key, T member);
         string[] SMembers(string key);
         T[] SMembers<T>(string key);
-        bool[] SMIsMember<T>(string key, params object[] members);
+        bool[] SMIsMember(string key, params object[] members);
         bool SMove<T>(string source, string destination, T member);
         string SPop(string key);
         T SPop<T>(string key);
@@ -491,7 +491,7 @@ namespace FreeRedis
         Task<bool> SIsMemberAsync<T>(string key, T member);
         Task<string[]> SMembersAsync(string key);
         Task<T[]> SMembersAsync<T>(string key);
-        Task<bool[]> SMIsMemberAsync<T>(string key, params object[] members);
+        Task<bool[]> SMIsMemberAsync(string key, params object[] members);
         Task<bool> SMoveAsync<T>(string source, string destination, T member);
         Task<string> SPopAsync(string key);
         Task<T> SPopAsync<T>(string key);
