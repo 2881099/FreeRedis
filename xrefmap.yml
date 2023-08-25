@@ -1293,6 +1293,19 @@ references:
   isSpec: "True"
   fullName: FreeRedis.ConnectionStringBuilder.Encoding
   nameWithType: ConnectionStringBuilder.Encoding
+- uid: FreeRedis.ConnectionStringBuilder.ExitAutoDisposePool
+  name: ExitAutoDisposePool
+  href: docs/api/FreeRedis.ConnectionStringBuilder.html#FreeRedis_ConnectionStringBuilder_ExitAutoDisposePool
+  commentId: P:FreeRedis.ConnectionStringBuilder.ExitAutoDisposePool
+  fullName: FreeRedis.ConnectionStringBuilder.ExitAutoDisposePool
+  nameWithType: ConnectionStringBuilder.ExitAutoDisposePool
+- uid: FreeRedis.ConnectionStringBuilder.ExitAutoDisposePool*
+  name: ExitAutoDisposePool
+  href: docs/api/FreeRedis.ConnectionStringBuilder.html#FreeRedis_ConnectionStringBuilder_ExitAutoDisposePool_
+  commentId: Overload:FreeRedis.ConnectionStringBuilder.ExitAutoDisposePool
+  isSpec: "True"
+  fullName: FreeRedis.ConnectionStringBuilder.ExitAutoDisposePool
+  nameWithType: ConnectionStringBuilder.ExitAutoDisposePool
 - uid: FreeRedis.ConnectionStringBuilder.Host
   name: Host
   href: docs/api/FreeRedis.ConnectionStringBuilder.html#FreeRedis_ConnectionStringBuilder_Host

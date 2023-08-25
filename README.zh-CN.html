@@ -186,6 +186,11 @@ string[] vals = cli.MGet(&quot;key1&quot;, &quot;key2&quot;);
 <td style="text-align: right;">&lt;empty&gt;</td>
 <td style="text-align: left;"><code>key</code> 前辍，所有方法都会附带此前辍，cli.Set(prefix + &quot;key&quot;, 111);</td>
 </tr>
+<tr>
+<td style="text-align: left;">exitAutoDisposePool</td>
+<td style="text-align: right;">true</td>
+<td style="text-align: left;">AppDomain.CurrentDomain.ProcessExit/Console.CancelKeyPress 事件自动释放</td>
+</tr>
 </tbody>
 </table>
 <blockquote>

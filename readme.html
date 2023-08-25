@@ -186,6 +186,11 @@ string[] vals = cli.MGet(&quot;key1&quot;, &quot;key2&quot;);
 <td style="text-align: right;">&lt;empty&gt;</td>
 <td style="text-align: left;">The prefix of the key, all methods will have this prefix. cli.Set(prefix + &quot;key&quot;, 111);</td>
 </tr>
+<tr>
+<td style="text-align: left;">exitAutoDisposePool</td>
+<td style="text-align: right;">true</td>
+<td style="text-align: left;">AppDomain.CurrentDomain.ProcessExit/Console.CancelKeyPress auto disposed</td>
+</tr>
 </tbody>
 </table>
 <blockquote>

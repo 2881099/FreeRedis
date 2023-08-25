@@ -12,7 +12,7 @@
       "output": {
         ".html": {
           "relative_path": "README.html",
-          "hash": "vYFqJEQR11PTEPelDs5lfTQHgTubxbDCGMgDQXUI+C0="
+          "hash": "EjDlgUtHfDKruUqwGkNyeOMWqHO+1wIpjiYD1OfD5eI="
         }
       },
       "is_incremental": false,
@@ -27,7 +27,7 @@
       "output": {
         ".html": {
           "relative_path": "README.zh-CN.html",
-          "hash": "XQ44hEesbuMhdTz9QvXtaadmUh1FJ+ZK4bOIuWRlCv4="
+          "hash": "xAMO/7D7q5WHXvpxLZThmnctGD3Udl844UytV5aeBlU="
         }
       },
       "is_incremental": false,
@@ -327,7 +327,7 @@
       "output": {
         ".html": {
           "relative_path": "docs/api/FreeRedis.ConnectionStringBuilder.html",
-          "hash": "RS2oBpsWTVSofqix99USQoC1+eeCZ/fvfxAL/xNdIwE="
+          "hash": "4aVNypUw5pDYt9EMtWplpSAv76LOfSqg0MxbhRHBEzs="
         }
       },
       "is_incremental": false,
