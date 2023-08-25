@@ -64,6 +64,7 @@ string[] vals = cli.MGet("key1", "key2");
 | ssl               | false     | Enable encrypted transmission |
 | name              | \<empty\> | Connection name, use client list command to view |
 | prefix            | \<empty\> | The prefix of the key, all methods will have this prefix. cli.Set(prefix + "key", 111); |
+| exitAutoDisposePool | true | AppDomain.CurrentDomain.ProcessExit/Console.CancelKeyPress auto disposed |
 
 > IPv6: [fe80::b164:55b3:4b4f:7ce6%15]:6379
 

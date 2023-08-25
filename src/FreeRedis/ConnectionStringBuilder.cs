@@ -31,6 +31,7 @@ namespace FreeRedis
         public int MaxPoolSize { get; set; } = 100;
         public int MinPoolSize { get; set; } = 1;
         public int Retry { get; set; } = 0;
+        public bool ExitAutoDisposePool { get; set; } = true;
 
         public static implicit operator ConnectionStringBuilder(string connectionString) => Parse(connectionString);
         public static implicit operator string(ConnectionStringBuilder connectionString) => connectionString.ToString();
@@ -56,6 +57,7 @@ namespace FreeRedis
             if (MaxPoolSize != 100) sb.Append(",max pool size=").Append(MaxPoolSize);
             if (MinPoolSize != 1) sb.Append(",min pool size=").Append(MinPoolSize);
             if (Retry != 0) sb.Append(",retry=").Append(Retry);
+            if (ExitAutoDisposePool != true) sb.Append(",exitAutoDisposePool=false");
             return sb.ToString();
         }
 
@@ -95,6 +97,7 @@ namespace FreeRedis
                     case "maxpoolsize": if (kv.Length > 1 && int.TryParse(kv[1].Trim(), out var maxPoolSize) && maxPoolSize >= 0) ret.MaxPoolSize = maxPoolSize; break;
                     case "minpoolsize": if (kv.Length > 1 && int.TryParse(kv[1].Trim(), out var minPoolSize) && minPoolSize >= 0) ret.MinPoolSize = minPoolSize; break;
                     case "retry": if (kv.Length > 1 && int.TryParse(kv[1].Trim(), out var retry) && retry > 0) ret.Retry = retry; break;
+                    case "exitautodisposepool": if (kv.Length > 1 && new[] { "false", "0" }.Contains(kv[1].Trim())) ret.ExitAutoDisposePool = false; break;
                 }
             }
             return ret;

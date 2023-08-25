@@ -156,7 +156,7 @@ namespace FreeRedis.Internal
         public TimeSpan SyncGetTimeout { get; set; } = TimeSpan.FromSeconds(10);
         public int AsyncGetCapacity { get; set; } = 100000;
         public bool IsThrowGetTimeoutException { get; set; } = true;
-        public bool IsAutoDisposeWithSystem { get; set; } = true;
+        public bool IsAutoDisposeWithSystem { get => _connectionStringBuilder.ExitAutoDisposePool; set => _connectionStringBuilder.ExitAutoDisposePool = value; }
         public int CheckAvailableInterval { get; set; } = 5;
 
         public string ConnectionString
