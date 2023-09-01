@@ -570,6 +570,31 @@
             { "first": 1, "second": 2 }
             </summary>
         </member>
+        <member name="M:FreeRedis.IRedisClient.SPublish(System.String,System.String)">
+            <summary>
+            redis 7.0 shard pub/sub
+            </summary>
+        </member>
+        <member name="M:FreeRedis.IRedisClient.SSubscribe(System.String[],System.Action{System.String,System.Object})">
+            <summary>
+            redis 7.0 shard pub/sub
+            </summary>
+        </member>
+        <member name="M:FreeRedis.IRedisClient.SSubscribe(System.String,System.Action{System.String,System.Object})">
+            <summary>
+            redis 7.0 shard pub/sub
+            </summary>
+        </member>
+        <member name="M:FreeRedis.IRedisClient.SUnSubscribe(System.String[])">
+            <summary>
+            redis 7.0 shard pub/sub
+            </summary>
+        </member>
+        <member name="M:FreeRedis.IRedisClient.SPublishAsync(System.String,System.String)">
+            <summary>
+            redis 7.0 shard pub/sub
+            </summary>
+        </member>
         <member name="M:FreeRedis.RedisClient.#ctor(FreeRedis.ConnectionStringBuilder,FreeRedis.ConnectionStringBuilder[])">
             <summary>
             Pooling RedisClient
@@ -1640,6 +1665,31 @@
             <param name="clientId">订阅端标识，若重复则争抢，若唯一必然收到消息</param>
             <param name="onMessage">接收消息委托</param>
             <returns></returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.SPublishAsync(System.String,System.String)">
+            <summary>
+            redis 7.0 shard pub/sub
+            </summary>
+        </member>
+        <member name="M:FreeRedis.RedisClient.SPublish(System.String,System.String)">
+            <summary>
+            redis 7.0 shard pub/sub
+            </summary>
+        </member>
+        <member name="M:FreeRedis.RedisClient.SSubscribe(System.String[],System.Action{System.String,System.Object})">
+            <summary>
+            redis 7.0 shard pub/sub
+            </summary>
+        </member>
+        <member name="M:FreeRedis.RedisClient.SSubscribe(System.String,System.Action{System.String,System.Object})">
+            <summary>
+            redis 7.0 shard pub/sub
+            </summary>
+        </member>
+        <member name="M:FreeRedis.RedisClient.SUnSubscribe(System.String[])">
+            <summary>
+            redis 7.0 shard pub/sub
+            </summary>
         </member>
         <member name="M:FreeRedis.RedisClient.ZRandMember(System.String,System.Int32,System.Boolean)">
             <summary>

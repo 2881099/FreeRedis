@@ -191,6 +191,31 @@ namespace FreeRedis
         long PubSubNumPat();
         void PUnSubscribe(params string[] pattern);
         void UnSubscribe(params string[] channels);
+        IDisposable PSubscribe(string pattern, Action<string, object> handler);
+        IDisposable PSubscribe(string[] pattern, Action<string, object> handler);
+        IDisposable Subscribe(string[] channels, Action<string, object> handler);
+        IDisposable Subscribe(string channel, Action<string, object> handler);
+
+        /// <summary>
+        /// redis 7.0 shard pub/sub
+        /// </summary>
+        long SPublish(string shardchannel, string message);
+        string[] PubSubShardChannels(string pattern = "*");
+        long PubSubShardNumSub(string channel);
+        long[] PubSubShardNumSub(string[] channels);
+        /// <summary>
+        /// redis 7.0 shard pub/sub
+        /// </summary>
+        IDisposable SSubscribe(string[] shardchannels, Action<string, object> handler);
+        /// <summary>
+        /// redis 7.0 shard pub/sub
+        /// </summary>
+        IDisposable SSubscribe(string shardchannel, Action<string, object> handler);
+        /// <summary>
+        /// redis 7.0 shard pub/sub
+        /// </summary>
+        void SUnSubscribe(params string[] shardchannels);
+
         bool ScriptExists(string sha1);
         bool[] ScriptExists(string[] sha1);
         void ScriptFlush();
@@ -538,10 +563,14 @@ namespace FreeRedis
         Task<long> PubSubNumSubAsync(string channel);
         Task<long[]> PubSubNumSubAsync(string[] channels);
         Task<long> PubSubNumPatAsync();
-        IDisposable PSubscribe(string pattern, Action<string, object> handler);
-        IDisposable PSubscribe(string[] pattern, Action<string, object> handler);
-        IDisposable Subscribe(string[] channels, Action<string, object> handler);
-        IDisposable Subscribe(string channel, Action<string, object> handler);
+        /// <summary>
+        /// redis 7.0 shard pub/sub
+        /// </summary>
+        Task<long> SPublishAsync(string shardchannel, string message);
+        Task<string[]> PubSubShardChannelsAsync(string pattern = "*");
+        Task<long> PubSubShardNumSubAsync(string channel);
+        Task<long[]> PubSubShardNumSubAsync(string[] channels);
+
         Task<object> EvalAsync(string script, string[] keys = null, params object[] arguments);
         Task<object> EvalShaAsync(string sha1, string[] keys = null, params object[] arguments);
         Task<bool> ScriptExistsAsync(string sha1);
