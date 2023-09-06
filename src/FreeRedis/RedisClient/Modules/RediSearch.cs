@@ -1,8 +1,11 @@
-﻿using System;
+﻿using Microsoft.VisualBasic.FileIO;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace FreeRedis
@@ -22,7 +25,7 @@ namespace FreeRedis
         public Dictionary<string, object> FtConfigGet(string option, string value) => Call("FT.CONFIG".SubCommand("GET").Input(option, value), rt => rt.ThrowOrValue((a, _) => a.MapToHash<object>(rt.Encoding)));
         public void FtConfigSet(string option, string value) => Call("FT.CONFIG".SubCommand("SET").Input(option, value), rt => rt.ThrowOrValue<string>() == "OK");
 
-        //public void FtCreate (string alias, string index) => Call("FT.CREATE".Input(alias, index), rt => rt.ThrowOrValue<string>() == "OK");
+        public void FtCreate(string index, FtCreateParams param) => Call(param.ToCommandPacket(index), rt => rt.ThrowOrValue<string>() == "OK");
 
         public void FtCursorDel(string index, long cursor_id) => Call("FT.CURSOR".SubCommand("DEL").Input(index, cursor_id), rt => rt.ThrowOrValue<string>() == "OK");
         public object FtCursorRead(string index, long cursor_id, int count = 0) => Call("FT.CURSOR".SubCommand("READ")
@@ -55,5 +58,73 @@ namespace FreeRedis
     public class FtAggregateBuilder
     {
 
+    }
+    public class FtCreateParams
+    {
+        public enum OnType { Hash, Json }
+        public enum FieldType { Text, Tag, Numeric, Geo, Vector, GeoShape }
+        public class Field
+        {
+            public string Name { get; set; }
+            public string Alias { get; set; }
+            public FieldType Type { get; set; }
+            public bool Sortable { get; set; }
+            public bool Unf { get; set; }
+            public bool NoIndex { get; set; }
+        }
+
+        public OnType On { get; set; } = OnType.Hash;
+        public string[] Prefix { get; set; }
+        public string Filter { get; set; }
+        public string Language { get; set; }
+        public string LanguageField { get; set; }
+        public decimal Score { get; set; }
+        public decimal ScoreField { get; set; }
+        public string PayLoadField { get; set; }
+        public bool MaxTextFields { get; set; }
+        public long Temporary { get; set; }
+        public bool NoOffsets { get; set; }
+        public bool NoHL { get; set; }
+        public bool NoFields { get; set; }
+        public bool NoFreqs { get; set; }
+        public string[] Stopwords { get; set; }
+        public bool SkipInitialScan { get; set; }
+        public Field[] Schema { get; set; }
+
+        public CommandPacket ToCommandPacket(string index)
+        {
+            var cmd = "FT.CREATE".Input(index).Input("ON", On.ToString().ToUpper());
+            if (Prefix?.Any() == true) cmd.Input("PREFIX", Prefix.Length).Input(Prefix.Select(a => (object)a).ToArray());
+            cmd
+                .InputIf(!string.IsNullOrWhiteSpace(Filter), "FILTER", Filter)
+                .InputIf(!string.IsNullOrWhiteSpace(Language), "LANGUAGE", Language)
+                .InputIf(!string.IsNullOrWhiteSpace(LanguageField), "LANGUAGE_FIELD", LanguageField)
+                .InputIf(Score > 0, "SCORE", Score)
+                .InputIf(ScoreField > 0, "SCORE_FIELD", ScoreField)
+                .InputIf(!string.IsNullOrWhiteSpace(PayLoadField), "PAYLOAD_FIELD", PayLoadField)
+                .InputIf(MaxTextFields, "MAXTEXTFIELDS")
+                .InputIf(Temporary > 0, "TEMPORARY", Temporary)
+                .InputIf(NoOffsets, "NOOFFSETS")
+                .InputIf(NoHL, "NOHL")
+                .InputIf(NoFields, "NOFIELDS")
+                .InputIf(NoFreqs, "NOFREQS");
+            if (Stopwords?.Any() == true) cmd.Input("STOPWORDS", Prefix.Length).Input(Stopwords.Select(a => (object)a).ToArray());
+            cmd
+                .InputIf(SkipInitialScan, "SKIPINITIALSCAN");
+            if (Schema != null)
+            {
+                cmd.Input("SCHEMA");
+                foreach(var field in Schema)
+                {
+                    cmd.Input(field.Name)
+                        .InputIf(!string.IsNullOrWhiteSpace(field.Alias), "AS", field.Alias)
+                        .Input(field.Type.ToString().ToUpper())
+                        .InputIf(field.Sortable, "SORTABLE")
+                        .InputIf(field.Sortable && field.Unf, "UNF")
+                        .InputIf(field.NoIndex, "NOINDEX");
+                }
+            }
+            return cmd;
+        }
     }
 }
