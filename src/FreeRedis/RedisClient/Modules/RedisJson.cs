@@ -21,15 +21,13 @@ namespace FreeRedis
 
         public Task<string[]> JsonMGetAsync(string[] keys, string path = "$") => CallAsync("JSON.MGET".InputKey(keys).Input(path), rt => rt.ThrowOrValue<string[]>());
 
-        public Task<bool> JsonSetAsync(string key, string value, string path = "$", bool nx = false, bool xx = false)
-        {
-            return CallAsync("JSON.SET".InputKey(key)
+        async public Task JsonSetAsync(string key, string value, string path = "$", bool nx = false, bool xx = false)
+            => await CallAsync("JSON.SET".InputKey(key)
                 .Input(path)
                 .InputRaw(value)
                 .InputIf(nx, "NX")
                 .InputIf(xx, "XX"), rt => rt.ThrowOrValue<string>() == "OK");
-        }
-        public Task<bool> JsonMSetAsync(string[] keys, string[] values, string[] paths)
+        async public Task JsonMSetAsync(string[] keys, string[] values, string[] paths)
         {
             if (keys?.Any() != true) throw new ArgumentException($"{nameof(keys)} not is null or empry");
             if (values?.Any() != true) throw new ArgumentException($"{nameof(values)} not is null or empry");
@@ -38,8 +36,10 @@ namespace FreeRedis
             var cmd = new CommandPacket("JSON.MSET");
             for (var a = 0; a < keys.Length; a++)
                 cmd = cmd.InputKey(keys[a]).Input(paths[a], values[a]);
-            return CallAsync(cmd, rt => rt.ThrowOrValue<string>() == "OK");
+            await CallAsync(cmd, rt => rt.ThrowOrValue<string>() == "OK");
         }
+
+        async public Task JsonMergeAsync(string key, string path, string value) => await CallAsync("JSON.MERGE".InputKey(key).Input(path, value), rt => rt.ThrowOrValue<string>() == "OK");
 
         public Task<long> JsonDelAsync(string key, string path = "$") => CallAsync("JSON.DEL".InputKey(key).Input(path), rt => rt.ThrowOrValue<long>());
 
@@ -51,10 +51,10 @@ namespace FreeRedis
 
         public Task<long[]> JsonArrLenAsync(string key, string path) => CallAsync("JSON.ARRLEN".InputKey(key).Input(path), rt => rt.ThrowOrValue<long[]>());
 
-        async public Task<object[]> JsonArrPopAsync(string key, string path, int index = -1) => await HReadArrayAsync<object>("JSON.ARRPOP".InputKey(key).Input(path).Input(index));
+        async public Task<object[]> JsonArrPopAsync(string key, string path, int index = -1) => await HReadArrayAsync<object>("JSON.ARRPOP".InputKey(key).Input(path).InputIf(index != -1, index));
 
         public Task<long[]> JsonArrTrimAsync(string key, string path, int start, int stop) => CallAsync("JSON.ARRTRIM".InputKey(key).Input(path).Input(start, stop), rt => rt.ThrowOrValue<long[]>());
-        public Task<long[]> JsonClearAsync(string key, string path = "$") => CallAsync("JSON.CLEAR".InputKey(key).Input(path), rt => rt.ThrowOrValue<long[]>());
+        public Task<long> JsonClearAsync(string key, string path = "$") => CallAsync("JSON.CLEAR".InputKey(key).Input(path), rt => rt.ThrowOrValue<long>());
         public Task<long[]> JsonDebugMemoryAsync(string key, string path = "$") => CallAsync("JSON.DEBUG".SubCommand("MEMORY").InputKey(key).Input(path), rt => rt.ThrowOrValue<long[]>());
 
         public Task<long> JsonForgetAsync(string key, string path = "$") => CallAsync("JSON.FORGET".InputKey(key).Input(path), rt => rt.ThrowOrValue<long>());
@@ -80,14 +80,12 @@ namespace FreeRedis
 
         public string[] JsonMGet(string[] keys, string path = "$") => Call("JSON.MGET".InputKey(keys).Input(path), rt => rt.ThrowOrValue<string[]>());
 
-        public bool JsonSet(string key, string value, string path = "$", bool nx = false, bool xx = false)
-        {
-            return Call("JSON.SET".InputKey(key).Input(path)
+        public void JsonSet(string key, string value, string path = "$", bool nx = false, bool xx = false) 
+            => Call("JSON.SET".InputKey(key).Input(path)
                 .InputRaw(value)
                 .InputIf(nx, "NX")
                 .InputIf(xx, "XX"), rt => rt.ThrowOrValue<string>() == "OK");
-        }
-        public bool JsonMSet(string[] keys, string[] values, string[] paths)
+        public void JsonMSet(string[] keys, string[] values, string[] paths)
         {
             if (keys?.Any() != true) throw new ArgumentException($"{nameof(keys)} not is null or empry");
             if (values?.Any() != true) throw new ArgumentException($"{nameof(values)} not is null or empry");
@@ -96,8 +94,10 @@ namespace FreeRedis
             var cmd = new CommandPacket("JSON.MSET");
             for (var a = 0; a < keys.Length; a++)
                 cmd = cmd.InputKey(keys[a]).Input(paths[a], values[a]);
-            return Call(cmd, rt => rt.ThrowOrValue<string>() == "OK");
+            Call(cmd, rt => rt.ThrowOrValue<string>() == "OK");
         }
+
+        public void JsonMerge(string key, string path, string value) => Call("JSON.MERGE".InputKey(key).Input(path, value), rt => rt.ThrowOrValue<string>() == "OK");
 
         public long JsonDel(string key, string path = "$") => Call("JSON.DEL".InputKey(key).Input(path), rt => rt.ThrowOrValue<long>());
 
@@ -109,10 +109,10 @@ namespace FreeRedis
 
         public long[] JsonArrLen(string key, string path) => Call("JSON.ARRLEN".InputKey(key).Input(path), rt => rt.ThrowOrValue<long[]>());
 
-        public object[] JsonArrPop(string key, string path, int index = -1) => HReadArray<object>("JSON.ARRPOP".InputKey(key).Input(path, index));
+        public object[] JsonArrPop(string key, string path, int index = -1) => HReadArray<object>("JSON.ARRPOP".InputKey(key).Input(path).InputIf(index != -1, index));
 
         public long[] JsonArrTrim(string key, string path, int start, int stop) => Call("JSON.ARRTRIM".InputKey(key).Input(path).Input(start, stop), rt => rt.ThrowOrValue<long[]>());
-        public long[] JsonClear(string key, string path = "$") => Call("JSON.CLEAR".InputKey(key).Input(path), rt => rt.ThrowOrValue<long[]>());
+        public long JsonClear(string key, string path = "$") => Call("JSON.CLEAR".InputKey(key).Input(path), rt => rt.ThrowOrValue<long>());
         public long[] JsonDebugMemory(string key, string path = "$") => Call("JSON.DEBUG".SubCommand("MEMORY").InputKey(key).Input(path), rt => rt.ThrowOrValue<long[]>());
 
         public long JsonForget(string key, string path = "$") => Call("JSON.FORGET".InputKey(key).Input(path), rt => rt.ThrowOrValue<long>());

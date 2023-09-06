@@ -160,7 +160,9 @@ namespace FreeRedis
         long SUnionStore(string destination, params string[] keys);
         string JsonGet(string key, string indent = null, string newline = null, string space = null, params string[] paths);
         string[] JsonMGet(string[] keys, string path = "$");
-        bool JsonSet(string key, string value, string path = "$", bool nx = false, bool xx = false);
+        void JsonSet(string key, string value, string path = "$", bool nx = false, bool xx = false);
+        void JsonMSet(string[] keys, string[] values, string[] paths);
+        void JsonMerge(string key, string path, string value);
         long JsonDel(string key, string path = "$");
         long[] JsonArrInsert(string key, string path, long index = 0, params object[] values);
         long[] JsonArrAppend(string key, string path, params object[] values);
@@ -168,12 +170,12 @@ namespace FreeRedis
         long[] JsonArrLen(string key, string path);
         object[] JsonArrPop(string key, string path, int index = -1);
         long[] JsonArrTrim(string key, string path, int start, int stop);
-        long[] JsonClear(string key, string path = "$");
+        long JsonClear(string key, string path = "$");
         long[] JsonDebugMemory(string key, string path = "$");
         long JsonForget(string key, string path = "$");
         string JsonNumIncrBy(string key, string path, Double value);
         string JsonNumMultBy(string key, string path, Double value);
-        string[][] JsonObjKeys(string key, string path = "$");
+        string[] JsonObjKeys(string key, string path = "$");
         long[] JsonObjLen(string key, string path = "$");
         object[][] JsonResp(string key, string path = "$");
         long[] JsonStrAppend(string key, string value, string path = "$");
@@ -551,7 +553,7 @@ namespace FreeRedis
         Task<ZMember[]> ZPopMinAsync(string key, int count);
         Task<ZMember> ZPopMaxAsync(string key);
         Task<ZMember[]> ZPopMaxAsync(string key, int count);
-        Task<string[][]> JsonObjKeysAsync(string key, string path = "$");
+        Task<string[]> JsonObjKeysAsync(string key, string path = "$");
         Task<long[]> JsonObjLenAsync(string key, string path = "$");
         Task<object[][]> JsonRespAsync(string key, string path = "$");
         Task<long[]> JsonStrAppendAsync(string key, string value, string path = "$");
@@ -622,7 +624,9 @@ namespace FreeRedis
         Task<Dictionary<string, string>> TopkInfoAsync(string key);
         Task<string> JsonGetAsync(string key, string indent = null, string newline = null, string space = null, params string[] paths);
         Task<string[]> JsonMGetAsync(string[] keys, string path = "$");
-        Task<bool> JsonSetAsync(string key, string value, string path = "$", bool nx = false, bool xx = false);
+        Task JsonSetAsync(string key, string value, string path = "$", bool nx = false, bool xx = false);
+        Task JsonMSetAsync(string[] keys, string[] values, string[] paths);
+        Task JsonMergeAsync(string key, string path, string value);
         Task<long> JsonDelAsync(string key, string path = "$");
         Task<long[]> JsonArrInsertAsync(string key, string path, long index = 0, params object[] values);
         Task<long[]> JsonArrAppendAsync(string key, string path, params object[] values);
@@ -630,7 +634,7 @@ namespace FreeRedis
         Task<long[]> JsonArrLenAsync(string key, string path);
         Task<object[]> JsonArrPopAsync(string key, string path, int index = -1);
         Task<long[]> JsonArrTrimAsync(string key, string path, int start, int stop);
-        Task<long[]> JsonClearAsync(string key, string path = "$");
+        Task<long> JsonClearAsync(string key, string path = "$");
         Task<long[]> JsonDebugMemoryAsync(string key, string path = "$");
         Task<long> JsonForgetAsync(string key, string path = "$");
         Task<string> JsonNumIncrByAsync(string key, string path, Double value);
