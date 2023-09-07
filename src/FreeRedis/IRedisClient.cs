@@ -175,7 +175,7 @@ namespace FreeRedis
         long JsonForget(string key, string path = "$");
         string JsonNumIncrBy(string key, string path, Double value);
         string JsonNumMultBy(string key, string path, Double value);
-        string[] JsonObjKeys(string key, string path = "$");
+        string[][] JsonObjKeys(string key, string path = "$");
         long[] JsonObjLen(string key, string path = "$");
         object[][] JsonResp(string key, string path = "$");
         long[] JsonStrAppend(string key, string value, string path = "$");
@@ -553,7 +553,7 @@ namespace FreeRedis
         Task<ZMember[]> ZPopMinAsync(string key, int count);
         Task<ZMember> ZPopMaxAsync(string key);
         Task<ZMember[]> ZPopMaxAsync(string key, int count);
-        Task<string[]> JsonObjKeysAsync(string key, string path = "$");
+        Task<string[][]> JsonObjKeysAsync(string key, string path = "$");
         Task<long[]> JsonObjLenAsync(string key, string path = "$");
         Task<object[][]> JsonRespAsync(string key, string path = "$");
         Task<long[]> JsonStrAppendAsync(string key, string value, string path = "$");
