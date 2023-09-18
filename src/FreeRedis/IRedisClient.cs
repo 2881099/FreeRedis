@@ -472,6 +472,8 @@ namespace FreeRedis
         Task<long> SetBitAsync(string key, long offset, bool value);
         Task SetExAsync<T>(string key, int seconds, T value);
         Task<bool> SetNxAsync<T>(string key, T value);
+        Task<bool> SetNxAsync<T>(string key, T value, TimeSpan timeout);
+        Task<bool> SetXxAsync<T>(string key, T value, TimeSpan timeout);
         Task<string[]> ZRangeAsync(string key, decimal start, decimal stop);
         Task<ZMember[]> ZRangeWithScoresAsync(string key, decimal start, decimal stop);
         Task<string[]> ZRangeByLexAsync(string key, string min, string max, int offset = 0, int count = 0);
