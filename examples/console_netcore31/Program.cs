@@ -48,6 +48,7 @@ namespace console_netcore31
 
         static void Main(string[] args)
         {
+            cli.PubSubShardChannels("*");
             var result7 = cli.AclGetUser("sample");
 
             cli.Set("num", 10);
