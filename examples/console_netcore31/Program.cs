@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Xml.Linq;
 
 namespace console_netcore31
 {
@@ -33,7 +34,7 @@ namespace console_netcore31
             //r.Interceptors.Add(() => new ResetCommandAop());
             //var r = new RedisClient("localhost:6379,database=9,password=123456"); //redis 3.2
             //var r = new RedisClient("127.0.0.1:6379,database=1", "127.0.0.1:6379,database=1");
-            var r = new RedisClient("192.168.164.10:63797,database=1"); //redis 6.0
+            var r = new RedisClient(new ConnectionStringBuilder[] { "192.168.164.10:6381,password=123456,subscribleReadBytes=true" }); //redis 7.0 cluster
             r.Serialize = obj => JsonConvert.SerializeObject(obj);
             r.Deserialize = (json, type) => JsonConvert.DeserializeObject(json, type);
             r.Notice += (s, e) => 
@@ -48,7 +49,38 @@ namespace console_netcore31
 
         static void Main(string[] args)
         {
-            cli.PubSubShardChannels("*");
+            void ondata(string channel, object data)
+            {
+                Console.WriteLine($"{channel} -> {data}");
+            }
+
+            using (cli.Subscribe("abc", ondata))
+            {
+                using (cli.Subscribe("abcc", ondata))
+                {
+                    using (cli.PSubscribe("*", ondata))
+                    {
+                        Console.ReadKey();
+                    }
+                    Console.ReadKey();
+                }
+                Console.ReadKey();
+            }
+            Console.WriteLine("one more time");
+
+            //cli.SSubscribe("key1", (key, msg) =>
+            //{
+            //    Console.WriteLine(key + ": " + msg);
+            //});
+            //cli.SSubscribe("key11", (key, msg) =>
+            //{
+            //    Console.WriteLine(key + ": " + msg);
+            //});
+            //Console.ReadKey();
+            //cli.PubSubShardChannels("*");
+            //cli.SPublish("key11", "111");
+            //cli.SPublish("key1", "222");
+
             var result7 = cli.AclGetUser("sample");
 
             cli.Set("num", 10);

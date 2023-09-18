@@ -187,6 +187,7 @@ namespace FreeRedis
         SubscribeListBroadcastObject SubscribeListBroadcast(string listKey, string clientId, Action<string> onMessage);
         SubscribeStreamObject SubscribeStream(string streamKey, Action<Dictionary<string, string>> onMessage);
         long Publish(string channel, string message);
+        long Publish(string channel, byte[] message);
         string[] PubSubChannels(string pattern = "*");
         long PubSubNumSub(string channel);
         long[] PubSubNumSub(string[] channels);
@@ -198,25 +199,25 @@ namespace FreeRedis
         IDisposable Subscribe(string[] channels, Action<string, object> handler);
         IDisposable Subscribe(string channel, Action<string, object> handler);
 
-        /// <summary>
-        /// redis 7.0 shard pub/sub
-        /// </summary>
-        long SPublish(string shardchannel, string message);
-        string[] PubSubShardChannels(string pattern = "*");
-        long PubSubShardNumSub(string channel);
-        long[] PubSubShardNumSub(string[] channels);
-        /// <summary>
-        /// redis 7.0 shard pub/sub
-        /// </summary>
-        IDisposable SSubscribe(string[] shardchannels, Action<string, object> handler);
-        /// <summary>
-        /// redis 7.0 shard pub/sub
-        /// </summary>
-        IDisposable SSubscribe(string shardchannel, Action<string, object> handler);
-        /// <summary>
-        /// redis 7.0 shard pub/sub
-        /// </summary>
-        void SUnSubscribe(params string[] shardchannels);
+        ///// <summary>
+        ///// redis 7.0 shard pub/sub
+        ///// </summary>
+        //long SPublish(string shardchannel, string message);
+        //string[] PubSubShardChannels(string pattern = "*");
+        //long PubSubShardNumSub(string channel);
+        //long[] PubSubShardNumSub(string[] channels);
+        ///// <summary>
+        ///// redis 7.0 shard pub/sub
+        ///// </summary>
+        //IDisposable SSubscribe(string[] shardchannels, Action<string, object> handler);
+        ///// <summary>
+        ///// redis 7.0 shard pub/sub
+        ///// </summary>
+        //IDisposable SSubscribe(string shardchannel, Action<string, object> handler);
+        ///// <summary>
+        ///// redis 7.0 shard pub/sub
+        ///// </summary>
+        //void SUnSubscribe(params string[] shardchannels);
 
         bool ScriptExists(string sha1);
         bool[] ScriptExists(string[] sha1);
@@ -561,17 +562,18 @@ namespace FreeRedis
         Task<bool[]> JsonToggleAsync(string key, string path = "$");
         Task<string[]> JsonTypeAsync(string key, string path = "$");
         Task<long> PublishAsync(string channel, string message);
+        Task<long> PublishAsync(string channel, byte[] message);
         Task<string[]> PubSubChannelsAsync(string pattern = "*");
         Task<long> PubSubNumSubAsync(string channel);
         Task<long[]> PubSubNumSubAsync(string[] channels);
         Task<long> PubSubNumPatAsync();
-        /// <summary>
-        /// redis 7.0 shard pub/sub
-        /// </summary>
-        Task<long> SPublishAsync(string shardchannel, string message);
-        Task<string[]> PubSubShardChannelsAsync(string pattern = "*");
-        Task<long> PubSubShardNumSubAsync(string channel);
-        Task<long[]> PubSubShardNumSubAsync(string[] channels);
+        ///// <summary>
+        ///// redis 7.0 shard pub/sub
+        ///// </summary>
+        //Task<long> SPublishAsync(string shardchannel, string message);
+        //Task<string[]> PubSubShardChannelsAsync(string pattern = "*");
+        //Task<long> PubSubShardNumSubAsync(string channel);
+        //Task<long[]> PubSubShardNumSubAsync(string[] channels);
 
         Task<object> EvalAsync(string script, string[] keys = null, params object[] arguments);
         Task<object> EvalShaAsync(string sha1, string[] keys = null, params object[] arguments);

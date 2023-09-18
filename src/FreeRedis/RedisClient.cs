@@ -11,6 +11,7 @@ namespace FreeRedis
     {
         internal protected BaseAdapter Adapter { get; }
         internal protected string Prefix { get; }
+        internal protected ConnectionStringBuilder ConnectionString { get; }
         public List<Func<IInterceptor>> Interceptors { get; } = new List<Func<IInterceptor>>();
         public event EventHandler<NoticeEventArgs> Notice;
         public event EventHandler<ConnectedEventArgs> Connected;
@@ -29,6 +30,7 @@ namespace FreeRedis
         {
             Adapter = new PoolingAdapter(this, connectionString, slaveConnectionStrings);
             Prefix = connectionString.Prefix;
+            ConnectionString = connectionString;
         }
 
         /// <summary>
@@ -38,6 +40,7 @@ namespace FreeRedis
         {
             Adapter = new ClusterAdapter(this, clusterConnectionStrings);
             Prefix = clusterConnectionStrings[0].Prefix;
+            ConnectionString = clusterConnectionStrings[0];
         }
         /// <summary>
         /// Norman RedisClient
@@ -46,6 +49,7 @@ namespace FreeRedis
         {
             Adapter = new NormanAdapter(this, connectionStrings, redirectRule);
             Prefix = connectionStrings[0].Prefix;
+            ConnectionString = connectionStrings[0];
         }
 
         /// <summary>
@@ -55,6 +59,7 @@ namespace FreeRedis
         {
             Adapter = new SentinelAdapter(this, sentinelConnectionString, sentinels, rw_splitting);
             Prefix = sentinelConnectionString.Prefix;
+            ConnectionString = sentinelConnectionString;
         }
 
         /// <summary>
@@ -67,6 +72,7 @@ namespace FreeRedis
             Adapter = new SingleInsideAdapter(topOwner ?? this, this, host, ssl, 
                 connectTimeout, receiveTimeout, sendTimeout, connected, disconnected);
             Prefix = topOwner.Prefix;
+            ConnectionString = topOwner.ConnectionString;
         }
 
         public void Dispose()

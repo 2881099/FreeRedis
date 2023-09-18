@@ -65,6 +65,7 @@ string[] vals = cli.MGet("key1", "key2");
 | name              | \<empty\> | 连接名，使用 CLIENT LIST 命令查看 |
 | prefix            | \<empty\> | `key` 前辍，所有方法都会附带此前辍，cli.Set(prefix + "key", 111); |
 | exitAutoDisposePool | true | AppDomain.CurrentDomain.ProcessExit/Console.CancelKeyPress 事件自动释放 |
+| subscribleReadbytes | false | Subscrible 读取内容为 byte[] |
 
 > IPv6: [fe80::b164:55b3:4b4f:7ce6%15]:6379
 

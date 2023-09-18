@@ -37,18 +37,11 @@ namespace FreeRedis
 #if isasync
         #region async (copy from sync)
         public Task<long> PublishAsync(string channel, string message) => CallAsync("PUBLISH".Input(channel, message), rt => rt.ThrowOrValue<long>());
+        public Task<long> PublishAsync(string channel, byte[] message) => CallAsync("PUBLISH".Input(channel).InputRaw(message), rt => rt.ThrowOrValue<long>());
         public Task<string[]> PubSubChannelsAsync(string pattern = "*") => CallAsync("PUBSUB".SubCommand("CHANNELS").Input(pattern), rt => rt.ThrowOrValue<string[]>());
         public Task<long> PubSubNumSubAsync(string channel) => CallAsync("PUBSUB".SubCommand("NUMSUB").Input(channel), rt => rt.ThrowOrValue((a, _) => a.MapToList((x, y) => y.ConvertTo<long>()).FirstOrDefault()));
         public Task<long[]> PubSubNumSubAsync(string[] channels) => CallAsync("PUBSUB".SubCommand("NUMSUB").Input(channels), rt => rt.ThrowOrValue((a, _) => a.MapToList((x, y) => y.ConvertTo<long>()).ToArray()));
         public Task<long> PubSubNumPatAsync() => CallAsync("PUBLISH".SubCommand("NUMPAT"), rt => rt.ThrowOrValue<long>());
-
-        /// <summary>
-        /// redis 7.0 shard pub/sub
-        /// </summary>
-        public Task<long> SPublishAsync(string shardchannel, string message) => CallAsync("SPUBLISH".Input(shardchannel, message), rt => rt.ThrowOrValue<long>());
-        public Task<string[]> PubSubShardChannelsAsync(string pattern = "*") => CallAsync("PUBSUB".SubCommand("SHARDCHANNELS").Input(pattern), rt => rt.ThrowOrValue<string[]>());
-        public Task<long> PubSubShardNumSubAsync(string channel) => CallAsync("PUBSUB".SubCommand("SHARDNUMSUB").Input(channel), rt => rt.ThrowOrValue((a, _) => a.MapToList((x, y) => y.ConvertTo<long>()).FirstOrDefault()));
-        public Task<long[]> PubSubShardNumSubAsync(string[] channels) => CallAsync("PUBSUB".SubCommand("SHARDNUMSUB").Input(channels), rt => rt.ThrowOrValue((a, _) => a.MapToList((x, y) => y.ConvertTo<long>()).ToArray()));
         #endregion
 #endif
 
@@ -66,6 +59,7 @@ namespace FreeRedis
         }
 
         public long Publish(string channel, string message) => Call("PUBLISH".Input(channel, message), rt => rt.ThrowOrValue<long>());
+        public long Publish(string channel, byte[] message) => Call("PUBLISH".Input(channel).InputRaw(message), rt => rt.ThrowOrValue<long>());
         public string[] PubSubChannels(string pattern = "*") => Call("PUBSUB".SubCommand("CHANNELS").Input(pattern), rt => rt.ThrowOrValue<string[]>());
         public long PubSubNumSub(string channel) => Call("PUBSUB".SubCommand("NUMSUB").Input(channel), rt => rt.ThrowOrValue((a, _) => a.MapToList((x, y) => y.ConvertTo<long>()).FirstOrDefault()));
         public long[] PubSubNumSub(string[] channels) => Call("PUBSUB".SubCommand("NUMSUB").Input(channels), rt => rt.ThrowOrValue((a, _) => a.MapToList((x, y) => y.ConvertTo<long>()).ToArray()));
@@ -85,38 +79,6 @@ namespace FreeRedis
             return _pubsub.Subscribe(false, false, new[] { channel }, (p, k, d) => handler(k, d));
         }
         public void UnSubscribe(params string[] channels) => _pubsub.UnSubscribe(false, false, channels);
-
-
-        /// <summary>
-        /// redis 7.0 shard pub/sub
-        /// </summary>
-        public long SPublish(string shardchannel, string message) => Call("SPUBLISH".Input(shardchannel, message), rt => rt.ThrowOrValue<long>());
-        public string[] PubSubShardChannels(string pattern = "*") => Call("PUBSUB".SubCommand("SHARDCHANNELS").Input(pattern), rt => rt.ThrowOrValue<string[]>());
-        public long PubSubShardNumSub(string channel) => Call("PUBSUB".SubCommand("SHARDNUMSUB").Input(channel), rt => rt.ThrowOrValue((a, _) => a.MapToList((x, y) => y.ConvertTo<long>()).FirstOrDefault()));
-        public long[] PubSubShardNumSub(string[] channels) => Call("PUBSUB".SubCommand("SHARDNUMSUB").Input(channels), rt => rt.ThrowOrValue((a, _) => a.MapToList((x, y) => y.ConvertTo<long>()).ToArray()));
-        /// <summary>
-        /// redis 7.0 shard pub/sub
-        /// </summary>
-        public IDisposable SSubscribe(string[] shardchannels, Action<string, object> handler)
-        {
-            if (shardchannels?.Any() != true) throw new ArgumentNullException(nameof(shardchannels));
-            if (handler == null) throw new ArgumentNullException(nameof(handler));
-            return _pubsub.Subscribe(false, true, shardchannels, (p, k, d) => handler(k, d));
-        }
-        /// <summary>
-        /// redis 7.0 shard pub/sub
-        /// </summary>
-        public IDisposable SSubscribe(string shardchannel, Action<string, object> handler)
-        {
-            if (string.IsNullOrEmpty(shardchannel)) throw new ArgumentNullException(nameof(shardchannel));
-            if (handler == null) throw new ArgumentNullException(nameof(handler));
-            return _pubsub.Subscribe(false, true, new[] { shardchannel }, (p, k, d) => handler(k, d));
-        }
-        /// <summary>
-        /// redis 7.0 shard pub/sub
-        /// </summary>
-        public void SUnSubscribe(params string[] shardchannels) => _pubsub.UnSubscribe(false, true, shardchannels);
-
 
         class PubSubSubscribeDisposable : IPubSubSubscriber
         {
@@ -266,7 +228,7 @@ namespace FreeRedis
                             _topOwner.Adapter.Refersh(_redisSocket); //防止 IdleBus 超时回收
                             try { _redisSocket.Write("PING"); } catch { }
                         }, null, 10000, 10000);
-                        var readCmd = "PubSubRead".SubCommand(null).FlagReadbytes(false);
+                        var readCmd = "PubSubRead".SubCommand(null).FlagReadbytes(_topOwner.ConnectionString.SubscribleReadbytes);
                         while (_stoped == false)
                         {
                             RedisResult rt = null;
@@ -313,7 +275,9 @@ namespace FreeRedis
                         }
                     }).Start();
                 }
-                Call((psub ? "PSUBSCRIBE" : "SUBSCRIBE").Input(channels));
+                if (ssub) Call("SSUBSCRIBE".Input(channels));
+                else if (psub) Call(("PSUBSCRIBE").Input(channels));
+                else Call("SUBSCRIBE".Input(channels));
                 return new PubSubSubscribeDisposable(this, () => Cancel(id));
             }
             void OnData(string pattern, bool ssub, string key, object data)
