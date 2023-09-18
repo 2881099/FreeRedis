@@ -469,6 +469,31 @@
   </table>
   
   
+  <a id="FreeRedis_RedisClient_ConnectionString_" data-uid="FreeRedis.RedisClient.ConnectionString*"></a>
+  <h4 id="FreeRedis_RedisClient_ConnectionString" data-uid="FreeRedis.RedisClient.ConnectionString">ConnectionString</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected ConnectionStringBuilder ConnectionString { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="FreeRedis.ConnectionStringBuilder.html">ConnectionStringBuilder</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
   <a id="FreeRedis_RedisClient_Interceptors_" data-uid="FreeRedis.RedisClient.Interceptors*"></a>
   <h4 id="FreeRedis_RedisClient_Interceptors" data-uid="FreeRedis.RedisClient.Interceptors">Interceptors</h4>
   <div class="markdown level1 summary"></div>
@@ -11204,6 +11229,53 @@ Available since 2.6.0.</li>
   
   
   <a id="FreeRedis_RedisClient_Publish_" data-uid="FreeRedis.RedisClient.Publish*"></a>
+  <h4 id="FreeRedis_RedisClient_Publish_System_String_System_Byte___" data-uid="FreeRedis.RedisClient.Publish(System.String,System.Byte[])">Publish(String, Byte[])</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public long Publish(string channel, byte[] message)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">channel</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Byte</span>[]</td>
+        <td><span class="parametername">message</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int64</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="FreeRedis_RedisClient_Publish_" data-uid="FreeRedis.RedisClient.Publish*"></a>
   <h4 id="FreeRedis_RedisClient_Publish_System_String_System_String_" data-uid="FreeRedis.RedisClient.Publish(System.String,System.String)">Publish(String, String)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
@@ -11366,132 +11438,6 @@ Available since 2.6.0.</li>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public long[] PubSubNumSub(string[] channels)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span>[]</td>
-        <td><span class="parametername">channels</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Int64</span>[]</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <a id="FreeRedis_RedisClient_PubSubShardChannels_" data-uid="FreeRedis.RedisClient.PubSubShardChannels*"></a>
-  <h4 id="FreeRedis_RedisClient_PubSubShardChannels_System_String_" data-uid="FreeRedis.RedisClient.PubSubShardChannels(System.String)">PubSubShardChannels(String)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string[] PubSubShardChannels(string pattern = &quot;*&quot;)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">pattern</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span>[]</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <a id="FreeRedis_RedisClient_PubSubShardNumSub_" data-uid="FreeRedis.RedisClient.PubSubShardNumSub*"></a>
-  <h4 id="FreeRedis_RedisClient_PubSubShardNumSub_System_String_" data-uid="FreeRedis.RedisClient.PubSubShardNumSub(System.String)">PubSubShardNumSub(String)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public long PubSubShardNumSub(string channel)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">channel</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Int64</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <a id="FreeRedis_RedisClient_PubSubShardNumSub_" data-uid="FreeRedis.RedisClient.PubSubShardNumSub*"></a>
-  <h4 id="FreeRedis_RedisClient_PubSubShardNumSub_System_String___" data-uid="FreeRedis.RedisClient.PubSubShardNumSub(System.String[])">PubSubShardNumSub(String[])</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public long[] PubSubShardNumSub(string[] channels)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -14589,54 +14535,6 @@ Available since 1.0.0.</p>
   </table>
   
   
-  <a id="FreeRedis_RedisClient_SPublish_" data-uid="FreeRedis.RedisClient.SPublish*"></a>
-  <h4 id="FreeRedis_RedisClient_SPublish_System_String_System_String_" data-uid="FreeRedis.RedisClient.SPublish(System.String,System.String)">SPublish(String, String)</h4>
-  <div class="markdown level1 summary"><p>redis 7.0 shard pub/sub</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public long SPublish(string shardchannel, string message)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">shardchannel</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">message</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Int64</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
   <a id="FreeRedis_RedisClient_SRandMember_" data-uid="FreeRedis.RedisClient.SRandMember*"></a>
   <h4 id="FreeRedis_RedisClient_SRandMember_System_String_" data-uid="FreeRedis.RedisClient.SRandMember(System.String)">SRandMember(String)</h4>
   <div class="markdown level1 summary"></div>
@@ -14995,102 +14893,6 @@ Available since 1.0.0.</p>
     <tbody>
       <tr>
         <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<span class="xref">System.String</span>[]&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <a id="FreeRedis_RedisClient_SSubscribe_" data-uid="FreeRedis.RedisClient.SSubscribe*"></a>
-  <h4 id="FreeRedis_RedisClient_SSubscribe_System_String_System_Action_System_String_System_Object__" data-uid="FreeRedis.RedisClient.SSubscribe(System.String,System.Action{System.String,System.Object})">SSubscribe(String, Action&lt;String, Object&gt;)</h4>
-  <div class="markdown level1 summary"><p>redis 7.0 shard pub/sub</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public IDisposable SSubscribe(string shardchannel, Action&lt;string, object&gt; handler)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">shardchannel</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Action</span>&lt;<span class="xref">System.String</span>, <span class="xref">System.Object</span>&gt;</td>
-        <td><span class="parametername">handler</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.IDisposable</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <a id="FreeRedis_RedisClient_SSubscribe_" data-uid="FreeRedis.RedisClient.SSubscribe*"></a>
-  <h4 id="FreeRedis_RedisClient_SSubscribe_System_String___System_Action_System_String_System_Object__" data-uid="FreeRedis.RedisClient.SSubscribe(System.String[],System.Action{System.String,System.Object})">SSubscribe(String[], Action&lt;String, Object&gt;)</h4>
-  <div class="markdown level1 summary"><p>redis 7.0 shard pub/sub</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public IDisposable SSubscribe(string[] shardchannels, Action&lt;string, object&gt; handler)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span>[]</td>
-        <td><span class="parametername">shardchannels</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Action</span>&lt;<span class="xref">System.String</span>, <span class="xref">System.Object</span>&gt;</td>
-        <td><span class="parametername">handler</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.IDisposable</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -15611,34 +15413,6 @@ Available since 2.2.0.</p>
     <tbody>
       <tr>
         <td><span class="xref">System.Int64</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <a id="FreeRedis_RedisClient_SUnSubscribe_" data-uid="FreeRedis.RedisClient.SUnSubscribe*"></a>
-  <h4 id="FreeRedis_RedisClient_SUnSubscribe_System_String___" data-uid="FreeRedis.RedisClient.SUnSubscribe(System.String[])">SUnSubscribe(String[])</h4>
-  <div class="markdown level1 summary"><p>redis 7.0 shard pub/sub</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void SUnSubscribe(params string[] shardchannels)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span>[]</td>
-        <td><span class="parametername">shardchannels</span></td>
         <td></td>
       </tr>
     </tbody>
