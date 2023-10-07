@@ -37,7 +37,7 @@ namespace FreeRedis
 
         public Task<string[]> HMGetAsync(string key, params string[] fields) => CallAsync("HMGET".InputKey(key, fields), rt => rt.ThrowOrValue<string[]>());
         public Task<T[]> HMGetAsync<T>(string key, params string[] fields) => HReadArrayAsync<T>("HMGET".InputKey(key, fields));
-        public Task HMSetAsync<T>(string key, string field, T value, params object[] fieldValues) => HSetAsync(false, key, field, value, fieldValues);
+        public Task HMSetAsync<T>(string key, string field, T value, params object[] fieldValues) => HSetAsync(true, key, field, value, fieldValues);
         public Task HMSetAsync<T>(string key, Dictionary<string, T> keyValues) => CallAsync("HMSET".InputKey(key).InputKv(keyValues, false, SerializeRedisValue), rt => rt.ThrowOrValue<string>());
 
         public Task<ScanResult<string>> HScanAsync(string key, long cursor, string pattern, long count) => CallAsync("HSCAN"
