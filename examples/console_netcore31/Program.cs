@@ -49,6 +49,10 @@ namespace console_netcore31
 
         static void Main(string[] args)
         {
+            var redis = new RedisClient("127.0.0.1:6379,ssl=false");
+            redis.Get("xxx");
+
+
             void ondata(string channel, object data)
             {
                 Console.WriteLine($"{channel} -> {data}");

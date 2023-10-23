@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Concurrent;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Security;
 using System.Net.Sockets;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace FreeRedis.Internal
@@ -104,9 +103,10 @@ namespace FreeRedis.Internal
 
         Socket _socket;
         public Socket Socket => _socket ?? throw new RedisClientException("Redis socket connection was not opened");
-        NetworkStream _stream;
-        public Stream Stream => _stream ?? throw new RedisClientException("Redis socket connection was not opened");
-        public bool IsConnected => _socket?.Connected == true && _stream != null;
+        NetworkStream _netStream;
+        SslStream _sslStream;
+        public Stream Stream => ((Stream)_sslStream ?? _netStream) ?? throw new RedisClientException("Redis socket connection was not opened");
+        public bool IsConnected => _socket?.Connected == true && _netStream != null;
         public event EventHandler<EventArgs> Connected;
         public event EventHandler<EventArgs> Disconnected;
         public ClientReplyType ClientReply { get; protected set; } = ClientReplyType.on;
@@ -256,9 +256,14 @@ namespace FreeRedis.Internal
                 }
                 localSocket.EndConnect(asyncResult);
                 _socket = localSocket;
-                _stream = new NetworkStream(Socket, true);
                 _socket.ReceiveTimeout = (int)ReceiveTimeout.TotalMilliseconds;
                 _socket.SendTimeout = (int)SendTimeout.TotalMilliseconds;
+                _netStream = new NetworkStream(Socket, true);
+                if (Ssl)
+                {
+                    _sslStream = new SslStream(_netStream, true);
+                    _sslStream.AuthenticateAsClient((endpoint as IPEndPoint).Address.ToString());
+                }
                 Connected?.Invoke(this, new EventArgs());
             }
         }
@@ -283,11 +288,17 @@ namespace FreeRedis.Internal
                     try { _socket.Dispose(); } catch { }
                     _socket = null;
                 }
-                if (_stream != null)
+                if (_sslStream != null)
                 {
-                    try { _stream.Close(); } catch { }
-                    try { _stream.Dispose(); } catch { }
-                    _stream = null;
+                    try { _sslStream.Close(); } catch { }
+                    try { _sslStream.Dispose(); } catch { }
+                    _sslStream = null;
+                }
+                if (_netStream != null)
+                {
+                    try { _netStream.Close(); } catch { }
+                    try { _netStream.Dispose(); } catch { }
+                    _netStream = null;
                 }
                 _reader = null;
                 Disconnected?.Invoke(this, new EventArgs());
