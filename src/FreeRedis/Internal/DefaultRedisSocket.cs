@@ -237,8 +237,8 @@ namespace FreeRedis.Internal
                 ResetHost(Host);
 
                 EndPoint endpoint = IPAddress.TryParse(_ip, out var tryip) ?
-                    new IPEndPoint(tryip, _port) :
-                    new IPEndPoint(Dns.GetHostAddresses(_ip).FirstOrDefault() ?? IPAddress.Parse(_ip), _port);
+                    (EndPoint)new IPEndPoint(tryip, _port) :
+                    new DnsEndPoint(_ip, _port);
 
                 var localSocket = endpoint.AddressFamily == AddressFamily.InterNetworkV6 ? 
                     new Socket(AddressFamily.InterNetworkV6, SocketType.Stream, ProtocolType.Tcp):
@@ -262,7 +262,9 @@ namespace FreeRedis.Internal
                 if (Ssl)
                 {
                     _sslStream = new SslStream(_netStream, true);
-                    _sslStream.AuthenticateAsClient((endpoint as IPEndPoint).Address.ToString());
+                    var stringHostOnly = endpoint is DnsEndPoint ep1 ? ep1.Host :
+                        (endpoint is IPEndPoint ep2 ? ep2.Address.ToString() : "");
+                    _sslStream.AuthenticateAsClient(stringHostOnly);
                 }
                 Connected?.Invoke(this, new EventArgs());
             }
