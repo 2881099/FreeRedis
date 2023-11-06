@@ -93,7 +93,7 @@ namespace FreeRedis
                     Parse = rt => parse(rt),
                     IsBytes = cmd._flagReadbytes
                 });
-                TopOwner.OnNotice(null, new NoticeEventArgs(NoticeType.Call, null, $"{"Pipeline".PadRight(21)} > {cmd}", null));
+                TopOwner.OnNotice(null, new NoticeEventArgs(NoticeType.Call, null, $"{"Pipeline".PadRight(21)} > {cmd}\r\n", null));
                 return default(TValue);
             }
 #if isasync
@@ -108,7 +108,7 @@ namespace FreeRedis
                     IsBytes = cmd._flagReadbytes,
                     TaskCompletionSource = tsc
                 });
-                TopOwner.OnNotice(null, new NoticeEventArgs(NoticeType.Call, null, $"{"Pipeline".PadRight(21)} > {cmd}", null));
+                TopOwner.OnNotice(null, new NoticeEventArgs(NoticeType.Call, null, $"{"Pipeline".PadRight(21)} > {cmd}\r\n", null));
                 var ret = await tsc.Task;
                 return (TValue)ret;
             }
@@ -134,6 +134,7 @@ namespace FreeRedis
                     {
                         using (var rds = _baseAdapter.GetRedisSocket(null))
                         {
+                            epcmd.WriteTarget = $"{rds.Host}/{rds.Database}";
                             EndPipe(rds, _commands);
                         }
                         return _commands.Select(a => a.Result).ToArray();
