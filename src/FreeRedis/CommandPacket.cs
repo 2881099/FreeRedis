@@ -39,7 +39,8 @@ namespace FreeRedis
             {
                 if (b > 0) sb.Append(" ");
                 var tmpstr = _input[b].ToInvariantCultureToString().Replace("\r\n", "\\r\\n");
-                if (tmpstr.Length > 96) tmpstr = $"{tmpstr.Substring(0, 96).Trim()}..";
+                if (_command == "EVAL" && b > 0) tmpstr = $"\"{tmpstr}\"";
+                else if (tmpstr.Length > 96) tmpstr = $"{tmpstr.Substring(0, 96).Trim()}..";
                 sb.Append(tmpstr);
             }
             return sb.ToString();
