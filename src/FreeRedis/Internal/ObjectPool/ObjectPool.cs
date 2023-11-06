@@ -11,6 +11,12 @@ namespace FreeRedis.Internal.ObjectPool
     {
         internal static void WriteLine(string text, ConsoleColor backgroundColor)
         {
+            try
+            {
+                System.Diagnostics.Debug.WriteLine(text);
+            }
+            catch { }
+            return;
             try //#643
             {
                 var bgcolor = Console.BackgroundColor;
