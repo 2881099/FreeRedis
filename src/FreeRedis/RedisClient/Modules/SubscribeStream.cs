@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Text;
+using FreeRedis.Internal.ObjectPool;
 
 namespace FreeRedis
 {
@@ -36,15 +37,8 @@ namespace FreeRedis
                 if (redis.XInfoGroups(streamKey).Any(a => a.name == groupName) == false) CreateGroupAndConsumer();
                 else if (redis.XInfoConsumers(streamKey, groupName).Any(a => a.name == consumerName) == false) redis.XGroupCreateConsumer(streamKey, groupName, consumerName);
             }
-            var bgcolor = Console.BackgroundColor;
-            var forecolor = Console.ForegroundColor;
-            Console.BackgroundColor = ConsoleColor.DarkGreen;
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.Write($"Subscribing to stream(streamKey:{streamKey})");
-            Console.BackgroundColor = bgcolor;
-            Console.ForegroundColor = forecolor;
-            Console.WriteLine();
 
+            TestTrace.WriteLine($"Subscribing to stream(streamKey:{streamKey})", ConsoleColor.DarkGreen);
             new Thread(() =>
             {
                 while (subobj.IsUnsubscribed == false)
@@ -83,14 +77,7 @@ namespace FreeRedis
                     }
                     catch (Exception ex)
                     {
-                        bgcolor = Console.BackgroundColor;
-                        forecolor = Console.ForegroundColor;
-                        Console.BackgroundColor = ConsoleColor.DarkRed;
-                        Console.ForegroundColor = ConsoleColor.White;
-                        Console.Write($"Stream subscription error(streamKey:{streamKey}): {ex.Message}");
-                        Console.BackgroundColor = bgcolor;
-                        Console.ForegroundColor = forecolor;
-                        Console.WriteLine();
+                        TestTrace.WriteLine($"Stream subscription error(streamKey:{streamKey}): {ex.Message}", ConsoleColor.DarkRed);
 
                         Thread.CurrentThread.Join(3000);
                     }

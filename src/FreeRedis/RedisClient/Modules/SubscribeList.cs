@@ -5,6 +5,7 @@ using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using FreeRedis.Internal.ObjectPool;
 
 namespace FreeRedis
 {
@@ -31,15 +32,7 @@ namespace FreeRedis
             var isMultiKey = listKeys.Length > 1;
             var subobj = new SubscribeListObject();
 
-            var bgcolor = Console.BackgroundColor;
-            var forecolor = Console.ForegroundColor;
-            Console.BackgroundColor = ConsoleColor.DarkGreen;
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.Write($"Subscribing to list(listKey:{listKeysStr})");
-            Console.BackgroundColor = bgcolor;
-            Console.ForegroundColor = forecolor;
-            Console.WriteLine();
-
+            TestTrace.WriteLine($"Subscribing to list(listKey:{listKeysStr})", ConsoleColor.DarkGreen);
             new Thread(() =>
             {
                 while (subobj.IsUnsubscribed == false)
@@ -65,14 +58,7 @@ namespace FreeRedis
                     }
                     catch (Exception ex)
                     {
-                        bgcolor = Console.BackgroundColor;
-                        forecolor = Console.ForegroundColor;
-                        Console.BackgroundColor = ConsoleColor.DarkRed;
-                        Console.ForegroundColor = ConsoleColor.White;
-                        Console.Write($"List subscription error(listKey:{listKeysStr}): {ex.Message}");
-                        Console.BackgroundColor = bgcolor;
-                        Console.ForegroundColor = forecolor;
-                        Console.WriteLine();
+                        TestTrace.WriteLine($"List subscription error(listKey:{listKeysStr}): {ex.Message}", ConsoleColor.DarkRed);
 
                         Thread.CurrentThread.Join(3000);
                     }
@@ -136,14 +122,7 @@ namespace FreeRedis
                 }
                 catch (Exception ex)
                 {
-                    var bgcolor = Console.BackgroundColor;
-                    var forecolor = Console.ForegroundColor;
-                    Console.BackgroundColor = ConsoleColor.DarkRed;
-                    Console.ForegroundColor = ConsoleColor.White;
-                    Console.Write($"List subscription error(listKey:{listKey}): {ex.Message}");
-                    Console.BackgroundColor = bgcolor;
-                    Console.ForegroundColor = forecolor;
-                    Console.WriteLine();
+                    TestTrace.WriteLine($"List subscription error(listKey:{listKey}): {ex.Message}", ConsoleColor.DarkRed);
                 }
             }, true));
 
