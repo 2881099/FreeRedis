@@ -17,34 +17,34 @@ namespace FreeRedis.Internal.ObjectPool
             }
             catch { }
             return;
-            try //#643
-            {
-                var bgcolor = Console.BackgroundColor;
-                var forecolor = Console.ForegroundColor;
-                Console.BackgroundColor = backgroundColor;
+            //try //#643
+            //{
+            //    var bgcolor = Console.BackgroundColor;
+            //    var forecolor = Console.ForegroundColor;
+            //    Console.BackgroundColor = backgroundColor;
 
-                switch (backgroundColor)
-                {
-                    case ConsoleColor.Yellow:
-                        Console.ForegroundColor = ConsoleColor.White;
-                        break;
-                    case ConsoleColor.DarkGreen:
-                        Console.ForegroundColor = ConsoleColor.White;
-                        break;
-                }
-                Console.Write(text);
-                Console.BackgroundColor = bgcolor;
-                Console.ForegroundColor = forecolor;
-                Console.WriteLine();
-            }
-            catch
-            {
-                try
-                {
-                    System.Diagnostics.Debug.WriteLine(text);
-                }
-                catch { }
-            }
+            //    switch (backgroundColor)
+            //    {
+            //        case ConsoleColor.Yellow:
+            //            Console.ForegroundColor = ConsoleColor.White;
+            //            break;
+            //        case ConsoleColor.DarkGreen:
+            //            Console.ForegroundColor = ConsoleColor.White;
+            //            break;
+            //    }
+            //    Console.Write(text);
+            //    Console.BackgroundColor = bgcolor;
+            //    Console.ForegroundColor = forecolor;
+            //    Console.WriteLine();
+            //}
+            //catch
+            //{
+            //    try
+            //    {
+            //        System.Diagnostics.Debug.WriteLine(text);
+            //    }
+            //    catch { }
+            //}
         }
     }
 
