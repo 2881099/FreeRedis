@@ -1,0 +1,40 @@
+version: "3.9"
+services:
+  redis_single:
+    image: redis:6.0-alpine
+    hostname: "redis_single"
+    container_name: "redis_single"
+    volumes:
+      - ${workDirectory}/env/redis.conf:/usr/local/etc/redis/redis.conf
+    ports:
+      - "6379:6379"
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+  redis_interceptor:
+    image: redis:6.0-alpine
+    hostname: "redis_interceptor"
+    container_name: "redis_interceptor"
+    ports:
+      - "6479:6379"
+    command: ["redis-server"]
+  redis_flush:
+    image: redis:6.0-alpine
+    hostname: "redis_flush"
+    container_name: "redis_flush"
+    ports:
+      - "6279:6379"
+    command: ["redis-server"]
+  redis_master:
+    image: redis:6.0-alpine
+    hostname: "redis_master"
+    container_name: "redis_master"
+    ports:
+      - 6380:6379
+  redis_sentinel:
+    image: redis:6.0-alpine
+    hostname: "redis_sentinel"
+    container_name: "redis_sentinel"
+    ports:
+      - 26379:26379
+    command: redis-sentinel /usr/local/etc/redis/sentinel.conf
+    volumes:
+      - ${workDirectory}/env/sentinel.conf:/usr/local/etc/redis/sentinel.conf
