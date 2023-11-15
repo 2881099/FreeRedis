@@ -1139,6 +1139,18 @@ references:
   commentId: T:FreeRedis.ConnectionStringBuilder
   fullName: FreeRedis.ConnectionStringBuilder
   nameWithType: ConnectionStringBuilder
+- uid: FreeRedis.ConnectionStringBuilder.CertificateSelection
+  name: CertificateSelection
+  href: docs/api/FreeRedis.ConnectionStringBuilder.html#FreeRedis_ConnectionStringBuilder_CertificateSelection
+  commentId: F:FreeRedis.ConnectionStringBuilder.CertificateSelection
+  fullName: FreeRedis.ConnectionStringBuilder.CertificateSelection
+  nameWithType: ConnectionStringBuilder.CertificateSelection
+- uid: FreeRedis.ConnectionStringBuilder.CertificateValidation
+  name: CertificateValidation
+  href: docs/api/FreeRedis.ConnectionStringBuilder.html#FreeRedis_ConnectionStringBuilder_CertificateValidation
+  commentId: F:FreeRedis.ConnectionStringBuilder.CertificateValidation
+  fullName: FreeRedis.ConnectionStringBuilder.CertificateValidation
+  nameWithType: ConnectionStringBuilder.CertificateValidation
 - uid: FreeRedis.ConnectionStringBuilder.ClientName
   name: ClientName
   href: docs/api/FreeRedis.ConnectionStringBuilder.html#FreeRedis_ConnectionStringBuilder_ClientName
@@ -2010,12 +2022,12 @@ references:
   commentId: T:FreeRedis.Internal.DefaultRedisSocket
   fullName: FreeRedis.Internal.DefaultRedisSocket
   nameWithType: DefaultRedisSocket
-- uid: FreeRedis.Internal.DefaultRedisSocket.#ctor(System.String,System.Boolean)
-  name: DefaultRedisSocket(String, Boolean)
-  href: docs/api/FreeRedis.Internal.DefaultRedisSocket.html#FreeRedis_Internal_DefaultRedisSocket__ctor_System_String_System_Boolean_
-  commentId: M:FreeRedis.Internal.DefaultRedisSocket.#ctor(System.String,System.Boolean)
-  fullName: FreeRedis.Internal.DefaultRedisSocket.DefaultRedisSocket(System.String, System.Boolean)
-  nameWithType: DefaultRedisSocket.DefaultRedisSocket(String, Boolean)
+- uid: FreeRedis.Internal.DefaultRedisSocket.#ctor(System.String,System.Boolean,RemoteCertificateValidationCallback,LocalCertificateSelectionCallback)
+  name: DefaultRedisSocket(String, Boolean, RemoteCertificateValidationCallback, LocalCertificateSelectionCallback)
+  href: docs/api/FreeRedis.Internal.DefaultRedisSocket.html#FreeRedis_Internal_DefaultRedisSocket__ctor_System_String_System_Boolean_RemoteCertificateValidationCallback_LocalCertificateSelectionCallback_
+  commentId: M:FreeRedis.Internal.DefaultRedisSocket.#ctor(System.String,System.Boolean,RemoteCertificateValidationCallback,LocalCertificateSelectionCallback)
+  fullName: FreeRedis.Internal.DefaultRedisSocket.DefaultRedisSocket(System.String, System.Boolean, RemoteCertificateValidationCallback, LocalCertificateSelectionCallback)
+  nameWithType: DefaultRedisSocket.DefaultRedisSocket(String, Boolean, RemoteCertificateValidationCallback, LocalCertificateSelectionCallback)
 - uid: FreeRedis.Internal.DefaultRedisSocket.#ctor*
   name: DefaultRedisSocket
   href: docs/api/FreeRedis.Internal.DefaultRedisSocket.html#FreeRedis_Internal_DefaultRedisSocket__ctor_
@@ -5070,12 +5082,12 @@ references:
   commentId: T:FreeRedis.Internal.RedisClientPool
   fullName: FreeRedis.Internal.RedisClientPool
   nameWithType: RedisClientPool
-- uid: FreeRedis.Internal.RedisClientPool.#ctor(System.String,FreeRedis.RedisClient)
-  name: RedisClientPool(String, RedisClient)
-  href: docs/api/FreeRedis.Internal.RedisClientPool.html#FreeRedis_Internal_RedisClientPool__ctor_System_String_FreeRedis_RedisClient_
-  commentId: M:FreeRedis.Internal.RedisClientPool.#ctor(System.String,FreeRedis.RedisClient)
-  fullName: FreeRedis.Internal.RedisClientPool.RedisClientPool(System.String, FreeRedis.RedisClient)
-  nameWithType: RedisClientPool.RedisClientPool(String, RedisClient)
+- uid: FreeRedis.Internal.RedisClientPool.#ctor(FreeRedis.ConnectionStringBuilder,FreeRedis.RedisClient)
+  name: RedisClientPool(ConnectionStringBuilder, RedisClient)
+  href: docs/api/FreeRedis.Internal.RedisClientPool.html#FreeRedis_Internal_RedisClientPool__ctor_FreeRedis_ConnectionStringBuilder_FreeRedis_RedisClient_
+  commentId: M:FreeRedis.Internal.RedisClientPool.#ctor(FreeRedis.ConnectionStringBuilder,FreeRedis.RedisClient)
+  fullName: FreeRedis.Internal.RedisClientPool.RedisClientPool(FreeRedis.ConnectionStringBuilder, FreeRedis.RedisClient)
+  nameWithType: RedisClientPool.RedisClientPool(ConnectionStringBuilder, RedisClient)
 - uid: FreeRedis.Internal.RedisClientPool.#ctor*
   name: RedisClientPool
   href: docs/api/FreeRedis.Internal.RedisClientPool.html#FreeRedis_Internal_RedisClientPool__ctor_
@@ -5147,19 +5159,6 @@ references:
   commentId: E:FreeRedis.Internal.RedisClientPoolPolicy.Connected
   fullName: FreeRedis.Internal.RedisClientPoolPolicy.Connected
   nameWithType: RedisClientPoolPolicy.Connected
-- uid: FreeRedis.Internal.RedisClientPoolPolicy.ConnectionString
-  name: ConnectionString
-  href: docs/api/FreeRedis.Internal.RedisClientPoolPolicy.html#FreeRedis_Internal_RedisClientPoolPolicy_ConnectionString
-  commentId: P:FreeRedis.Internal.RedisClientPoolPolicy.ConnectionString
-  fullName: FreeRedis.Internal.RedisClientPoolPolicy.ConnectionString
-  nameWithType: RedisClientPoolPolicy.ConnectionString
-- uid: FreeRedis.Internal.RedisClientPoolPolicy.ConnectionString*
-  name: ConnectionString
-  href: docs/api/FreeRedis.Internal.RedisClientPoolPolicy.html#FreeRedis_Internal_RedisClientPoolPolicy_ConnectionString_
-  commentId: Overload:FreeRedis.Internal.RedisClientPoolPolicy.ConnectionString
-  isSpec: "True"
-  fullName: FreeRedis.Internal.RedisClientPoolPolicy.ConnectionString
-  nameWithType: RedisClientPoolPolicy.ConnectionString
 - uid: FreeRedis.Internal.RedisClientPoolPolicy.IdleTimeout
   name: IdleTimeout
   href: docs/api/FreeRedis.Internal.RedisClientPoolPolicy.html#FreeRedis_Internal_RedisClientPoolPolicy_IdleTimeout
@@ -10671,15 +10670,15 @@ references:
   fullName.vb: FreeRedis.RedisClient.RedisClient(FreeRedis.ConnectionStringBuilder(), System.Func(Of System.String, System.String))
   nameWithType: RedisClient.RedisClient(ConnectionStringBuilder[], Func<String, String>)
   nameWithType.vb: RedisClient.RedisClient(ConnectionStringBuilder(), Func(Of String, String))
-- uid: FreeRedis.RedisClient.#ctor(FreeRedis.RedisClient,System.String,System.Boolean,System.TimeSpan,System.TimeSpan,System.TimeSpan,System.Action{FreeRedis.RedisClient},System.Action{FreeRedis.RedisClient})
-  name: RedisClient(RedisClient, String, Boolean, TimeSpan, TimeSpan, TimeSpan, Action<RedisClient>, Action<RedisClient>)
-  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient__ctor_FreeRedis_RedisClient_System_String_System_Boolean_System_TimeSpan_System_TimeSpan_System_TimeSpan_System_Action_FreeRedis_RedisClient__System_Action_FreeRedis_RedisClient__
-  commentId: M:FreeRedis.RedisClient.#ctor(FreeRedis.RedisClient,System.String,System.Boolean,System.TimeSpan,System.TimeSpan,System.TimeSpan,System.Action{FreeRedis.RedisClient},System.Action{FreeRedis.RedisClient})
-  name.vb: RedisClient(RedisClient, String, Boolean, TimeSpan, TimeSpan, TimeSpan, Action(Of RedisClient), Action(Of RedisClient))
-  fullName: FreeRedis.RedisClient.RedisClient(FreeRedis.RedisClient, System.String, System.Boolean, System.TimeSpan, System.TimeSpan, System.TimeSpan, System.Action<FreeRedis.RedisClient>, System.Action<FreeRedis.RedisClient>)
-  fullName.vb: FreeRedis.RedisClient.RedisClient(FreeRedis.RedisClient, System.String, System.Boolean, System.TimeSpan, System.TimeSpan, System.TimeSpan, System.Action(Of FreeRedis.RedisClient), System.Action(Of FreeRedis.RedisClient))
-  nameWithType: RedisClient.RedisClient(RedisClient, String, Boolean, TimeSpan, TimeSpan, TimeSpan, Action<RedisClient>, Action<RedisClient>)
-  nameWithType.vb: RedisClient.RedisClient(RedisClient, String, Boolean, TimeSpan, TimeSpan, TimeSpan, Action(Of RedisClient), Action(Of RedisClient))
+- uid: FreeRedis.RedisClient.#ctor(FreeRedis.RedisClient,System.String,System.Boolean,RemoteCertificateValidationCallback,LocalCertificateSelectionCallback,System.TimeSpan,System.TimeSpan,System.TimeSpan,System.Action{FreeRedis.RedisClient},System.Action{FreeRedis.RedisClient})
+  name: RedisClient(RedisClient, String, Boolean, RemoteCertificateValidationCallback, LocalCertificateSelectionCallback, TimeSpan, TimeSpan, TimeSpan, Action<RedisClient>, Action<RedisClient>)
+  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient__ctor_FreeRedis_RedisClient_System_String_System_Boolean_RemoteCertificateValidationCallback_LocalCertificateSelectionCallback_System_TimeSpan_System_TimeSpan_System_TimeSpan_System_Action_FreeRedis_RedisClient__System_Action_FreeRedis_RedisClient__
+  commentId: M:FreeRedis.RedisClient.#ctor(FreeRedis.RedisClient,System.String,System.Boolean,RemoteCertificateValidationCallback,LocalCertificateSelectionCallback,System.TimeSpan,System.TimeSpan,System.TimeSpan,System.Action{FreeRedis.RedisClient},System.Action{FreeRedis.RedisClient})
+  name.vb: RedisClient(RedisClient, String, Boolean, RemoteCertificateValidationCallback, LocalCertificateSelectionCallback, TimeSpan, TimeSpan, TimeSpan, Action(Of RedisClient), Action(Of RedisClient))
+  fullName: FreeRedis.RedisClient.RedisClient(FreeRedis.RedisClient, System.String, System.Boolean, RemoteCertificateValidationCallback, LocalCertificateSelectionCallback, System.TimeSpan, System.TimeSpan, System.TimeSpan, System.Action<FreeRedis.RedisClient>, System.Action<FreeRedis.RedisClient>)
+  fullName.vb: FreeRedis.RedisClient.RedisClient(FreeRedis.RedisClient, System.String, System.Boolean, RemoteCertificateValidationCallback, LocalCertificateSelectionCallback, System.TimeSpan, System.TimeSpan, System.TimeSpan, System.Action(Of FreeRedis.RedisClient), System.Action(Of FreeRedis.RedisClient))
+  nameWithType: RedisClient.RedisClient(RedisClient, String, Boolean, RemoteCertificateValidationCallback, LocalCertificateSelectionCallback, TimeSpan, TimeSpan, TimeSpan, Action<RedisClient>, Action<RedisClient>)
+  nameWithType.vb: RedisClient.RedisClient(RedisClient, String, Boolean, RemoteCertificateValidationCallback, LocalCertificateSelectionCallback, TimeSpan, TimeSpan, TimeSpan, Action(Of RedisClient), Action(Of RedisClient))
 - uid: FreeRedis.RedisClient.#ctor(FreeRedis.RedisClient.BaseAdapter)
   name: RedisClient(RedisClient.BaseAdapter)
   href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient__ctor_FreeRedis_RedisClient_BaseAdapter_

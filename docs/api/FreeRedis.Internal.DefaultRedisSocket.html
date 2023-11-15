@@ -121,12 +121,12 @@
   
   
   <a id="FreeRedis_Internal_DefaultRedisSocket__ctor_" data-uid="FreeRedis.Internal.DefaultRedisSocket.#ctor*"></a>
-  <h4 id="FreeRedis_Internal_DefaultRedisSocket__ctor_System_String_System_Boolean_" data-uid="FreeRedis.Internal.DefaultRedisSocket.#ctor(System.String,System.Boolean)">DefaultRedisSocket(String, Boolean)</h4>
+  <h4 id="FreeRedis_Internal_DefaultRedisSocket__ctor_System_String_System_Boolean_RemoteCertificateValidationCallback_LocalCertificateSelectionCallback_" data-uid="FreeRedis.Internal.DefaultRedisSocket.#ctor(System.String,System.Boolean,RemoteCertificateValidationCallback,LocalCertificateSelectionCallback)">DefaultRedisSocket(String, Boolean, RemoteCertificateValidationCallback, LocalCertificateSelectionCallback)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public DefaultRedisSocket(string host, bool ssl)</code></pre>
+    <pre><code class="lang-csharp hljs">public DefaultRedisSocket(string host, bool ssl, RemoteCertificateValidationCallback certificateValidation, LocalCertificateSelectionCallback certificateSelection)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -146,6 +146,16 @@
       <tr>
         <td><span class="xref">System.Boolean</span></td>
         <td><span class="parametername">ssl</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">RemoteCertificateValidationCallback</span></td>
+        <td><span class="parametername">certificateValidation</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">LocalCertificateSelectionCallback</span></td>
+        <td><span class="parametername">certificateSelection</span></td>
         <td></td>
       </tr>
     </tbody>
