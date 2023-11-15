@@ -2,7 +2,7 @@
 
 <div align="center">
 
-FreeRedis is a redis client based on .NET, supports .NET Core 2.1+, .NET Framework 4.0+, and Xamarin.
+FreeRedis is a redis client based on .NET, supports .NET Core 2.1+, .NET Framework 4.0+, and Xamarin, and AOT.
 
 [![nuget](https://img.shields.io/nuget/v/FreeRedis.svg?style=flat-square)](https://www.nuget.org/packages/FreeRedis) 
 [![stats](https://img.shields.io/nuget/dt/FreeRedis.svg?style=flat-square)](https://www.nuget.org/stats/packages/FreeRedis?groupby=Version) 
