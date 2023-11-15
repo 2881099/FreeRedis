@@ -13,7 +13,7 @@ namespace FreeRedis
 
         public RedisSentinelClient(ConnectionStringBuilder connectionString)
         {
-            _redisSocket = new DefaultRedisSocket(connectionString.Host, connectionString.Ssl);
+            _redisSocket = new DefaultRedisSocket(connectionString.Host, connectionString.Ssl, connectionString.CertificateValidation, connectionString.CertificateSelection);
             _redisSocket.ReceiveTimeout = connectionString.ReceiveTimeout;
             _redisSocket.SendTimeout = connectionString.SendTimeout;
             _redisSocket.Encoding = connectionString.Encoding;

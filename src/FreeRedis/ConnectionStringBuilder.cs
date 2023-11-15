@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Security;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -33,6 +34,9 @@ namespace FreeRedis
         public int Retry { get; set; } = 0;
         public bool ExitAutoDisposePool { get; set; } = true;
         public bool SubscribleReadbytes { get; set; } = false;
+
+        public RemoteCertificateValidationCallback CertificateValidation;
+        public LocalCertificateSelectionCallback CertificateSelection;
 
         public static implicit operator ConnectionStringBuilder(string connectionString) => Parse(connectionString);
         public static implicit operator string(ConnectionStringBuilder connectionString) => connectionString.ToString();

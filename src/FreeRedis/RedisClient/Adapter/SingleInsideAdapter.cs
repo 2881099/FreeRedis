@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Security;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -14,13 +15,14 @@ namespace FreeRedis
         {
             readonly IRedisSocket _redisSocket;
 
-            public SingleInsideAdapter(RedisClient topOwner, RedisClient owner, string host, bool ssl, 
+            public SingleInsideAdapter(RedisClient topOwner, RedisClient owner, string host, 
+                bool ssl, RemoteCertificateValidationCallback certificateValidation, LocalCertificateSelectionCallback certificateSelection,
                 TimeSpan connectTimeout, TimeSpan receiveTimeout, TimeSpan sendTimeout, 
                 Action<RedisClient> connected, Action<RedisClient> disconnected)
             {
                 UseType = UseType.SingleInside;
                 TopOwner = topOwner;
-                _redisSocket = new DefaultRedisSocket(host, ssl);
+                _redisSocket = new DefaultRedisSocket(host, ssl, certificateValidation, certificateSelection);
                 _redisSocket.Connected += (s, e) => connected?.Invoke(owner);
                 _redisSocket.Disconnected += (s, e) => disconnected?.Invoke(owner);
                 _redisSocket.ConnectTimeout = connectTimeout;

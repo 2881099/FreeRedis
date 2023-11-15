@@ -31,6 +31,8 @@ namespace FreeRedis
                 {
                     var csb = ConnectionStringBuilder.Parse(a);
                     csb.Host = csb.Host.ToLower();
+                    csb.CertificateValidation = _connectionString.CertificateValidation;
+                    csb.CertificateSelection = _connectionString.CertificateSelection;
                     return csb;
                 }).GroupBy(a => a.Host, a => a).Select(a => a.First()) ?? new ConnectionStringBuilder[0]);
                 _rw_splitting = rw_splitting;
@@ -227,6 +229,8 @@ namespace FreeRedis
                             {
                                 ConnectionStringBuilder remoteSentinelHost = _sentinels.First.Value.ToString();
                                 remoteSentinelHost.Host = $"{sentinel.ip}:{sentinel.port}";
+                                remoteSentinelHost.CertificateValidation = _connectionString.CertificateValidation;
+                                remoteSentinelHost.CertificateSelection = _connectionString.CertificateSelection;
                                 if (_sentinels.Any(a => string.Compare(a.Host, remoteSentinelHost.Host, true) == 0)) continue;
                                 _sentinels.AddLast(remoteSentinelHost);
                             }
@@ -249,6 +253,8 @@ namespace FreeRedis
                     connectionString.Host = host;
                     connectionString.MinPoolSize = 1;
                     connectionString.MaxPoolSize = 1;
+                    connectionString.CertificateValidation = _connectionString.CertificateValidation;
+                    connectionString.CertificateSelection = _connectionString.CertificateSelection;
                     using (var cli = new RedisClient(connectionString))
                     {
                         if (cli.Role().role != role)

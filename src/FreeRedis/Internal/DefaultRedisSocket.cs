@@ -124,11 +124,15 @@ namespace FreeRedis.Internal
 
         public RedisProtocol Protocol { get; set; } = RedisProtocol.RESP2;
         public Encoding Encoding { get; set; } = Encoding.UTF8;
+        RemoteCertificateValidationCallback _certificateValidation;
+        LocalCertificateSelectionCallback _certificateSelection;
 
-        public DefaultRedisSocket(string host, bool ssl)
+        public DefaultRedisSocket(string host, bool ssl, RemoteCertificateValidationCallback certificateValidation, LocalCertificateSelectionCallback certificateSelection)
         {
             Host = host;
             Ssl = ssl;
+            _certificateValidation = certificateValidation;
+            _certificateSelection = certificateSelection;
         }
 
         void WriteAfter(CommandPacket cmd)
@@ -261,7 +265,7 @@ namespace FreeRedis.Internal
                 _netStream = new NetworkStream(Socket, true);
                 if (Ssl)
                 {
-                    _sslStream = new SslStream(_netStream, true);
+                    _sslStream = new SslStream(_netStream, true, _certificateValidation, _certificateSelection);
                     var stringHostOnly = endpoint is DnsEndPoint ep1 ? ep1.Host :
                         (endpoint is IPEndPoint ep2 ? ep2.Address.ToString() : "");
                     _sslStream.AuthenticateAsClient(stringHostOnly);

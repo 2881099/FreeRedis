@@ -148,13 +148,16 @@ namespace FreeRedis
                         {
                             cmd._clusterMovedTryCount++;
 
+                            var testConnection = pool._policy._connectionStringBuilder;
                             if (moved.endpoint.StartsWith("127.0.0.1"))
-                                moved.endpoint = $"{DefaultRedisSocket.SplitHost(pool._policy._connectionStringBuilder.Host).Key}:{moved.endpoint.Substring(10)}";
+                                moved.endpoint = $"{DefaultRedisSocket.SplitHost(testConnection.Host).Key}:{moved.endpoint.Substring(10)}";
                             else if (moved.endpoint.StartsWith("localhost", StringComparison.CurrentCultureIgnoreCase))
-                                moved.endpoint = $"{DefaultRedisSocket.SplitHost(pool._policy._connectionStringBuilder.Host).Key}:{moved.endpoint.Substring(10)}";
+                                moved.endpoint = $"{DefaultRedisSocket.SplitHost(testConnection.Host).Key}:{moved.endpoint.Substring(10)}";
 
-                            ConnectionStringBuilder connectionString = pool._policy._connectionStringBuilder.ToString();
+                            ConnectionStringBuilder connectionString = testConnection.ToString();
                             connectionString.Host = moved.endpoint;
+                            connectionString.CertificateValidation = testConnection.CertificateValidation;
+                            connectionString.CertificateSelection = testConnection.CertificateSelection;
                             RegisterClusterNode(connectionString);
 
                             if (moved.ismoved)
@@ -243,13 +246,16 @@ namespace FreeRedis
                         {
                             cmd._clusterMovedTryCount++;
 
+                            var testConnection = pool._policy._connectionStringBuilder;
                             if (moved.endpoint.StartsWith("127.0.0.1"))
-                                moved.endpoint = $"{DefaultRedisSocket.SplitHost(pool._policy._connectionStringBuilder.Host).Key}:{moved.endpoint.Substring(10)}";
+                                moved.endpoint = $"{DefaultRedisSocket.SplitHost(testConnection.Host).Key}:{moved.endpoint.Substring(10)}";
                             else if (moved.endpoint.StartsWith("localhost", StringComparison.CurrentCultureIgnoreCase))
-                                moved.endpoint = $"{DefaultRedisSocket.SplitHost(pool._policy._connectionStringBuilder.Host).Key}:{moved.endpoint.Substring(10)}";
+                                moved.endpoint = $"{DefaultRedisSocket.SplitHost(testConnection.Host).Key}:{moved.endpoint.Substring(10)}";
 
-                            ConnectionStringBuilder connectionString = pool._policy._connectionStringBuilder.ToString();
+                            ConnectionStringBuilder connectionString = testConnection.ToString();
                             connectionString.Host = moved.endpoint;
+                            connectionString.CertificateValidation = testConnection.CertificateValidation;
+                            connectionString.CertificateSelection = testConnection.CertificateSelection;
                             RegisterClusterNode(connectionString);
 
                             if (moved.ismoved)
@@ -298,6 +304,8 @@ namespace FreeRedis
                                 endpoint = $"{DefaultRedisSocket.SplitHost(testConnection.Host).Key}:{endpoint.Substring(10)}";
                             ConnectionStringBuilder connectionString = testConnection.ToString();
                             connectionString.Host = endpoint;
+                            connectionString.CertificateValidation = testConnection.CertificateValidation;
+                            connectionString.CertificateSelection = testConnection.CertificateSelection;
                             if (cnodesDict.ContainsKey(endpoint) == false) cnodesDict.Add(endpoint, true);
                             RegisterClusterNode(connectionString);
 

@@ -590,7 +590,7 @@
             Sentinel RedisClient
             </summary>
         </member>
-        <member name="M:FreeRedis.RedisClient.#ctor(FreeRedis.RedisClient,System.String,System.Boolean,System.TimeSpan,System.TimeSpan,System.TimeSpan,System.Action{FreeRedis.RedisClient},System.Action{FreeRedis.RedisClient})">
+        <member name="M:FreeRedis.RedisClient.#ctor(FreeRedis.RedisClient,System.String,System.Boolean,System.Net.Security.RemoteCertificateValidationCallback,System.Net.Security.LocalCertificateSelectionCallback,System.TimeSpan,System.TimeSpan,System.TimeSpan,System.Action{FreeRedis.RedisClient},System.Action{FreeRedis.RedisClient})">
             <summary>
             Single inside RedisClient
             </summary>

@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.Security;
 using System.Text;
-using System.Threading;
 
 namespace FreeRedis
 {
@@ -65,11 +65,12 @@ namespace FreeRedis
         /// <summary>
         /// Single inside RedisClient
         /// </summary>
-        protected internal RedisClient(RedisClient topOwner, string host, bool ssl, 
+        protected internal RedisClient(RedisClient topOwner, string host, 
+            bool ssl, RemoteCertificateValidationCallback certificateValidation, LocalCertificateSelectionCallback certificateSelection,
             TimeSpan connectTimeout, TimeSpan receiveTimeout, TimeSpan sendTimeout, 
             Action<RedisClient> connected, Action<RedisClient> disconnected)
         {
-            Adapter = new SingleInsideAdapter(topOwner ?? this, this, host, ssl, 
+            Adapter = new SingleInsideAdapter(topOwner ?? this, this, host, ssl, certificateValidation, certificateSelection,
                 connectTimeout, receiveTimeout, sendTimeout, connected, disconnected);
             Prefix = topOwner.Prefix;
             ConnectionString = topOwner.ConnectionString;
