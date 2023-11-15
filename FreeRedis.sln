@@ -15,19 +15,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{C65D7453-8
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "examples", "examples", "{DD1426BF-F56F-49A8-9D4E-2BA0E3BEFC72}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "console_netcore31", "examples\console_netcore31\console_netcore31.csproj", "{39A0490D-FF53-4A82-B6F7-3998AC346759}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "console_net8", "examples\console_net8\console_net8.csproj", "{39A0490D-FF53-4A82-B6F7-3998AC346759}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "console_netcore31_benchmark", "examples\console_netcore31_benchmark\console_netcore31_benchmark.csproj", "{5F0E6390-75E3-4A2D-AB37-1C869D5C07D2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "console_net8_benchmark", "examples\console_net8_benchmark\console_net8_benchmark.csproj", "{5F0E6390-75E3-4A2D-AB37-1C869D5C07D2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "console_netcore31_vs", "examples\console_netcore31_vs\console_netcore31_vs.csproj", "{A2952C91-C838-42FB-B628-2130100FF190}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "console_net8_vs", "examples\console_net8_vs\console_net8_vs.csproj", "{A2952C91-C838-42FB-B628-2130100FF190}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "console_netcore31_sentinel", "examples\console_netcore31_sentinel\console_netcore31_sentinel.csproj", "{13282EB2-1836-4BAC-806F-A1B2C29C1E4A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "console_net8_sentinel", "examples\console_net8_sentinel\console_net8_sentinel.csproj", "{13282EB2-1836-4BAC-806F-A1B2C29C1E4A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "console_netcore31_pooling", "examples\console_netcore31_pooling\console_netcore31_pooling.csproj", "{233FE426-DFD7-43C0-89D7-228499166741}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "console_net8_pooling", "examples\console_net8_pooling\console_net8_pooling.csproj", "{233FE426-DFD7-43C0-89D7-228499166741}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "console_netcore31_pubsub", "examples\console_netcore31_pubsub\console_netcore31_pubsub.csproj", "{F79A86FE-07AC-4938-91AA-C2DA18DFA452}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "console_net8_pubsub", "examples\console_net8_pubsub\console_net8_pubsub.csproj", "{F79A86FE-07AC-4938-91AA-C2DA18DFA452}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "console_netcore31_cluster", "examples\console_netcore31_cluster\console_netcore31_cluster.csproj", "{32DF2401-E455-4FF1-8017-FA3EAE1107CF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "console_net8_cluster", "examples\console_net8_cluster\console_net8_cluster.csproj", "{32DF2401-E455-4FF1-8017-FA3EAE1107CF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{D8045351-59E4-45B9-81F5-D21CC0996344}"
 EndProject
@@ -37,11 +37,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Benchmark", "Benchmark", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Unit", "Unit", "{36C8EC48-1329-4251-B795-7AEFC446EF60}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "console_netcore31_client_side_caching", "examples\console_netcore31_client_side_caching\console_netcore31_client_side_caching.csproj", "{DA686F0B-E9F7-4AF1-AD2E-EE6EE0C24BB4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "console_net8_client_side_caching", "examples\console_net8_client_side_caching\console_net8_client_side_caching.csproj", "{DA686F0B-E9F7-4AF1-AD2E-EE6EE0C24BB4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "console_netcore31_norman", "examples\console_netcore31_norman\console_netcore31_norman.csproj", "{D6DF0DBA-F181-4F1C-B6AD-9D71A01A4431}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FreeRedis.Build.Cli", "src\FreeRedis.Build.Cli\FreeRedis.Build.Cli.csproj", "{EF59B801-0228-436D-88DA-DCBD58C7E074}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "console_net8_norman", "examples\console_net8_norman\console_net8_norman.csproj", "{D6DF0DBA-F181-4F1C-B6AD-9D71A01A4431}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "console_net452_vs", "examples\console_net452_vs\console_net452_vs.csproj", "{7AC68251-83D4-423F-849C-04BD89F4BDFB}"
 EndProject
@@ -191,18 +189,6 @@ Global
 		{D6DF0DBA-F181-4F1C-B6AD-9D71A01A4431}.Release|x64.Build.0 = Release|Any CPU
 		{D6DF0DBA-F181-4F1C-B6AD-9D71A01A4431}.Release|x86.ActiveCfg = Release|Any CPU
 		{D6DF0DBA-F181-4F1C-B6AD-9D71A01A4431}.Release|x86.Build.0 = Release|Any CPU
-		{EF59B801-0228-436D-88DA-DCBD58C7E074}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EF59B801-0228-436D-88DA-DCBD58C7E074}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EF59B801-0228-436D-88DA-DCBD58C7E074}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{EF59B801-0228-436D-88DA-DCBD58C7E074}.Debug|x64.Build.0 = Debug|Any CPU
-		{EF59B801-0228-436D-88DA-DCBD58C7E074}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{EF59B801-0228-436D-88DA-DCBD58C7E074}.Debug|x86.Build.0 = Debug|Any CPU
-		{EF59B801-0228-436D-88DA-DCBD58C7E074}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EF59B801-0228-436D-88DA-DCBD58C7E074}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EF59B801-0228-436D-88DA-DCBD58C7E074}.Release|x64.ActiveCfg = Release|Any CPU
-		{EF59B801-0228-436D-88DA-DCBD58C7E074}.Release|x64.Build.0 = Release|Any CPU
-		{EF59B801-0228-436D-88DA-DCBD58C7E074}.Release|x86.ActiveCfg = Release|Any CPU
-		{EF59B801-0228-436D-88DA-DCBD58C7E074}.Release|x86.Build.0 = Release|Any CPU
 		{7AC68251-83D4-423F-849C-04BD89F4BDFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7AC68251-83D4-423F-849C-04BD89F4BDFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7AC68251-83D4-423F-849C-04BD89F4BDFB}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -257,7 +243,6 @@ Global
 		{36C8EC48-1329-4251-B795-7AEFC446EF60} = {ECEC9840-4A56-4E55-B6C5-E84A79DFDBC4}
 		{DA686F0B-E9F7-4AF1-AD2E-EE6EE0C24BB4} = {DD1426BF-F56F-49A8-9D4E-2BA0E3BEFC72}
 		{D6DF0DBA-F181-4F1C-B6AD-9D71A01A4431} = {DD1426BF-F56F-49A8-9D4E-2BA0E3BEFC72}
-		{EF59B801-0228-436D-88DA-DCBD58C7E074} = {D8045351-59E4-45B9-81F5-D21CC0996344}
 		{7AC68251-83D4-423F-849C-04BD89F4BDFB} = {DD1426BF-F56F-49A8-9D4E-2BA0E3BEFC72}
 		{AFA6EB33-8DD2-41CE-B2EF-917406F47D28} = {DD1426BF-F56F-49A8-9D4E-2BA0E3BEFC72}
 		{B0B0B55E-4D41-4419-83FE-309F72699A3A} = {D8045351-59E4-45B9-81F5-D21CC0996344}

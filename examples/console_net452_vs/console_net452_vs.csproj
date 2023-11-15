@@ -51,10 +51,10 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CSRedisCore">
-      <Version>3.6.5</Version>
+      <Version>3.8.800</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
-      <Version>12.0.3</Version>
+      <Version>13.0.1</Version>
     </PackageReference>
     <PackageReference Include="StackExchange.Redis">
       <Version>1.2.6</Version>
