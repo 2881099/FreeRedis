@@ -1,0 +1,6 @@
+﻿<Directives>
+	<Application>
+		<Assembly Name="FreeRedis"  Dynamic="Required All">
+		</Assembly>
+	</Application>
+</Directives>

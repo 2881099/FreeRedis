@@ -27,11 +27,11 @@ namespace console_net8
     {
         static Lazy<RedisClient> _cliLazy = new Lazy<RedisClient>(() =>
         {
-            //var r = new RedisClient("127.0.0.1:6379"); //redis 3.2 Single test
+            var r = new RedisClient("127.0.0.1:6379"); //redis 3.2 Single test
             //r.Interceptors.Add(() => new ResetCommandAop());
             //var r = new RedisClient("localhost:6379,database=9,password=123456"); //redis 3.2
             //var r = new RedisClient("127.0.0.1:6379,database=1", "127.0.0.1:6379,database=1");
-            var r = new RedisClient(new ConnectionStringBuilder[] { "192.168.164.10:6381,password=123456,subscribleReadBytes=true" }); //redis 7.0 cluster
+            //var r = new RedisClient(new ConnectionStringBuilder[] { "192.168.164.10:6381,password=123456,subscribleReadBytes=true" }); //redis 7.0 cluster
             r.Serialize = obj => JsonConvert.SerializeObject(obj);
             r.Deserialize = (json, type) => JsonConvert.DeserializeObject(json, type);
             r.Notice += (s, e) => 
@@ -41,14 +41,21 @@ namespace console_net8
             return r;
         });
         static RedisClient cli => _cliLazy.Value;
+
         //static StackExchange.Redis.ConnectionMultiplexer seredis = StackExchange.Redis.ConnectionMultiplexer.Connect("127.0.0.1:6379");
         //static StackExchange.Redis.IDatabase sedb = seredis.GetDatabase(1);
 
         static void Main(string[] args)
         {
+
+            Console.WriteLine(typeof(GeoUnit).FromObject(null));
+            Console.WriteLine(typeof(GeoUnit).FromObject(""));
+            Console.WriteLine(typeof(GeoUnit).FromObject("ft"));
+            Console.WriteLine(Array.CreateInstance(typeof(GeoMember[]).GetElementType(), 0));
             var redis = new RedisClient("127.0.0.1:6379,ssl=false");
             redis.Get("xxx");
 
+            var result71 = cli.AclGetUser("sample");
 
             void ondata(string channel, object data)
             {
