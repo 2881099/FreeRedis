@@ -2,7 +2,7 @@
 
 <div align="center">
 
-基于 .NET 的 Redis 客户端，支持 .NET Core 2.1+、.NET Framework 4.0+ 以及 Xamarin 和 AOT。
+基于 .NET 的 Redis 客户端，支持 .NET Core 2.1+、.NET Framework 4.0+、Xamarin 以及 AOT。
 
 [![nuget](https://img.shields.io/nuget/v/FreeRedis.svg?style=flat-square)](https://www.nuget.org/packages/FreeRedis) 
 [![stats](https://img.shields.io/nuget/dt/FreeRedis.svg?style=flat-square)](https://www.nuget.org/stats/packages/FreeRedis?groupby=Version) 
