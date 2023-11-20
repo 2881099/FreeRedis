@@ -626,7 +626,7 @@ namespace FreeRedis
             }
             return sb.Append(">").ToString();
         }
-        static string DisplayCsharp(this MethodInfo method, bool isOverride)
+        public static string DisplayCsharp(this MethodInfo method, bool isOverride)
         {
             if (method == null) return null;
             var sb = new StringBuilder();
