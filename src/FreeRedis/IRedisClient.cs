@@ -676,7 +676,7 @@ namespace FreeRedis
         Task<long> RPushXAsync(string key, params object[] elements);
         Task HMSetAsync<T>(string key, string field, T value, params object[] fieldValues);
         Task HMSetAsync<T>(string key, Dictionary<string, T> keyValues);
-        Task<ScanResult<string>> HScanAsync(string key, long cursor, string pattern, long count);
+        Task<ScanResult<KeyValuePair<string, string>>> HScanAsync(string key, long cursor, string pattern, long count);
         Task<long> HSetAsync<T>(string key, string field, T value, params object[] fieldValues);
         Task<long> HSetAsync<T>(string key, Dictionary<string, T> keyValues);
         Task<bool> HSetNxAsync<T>(string key, string field, T value);

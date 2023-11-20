@@ -53,7 +53,25 @@ namespace console_net8
             Console.WriteLine(typeof(GeoUnit).FromObject("ft"));
             Console.WriteLine(Array.CreateInstance(typeof(GeoMember[]).GetElementType(), 0));
             var redis = new RedisClient("127.0.0.1:6379,ssl=false");
-            redis.Get("xxx");
+
+			foreach (var result1 in redis.SScan("tset1", "*", 100))
+			{
+
+			}
+			foreach (var result1 in redis.SScan<byte[]>("tset1", "*", 100))
+			{
+
+			}
+			foreach (var result1 in  redis.HScan("thash",  "*", 100))
+            {
+
+            }
+			foreach (var result1 in redis.HScan<byte[]>("thash", "*", 100))
+            {
+
+            }
+
+			redis.Get("xxx");
 
             var result71 = cli.AclGetUser("sample");
 
