@@ -8,8 +8,8 @@ namespace console_net8_client_side_caching
     {
         static Lazy<RedisClient> _cliLazy = new Lazy<RedisClient>(() =>
         {
-            //var r = new RedisClient("127.0.0.1:6379", false); //redis 3.2 Single test
-            var r = new RedisClient("192.168.164.10:6379"); //redis 3.2 Single test
+            var r = new RedisClient("127.0.0.1:6379"); //redis 3.2 Single test
+            //var r = new RedisClient("192.168.164.10:6379"); //redis 3.2 Single test
             //var r = new RedisClient("127.0.0.1:6379,database=1,min pool size=500,max pool size=500"); //redis 3.2
             //var r = new RedisClient("127.0.0.1:6379,database=10", "127.0.0.1:6380,database=10", "127.0.0.1:6381,database=10");
             //var r = new RedisClient(new [] { (ConnectionStringBuilder)"192.168.164.10:6379,database=1", (ConnectionStringBuilder)"192.168.164.10:6379,database=2" }); //redis 6.0
@@ -32,10 +32,17 @@ namespace console_net8_client_side_caching
                 //本地缓存的容量
                 Capacity = 3,
                 //过滤哪些键能被本地缓存
-                KeyFilter = key => key.StartsWith("Interceptor"),
+                //KeyFilter = key => key.StartsWith("Interceptor"),
                 //检查长期未使用的缓存
                 CheckExpired = (key, dt) => DateTime.Now.Subtract(dt) > TimeSpan.FromSeconds(600)
             });
+
+            while (Console.ReadKey().Key != ConsoleKey.Escape)
+            {
+                Console.WriteLine(cli.HGetAll("hash01"));
+                Console.WriteLine(cli.HGet("hash01", "f3"));
+                Console.WriteLine(cli.HMGet("hash01", "f3", "f2"));
+			}
 
             cli.Set("Interceptor01", "123123"); //redis-server
 

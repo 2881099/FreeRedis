@@ -292,7 +292,39 @@ namespace FreeRedis
                                 _iscached = true;
                             }
                             break;
-                    }
+                        case "HGETALL":
+							if (_cscc.TryGetCacheValue(args.Command.GetKey(0), args.ValueType, out var hgetallval))
+							{
+								args.Value = hgetallval;
+								_iscached = true;
+							}
+							break;
+                        case "HGET":
+							if (_cscc.TryGetCacheValue(args.Command.GetKey(0), typeof(Dictionary<string, string>), out var hvals2))
+							{
+                                var dict = hvals2 as Dictionary<string, string>;
+								var keyIndex = args.Command._keyIndexes.Max(a => a);
+								if (dict.TryGetValue(args.Command._input[keyIndex + 1]?.ToString(), out var hval))
+                                {
+                                    args.Value = hval;
+                                    _iscached = true;
+                                }
+							}
+							break;
+						case "HMGET":
+							if (_cscc.TryGetCacheValue(args.Command.GetKey(0), typeof(Dictionary<string, string>), out var hvals3))
+							{
+								var dict = hvals3 as Dictionary<string, string>;
+                                var keyIndex = args.Command._keyIndexes.Max(a => a);
+                                var vals = new string[args.Command._input.Count - keyIndex - 1];
+                                for (var a = 0; a < vals.Length; a++)
+                                    if (dict.TryGetValue(args.Command._input[keyIndex + 1 + a]?.ToString(), out var hval))
+                                        vals[a] = hval;
+								args.Value = vals;
+								_iscached = true;
+							}
+							break;
+					}
                 }
 
                 public void After(InterceptorAfterEventArgs args)
@@ -323,7 +355,15 @@ namespace FreeRedis
                                 }
                             }
                             break;
-                        default:
+						case "HGETALL":
+							if (_iscached == false && args.Exception == null)
+							{
+								var getkey = args.Command.GetKey(0);
+								if (_cscc._options.KeyFilter?.Invoke(getkey) != false)
+									_cscc.SetCacheValue(args.Command, args.Command._command, getkey, args.ValueType, args.Value);
+							}
+							break;
+						default:
                             if (args.Command._keyIndexes.Any())
                             {
                                 var cmdset = CommandSets.Get(args.Command._command);
