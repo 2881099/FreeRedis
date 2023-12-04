@@ -1,6 +1,8 @@
 ﻿using FreeRedis;
 using Newtonsoft.Json;
 using System;
+using System.Globalization;
+using System.Threading;
 
 namespace console_net8_client_side_caching
 {
@@ -27,7 +29,10 @@ namespace console_net8_client_side_caching
 
         static void Main(string[] args)
         {
-            cli.UseClientSideCaching(new ClientSideCachingOptions
+			Thread.CurrentThread.CurrentCulture = new CultureInfo("nb"); 
+            var test = long.Parse("-1");
+
+			cli.UseClientSideCaching(new ClientSideCachingOptions
             {
                 //本地缓存的容量
                 Capacity = 3,

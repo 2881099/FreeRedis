@@ -52,7 +52,7 @@ namespace FreeRedis
                     {
                         if (destination == null) destination = ms = new MemoryStream();
                         var lenstr = ReadLine(null);
-                        if (int.TryParse(lenstr, out var len))
+						if (int.TryParse(lenstr, NumberStyles.Any, CultureInfo.InvariantCulture.NumberFormat, out var len))
                         {
                             if (len < 0) return null;
                             if (len > 0) Read(destination, len, bufferSize);
@@ -67,7 +67,7 @@ namespace FreeRedis
                                 char c = (char)_stream.ReadByte();
                                 if (c != ';') throw new ProtocolViolationException($"Expecting fail Streamed strings ';', got '{c}'");
                                 var clenstr = ReadLine(null);
-                                if (int.TryParse(clenstr, out var clen))
+                                if (int.TryParse(clenstr, NumberStyles.Any, CultureInfo.InvariantCulture.NumberFormat, out var clen))
                                 {
                                     if (clen == 0) break;
                                     if (clen > 0)
@@ -113,13 +113,13 @@ namespace FreeRedis
             long ReadNumber(char msgtype)
             {
                 var numstr = ReadLine(null);
-                if (long.TryParse(numstr, out var num)) return num;
+                if (long.TryParse(numstr, NumberStyles.Any, CultureInfo.InvariantCulture.NumberFormat, out var num)) return num;
                 throw new ProtocolViolationException($"Expecting fail Number '{msgtype}0', got '{msgtype}{numstr}'");
             }
             BigInteger ReadBigNumber(char msgtype)
             {
                 var numstr = ReadLine(null);
-                if (BigInteger.TryParse(numstr, NumberStyles.Any, null, out var num)) return num;
+                if (BigInteger.TryParse(numstr, NumberStyles.Any, CultureInfo.InvariantCulture.NumberFormat, out var num)) return num;
                 throw new ProtocolViolationException($"Expecting fail BigNumber '{msgtype}0', got '{msgtype}{numstr}'");
             }
             double ReadDouble(char msgtype)
@@ -130,7 +130,7 @@ namespace FreeRedis
                     case "inf": return double.PositiveInfinity;
                     case "-inf": return double.NegativeInfinity;
                 }
-                if (double.TryParse(numstr, NumberStyles.Any, null, out var num)) return num;
+                if (double.TryParse(numstr, NumberStyles.Any, CultureInfo.InvariantCulture.NumberFormat, out var num)) return num;
                 throw new ProtocolViolationException($"Expecting fail Double '{msgtype}1.23', got '{msgtype}{numstr}'");
             }
             bool ReadBoolean(char msgtype)
@@ -147,7 +147,7 @@ namespace FreeRedis
             object[] ReadArray(char msgtype, Encoding encoding)
             {
                 var lenstr = ReadLine(null);
-                if (int.TryParse(lenstr, out var len))
+                if (int.TryParse(lenstr, NumberStyles.Any, CultureInfo.InvariantCulture.NumberFormat, out var len))
                 {
                     if (len < 0) return null;
                     var arr = new object[len];
@@ -172,7 +172,7 @@ namespace FreeRedis
             object[] ReadMap(char msgtype, Encoding encoding)
             {
                 var lenstr = ReadLine(null);
-                if (int.TryParse(lenstr, out var len))
+                if (int.TryParse(lenstr, NumberStyles.Any, CultureInfo.InvariantCulture.NumberFormat, out var len))
                 {
                     if (len < 0) return null;
                     var arr = new object[len * 2];
@@ -900,28 +900,28 @@ namespace FreeRedis
                     }
                     return null;
                 };
-                if (tt == typeof(byte)) return vs => vs == null ? 0 : (byte.TryParse(vs, NumberStyles.Any, null, out var tryval) ? tryval : 0);
-                if (tt == typeof(byte?)) return vs => vs == null ? null : (byte.TryParse(vs, NumberStyles.Any, null, out var tryval) ? (byte?)tryval : null);
-                if (tt == typeof(decimal)) return vs => vs == null ? 0 : (decimal.TryParse(vs, NumberStyles.Any, null, out var tryval) ? tryval : 0);
-                if (tt == typeof(decimal?)) return vs => vs == null ? null : (decimal.TryParse(vs, NumberStyles.Any, null, out var tryval) ? (decimal?)tryval : null);
-                if (tt == typeof(double)) return vs => vs == null ? 0 : (double.TryParse(vs, NumberStyles.Any, null, out var tryval) ? tryval : 0);
-                if (tt == typeof(double?)) return vs => vs == null ? null : (double.TryParse(vs, NumberStyles.Any, null, out var tryval) ? (double?)tryval : null);
-                if (tt == typeof(float)) return vs => vs == null ? 0 : (float.TryParse(vs, NumberStyles.Any, null, out var tryval) ? tryval : 0);
-                if (tt == typeof(float?)) return vs => vs == null ? null : (float.TryParse(vs, NumberStyles.Any, null, out var tryval) ? (float?)tryval : null);
-                if (tt == typeof(int)) return vs => vs == null ? 0 : (int.TryParse(vs, NumberStyles.Any, null, out var tryval) ? tryval : 0);
-                if (tt == typeof(int?)) return vs => vs == null ? null : (int.TryParse(vs, NumberStyles.Any, null, out var tryval) ? (int?)tryval : null);
-                if (tt == typeof(long)) return vs => vs == null ? 0 : (long.TryParse(vs, NumberStyles.Any, null, out var tryval) ? tryval : 0);
-                if (tt == typeof(long?)) return vs => vs == null ? null : (long.TryParse(vs, NumberStyles.Any, null, out var tryval) ? (long?)tryval : null);
-                if (tt == typeof(sbyte)) return vs => vs == null ? 0 : (sbyte.TryParse(vs, NumberStyles.Any, null, out var tryval) ? tryval : 0);
-                if (tt == typeof(sbyte?)) return vs => vs == null ? null : (sbyte.TryParse(vs, NumberStyles.Any, null, out var tryval) ? (sbyte?)tryval : null);
-                if (tt == typeof(short)) return vs => vs == null ? 0 : (short.TryParse(vs, NumberStyles.Any, null, out var tryval) ? tryval : 0);
-                if (tt == typeof(short?)) return vs => vs == null ? null : (short.TryParse(vs, NumberStyles.Any, null, out var tryval) ? (short?)tryval : null);
-                if (tt == typeof(uint)) return vs => vs == null ? 0 : (uint.TryParse(vs, NumberStyles.Any, null, out var tryval) ? tryval : 0);
-                if (tt == typeof(uint?)) return vs => vs == null ? null : (uint.TryParse(vs, NumberStyles.Any, null, out var tryval) ? (uint?)tryval : null);
-                if (tt == typeof(ulong)) return vs => vs == null ? 0 : (ulong.TryParse(vs, NumberStyles.Any, null, out var tryval) ? tryval : 0);
-                if (tt == typeof(ulong?)) return vs => vs == null ? null : (ulong.TryParse(vs, NumberStyles.Any, null, out var tryval) ? (ulong?)tryval : null);
-                if (tt == typeof(ushort)) return vs => vs == null ? 0 : (ushort.TryParse(vs, NumberStyles.Any, null, out var tryval) ? tryval : 0);
-                if (tt == typeof(ushort?)) return vs => vs == null ? null : (ushort.TryParse(vs, NumberStyles.Any, null, out var tryval) ? (ushort?)tryval : null);
+                if (tt == typeof(byte)) return vs => vs == null ? 0 : (byte.TryParse(vs, NumberStyles.Any, CultureInfo.InvariantCulture.NumberFormat, out var tryval) ? tryval : 0);
+                if (tt == typeof(byte?)) return vs => vs == null ? null : (byte.TryParse(vs, NumberStyles.Any, CultureInfo.InvariantCulture.NumberFormat, out var tryval) ? (byte?)tryval : null);
+                if (tt == typeof(decimal)) return vs => vs == null ? 0 : (decimal.TryParse(vs, NumberStyles.Any, CultureInfo.InvariantCulture.NumberFormat, out var tryval) ? tryval : 0);
+                if (tt == typeof(decimal?)) return vs => vs == null ? null : (decimal.TryParse(vs, NumberStyles.Any, CultureInfo.InvariantCulture.NumberFormat, out var tryval) ? (decimal?)tryval : null);
+                if (tt == typeof(double)) return vs => vs == null ? 0 : (double.TryParse(vs, NumberStyles.Any, CultureInfo.InvariantCulture.NumberFormat, out var tryval) ? tryval : 0);
+                if (tt == typeof(double?)) return vs => vs == null ? null : (double.TryParse(vs, NumberStyles.Any, CultureInfo.InvariantCulture.NumberFormat, out var tryval) ? (double?)tryval : null);
+                if (tt == typeof(float)) return vs => vs == null ? 0 : (float.TryParse(vs, NumberStyles.Any, CultureInfo.InvariantCulture.NumberFormat, out var tryval) ? tryval : 0);
+                if (tt == typeof(float?)) return vs => vs == null ? null : (float.TryParse(vs, NumberStyles.Any, CultureInfo.InvariantCulture.NumberFormat, out var tryval) ? (float?)tryval : null);
+                if (tt == typeof(int)) return vs => vs == null ? 0 : (int.TryParse(vs, NumberStyles.Any, CultureInfo.InvariantCulture.NumberFormat, out var tryval) ? tryval : 0);
+                if (tt == typeof(int?)) return vs => vs == null ? null : (int.TryParse(vs, NumberStyles.Any, CultureInfo.InvariantCulture.NumberFormat, out var tryval) ? (int?)tryval : null);
+                if (tt == typeof(long)) return vs => vs == null ? 0 : (long.TryParse(vs, NumberStyles.Any, CultureInfo.InvariantCulture.NumberFormat, out var tryval) ? tryval : 0);
+                if (tt == typeof(long?)) return vs => vs == null ? null : (long.TryParse(vs, NumberStyles.Any, CultureInfo.InvariantCulture.NumberFormat, out var tryval) ? (long?)tryval : null);
+                if (tt == typeof(sbyte)) return vs => vs == null ? 0 : (sbyte.TryParse(vs, NumberStyles.Any, CultureInfo.InvariantCulture.NumberFormat, out var tryval) ? tryval : 0);
+                if (tt == typeof(sbyte?)) return vs => vs == null ? null : (sbyte.TryParse(vs, NumberStyles.Any, CultureInfo.InvariantCulture.NumberFormat, out var tryval) ? (sbyte?)tryval : null);
+                if (tt == typeof(short)) return vs => vs == null ? 0 : (short.TryParse(vs, NumberStyles.Any, CultureInfo.InvariantCulture.NumberFormat, out var tryval) ? tryval : 0);
+                if (tt == typeof(short?)) return vs => vs == null ? null : (short.TryParse(vs, NumberStyles.Any, CultureInfo.InvariantCulture.NumberFormat, out var tryval) ? (short?)tryval : null);
+                if (tt == typeof(uint)) return vs => vs == null ? 0 : (uint.TryParse(vs, NumberStyles.Any, CultureInfo.InvariantCulture.NumberFormat, out var tryval) ? tryval : 0);
+                if (tt == typeof(uint?)) return vs => vs == null ? null : (uint.TryParse(vs, NumberStyles.Any, CultureInfo.InvariantCulture.NumberFormat, out var tryval) ? (uint?)tryval : null);
+                if (tt == typeof(ulong)) return vs => vs == null ? 0 : (ulong.TryParse(vs, NumberStyles.Any, CultureInfo.InvariantCulture.NumberFormat, out var tryval) ? tryval : 0);
+                if (tt == typeof(ulong?)) return vs => vs == null ? null : (ulong.TryParse(vs, NumberStyles.Any, CultureInfo.InvariantCulture.NumberFormat, out var tryval) ? (ulong?)tryval : null);
+                if (tt == typeof(ushort)) return vs => vs == null ? 0 : (ushort.TryParse(vs, NumberStyles.Any, CultureInfo.InvariantCulture.NumberFormat, out var tryval) ? tryval : 0);
+                if (tt == typeof(ushort?)) return vs => vs == null ? null : (ushort.TryParse(vs, NumberStyles.Any, CultureInfo.InvariantCulture.NumberFormat, out var tryval) ? (ushort?)tryval : null);
                 if (tt == typeof(DateTime)) return vs => vs == null ? DateTime.MinValue : (DateTime.TryParse(vs, out var tryval) ? tryval : DateTime.MinValue);
                 if (tt == typeof(DateTime?)) return vs => vs == null ? null : (DateTime.TryParse(vs, out var tryval) ? (DateTime?)tryval : null);
                 if (tt == typeof(DateTimeOffset)) return vs => vs == null ? DateTimeOffset.MinValue : (DateTimeOffset.TryParse(vs, out var tryval) ? tryval : DateTimeOffset.MinValue);
@@ -930,8 +930,8 @@ namespace FreeRedis
                 if (tt == typeof(TimeSpan?)) return vs => vs == null ? null : (TimeSpan.TryParse(vs, out var tryval) ? (TimeSpan?)tryval : null);
                 if (tt == typeof(Guid)) return vs => vs == null ? Guid.Empty : (Guid.TryParse(vs, out var tryval) ? tryval : Guid.Empty);
                 if (tt == typeof(Guid?)) return vs => vs == null ? null : (Guid.TryParse(vs, out var tryval) ? (Guid?)tryval : null);
-                if (tt == typeof(BigInteger)) return vs => vs == null ? 0 : (BigInteger.TryParse(vs, NumberStyles.Any, null, out var tryval) ? tryval : 0);
-                if (tt == typeof(BigInteger?)) return vs => vs == null ? null : (BigInteger.TryParse(vs, NumberStyles.Any, null, out var tryval) ? (BigInteger?)tryval : null);
+                if (tt == typeof(BigInteger)) return vs => vs == null ? 0 : (BigInteger.TryParse(vs, NumberStyles.Any, CultureInfo.InvariantCulture.NumberFormat, out var tryval) ? tryval : 0);
+                if (tt == typeof(BigInteger?)) return vs => vs == null ? null : (BigInteger.TryParse(vs, NumberStyles.Any, CultureInfo.InvariantCulture.NumberFormat, out var tryval) ? (BigInteger?)tryval : null);
                 if (tt.NullableTypeOrThis().IsEnum)
                 {
                     var tttype = tt.NullableTypeOrThis();
