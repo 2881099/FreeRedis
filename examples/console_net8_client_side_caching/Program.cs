@@ -32,6 +32,13 @@ namespace console_net8_client_side_caching
 			Thread.CurrentThread.CurrentCulture = new CultureInfo("nb"); 
             var test = long.Parse("-1");
 
+            cli.Notice += (s, e) =>
+            {
+                if (e.NoticeType == NoticeType.Event && e.Log == "ClientSideCaching:InValidate")
+                {
+                    var keys = e.Tag as string[];
+                }
+            };
 			cli.UseClientSideCaching(new ClientSideCachingOptions
             {
                 //本地缓存的容量

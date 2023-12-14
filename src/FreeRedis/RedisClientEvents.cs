@@ -7,7 +7,7 @@ namespace FreeRedis
 {
     public enum NoticeType
     {
-        Call, Info
+        Call, Info, Event
     }
     public class NoticeEventArgs : EventArgs
     {

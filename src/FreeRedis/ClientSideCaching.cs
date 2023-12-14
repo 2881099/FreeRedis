@@ -164,7 +164,8 @@ namespace FreeRedis
                 {
                     foreach (var key in keys)
                         RemoveCache(string.Concat(key));
-                }
+					_cli.OnNotice(_cli, new NoticeEventArgs(NoticeType.Event, null, "ClientSideCaching:InValidate", keys));
+				}
             }
 
             static readonly DateTime _dt2020 = new DateTime(2020, 1, 1);
