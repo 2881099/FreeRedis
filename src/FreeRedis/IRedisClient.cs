@@ -712,6 +712,7 @@ namespace FreeRedis
 		Task<bool> SetXxAsync<T>(string key, T value, TimeSpan timeout);
 		Task<bool> SetXxAsync<T>(string key, T value, bool keepTtl);
 		Task<string> SetAsync<T>(string key, T value, TimeSpan timeout, bool keepTtl, bool nx, bool xx, bool get);
+		Task SetAsync<T>(string key, T value, TimeSpan timeout);
 		Task<long> SetBitAsync(string key, long offset, bool value);
 		Task SetExAsync<T>(string key, int seconds, T value);
 		Task<bool> SetNxAsync<T>(string key, T value);

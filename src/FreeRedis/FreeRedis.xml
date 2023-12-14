@@ -2226,6 +2226,22 @@
              Null reply: a Null Bulk Reply is returned if the SET operation was not performed because the user specified the NX or XX option but the condition was not met or if user specified the NX and GET options that do not met.
              </returns>
         </member>
+        <member name="M:FreeRedis.RedisClient.SetAsync``1(System.String,``0,System.TimeSpan)">
+            <summary>
+            SET key value EX seconds (A Synchronized Version) <br /><br />
+            <br />
+            Set key to hold the string value.<br /><br />
+            <br />
+            设置键和值。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/set <br />
+            Available since 2.6.12. 
+            </summary>
+            <param name="key">Key</param>
+            <param name="value">Value</param>
+            <param name="timeout">Timeout</param>
+            <typeparam name="T"></typeparam>
+        </member>
         <member name="M:FreeRedis.RedisClient.SetBitAsync(System.String,System.Int64,System.Boolean)">
              <summary>
              SETBIT command (An Asynchronous Version) <br /><br />
