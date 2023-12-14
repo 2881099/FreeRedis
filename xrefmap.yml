@@ -10608,6 +10608,12 @@ references:
   commentId: F:FreeRedis.NoticeType.Call
   fullName: FreeRedis.NoticeType.Call
   nameWithType: NoticeType.Call
+- uid: FreeRedis.NoticeType.Event
+  name: Event
+  href: docs/api/FreeRedis.NoticeType.html#FreeRedis_NoticeType_Event
+  commentId: F:FreeRedis.NoticeType.Event
+  fullName: FreeRedis.NoticeType.Event
+  nameWithType: NoticeType.Event
 - uid: FreeRedis.NoticeType.Info
   name: Info
   href: docs/api/FreeRedis.NoticeType.html#FreeRedis_NoticeType_Info
