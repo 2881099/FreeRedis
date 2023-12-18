@@ -65,7 +65,7 @@ string[] vals = cli.MGet("key1", "key2");
 | name              | \<empty\> | Connection name, use client list command to view |
 | prefix            | \<empty\> | The prefix of the key, all methods will have this prefix. cli.Set(prefix + "key", 111); |
 | exitAutoDisposePool | true | AppDomain.CurrentDomain.ProcessExit/Console.CancelKeyPress auto disposed |
-| subscribleReadbytes | false | Subscrible read bytes |
+| subscribeReadbytes | false | Subscribe read bytes |
 
 > IPv6: [fe80::b164:55b3:4b4f:7ce6%15]:6379
 

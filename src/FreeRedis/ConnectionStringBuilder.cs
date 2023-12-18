@@ -33,7 +33,7 @@ namespace FreeRedis
         public int MinPoolSize { get; set; } = 1;
         public int Retry { get; set; } = 0;
         public bool ExitAutoDisposePool { get; set; } = true;
-        public bool SubscribleReadbytes { get; set; } = false;
+        public bool SubscribeReadbytes { get; set; } = false;
 
         public RemoteCertificateValidationCallback CertificateValidation;
         public LocalCertificateSelectionCallback CertificateSelection;
@@ -63,7 +63,7 @@ namespace FreeRedis
             if (MinPoolSize != 1) sb.Append(",min pool size=").Append(MinPoolSize);
             if (Retry != 0) sb.Append(",retry=").Append(Retry);
             if (ExitAutoDisposePool != true) sb.Append(",exitAutoDisposePool=false");
-            if (SubscribleReadbytes != false) sb.Append(",subscribleReadbytes=true");
+            if (SubscribeReadbytes != false) sb.Append(",subscribeReadbytes=true");
             return sb.ToString();
         }
 
@@ -104,7 +104,8 @@ namespace FreeRedis
                     case "minpoolsize": if (kv.Length > 1 && int.TryParse(kv[1].Trim(), out var minPoolSize) && minPoolSize >= 0) ret.MinPoolSize = minPoolSize; break;
                     case "retry": if (kv.Length > 1 && int.TryParse(kv[1].Trim(), out var retry) && retry > 0) ret.Retry = retry; break;
                     case "exitautodisposepool": if (kv.Length > 1 && new[] { "false", "0" }.Contains(kv[1].Trim())) ret.ExitAutoDisposePool = false; break;
-                    case "subscriblereadbytes": if (kv.Length > 1 && kv[1].ToLower().Trim() == "true") ret.SubscribleReadbytes = true; break;
+                    case "subscriblereadbytes": //history error
+                    case "subscribereadbytes": if (kv.Length > 1 && kv[1].ToLower().Trim() == "true") ret.SubscribeReadbytes = true; break;
                 }
             }
             return ret;

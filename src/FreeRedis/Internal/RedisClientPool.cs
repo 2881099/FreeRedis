@@ -157,7 +157,9 @@ namespace FreeRedis.Internal
         public bool OnCheckAvailable(Object<RedisClient> obj)
         {
             obj.ResetValue();
-            return obj.Value.Ping("CheckAvailable") == "CheckAvailable";
+            CommandPacket cmd = "PING";
+            cmd.IsIgnoreAop = true;
+            return obj.Value.Call(cmd) as string == "PONG";
         }
 
         public RedisClient OnCreate()
@@ -192,8 +194,10 @@ namespace FreeRedis.Internal
                 {
                     try
                     {
-                        obj.Value.Ping("CheckAvailable");
-                    }
+						CommandPacket cmd = "PING";
+						cmd.IsIgnoreAop = true;
+						obj.Value.Call(cmd);
+					}
                     catch
                     {
                         obj.ResetValue();
@@ -202,11 +206,25 @@ namespace FreeRedis.Internal
             }
         }
 #if !NET40
-        public Task OnGetAsync(Object<RedisClient> obj)
+        async public Task OnGetAsync(Object<RedisClient> obj)
         {
-            OnGet(obj); //todo
-            return Task.FromResult(false);
-        }
+			if (_pool.IsAvailable)
+			{
+				if (DateTime.Now.Subtract(obj.LastReturnTime).TotalSeconds > 60 || obj.Value.Adapter.GetRedisSocket(null).IsConnected == false)
+				{
+					try
+					{
+						CommandPacket cmd = "PING";
+						cmd.IsIgnoreAop = true;
+						await obj.Value.CallAsync(cmd);
+					}
+					catch
+					{
+						obj.ResetValue();
+					}
+				}
+			}
+		}
 #endif
 
         public void OnGetTimeout() { }
@@ -229,8 +247,10 @@ namespace FreeRedis.Internal
             {
                 var conn = pool.Get();
                 initConns.Add(conn);
-                conn.Value.Ping("CheckAvailable");
-            }
+				CommandPacket cmd = "PING";
+				cmd.IsIgnoreAop = true;
+				conn.Value.Call(cmd);
+			}
             catch (Exception ex)
             {
                 initTestOk = false; //预热一次失败，后面将不进行
