@@ -1400,19 +1400,19 @@ references:
   isSpec: "True"
   fullName: FreeRedis.ConnectionStringBuilder.Ssl
   nameWithType: ConnectionStringBuilder.Ssl
-- uid: FreeRedis.ConnectionStringBuilder.SubscribleReadbytes
-  name: SubscribleReadbytes
-  href: docs/api/FreeRedis.ConnectionStringBuilder.html#FreeRedis_ConnectionStringBuilder_SubscribleReadbytes
-  commentId: P:FreeRedis.ConnectionStringBuilder.SubscribleReadbytes
-  fullName: FreeRedis.ConnectionStringBuilder.SubscribleReadbytes
-  nameWithType: ConnectionStringBuilder.SubscribleReadbytes
-- uid: FreeRedis.ConnectionStringBuilder.SubscribleReadbytes*
-  name: SubscribleReadbytes
-  href: docs/api/FreeRedis.ConnectionStringBuilder.html#FreeRedis_ConnectionStringBuilder_SubscribleReadbytes_
-  commentId: Overload:FreeRedis.ConnectionStringBuilder.SubscribleReadbytes
+- uid: FreeRedis.ConnectionStringBuilder.SubscribeReadbytes
+  name: SubscribeReadbytes
+  href: docs/api/FreeRedis.ConnectionStringBuilder.html#FreeRedis_ConnectionStringBuilder_SubscribeReadbytes
+  commentId: P:FreeRedis.ConnectionStringBuilder.SubscribeReadbytes
+  fullName: FreeRedis.ConnectionStringBuilder.SubscribeReadbytes
+  nameWithType: ConnectionStringBuilder.SubscribeReadbytes
+- uid: FreeRedis.ConnectionStringBuilder.SubscribeReadbytes*
+  name: SubscribeReadbytes
+  href: docs/api/FreeRedis.ConnectionStringBuilder.html#FreeRedis_ConnectionStringBuilder_SubscribeReadbytes_
+  commentId: Overload:FreeRedis.ConnectionStringBuilder.SubscribeReadbytes
   isSpec: "True"
-  fullName: FreeRedis.ConnectionStringBuilder.SubscribleReadbytes
-  nameWithType: ConnectionStringBuilder.SubscribleReadbytes
+  fullName: FreeRedis.ConnectionStringBuilder.SubscribeReadbytes
+  nameWithType: ConnectionStringBuilder.SubscribeReadbytes
 - uid: FreeRedis.ConnectionStringBuilder.ToString
   name: ToString()
   href: docs/api/FreeRedis.ConnectionStringBuilder.html#FreeRedis_ConnectionStringBuilder_ToString
