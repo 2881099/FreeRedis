@@ -57,7 +57,7 @@ namespace FreeRedis
 				{
 					return new LockController(this, name, value, timeoutSeconds, refrshTimeoutSeconds, autoDelay, token);
 				}
-
+				if (token.IsCancellationRequested) return null;
 				Thread.CurrentThread.Join(millisecondsTimeout: 3);
 			}
 			return null;
