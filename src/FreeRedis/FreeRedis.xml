@@ -1596,6 +1596,18 @@
             <param name="autoDelay">自动延长锁超时时间，看门狗线程的超时时间为timeoutSeconds/2 ， 在看门狗线程超时时间时自动延长锁的时间为timeoutSeconds。除非程序意外退出，否则永不超时。</param>
             <returns></returns>
         </member>
+        <member name="M:FreeRedis.RedisClient.Lock(System.String,System.Int32,System.Int32,System.Int32,System.Boolean,System.Threading.CancellationToken)">
+            <summary>
+            开启分布式锁，若超时返回null
+            </summary>
+            <param name="name">锁名称</param>
+            <param name="timeoutSeconds">独占锁过期时间</param>
+            <param name="refrshTimeoutSeconds">每隔多久自动延长一次锁，时间要比 timeoutSeconds 小，否则没有意义</param>
+            <param name="waitTimeoutSeconds">等待锁释放超时时间，如果这个时间内获取不到锁，则 LockController 为 null</param>
+            <param name="autoDelay">自动延长锁超时时间，看门狗线程的超时时间为timeoutSeconds/2 ， 在看门狗线程超时时间时自动延长锁的时间为timeoutSeconds。除非程序意外退出，否则永不超时。</param>
+            <param name="token">CancellationToken 自动取消锁</param>
+            <returns></returns>
+        </member>
         <member name="M:FreeRedis.RedisClient.LockController.Delay(System.Int32)">
             <summary>
             延长锁时间，锁在占用期内操作时返回true，若因锁超时被其他使用者占用则返回false
