@@ -13169,6 +13169,12 @@ references:
   commentId: M:FreeRedis.RedisClient.Lock(System.String,System.Int32,System.Boolean)
   fullName: FreeRedis.RedisClient.Lock(System.String, System.Int32, System.Boolean)
   nameWithType: RedisClient.Lock(String, Int32, Boolean)
+- uid: FreeRedis.RedisClient.Lock(System.String,System.Int32,System.Int32,System.Int32,System.Boolean,System.Threading.CancellationToken)
+  name: Lock(String, Int32, Int32, Int32, Boolean, CancellationToken)
+  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_Lock_System_String_System_Int32_System_Int32_System_Int32_System_Boolean_System_Threading_CancellationToken_
+  commentId: M:FreeRedis.RedisClient.Lock(System.String,System.Int32,System.Int32,System.Int32,System.Boolean,System.Threading.CancellationToken)
+  fullName: FreeRedis.RedisClient.Lock(System.String, System.Int32, System.Int32, System.Int32, System.Boolean, System.Threading.CancellationToken)
+  nameWithType: RedisClient.Lock(String, Int32, Int32, Int32, Boolean, CancellationToken)
 - uid: FreeRedis.RedisClient.Lock*
   name: Lock
   href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_Lock_

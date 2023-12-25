@@ -759,7 +759,7 @@
       "output": {
         ".html": {
           "relative_path": "docs/api/FreeRedis.RedisClient.DatabaseHook.html",
-          "hash": "hVEJhT3Dfj6vy1OqFRUgW5WGDZSJ0pGh0fnq6h4v5gA="
+          "hash": "d0zSThEOCBl99w3kZtvufs462Mgh7a4n5zYn6tjqfUI="
         }
       },
       "is_incremental": false,
@@ -783,7 +783,7 @@
       "output": {
         ".html": {
           "relative_path": "docs/api/FreeRedis.RedisClient.PipelineHook.html",
-          "hash": "plwG00GWuXSjFi/8p2aq2WLszc4/36K9HxA3e4GTLMc="
+          "hash": "XVwukbRIzNaO0i1GTwfoRpIlIYhs9qtfKeXmj6WzNPY="
         }
       },
       "is_incremental": false,
@@ -795,7 +795,7 @@
       "output": {
         ".html": {
           "relative_path": "docs/api/FreeRedis.RedisClient.TransactionHook.html",
-          "hash": "/2VI5W09YTTYqg2FfWA2fior44v9rhxzJ3uG3lpwe2g="
+          "hash": "DylUjZVyE18JNHhB/6CFHHWuzmrWPK+2nFMzgNygAlE="
         }
       },
       "is_incremental": false,
@@ -819,7 +819,7 @@
       "output": {
         ".html": {
           "relative_path": "docs/api/FreeRedis.RedisClient.html",
-          "hash": "jv4rOkzrmNQv0Jh214BEyi00lG/z5l/8UihsCxHn6q0="
+          "hash": "kfXGv15KKEKyPunB0WrC9uhaFyE4fXC9o6kZsBVKRWU="
         }
       },
       "is_incremental": false,

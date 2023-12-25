@@ -9212,6 +9212,80 @@ Available since 1.0.0.</p>
   </table>
   
   
+  <a id="FreeRedis_RedisClient_Lock_" data-uid="FreeRedis.RedisClient.Lock*"></a>
+  <h4 id="FreeRedis_RedisClient_Lock_System_String_System_Int32_System_Int32_System_Int32_System_Boolean_System_Threading_CancellationToken_" data-uid="FreeRedis.RedisClient.Lock(System.String,System.Int32,System.Int32,System.Int32,System.Boolean,System.Threading.CancellationToken)">Lock(String, Int32, Int32, Int32, Boolean, CancellationToken)</h4>
+  <div class="markdown level1 summary"><p>开启分布式锁，若超时返回null</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public RedisClient.LockController Lock(string name, int timeoutSeconds, int refrshTimeoutSeconds, int waitTimeoutSeconds, bool autoDelay = true, CancellationToken token = default(CancellationToken))</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">name</span></td>
+        <td><p>锁名称</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">timeoutSeconds</span></td>
+        <td><p>独占锁过期时间</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">refrshTimeoutSeconds</span></td>
+        <td><p>每隔多久自动延长一次锁，时间要比 timeoutSeconds 小，否则没有意义</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">waitTimeoutSeconds</span></td>
+        <td><p>等待锁释放超时时间，如果这个时间内获取不到锁，则 LockController 为 null</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">autoDelay</span></td>
+        <td><p>自动延长锁超时时间，看门狗线程的超时时间为timeoutSeconds/2 ， 在看门狗线程超时时间时自动延长锁的时间为timeoutSeconds。除非程序意外退出，否则永不超时。</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Threading.CancellationToken</span></td>
+        <td><span class="parametername">token</span></td>
+        <td><p>CancellationToken 自动取消锁</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="FreeRedis.RedisClient.LockController.html">RedisClient.LockController</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
   <a id="FreeRedis_RedisClient_LogCall_" data-uid="FreeRedis.RedisClient.LogCall*"></a>
   <h4 id="FreeRedis_RedisClient_LogCall__1_FreeRedis_CommandPacket_System_Func___0__" data-uid="FreeRedis.RedisClient.LogCall``1(FreeRedis.CommandPacket,System.Func{``0})">LogCall&lt;T&gt;(CommandPacket, Func&lt;T&gt;)</h4>
   <div class="markdown level1 summary"></div>
