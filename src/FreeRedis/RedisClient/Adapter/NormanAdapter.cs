@@ -1,4 +1,4 @@
-﻿using FreeRedis;
+using FreeRedis;
 using FreeRedis.Internal;
 using System;
 using System.Collections.Generic;
@@ -17,6 +17,7 @@ namespace FreeRedis
             internal readonly IdleBus<RedisClientPool> _ib;
             readonly ConnectionStringBuilder[] _connectionStrings;
             readonly Func<string, string> _redirectRule;
+            internal static Encoding _baseEncoding = System.Text.Encoding.ASCII;
 
             public NormanAdapter(RedisClient topOwner, ConnectionStringBuilder[] connectionStrings, Func<string, string> redirectRule)
             {
@@ -27,6 +28,7 @@ namespace FreeRedis
                     throw new ArgumentNullException(nameof(connectionStrings));
 
                 _connectionStrings = connectionStrings.ToArray();
+                _baseEncoding = connectionStrings.FirstOrDefault()?.Encoding;
                 _ib = new IdleBus<RedisClientPool>(TimeSpan.FromMinutes(10));
                 foreach (var connectionString in _connectionStrings)
                     RegisterClusterNode(connectionString);
@@ -58,7 +60,7 @@ namespace FreeRedis
                 if (_redirectRule == null)
                 {
                     //crc16
-                    var slots = cmd?._keyIndexes.Select(a => ClusterAdapter.GetClusterSlot(cmd._input[a].ToInvariantCultureToString())).Distinct().ToArray();
+                    var slots = cmd?._keyIndexes.Select(a => ClusterAdapter.GetClusterSlot(cmd._input[a].ToInvariantCultureToString(), _baseEncoding)).Distinct().ToArray();
                     poolkeys = slots?.Select(a => _connectionStrings[a % _connectionStrings.Length]).Select(a => $"{a.Host}/{a.Database}").Distinct().ToArray();
                 }
                 else
