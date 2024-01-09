@@ -1,4 +1,4 @@
-﻿using FreeRedis.Internal;
+using FreeRedis.Internal;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -15,6 +15,7 @@ namespace FreeRedis
         {
             internal readonly IdleBus<RedisClientPool> _ib;
             internal readonly ConnectionStringBuilder[] _clusterConnectionStrings;
+            internal static Encoding _baseEncoding=System.Text.Encoding.ASCII;
 
             public ClusterAdapter(RedisClient topOwner, ConnectionStringBuilder[] clusterConnectionStrings)
             {
@@ -25,6 +26,7 @@ namespace FreeRedis
                     throw new ArgumentNullException(nameof(clusterConnectionStrings));
 
                 _clusterConnectionStrings = clusterConnectionStrings.ToArray();
+                _baseEncoding= _clusterConnectionStrings.FirstOrDefault()?.Encoding;
                 _ib = new IdleBus<RedisClientPool>(TimeSpan.FromMinutes(10));
                 RefershClusterNodes();
             }
@@ -49,7 +51,7 @@ namespace FreeRedis
             }
             public override IRedisSocket GetRedisSocket(CommandPacket cmd)
             {
-                var slots = cmd?._keyIndexes.Select(a => GetClusterSlot(cmd._input[a].ToInvariantCultureToString())).Distinct().ToArray();
+                var slots = cmd?._keyIndexes.Select(a => GetClusterSlot(cmd._input[a].ToInvariantCultureToString(), _baseEncoding)).Distinct().ToArray();
                 var poolkeys = slots?.Select(a => _slotCache.TryGetValue(a, out var trykey) ? trykey : null).Distinct().Where(a => a != null).ToArray();
                 //if (poolkeys.Length > 1) throw new RedisClientException($"CROSSSLOT Keys in request don't hash to the same slot: {cmd}");
                 var poolkey = poolkeys?.FirstOrDefault();
@@ -408,10 +410,14 @@ namespace FreeRedis
                 0xef1f,0xff3e,0xcf5d,0xdf7c,0xaf9b,0xbfba,0x8fd9,0x9ff8,
                 0x6e17,0x7e36,0x4e55,0x5e74,0x2e93,0x3eb2,0x0ed1,0x1ef0
             };
-            public static ushort GetClusterSlot(string key)
+            public static ushort GetClusterSlot(string key, System.Text.Encoding encoding = null)
             {
+                if (encoding==null)
+                {
+                    encoding = Encoding.ASCII;
+                }
                 //HASH_SLOT = CRC16(key) mod 16384
-                var blob = Encoding.ASCII.GetBytes(key);
+                var blob = encoding.GetBytes(key);
                 int offset = 0, count = blob.Length, start = -1, end = -1;
                 byte lt = (byte)'{', rt = (byte)'}';
                 for (int a = 0; a < count - 1; a++)
