@@ -17,7 +17,7 @@ namespace FreeRedis
             internal readonly IdleBus<RedisClientPool> _ib;
             readonly ConnectionStringBuilder[] _connectionStrings;
             readonly Func<string, string> _redirectRule;
-            internal static Encoding _baseEncoding = System.Text.Encoding.ASCII;
+            internal static Encoding _baseEncoding;
 
             public NormanAdapter(RedisClient topOwner, ConnectionStringBuilder[] connectionStrings, Func<string, string> redirectRule)
             {

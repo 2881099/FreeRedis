@@ -15,7 +15,7 @@ namespace FreeRedis
         {
             internal readonly IdleBus<RedisClientPool> _ib;
             internal readonly ConnectionStringBuilder[] _clusterConnectionStrings;
-            internal static Encoding _baseEncoding=System.Text.Encoding.ASCII;
+            internal static Encoding _baseEncoding;
 
             public ClusterAdapter(RedisClient topOwner, ConnectionStringBuilder[] clusterConnectionStrings)
             {
@@ -26,7 +26,7 @@ namespace FreeRedis
                     throw new ArgumentNullException(nameof(clusterConnectionStrings));
 
                 _clusterConnectionStrings = clusterConnectionStrings.ToArray();
-                _baseEncoding= _clusterConnectionStrings.FirstOrDefault()?.Encoding;
+                _baseEncoding = _clusterConnectionStrings.FirstOrDefault()?.Encoding;
                 _ib = new IdleBus<RedisClientPool>(TimeSpan.FromMinutes(10));
                 RefershClusterNodes();
             }
@@ -412,10 +412,7 @@ namespace FreeRedis
             };
             public static ushort GetClusterSlot(string key, System.Text.Encoding encoding = null)
             {
-                if (encoding==null)
-                {
-                    encoding = Encoding.ASCII;
-                }
+                if (encoding == null) encoding = Encoding.UTF8;
                 //HASH_SLOT = CRC16(key) mod 16384
                 var blob = encoding.GetBytes(key);
                 int offset = 0, count = blob.Length, start = -1, end = -1;
