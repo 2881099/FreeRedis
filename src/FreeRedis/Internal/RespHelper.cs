@@ -837,7 +837,13 @@ namespace FreeRedis
                     return Guid.TryParse(BitConverter.ToString(bytes, 0, Math.Min(bytes.Length, 36)).Replace("-", ""), out var tryguid) ? (Guid?)tryguid : null;
                 }
             }
-            if (targetType == typeof(byte[])) //guid -> byte[]
+            if (targetType == typeof(string))
+            {
+                if (valueIsNull) return null;
+                if (valueType == typeof(byte[])) return encoding.GetString(value as byte[]);
+                return value.ToInvariantCultureToString();
+            }
+            else if (targetType == typeof(byte[])) //guid -> byte[]
             {
                 if (valueIsNull) return null;
                 if (valueType == typeof(Guid) || valueType == typeof(Guid?))
@@ -950,10 +956,13 @@ namespace FreeRedis
                     throw new NotSupportedException($"convert failed {localValueType.DisplayCsharp()} -> {localTargetType.DisplayCsharp()}");
                 };
             });
-            var valueStr = valueIsNull ? null : (valueType == typeof(byte[]) ? encoding.GetString(value as byte[]) : value.ToInvariantCultureToString());
-            return func(valueStr);
+            if (valueIsNull) return func(null);
+            if (valueType == typeof(byte[])) return func(encoding.GetString(value as byte[]));
+            var valueType2 = valueType.NullableTypeOrThis();
+            if (valueType2.IsEnum && targetType.IsNumberType()) return func(Convert.ChangeType(value, valueType2.GetEnumUnderlyingType()).ToInvariantCultureToString());
+            return func(value.ToInvariantCultureToString());
         }
-#endregion
+        #endregion
     }
 
     public class RedisServerException : Exception
