@@ -37,9 +37,9 @@ namespace FreeRedis
         /// <summary>
         /// Cluster RedisClient
         /// </summary>
-        public RedisClient(ConnectionStringBuilder[] clusterConnectionStrings)
+        public RedisClient(ConnectionStringBuilder[] clusterConnectionStrings, Dictionary<string, string> hostMappings = null)
         {
-            Adapter = new ClusterAdapter(this, clusterConnectionStrings);
+            Adapter = new ClusterAdapter(this, clusterConnectionStrings, hostMappings);
             Prefix = clusterConnectionStrings[0].Prefix;
             ConnectionString = clusterConnectionStrings[0];
         }

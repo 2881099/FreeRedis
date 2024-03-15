@@ -575,7 +575,7 @@
             Pooling RedisClient
             </summary>
         </member>
-        <member name="M:FreeRedis.RedisClient.#ctor(FreeRedis.ConnectionStringBuilder[])">
+        <member name="M:FreeRedis.RedisClient.#ctor(FreeRedis.ConnectionStringBuilder[],System.Collections.Generic.Dictionary{System.String,System.String})">
             <summary>
             Cluster RedisClient
             </summary>
