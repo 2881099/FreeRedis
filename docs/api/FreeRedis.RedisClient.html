@@ -194,13 +194,13 @@
   
   
   <a id="FreeRedis_RedisClient__ctor_" data-uid="FreeRedis.RedisClient.#ctor*"></a>
-  <h4 id="FreeRedis_RedisClient__ctor_FreeRedis_ConnectionStringBuilder___" data-uid="FreeRedis.RedisClient.#ctor(FreeRedis.ConnectionStringBuilder[])">RedisClient(ConnectionStringBuilder[])</h4>
+  <h4 id="FreeRedis_RedisClient__ctor_FreeRedis_ConnectionStringBuilder___System_Collections_Generic_Dictionary_System_String_System_String__" data-uid="FreeRedis.RedisClient.#ctor(FreeRedis.ConnectionStringBuilder[],System.Collections.Generic.Dictionary{System.String,System.String})">RedisClient(ConnectionStringBuilder[], Dictionary&lt;String, String&gt;)</h4>
   <div class="markdown level1 summary"><p>Cluster RedisClient</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public RedisClient(ConnectionStringBuilder[] clusterConnectionStrings)</code></pre>
+    <pre><code class="lang-csharp hljs">public RedisClient(ConnectionStringBuilder[] clusterConnectionStrings, Dictionary&lt;string, string&gt; hostMappings = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -215,6 +215,11 @@
       <tr>
         <td><a class="xref" href="FreeRedis.ConnectionStringBuilder.html">ConnectionStringBuilder</a>[]</td>
         <td><span class="parametername">clusterConnectionStrings</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.Dictionary</span>&lt;<span class="xref">System.String</span>, <span class="xref">System.String</span>&gt;</td>
+        <td><span class="parametername">hostMappings</span></td>
         <td></td>
       </tr>
     </tbody>
