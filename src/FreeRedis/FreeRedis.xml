@@ -302,12 +302,6 @@
             <param name="timeout">超时</param>
             <returns></returns>
         </member>
-        <member name="M:FreeRedis.Internal.ObjectPool.IObjectPool`1.GetAsync">
-            <summary>
-            获取资源
-            </summary>
-            <returns></returns>
-        </member>
         <member name="M:FreeRedis.Internal.ObjectPool.IObjectPool`1.Return(FreeRedis.Internal.ObjectPool.Object{`0},System.Boolean)">
             <summary>
             使用完毕后，归还资源
@@ -373,12 +367,6 @@
             </summary>
         </member>
         <member name="M:FreeRedis.Internal.ObjectPool.IPolicy`1.OnGet(FreeRedis.Internal.ObjectPool.Object{`0})">
-            <summary>
-            从对象池获取对象成功的时候触发，通过该方法统计或初始化对象
-            </summary>
-            <param name="obj">资源对象</param>
-        </member>
-        <member name="M:FreeRedis.Internal.ObjectPool.IPolicy`1.OnGetAsync(FreeRedis.Internal.ObjectPool.Object{`0})">
             <summary>
             从对象池获取对象成功的时候触发，通过该方法统计或初始化对象
             </summary>
@@ -594,502 +582,6 @@
             <summary>
             Single inside RedisClient
             </summary>
-        </member>
-        <member name="M:FreeRedis.RedisClient.DelAsync(System.String[])">
-            <summary>
-            DEL command (An Asynchronous Version) <br /><br />
-            <br />
-            Removes the specified keys. A key is ignored if it does not exist.<br /><br />
-            <br />
-            移除指定的键。如果键不存在，则忽略之。<br /><br />
-            <br />
-            Document link: https://redis.io/commands/del <br />
-            Available since 2.6.0. 
-            </summary>
-            <param name="keys">Keys</param>
-            <returns>The number of keys that were removed.</returns>
-        </member>
-        <member name="M:FreeRedis.RedisClient.DumpAsync(System.String)">
-            <summary>
-            DUMP command (An Asynchronous Version) <br /><br />
-            <br />
-            Serialize the value stored at key in a Redis-specific format and return it to the user. The returned value can be synthesized back into a Redis key using the RESTORE command.<br /><br />
-            <br />
-            以 Redis 特有格式序列化指定的键值，并返回给用户。可结合 RESTORE 命令将序列化的结果重新写回 Redis。<br /><br />
-            <br />
-            Document link: https://redis.io/commands/dump <br />
-            Available since 2.6.0. 
-            </summary>
-            <param name="key">Key</param>
-            <returns>The serialized value.</returns>
-        </member>
-        <member name="M:FreeRedis.RedisClient.ExistsAsync(System.String)">
-            <summary>
-            EXISTS command (An Asynchronous Version) <br /><br />
-            <br />
-            Returns if key exists.<br /><br />
-            <br />
-            返回键是否存在。<br /><br />
-            <br />
-            Document link: https://redis.io/commands/exists <br />
-            Available since 1.0.0. 
-            </summary>
-            <param name="key">Key</param>
-            <returns>Specifically: True if the key exists. False if the key does not exist.</returns>
-        </member>
-        <member name="M:FreeRedis.RedisClient.ExistsAsync(System.String[])">
-            <summary>
-            EXISTS command (An Asynchronous Version) <br /><br />
-            <br />
-            Returns if key exists.<br /><br />
-            <br />
-            返回键是否存在。<br /><br />
-            <br />
-            Document link: https://redis.io/commands/exists <br />
-            Available since 3.0.3. 
-            </summary>
-            <param name="keys">Keys</param>
-            <returns>The number of keys existing among the ones specified as arguments. Keys mentioned multiple times and existing are counted multiple times.</returns>
-        </member>
-        <member name="M:FreeRedis.RedisClient.ExpireAsync(System.String,System.Int32)">
-            <summary>
-            EXPIRE command (An Asynchronous Version) <br /><br />
-            <br />
-            Set a timeout on key. After the timeout has expired, the key will automatically be deleted. A key with an associated timeout is often said to be volatile in Redis terminology.<br /><br />
-            <br />
-            设置键的超时时间。到期后，键将被自动删除。<br /><br />
-            <br />
-            Document link: https://redis.io/commands/expire <br />
-            Available since 1.0.0. 
-            </summary>
-            <param name="key">Key</param>
-            <param name="seconds">Expires time (seconds)</param>
-            <returns>Specifically: True if the timeout was set.False if key does not exist.</returns>
-        </member>
-        <member name="M:FreeRedis.RedisClient.ExpireAsync(System.String,System.TimeSpan)">
-            <summary>
-            EXPIRE command (An Asynchronous Version) <br /><br />
-            <br />
-            Set a timeout on key. After the timeout has expired, the key will automatically be deleted. A key with an associated timeout is often said to be volatile in Redis terminology.<br /><br />
-            <br />
-            设置键的超时时间。到期后，键将被自动删除。<br /><br />
-            <br />
-            Document link: https://redis.io/commands/expire <br />
-            Available since 1.0.0. 
-            </summary>
-            <param name="key">Key</param>
-            <param name="expire">Expires TimeSpan</param>
-            <returns>Specifically: True if the timeout was set.False if key does not exist.</returns>
-        </member>
-        <member name="M:FreeRedis.RedisClient.ExpireAtAsync(System.String,System.DateTime)">
-            <summary>
-            EXPIREAT command (An Asynchronous Version) <br /><br />
-            <br />
-            EXPIREAT has the same effect and semantic as EXPIRE, but instead of specifying the number of seconds representing the TTL (time to live), it takes an absolute Unix timestamp (seconds since January 1, 1970). A timestamp in the past will delete the key immediately.<br /><br />
-            <br />
-            EXPIREAT 具有与 EXPIRE 相同的作用和语义，但是它没有指定表示 TTL（生存时间）的秒数，而是使用了绝对的 Unix 时间戳（自1970年1月1日以来的秒数）。时间戳一旦过期就会被删除。<br /><br />
-            <br />
-            Document link: https://redis.io/commands/expireat <br />
-            Available since 1.2.0. 
-            </summary>
-            <param name="key">Key</param>
-            <param name="timestamp">UNIX Timestamp</param>
-            <returns>Specifically: True if the timeout was set.False if key does not exist.</returns>
-        </member>
-        <member name="M:FreeRedis.RedisClient.KeysAsync(System.String)">
-            <summary>
-            KEYS command (An Asynchronous Version) <br /><br />
-            <br />
-            Returns all keys matching pattern.<br /><br />
-            <br />
-            返回所有与模式匹配的键。<br /><br />
-            <br />
-            Document link: https://redis.io/commands/keys <br />
-            Available since 1.0.0. 
-            </summary>
-            <param name="pattern">Pattern</param>
-            <returns>List of keys matching pattern.</returns>
-        </member>
-        <member name="M:FreeRedis.RedisClient.MigrateAsync(System.String,System.Int32,System.String,System.Int32,System.Int64,System.Boolean,System.Boolean,System.String,System.String,System.String,System.String[])">
-            <summary>
-            MIGRATE command (An Asynchronous Version) <br /><br />
-            <br />
-            Atomically transfer a key from a source Redis instance to a destination Redis instance. On success the key is deleted from the original instance and is guaranteed to exist in the target instance.<br /><br />
-            <br />
-            原子地将键从 Redis 源实例转移到目标实例。转移成功后，Key 将从源实例中删除，并确保保存在目标实例之中。<br /><br />
-            <br />
-            Document link: https://redis.io/commands/migrate <br />
-            Available since 2.6.0. 
-            </summary>
-            <param name="host">Destination Instance's Host</param>
-            <param name="port">Destination Instance's Port</param>
-            <param name="key">Key</param>
-            <param name="destinationDb">Destination Instance's Database</param>
-            <param name="timeoutMilliseconds">Timeout milliseconds</param>
-            <param name="copy">Do not remove the key from the local instance. Available since 3.0.0. </param>
-            <param name="replace">Replace existing key on the remote instance. Available since 3.0.0. </param>
-            <param name="authPassword">Authenticate with the given password to the remote instance. Available since 4.0.7. </param>
-            <param name="auth2Username">Authenticate with the given username (Redis 6 or greater ACL auth style).</param>
-            <param name="auth2Password">Authenticate with the given password (Redis 6 or greater ACL auth style).</param>
-            <param name="keys">If the key argument is an empty string, the command will instead migrate all the keys that follow the KEYS option (see the above section for more info). Available since 3.0.6. </param>
-        </member>
-        <member name="M:FreeRedis.RedisClient.MoveAsync(System.String,System.Int32)">
-            <summary>
-            MOVE command (An Asynchronous Version) <br /><br />
-            <br />
-            Move key from the currently selected database (see SELECT) to the specified destination database. When key already exists in the destination database, or it does not exist in the source database, it does nothing. It is possible to use MOVE as a locking primitive because of this. <br /><br />
-            <br />
-            将指定的 Key 从当前数据库移动到目标数据库。<br />
-            如果目标数据库中已存在该键，或源数据库中不存在该键，则什么都不做。<br /><br />
-            <br />
-            Document link: https://redis.io/commands/move <br />
-            Available since 1.0.0.
-            </summary>
-            <param name="key">Key</param>
-            <param name="db">Database</param>
-            <returns>Specifically: True if key was moved. False if key was not moved.</returns>
-        </member>
-        <member name="M:FreeRedis.RedisClient.ObjectRefCountAsync(System.String)">
-            <summary>
-            OBJECT REFCOUNT command (An Asynchronous Version) <br /><br />
-            <br />
-            Returns the number of references of the value associated with the specified key. This command is mainly useful for debugging.<br /><br />
-            <br />
-            返回与指定键关联的值的引用数。<br /><br />
-            <br />
-            Document link: https://redis.io/commands/object <br />
-            Available since 2.2.3. 
-            </summary>
-            <param name="key">Key</param>
-            <returns>Returns the number of references of the value associated with the specified key.</returns>
-        </member>
-        <member name="M:FreeRedis.RedisClient.ObjectIdleTimeAsync(System.String)">
-            <summary>
-            OBJECT IDLETIME command (An Asynchronous Version) <br /><br />
-            <br />
-            returns the number of seconds since the object stored at the specified key is idle (not requested by read or write operations). While the value is returned in seconds the actual resolution of this timer is 10 seconds, but may vary in future implementations. This subcommand is available when maxmemory-policy is set to an LRU policy or noeviction and maxmemory is set. <br /><br />
-            <br />
-            返回指定键值的空闲时间，单位为秒。<br /><br />
-            <br />
-            Document link: https://redis.io/commands/object <br />
-            Available since 2.2.3. 
-            </summary>
-            <param name="key">Key</param>
-            <returns>Returns the number of seconds since the object stored at the specified key is idle</returns>
-        </member>
-        <member name="M:FreeRedis.RedisClient.ObjectEncodingAsync(System.String)">
-            <summary>
-            OBJECT ENCODING command (An Asynchronous Version) <br /><br />
-            <br />
-            Returns the kind of internal representation used in order to store the value associated with a key.<br /><br />
-            <br />
-            返回用于存储与键关联的值的内部表示形式的类型。
-            <br />
-            Document link: https://redis.io/commands/object <br />
-            Available since 2.2.3. 
-            </summary>
-            <param name="key">Key</param>
-            <returns>Returns the kind of internal representation used in order to store the value associated with a key.</returns>
-        </member>
-        <member name="M:FreeRedis.RedisClient.ObjectFreqAsync(System.String)">
-            <summary>
-            OBJECT FREQ command (An Asynchronous Version) <br /><br />
-            <br />
-            Returns the logarithmic access frequency counter of the object stored at the specified key. This subcommand is available when maxmemory-policy is set to an LFU policy.<br /><br />
-            <br />
-            返回存储在指定键处的对象的对数访问频率计数器。<br /><br />
-            <br />
-            Document link: https://redis.io/commands/object <br />
-            Available since 2.2.3. 
-            </summary>
-            <param name="key">Key</param>
-            <returns>Returns the logarithmic access frequency counter of the object stored at the specified key.</returns>
-        </member>
-        <member name="M:FreeRedis.RedisClient.PersistAsync(System.String)">
-            <summary>
-            PERSIST command (An Asynchronous Version) <br /><br />
-            <br />
-            Remove the existing timeout on key, turning the key from volatile (a key with an expire set) to persistent (a key that will never expire as no timeout is associated).<br /><br />
-            <br />
-            将指定键的超时设置移除，将键从可变键转换为持久键。<br /><br />
-            <br />
-            Document link: https://redis.io/commands/persist <br />
-            Available since 2.2.0. 
-            </summary>
-            <param name="key">Key</param>
-            <returns>Specifically: True if the timeout was removed. False if key does not exist or does not have an associated timeout.</returns>
-        </member>
-        <member name="M:FreeRedis.RedisClient.PExpireAsync(System.String,System.Int32)">
-            <summary>
-            PEXPIRE command (An Asynchronous Version) <br /><br />
-            <br />
-            This command works exactly like EXPIRE but the time to live of the key is specified in milliseconds instead of seconds.<br /><br />
-            <br />
-            此命令与 EXPIRE 相同，区别仅仅在于时间单位是毫秒，不是秒。<br /><br />
-            <br />
-            Document link: https://redis.io/commands/expire <br />
-            Available since 1.0.0. 
-            </summary>
-            <param name="key">Key</param>
-            <param name="milliseconds">Expires time (milliseconds)</param>
-            <returns>Specifically: True if the timeout was set.False if key does not exist.</returns>
-        </member>
-        <member name="M:FreeRedis.RedisClient.PExpireAtAsync(System.String,System.DateTime)">
-            <summary>
-            PEXPIREAT command (An Asynchronous Version) <br /><br />
-            <br />
-            PEXPIREAT has the same effect and semantic as EXPIREAT, but the Unix time at which the key will expire is specified in milliseconds instead of seconds.<br /><br />
-            <br />
-            PEXPIREAT 具有与 EXPIREAT 相同的作用和语义，但 Key 的时间戳使用的是毫秒，而不是秒。<br /><br />
-            <br />
-            Document link: https://redis.io/commands/pexpireat <br />
-            Available since 2.6.0. 
-            </summary>
-            <param name="key">Key</param>
-            <param name="timestamp">UNIX Timestamp</param>
-            <returns>Specifically: True if the timeout was set.False if key does not exist.</returns>
-            <returns></returns>
-        </member>
-        <member name="M:FreeRedis.RedisClient.PTtlAsync(System.String)">
-            <summary>
-            PTTL command (An Asynchronous Version) <br /><br />
-            <br />
-            Like TTL this command returns the remaining time to live of a key that has an expire set, with the sole difference that TTL returns the amount of remaining time in seconds while PTTL returns it in milliseconds.<br />
-            In Redis 2.6 or older the command returns -1 if the key does not exist or if the key exist but has no associated expire. <br />
-            Starting with Redis 2.8 the return value in case of error changed: <br />
-             - The command returns -2 if the key does not exist.<br />
-             - The command returns -1 if the key exists but has no associated expire.<br /><br />
-            <br />
-            与 TTL 命令一样，返回键的剩余生存时间，唯一的区别是 TTL 以秒为单位返回剩余时间，而 PTTL 以毫秒为单位返回。<br />
-            在 Redis 2.6 之前，如果 Key 不存在或 Key 未设置过期时间，则返回 -1<br />
-            从 Redis 2.8 开始，将针对不同的错误情况返回不同的值：<br />
-             - 如果 Key 不存在，则返回 -2 <br />
-             - 如果 Key 存在，但没有设置过过期时间，则返回 -1 <br /><br />
-            <br />
-            Document link: https://redis.io/commands/pttl <br />
-            Available since 2.6.0. 
-            </summary>
-            <param name="key">Key</param>
-            <returns>TTL in milliseconds, or a negative value in order to signal an error (see the description above).</returns>
-        </member>
-        <member name="M:FreeRedis.RedisClient.RandomKeyAsync">
-            <summary>
-            RANDOMKEY command (An Asynchronous Version) <br /><br />
-            <br />
-            Return a random key from the currently selected database. <br /><br />
-            <br />
-            从当前选择的数据库返回一个随机密钥。<br /><br />
-            <br />
-            Document link: https://redis.io/commands/randomkey <br />
-            Available since 1.0.0. 
-            </summary>
-            <returns>The random key, or nil when the database is empty.</returns>
-        </member>
-        <member name="M:FreeRedis.RedisClient.RenameAsync(System.String,System.String)">
-            <summary>
-            RENAME command (An Asynchronous Version) <br /><br />
-            <br />
-            Renames key to newkey. It returns an error when key does not exist. If newkey already exists it is overwritten, when this happens RENAME executes an implicit DEL operation, so if the deleted key contains a very big value it may cause high latency even if RENAME itself is usually a constant-time operation.<br />
-             - Before Redis 3.2.0, an error is returned if source and destination names are the same.<br /><br />
-            <br />
-            将 Key 重命名为 New Key。如果键不存在，返回错误。<br />
-            如果 New Key 已存在，则将被覆盖，此时类似 DEL 命令，由于 RENAME 是 constant-time operation，因此当删除的键有很大的值时会有较大的延迟。<br />
-             - 在 Redis 3.2 之前，如果 Key 和 New Key 名字一样，将返回错误。<br /><br /> 
-            <br />
-            Document link: https://redis.io/commands/rename <br />
-            Available since 1.0.0. 
-            </summary>
-            <param name="key">Key</param>
-            <param name="newkey">New key</param>
-        </member>
-        <member name="M:FreeRedis.RedisClient.RenameNxAsync(System.String,System.String)">
-            <summary>
-            RENAMENX command (An Asynchronous Version) <br /><br />
-            <br />
-            Renames key to newkey. It returns an error when key does not exist. If newkey already exists it is overwritten, when this happens RENAME executes an implicit DEL operation, so if the deleted key contains a very big value it may cause high latency even if RENAME itself is usually a constant-time operation.<br />
-             - Before Redis 3.2.0, an error is returned if source and destination names are the same.<br /><br />
-            <br />
-            将 Key 重命名为 New Key。如果键不存在，返回错误。<br />
-            如果 New Key 已存在，则将被覆盖，此时类似 DEL 命令，由于 RENAME 是 constant-time operation，因此当删除的键有很大的值时会有较大的延迟。<br />
-             - 在 Redis 3.2 之前，如果 Key 和 New Key 名字一样，将返回错误。<br /><br /> 
-            <br />
-            Document link: https://redis.io/commands/renamenx <br />
-            Available since 1.0.0. 
-            </summary>
-            <param name="key">Key</param>
-            <param name="newkey">New key</param>
-            <returns>specifically: True if key was renamed to newkey. False if newkey already exists.</returns>
-        </member>
-        <member name="M:FreeRedis.RedisClient.RestoreAsync(System.String,System.Byte[])">
-            <summary>
-            RESTORE command (An Asynchronous Version) <br /><br />
-            <br />
-            Create a key associated with a value that is obtained by deserializing the provided serialized value (obtained via DUMP).<br /><br />
-            <br />
-            将经由 DUMP 命令序列化的值反序列化后，作为给定键的值进行保存。<br /><br />
-            <br />
-            Document link: https://redis.io/commands/restore <br />
-            Available since 2.6.0. 
-            </summary>
-            <param name="key">Key</param>
-            <param name="serializedValue">Serialized value</param>
-        </member>
-        <member name="M:FreeRedis.RedisClient.RestoreAsync(System.String,System.Int32,System.Byte[],System.Boolean,System.Boolean,System.Nullable{System.Int32},System.Nullable{System.Decimal})">
-            <summary>
-            RESTORE command (An Asynchronous Version) <br /><br />
-            <br />
-            Create a key associated with a value that is obtained by deserializing the provided serialized value (obtained via DUMP).<br /><br />
-            <br />
-            将经由 DUMP 命令序列化的值反序列化后，作为给定键的值进行保存。<br /><br />
-            <br />
-            Document link: https://redis.io/commands/restore <br />
-            Available since 2.6.0. 
-            </summary>
-            <param name="key">Key</param>
-            <param name="ttl">If ttl is 0 the key is created without any expire, otherwise the specified expire time (in milliseconds) is set.</param>
-            <param name="serializedValue">Serialized value</param>
-            <param name="replace">REPLACE modifier: If the Key already exists, replace it. Available since 3.0.0.</param>
-            <param name="absTtl">Absolute Unix timestamp (in milliseconds) in which the key will expire. Available since 5.0.0.</param>
-            <param name="idleTimeSeconds">IDLETIME modifier. Available since 5.0.0.</param>
-            <param name="frequency">FREQ modifier. Available since 5.0.0.</param>
-        </member>
-        <member name="M:FreeRedis.RedisClient.ScanAsync(System.Int64,System.String,System.Int64,System.String)">
-            <summary>
-            SCAN command (An Asynchronous Version) <br /><br />
-            <br />
-            The SCAN command and the closely related commands SSCAN, HSCAN and ZSCAN are used in order to incrementally iterate over a collection of elements.<br /><br />
-            <br />
-            使用 SCAN 命令及其关联的 SSCAN、HSCAN、ZSCAN 等命令来迭代返回元素集合。<br /><br />
-            <br />
-            Document link: https://redis.io/commands/scan <br />
-            Available since 2.8.0. 
-            </summary>
-            <param name="cursor">Cursor</param>
-            <param name="pattern">MATCH option</param>
-            <param name="count">COUNT option: while SCAN does not provide guarantees about the number of elements returned at every iteration, it is possible to empirically adjust the behavior of SCAN using the COUNT option, default is 10</param>
-            <param name="type">TYPE option: the type argument is the same string name that the TYPE command returns. Available since 6.0</param>
-            <returns>Return a two elements multi-bulk reply, where the first element is a string representing an unsigned 64 bit number (the cursor), and the second element is a multi-bulk with an array of elements.</returns>
-        </member>
-        <member name="M:FreeRedis.RedisClient.SortAsync(System.String,System.String,System.Int64,System.Int64,System.String[],System.Nullable{FreeRedis.Collation},System.Boolean)">
-            <summary>
-            SORT command (An Asynchronous Version) <br /><br />
-            <br />
-            Returns or stores the elements contained in the list, set or sorted set at key. By default, sorting is numeric and elements are compared by their value interpreted as double precision floating point number. <br /><br />
-            <br />
-            返回含在 LIST、SET、ZSET 中的元素。默认情况下，排序是数字形式的，并且将元素的值进行比较以解释为双精度浮点数。<br /><br />
-            <br />
-            Document link: https://redis.io/commands/sort <br />
-            Available since 1.0.0. 
-            </summary>
-            <param name="key">Keys</param>
-            <param name="byPattern">BY modifier</param>
-            <param name="offset">The number of elements to skip.</param>
-            <param name="count">Specifying the number of elements to return from starting at offset.</param>
-            <param name="getPatterns">GET modifier</param>
-            <param name="collation">ASC | DESC modifier</param>
-            <param name="alpha">ALPHA modifier, sort by lexicographically.</param>
-            <returns>A list of sorted elements</returns>
-        </member>
-        <member name="M:FreeRedis.RedisClient.SortStoreAsync(System.String,System.String,System.String,System.Int64,System.Int64,System.String[],System.Nullable{FreeRedis.Collation},System.Boolean)">
-            <summary>
-            SORT command (An Asynchronous Version) <br /><br />
-            <br />
-            Stores the elements contained in the list, set or sorted set at key. By default, sorting is numeric and elements are compared by their value interpreted as double precision floating point number. <br /><br />
-            <br />
-            存储包含在 LIST、SET、ZSET 中的元素。默认情况下，排序是数字形式的，并且将元素的值进行比较以解释为双精度浮点数。<br /><br />
-            <br />
-            Document link: https://redis.io/commands/sort <br />
-            Available since 1.0.0. 
-            </summary>
-            <param name="storeDestination">Storing the result of a SORT operation to the destination key.</param>
-            <param name="key">Keys</param>
-            <param name="byPattern">BY modifier</param>
-            <param name="offset">The number of elements to skip.</param>
-            <param name="count">Specifying the number of elements to return from starting at offset.</param>
-            <param name="getPatterns">GET modifier</param>
-            <param name="collation">ASC | DESC modifier</param>
-            <param name="alpha">ALPHA modifier, sort by lexicographically.</param>
-            <returns>The number of sorted elements in the destination list.</returns>
-        </member>
-        <member name="M:FreeRedis.RedisClient.TouchAsync(System.String[])">
-            <summary>
-            TOUCH command (An Asynchronous Version) <br /><br />
-            <br />
-            Alters the last access time of a key(s). A key is ignored if it does not exist.<br /><br />
-            <br />
-            更改 Key(s) 最后访问时间。如果键不存在，则忽略之。<br /><br />
-            <br />
-            Document link: https://redis.io/commands/touch <br />
-            Available since 3.2.1. 
-            </summary>
-            <param name="keys">Keys</param>
-            <returns>The number of keys that were touched.</returns>
-        </member>
-        <member name="M:FreeRedis.RedisClient.TtlAsync(System.String)">
-            <summary>
-            TTL command (An Asynchronous Version) <br /><br />
-            <br />
-            Returns the remaining time to live of a key that has a timeout. This introspection capability allows a Redis client to check how many seconds a given key will continue to be part of the dataset.<br />
-            In Redis 2.6 or older the command returns -1 if the key does not exist or if the key exist but has no associated expire. <br />
-            Starting with Redis 2.8 the return value in case of error changed: <br />
-             - The command returns -2 if the key does not exist.<br />
-             - The command returns -1 if the key exists but has no associated expire.<br /><br />
-            <br />
-            返回键的剩余生存时间。这种自省能力允许 Redis 客户端检查指定键还能再数据集中生存多少秒。<br />
-            在 Redis 2.6 之前，如果 Key 不存在或 Key 未设置过期时间，则返回 -1<br />
-            从 Redis 2.8 开始，将针对不同的错误情况返回不同的值：<br />
-             - 如果 Key 不存在，则返回 -2 <br />
-             - 如果 Key 存在，但没有设置过过期时间，则返回 -1 <br /><br />
-            <br />
-            Document link: https://redis.io/commands/ttl <br />
-            Available since 1.0.0. 
-            </summary>
-            <param name="key">Key</param>
-            <returns>TTL in seconds, or a negative value in order to signal an error (see the description above).</returns>
-        </member>
-        <member name="M:FreeRedis.RedisClient.TypeAsync(System.String)">
-            <summary>
-            TYPE command (An Asynchronous Version) <br /><br />
-            <br />
-            Returns the string representation of the type of the value stored at key. The different types that can be returned are: string, list, set, zset, hash and stream.<br /><br />
-            <br />
-            获取键对应值的类型的字符串表达形式。可以返回的类型是：string，list，set，zset，hash 以及 stream。<br /><br />
-            <br />
-            Document link: https://redis.io/commands/type <br />
-            Available since 1.0.0. 
-            </summary>
-            <param name="key">Key</param>
-            <returns>The type of key, or none when key does not exist.</returns>
-        </member>
-        <member name="M:FreeRedis.RedisClient.UnLinkAsync(System.String[])">
-            <summary>
-            UNLINK command (An Asynchronous Version) <br /><br />
-            <br />
-            This command is very similar to DEL: it removes the specified keys. Just like DEL a key is ignored if it does not exist. However the command performs the actual memory reclaiming in a different thread, so it is not blocking, while DEL is. <br /><br />
-            <br />
-            本命令与 DEL 相似，能删除指定的键值；如果键不存在，则忽略。与 DEL 不同的是，本命令将在另一个线程中执行实际的内存回收，因此是非阻塞的。<br /><br />
-            <br />
-            Document link: https://redis.io/commands/unlink <br />
-            Available since 4.0.0. 
-            </summary>
-            <param name="keys">Keys</param>
-            <returns>The number of keys that were unlinked.</returns>
-        </member>
-        <member name="M:FreeRedis.RedisClient.WaitAsync(System.Int64,System.Int64)">
-            <summary>
-            WAIT command (An Asynchronous Version) <br /><br />
-            <br />
-            This command blocks the current client until all the previous write commands are successfully transferred and acknowledged by at least the specified number of replicas. If the timeout, specified in milliseconds, is reached, the command returns even if the specified number of replicas were not yet reached. <br /><br />
-            <br />
-            本命令将阻塞当前客户端，直到所有写命令成功发送、且大于等于指定数量的副本进行了确认。<br />
-            如果超时（单位为毫秒），即便没能获得指定数量副本的确认，命令也会返回。<br /><br />
-            <br />
-            Document link: https://redis.io/commands/wait <br />
-            Available since 3.0.0. 
-            </summary>
-            <param name="numreplicas">The number of replicas</param>
-            <param name="timeoutMilliseconds">Timeout milliseconds</param>
-            <returns>The command returns the number of replicas reached by all the writes performed in the context of the current connection.</returns>
         </member>
         <member name="M:FreeRedis.RedisClient.Del(System.String[])">
             <summary>
@@ -1683,9 +1175,9 @@
             <param name="count"></param>
             <returns></returns>
         </member>
-        <member name="M:FreeRedis.RedisClient.AppendAsync``1(System.String,``0)">
+        <member name="M:FreeRedis.RedisClient.Append``1(System.String,``0)">
             <summary>
-            APPEND command (An Asynchronous Version)<br /><br />
+            APPEND command (A Synchronized Version)<br /><br />
             <br />
             If key already exists and is a string, this command appends the value at the end of the string. If key does not exist it is created and set as an empty string, so APPEND will be similar to SET in this special case. <br /><br />
             <br />
@@ -1700,9 +1192,9 @@
             <typeparam name="T"></typeparam>
             <returns>The length of the string after the append operation.</returns>
         </member>
-        <member name="M:FreeRedis.RedisClient.BitCountAsync(System.String,System.Int64,System.Int64)">
+        <member name="M:FreeRedis.RedisClient.BitCount(System.String,System.Int64,System.Int64)">
             <summary>
-            BITCOUNT command (An Asynchronous Version)<br /><br />
+            BITCOUNT command (A Synchronized Version)<br /><br />
             <br />
             Count the number of set bits (population counting) in a string.<br /><br />
             <br />
@@ -1716,9 +1208,9 @@
             <param name="end">Index of the end. It can contain negative values in order to index bytes starting from the end of the string.</param>
             <returns>The number of set bits in the string. Non-existent keys are treated as empty strings and will return zero.</returns>
         </member>
-        <member name="M:FreeRedis.RedisClient.BitOpAsync(FreeRedis.BitOpOperation,System.String,System.String[])">
+        <member name="M:FreeRedis.RedisClient.BitOp(FreeRedis.BitOpOperation,System.String,System.String[])">
             <summary>
-            BITOP command (An Asynchronous Version) <br /><br />
+            BITOP command (A Synchronized Version) <br /><br />
             <br />
             Perform a bitwise operation between multiple keys (containing string values) and store the result in the destination key.<br /><br />
             <br />
@@ -1733,9 +1225,9 @@
             <param name="keys">Multiple keys (containing string values)</param>
             <returns>The size of the string stored in the destination key, that is equal to the size of the longest input string.</returns>
         </member>
-        <member name="M:FreeRedis.RedisClient.BitPosAsync(System.String,System.Boolean,System.Nullable{System.Int64},System.Nullable{System.Int64})">
+        <member name="M:FreeRedis.RedisClient.BitPos(System.String,System.Boolean,System.Nullable{System.Int64},System.Nullable{System.Int64})">
             <summary>
-            BITPOS command (An Asynchronous Version) <br /><br />
+            BITPOS command (A Synchronized Version) <br /><br />
             <br />
             Return the position of the first bit set to 1 or 0 in a string.<br />
             The position is returned, thinking of the string as an array of bits from left to right, where the first byte's most significant bit is at position 0, the second byte's most significant bit is at position 8, and so forth.<br /><br />
@@ -1752,9 +1244,9 @@
             <param name="end">Index of the end. It can contain negative values in order to index bytes starting from the end of the string.</param>
             <returns>Returns the position of the first bit set to 1 or 0 according to the request.</returns>
         </member>
-        <member name="M:FreeRedis.RedisClient.DecrAsync(System.String)">
+        <member name="M:FreeRedis.RedisClient.Decr(System.String)">
             <summary>
-            DECR command (An Asynchronous Version) <br /><br />
+            DECR command (A Synchronized Version) <br /><br />
             <br />
             Decrements the number stored at key by one. <br />
             If the key does not exist, it is set to 0 before performing the operation. An error is returned if the key contains a value of the wrong type or contains a string that can not be represented as integer. <br />
@@ -1769,9 +1261,9 @@
             <param name="key">Key</param>
             <returns>the value of key after the decrement.</returns>
         </member>
-        <member name="M:FreeRedis.RedisClient.DecrByAsync(System.String,System.Int64)">
+        <member name="M:FreeRedis.RedisClient.DecrBy(System.String,System.Int64)">
             <summary>
-            DECRBY command (An Asynchronous Version) <br /><br />
+            DECRBY command (A Synchronized Version) <br /><br />
             <br />
             Decrements the number stored at key by decrement. <br />
             If the key does not exist, it is set to 0 before performing the operation. An error is returned if the key contains a value of the wrong type or contains a string that can not be represented as integer. <br />
@@ -1787,9 +1279,9 @@
             <param name="decrement">The given value to be decreased.</param>
             <returns>the value of key after the decrement.</returns>
         </member>
-        <member name="M:FreeRedis.RedisClient.GetAsync(System.String)">
+        <member name="M:FreeRedis.RedisClient.Get(System.String)">
             <summary>
-            GET command (An Asynchronous Version) <br /><br />
+            GET command (A Synchronized Version) <br /><br />
             <br />
             Get the value of key. If the key does not exist the special value nil is returned. An error is returned if the value stored at key is not a string, because GET only handles string values.<br /><br />
             <br />
@@ -1801,9 +1293,9 @@
             <param name="key">Key</param>
             <returns>The value of key, or nil when key does not exist.</returns>
         </member>
-        <member name="M:FreeRedis.RedisClient.GetAsync``1(System.String)">
+        <member name="M:FreeRedis.RedisClient.Get``1(System.String)">
             <summary>
-            GET command (An Asynchronous Version) <br /><br />
+            GET command (A Synchronized Version) <br /><br />
             <br />
             Get the value of key. If the key does not exist the special value nil is returned. An error is returned if the value stored at key is not a string, because GET only handles string values.<br /><br />
             <br />
@@ -1816,7 +1308,7 @@
             <typeparam name="T"></typeparam>
             <returns>The value of key, or nil when key does not exist.</returns>
         </member>
-        <member name="M:FreeRedis.RedisClient.GetAsync(System.String,System.IO.Stream,System.Int32)">
+        <member name="M:FreeRedis.RedisClient.Get(System.String,System.IO.Stream,System.Int32)">
             <summary>
             GET command (A Synchronized Version) <br /><br />
             <br />
@@ -1831,9 +1323,9 @@
             <param name="destination">Destination stream</param>
             <param name="bufferSize">Size</param>
         </member>
-        <member name="M:FreeRedis.RedisClient.GetBitAsync(System.String,System.Int64)">
+        <member name="M:FreeRedis.RedisClient.GetBit(System.String,System.Int64)">
             <summary>
-            GETBIT command (An Asynchronous Version) <br /><br />
+            GETBIT command (A Synchronized Version) <br /><br />
             <br />
             Returns the bit value at offset in the string value stored at key.<br /><br />
             <br />
@@ -1846,9 +1338,9 @@
             <param name="offset">Offset</param>
             <returns>The bit value stored at offset.</returns>
         </member>
-        <member name="M:FreeRedis.RedisClient.GetRangeAsync(System.String,System.Int64,System.Int64)">
+        <member name="M:FreeRedis.RedisClient.GetRange(System.String,System.Int64,System.Int64)">
             <summary>
-            GETRANGE command (An Asynchronous Version) <br /><br />
+            GETRANGE command (A Synchronized Version) <br /><br />
             <br />
             Returns the substring of the string value stored at key, determined by the offsets start and end (both are inclusive).<br /><br />
             <br />
@@ -1862,9 +1354,9 @@
             <param name="end">End</param>
             <returns>The substring of the string value</returns>
         </member>
-        <member name="M:FreeRedis.RedisClient.GetRangeAsync``1(System.String,System.Int64,System.Int64)">
+        <member name="M:FreeRedis.RedisClient.GetRange``1(System.String,System.Int64,System.Int64)">
             <summary>
-            GETRANGE command (An Asynchronous Version) <br /><br />
+            GETRANGE command (A Synchronized Version) <br /><br />
             <br />
             Returns the substring of the string value stored at key, determined by the offsets start and end (both are inclusive).<br /><br />
             <br />
@@ -1879,9 +1371,9 @@
             <typeparam name="T"></typeparam>
             <returns></returns>
         </member>
-        <member name="M:FreeRedis.RedisClient.GetSetAsync``1(System.String,``0)">
+        <member name="M:FreeRedis.RedisClient.GetSet``1(System.String,``0)">
             <summary>
-            GETSET command (An Asynchronous Version) <br /><br />
+            GETSET command (A Synchronized Version) <br /><br />
             <br />
             Atomically sets key to value and returns the old value stored at key. Returns an error when key exists but does not hold a string value.<br /><br />
             <br />
@@ -1895,9 +1387,9 @@
             <typeparam name="T"></typeparam>
             <returns>The old value stored at key, or nil when key did not exist.</returns>
         </member>
-        <member name="M:FreeRedis.RedisClient.IncrAsync(System.String)">
+        <member name="M:FreeRedis.RedisClient.Incr(System.String)">
             <summary>
-            INCR command (An Asynchronous Version) <br /><br />
+            INCR command (A Synchronized Version) <br /><br />
             <br />
             Increments the number stored at key by one. <br />
             If the key does not exist, it is set to 0 before performing the operation. An error is returned if the key contains a value of the wrong type or contains a string that can not be represented as integer. <br />
@@ -1912,9 +1404,9 @@
             <param name="key">Key</param>
             <returns>The value of key after the increment</returns>
         </member>
-        <member name="M:FreeRedis.RedisClient.IncrByAsync(System.String,System.Int64)">
+        <member name="M:FreeRedis.RedisClient.IncrBy(System.String,System.Int64)">
             <summary>
-            INCRBY command (An Asynchronous Version) <br /><br />
+            INCRBY command (A Synchronized Version) <br /><br />
             <br />
             Decrements the number stored at key by increment. <br />
             If the key does not exist, it is set to 0 before performing the operation. An error is returned if the key contains a value of the wrong type or contains a string that can not be represented as integer. <br />
@@ -1930,9 +1422,9 @@
             <param name="increment">The given value to be increased.</param>
             <returns>The value of key after the increment</returns>
         </member>
-        <member name="M:FreeRedis.RedisClient.IncrByFloatAsync(System.String,System.Decimal)">
+        <member name="M:FreeRedis.RedisClient.IncrByFloat(System.String,System.Decimal)">
             <summary>
-            INCRBYFLOAT command (An Asynchronous Version) <br /><br />
+            INCRBYFLOAT command (A Synchronized Version) <br /><br />
             <br />
             Increment the string representing a floating point number stored at key by the specified increment. <br />
             By using a negative increment value, the result is that the value stored at the key is decremented (by the obvious properties of addition). <br />
@@ -1954,9 +1446,9 @@
             <param name="increment">The given value to be increased.</param>
             <returns>The value of key after the increment.</returns>
         </member>
-        <member name="M:FreeRedis.RedisClient.MGetAsync(System.String[])">
+        <member name="M:FreeRedis.RedisClient.MGet(System.String[])">
             <summary>
-            MGET command (An Asynchronous Version) <br /><br />
+            MGET command (A Synchronized Version) <br /><br />
             <br />
             Returns the values of all specified keys. For every key that does not hold a string value or does not exist, the special value nil is returned. Because of this, the operation never fails.<br /><br />
             <br />
@@ -1968,9 +1460,9 @@
             <param name="keys">Key list</param>
             <returns>A list of values at the specified keys.</returns>
         </member>
-        <member name="M:FreeRedis.RedisClient.MGetAsync``1(System.String[])">
+        <member name="M:FreeRedis.RedisClient.MGet``1(System.String[])">
             <summary>
-            MGET command (An Asynchronous Version) <br /><br />
+            MGET command (A Synchronized Version) <br /><br />
             <br />
             Returns the values of all specified keys. For every key that does not hold a string value or does not exist, the special value nil is returned. Because of this, the operation never fails.<br /><br />
             <br />
@@ -1983,9 +1475,9 @@
             <typeparam name="T"></typeparam>
             <returns>A list of values at the specified keys.</returns>
         </member>
-        <member name="M:FreeRedis.RedisClient.MSetAsync(System.String,System.Object,System.Object[])">
+        <member name="M:FreeRedis.RedisClient.MSet(System.String,System.Object,System.Object[])">
             <summary>
-            MSET command (An Asynchronous Version) <br /><br />
+            MSET command (A Synchronized Version) <br /><br />
             <br />
             Sets the given keys to their respective values. MSET replaces existing values with new values, just as regular SET. <br /><br />
             <br />
@@ -1998,9 +1490,9 @@
             <param name="value">Value</param>
             <param name="keyValues">Other key-value sets</param>
         </member>
-        <member name="M:FreeRedis.RedisClient.MSetAsync``1(System.Collections.Generic.Dictionary{System.String,``0})">
+        <member name="M:FreeRedis.RedisClient.MSet``1(System.Collections.Generic.Dictionary{System.String,``0})">
             <summary>
-            MSET command (An Asynchronous Version) <br /><br />
+            MSET command (A Synchronized Version) <br /><br />
             <br />
             Sets the given keys to their respective values. MSET replaces existing values with new values, just as regular SET. <br /><br />
             <br />
@@ -2012,9 +1504,9 @@
             <param name="keyValues">Key-value sets</param>
             <typeparam name="T"></typeparam>
         </member>
-        <member name="M:FreeRedis.RedisClient.MSetNxAsync(System.String,System.Object,System.Object[])">
+        <member name="M:FreeRedis.RedisClient.MSetNx(System.String,System.Object,System.Object[])">
             <summary>
-            MSETNX command (An Asynchronous Version) <br /><br />
+            MSETNX command (A Synchronized Version) <br /><br />
             <br />
             Sets the given keys to their respective values. MSETNX will not perform any operation at all even if just a single key already exists.<br /><br />
             <br />
@@ -2028,9 +1520,9 @@
             <param name="keyValues">Other key-value sets</param>
             <returns>True if the all the keys were set. False if no key was set (at least one key already existed).</returns>
         </member>
-        <member name="M:FreeRedis.RedisClient.MSetNxAsync``1(System.Collections.Generic.Dictionary{System.String,``0})">
+        <member name="M:FreeRedis.RedisClient.MSetNx``1(System.Collections.Generic.Dictionary{System.String,``0})">
             <summary>
-            MSETNX command (An Asynchronous Version) <br /><br />
+            MSETNX command (A Synchronized Version) <br /><br />
             <br />
             Sets the given keys to their respective values. MSETNX will not perform any operation at all even if just a single key already exists.<br /><br />
             <br />
@@ -2043,9 +1535,9 @@
             <typeparam name="T"></typeparam>
             <returns>True if the all the keys were set. False if no key was set (at least one key already existed).</returns>
         </member>
-        <member name="M:FreeRedis.RedisClient.MSetAsync``1(System.Boolean,System.String,System.Object,System.Object[])">
+        <member name="M:FreeRedis.RedisClient.MSet``1(System.Boolean,System.String,System.Object,System.Object[])">
             <summary>
-            MSET key value [key value ...] command (An Asynchronous Version) <br /><br />
+            MSET key value [key value ...] command (A Synchronized Version) <br /><br />
             <br />
             Sets the given keys to their respective values. MSET replaces existing values with new values, just as regular SET. See MSETNX if you don't want to overwrite existing values.<br /><br />
             <br />
@@ -2061,9 +1553,9 @@
             <typeparam name="T"></typeparam>
             <returns>Always OK since MSET can't fail.</returns>
         </member>
-        <member name="M:FreeRedis.RedisClient.PSetExAsync``1(System.String,System.Int64,``0)">
+        <member name="M:FreeRedis.RedisClient.PSetEx``1(System.String,System.Int64,``0)">
             <summary>
-            PSETEX command (An Asynchronous Version) <br /><br />
+            PSETEX command (A Synchronized Version) <br /><br />
             <br />
             PSETEX works exactly like SETEX with the sole difference that the expire time is specified in milliseconds instead of seconds.<br /><br />
             <br />
@@ -2077,9 +1569,9 @@
             <param name="value">Value</param>
             <typeparam name="T"></typeparam>
         </member>
-        <member name="M:FreeRedis.RedisClient.SetAsync``1(System.String,``0,System.Int32)">
+        <member name="M:FreeRedis.RedisClient.Set``1(System.String,``0,System.Int32)">
             <summary>
-            SET key value EX seconds (An Asynchronous Version) <br /><br />
+            SET key value EX seconds (A Synchronized Version) <br /><br />
             <br />
             Set key to hold the string value.<br /><br />
             <br />
@@ -2093,9 +1585,25 @@
             <param name="timeoutSeconds">Timeout seconds</param>
             <typeparam name="T"></typeparam>
         </member>
-        <member name="M:FreeRedis.RedisClient.SetAsync``1(System.String,``0,System.Boolean)">
+        <member name="M:FreeRedis.RedisClient.Set``1(System.String,``0,System.TimeSpan)">
             <summary>
-            SET key value KEEPTTL command (An Asynchronous Version) <br /><br />
+            SET key value EX seconds (A Synchronized Version) <br /><br />
+            <br />
+            Set key to hold the string value.<br /><br />
+            <br />
+            设置键和值。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/set <br />
+            Available since 2.6.12. 
+            </summary>
+            <param name="key">Key</param>
+            <param name="value">Value</param>
+            <param name="timeout">Timeout</param>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:FreeRedis.RedisClient.Set``1(System.String,``0,System.Boolean)">
+            <summary>
+            SET key value KEEPTTL command (A Synchronized Version) <br /><br />
             <br />
             Set key to hold the string value. Retain the time to live associated with the key. <br /><br />
             <br />
@@ -2108,9 +1616,9 @@
             <param name="keepTtl">Retain the time to live associated with the key</param>
             <typeparam name="T"></typeparam>
         </member>
-        <member name="M:FreeRedis.RedisClient.SetNxAsync``1(System.String,``0,System.Int32)">
+        <member name="M:FreeRedis.RedisClient.SetNx``1(System.String,``0,System.Int32)">
             <summary>
-            SET key value EX seconds NX command (An Asynchronous Version) <br /><br />
+            SET key value EX seconds NX command (A Synchronized Version) <br /><br />
             <br />
             Set key to hold the string value. Only set the key if it does not already exist.<br /><br />
             <br />
@@ -2129,9 +1637,9 @@
             Null reply: a Null Bulk Reply is returned if the SET operation was not performed because the user specified the NX or XX option but the condition was not met or if user specified the NX and GET options that do not met.
             </returns>
         </member>
-        <member name="M:FreeRedis.RedisClient.SetNxAsync``1(System.String,``0,System.TimeSpan)">
+        <member name="M:FreeRedis.RedisClient.SetNx``1(System.String,``0,System.TimeSpan)">
             <summary>
-            SET key value EX seconds NX command (An Asynchronous Version) <br /><br />
+            SET key value EX seconds NX command (A Synchronized Version) <br /><br />
             <br />
             Set key to hold the string value. Only set the key if it does not already exist.<br /><br />
             <br />
@@ -2150,9 +1658,9 @@
             Null reply: a Null Bulk Reply is returned if the SET operation was not performed because the user specified the NX or XX option but the condition was not met or if user specified the NX and GET options that do not met.
             </returns>
         </member>
-        <member name="M:FreeRedis.RedisClient.SetXxAsync``1(System.String,``0,System.Int32)">
+        <member name="M:FreeRedis.RedisClient.SetXx``1(System.String,``0,System.Int32)">
             <summary>
-            SET key value EX seconds XX command (An Asynchronous Version) <br /><br />
+            SET key value EX seconds XX command (A Synchronized Version) <br /><br />
             <br />
             Set key to hold the string value. Only set the key if it already exist.<br /><br />
             <br />
@@ -2171,9 +1679,9 @@
             Null reply: a Null Bulk Reply is returned if the SET operation was not performed because the user specified the NX or XX option but the condition was not met or if user specified the NX and GET options that do not met.
             </returns>
         </member>
-        <member name="M:FreeRedis.RedisClient.SetXxAsync``1(System.String,``0,System.TimeSpan)">
+        <member name="M:FreeRedis.RedisClient.SetXx``1(System.String,``0,System.TimeSpan)">
             <summary>
-            SET key value EX seconds XX command (An Asynchronous Version) <br /><br />
+            SET key value EX seconds XX command (A Synchronized Version) <br /><br />
             <br />
             Set key to hold the string value. Only set the key if it already exist.<br /><br />
             <br />
@@ -2192,9 +1700,140 @@
             Null reply: a Null Bulk Reply is returned if the SET operation was not performed because the user specified the NX or XX option but the condition was not met or if user specified the NX and GET options that do not met.
             </returns>
         </member>
-        <member name="M:FreeRedis.RedisClient.SetXxAsync``1(System.String,``0,System.Boolean)">
+        <member name="M:FreeRedis.RedisClient.SetXx``1(System.String,``0,System.Boolean)">
             <summary>
-            SET key value KEEPTTL XX command (An Asynchronous Version) <br /><br />
+            SET key value KEEPTTL XX command (A Synchronized Version) <br /><br />
+            <br />
+            Set key to hold the string value. Only set the key if it already exist.<br /><br />
+            <br />
+            设置键和值。当且仅当键值已存在时才执行命令。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/set <br />
+            Available since 6.0.0. 
+            </summary>
+            <param name="key">Key</param>
+            <param name="value">Value</param>
+            <param name="keepTtl">Retain the time to live associated with the key</param>
+            <typeparam name="T"></typeparam>
+            <returns>
+            Simple string reply: OK if SET was executed correctly.<br />
+            Bulk string reply: when GET option is set, the old value stored at key, or nil when key did not exist.<br />
+            Null reply: a Null Bulk Reply is returned if the SET operation was not performed because the user specified the NX or XX option but the condition was not met or if user specified the NX and GET options that do not met.
+            </returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.Set``1(System.String,``0,System.TimeSpan,System.Boolean,System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            SET command (A Synchronized Version) <br /><br />
+            <br />
+            Set key to hold the string value. If key already holds a value, it is overwritten, regardless of its type. <br /><br />
+            <br />
+            设置键和值。如果该键已存在，则覆盖之。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/set <br />
+            Available since 6.0.0. 
+            </summary>
+            <param name="key">Key</param>
+            <param name="value">Value</param>
+            <param name="timeout">Timeout value</param>
+            <param name="keepTtl">Retain the time to live associated with the key</param>
+            <param name="nx">Only set the key if it does not already exist.</param>
+            <param name="xx">Only set the key if it already exist.</param>
+            <param name="get">Return the old value stored at key, or nil when key did not exist.</param>
+            <typeparam name="T"></typeparam>
+            <returns>
+            Simple string reply: OK if SET was executed correctly.<br />
+            Bulk string reply: when GET option is set, the old value stored at key, or nil when key did not exist.<br />
+            Null reply: a Null Bulk Reply is returned if the SET operation was not performed because the user specified the NX or XX option but the condition was not met or if user specified the NX and GET options that do not met.
+            </returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.SetBit(System.String,System.Int64,System.Boolean)">
+            <summary>
+            SETBIT command (A Synchronized Version) <br /><br />
+            <br />
+            Sets or clears the bit at offset in the string value stored at key.<br /><br />
+            <br />
+            设置或清除键值字符串指定偏移量的位（bit）。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/setbit <br />
+            Available since 2.2.0.   
+            </summary>
+            <param name="key">Key</param>
+            <param name="offset">Offset value</param>
+            <param name="value">New value</param>
+            <returns>The original bit value stored at offset.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.SetEx``1(System.String,System.Int32,``0)">
+            <summary>
+            SETEX command (A Synchronized Version) <br /><br />
+            <br />
+            Set key to hold the string value and set key to timeout after a given number of seconds.<br /><br />
+            <br />
+            设置键值在给定的秒数后超时。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/setex <br />
+            Available since 2.0.0.   
+            </summary>
+            <param name="key">Key</param>
+            <param name="seconds">Seconds</param>
+            <param name="value">Value</param>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:FreeRedis.RedisClient.SetNx``1(System.String,``0)">
+            <summary>
+            SETNX command (A Synchronized Version) <br /><br />
+            <br />
+            Set key to hold string value if key does not exist. In that case, it is equal to SET. When key already holds a value, no operation is performed. <br />
+            SETNX is short for "SET if Not eXists".<br /><br />
+            <br />
+            如果键值不存在，则设置该键值，在此情况下与 SET 指令相似。当键值已经存在时，不执行任何操作。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/setnx <br />
+            Available since 1.0.0.   
+            </summary>
+            <param name="key">Key</param>
+            <param name="value">Value</param>
+            <typeparam name="T"></typeparam>
+            <returns>Set result, specifically: 1 is if the key was set; 0 is if the key was not set.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.SetRange``1(System.String,System.Int64,``0)">
+            <summary>
+            SETRANGE command (A Synchronized Version) <br /><br />
+            <br />
+            Overwrites part of the string stored at key, starting at the specified offset, for the entire length of value. If the offset is larger than the current length of the string at key, the string is padded with zero-bytes to make offset fit. Non-existing keys are considered as empty strings, so this command will make sure it holds a string large enough to be able to set value at offset.<br /><br />
+            <br />
+            从给定的偏移量开始覆盖键所对应的字符串值。如果偏移量大于值的长度，则为该字符串填充零字节（zero-bytes）以满足偏移量的要求。若键值不存在则视作空字符串值。故本指令将确保有足够长度的字符串以适应偏移量的要求。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/setrange <br />
+            Available since 2.2.0.  
+            </summary>
+            <param name="key">Key</param>
+            <param name="offset">Offset value</param>
+            <param name="value">The value to be filled.</param>
+            <typeparam name="T"></typeparam>
+            <returns>The length of the string after it was modified by the command.</returns>
+        </member>
+        <member name="M:FreeRedis.RedisClient.StrLen(System.String)">
+            <summary>
+            STRLRN command (A Synchronized Version) <br /><br />
+            <br />
+            Returns the length of the string value stored at key. An error is returned when key holds a non-string value.<br /><br />
+            <br />
+            返回键对应值字符串的长度。当该键对应的值不是字符串，则返回错误。<br /><br />
+            <br />
+            Document link: https://redis.io/commands/strlen <br />
+            Available since 2.2.0. 
+            </summary>
+            <param name="key">Key</param>
+            <returns>The length of the string at key, or 0 when key does not exist.</returns>
+        </member>
+        <member name="T:FreeRedis.ZAddThan">
+            <summary>
+            redis version >=6.2: Added the GT and LT options.
+            </summary>
+        </member>
+    </members>
+</doc>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     s Version) <br /><br />
             <br />
             Set key to hold the string value. Only set the key if it already exist.<br /><br />
             <br />

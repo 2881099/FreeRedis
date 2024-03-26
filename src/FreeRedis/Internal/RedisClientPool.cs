@@ -71,10 +71,11 @@ namespace FreeRedis.Internal
                         {
                             if (rt.IsError)
                             {
-                                if (rt.SimpleError == "ERR SELECT is not allowed in cluster mode")
+                                if (rt.SimpleError == "ERR SELECT is not allowed in cluster mode" ||
+                                    rt.SimpleError == "ERR invalid database index.") //Garnet
                                     connectionString.Database = 0;
                                 else
-                                    rt.ThrowOrNothing();
+                                rt.ThrowOrNothing();
                             }
                             (rds as IRedisSocketModify).SetDatabase(connectionString.Database);
                         }));
