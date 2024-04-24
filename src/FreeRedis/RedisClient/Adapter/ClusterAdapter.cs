@@ -144,7 +144,7 @@ namespace FreeRedis
                         }
                         catch (Exception ex)
                         {
-                            if (pool?.SetUnavailable(ex, getTime) == true)
+                            if (cmd.IsBlockingCommand() == false && pool?.SetUnavailable(ex, getTime) == true)
                             {
                             }
                             throw;
@@ -242,7 +242,7 @@ namespace FreeRedis
                         }
                         catch (Exception ex)
                         {
-                            if (pool?.SetUnavailable(ex, getTime) == true)
+                            if (cmd.IsBlockingCommand() == false && pool?.SetUnavailable(ex, getTime) == true)
                             {
                             }
                             throw;

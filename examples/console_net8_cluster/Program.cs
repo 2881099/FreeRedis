@@ -26,6 +26,17 @@ namespace console_net8_cluster
 
         static void Main(string[] args)
         {
+            var tblv1 = cli.BLPop("testblist01", 5);
+            var tblv2 = cli.BLPop("testblist02", 5);
+            var tblv3 = cli.BLPop("testblist03", 5);
+
+            cli.LPush("testblist01", "value1");
+            tblv1 = cli.BLPop("testblist01", 5);
+            cli.LPush("testblist02", "value2");
+            tblv2 = cli.BLPop("testblist02", 5);
+            cli.LPush("testblist03", "value3");
+            tblv3 = cli.BLPop("testblist03", 5);
+
             //预热
             cli.Set(Guid.NewGuid().ToString(), "我也不知道为什么刚刚好十五个字");
             sedb.StringSet(Guid.NewGuid().ToString(), "我也不知道为什么刚刚好十五个字");

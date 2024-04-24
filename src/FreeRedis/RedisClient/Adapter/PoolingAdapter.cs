@@ -95,7 +95,7 @@ namespace FreeRedis
                         catch (Exception ex)
                         {
                             var pool = (rds as DefaultRedisSocket.TempProxyRedisSocket)._pool;
-                            if (pool?.SetUnavailable(ex, getTime) == true)
+                            if (cmd.IsBlockingCommand() == false && pool?.SetUnavailable(ex, getTime) == true)
                             {
                             }
                             throw;
@@ -136,7 +136,7 @@ namespace FreeRedis
                         catch (Exception ex)
                         {
                             var pool = (rds as DefaultRedisSocket.TempProxyRedisSocket)._pool;
-                            if (pool?.SetUnavailable(ex, getTime) == true)
+                            if (cmd.IsBlockingCommand() == false && pool?.SetUnavailable(ex, getTime) == true)
                             {
                             }
                             throw;

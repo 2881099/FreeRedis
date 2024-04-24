@@ -204,6 +204,11 @@ namespace FreeRedis
             var cmdset = CommandSets.Get(_command);
             return cmdset != null && ((cmdset.Tag & CommandSets.ServerTag.read) == CommandSets.ServerTag.read || (cmdset.Flag & CommandSets.ServerFlag.@readonly) == CommandSets.ServerFlag.@readonly);
         }
+        internal bool IsBlockingCommand()
+        {
+            var cmdset = CommandSets.Get(_command);
+            return cmdset != null && ((cmdset.Tag & CommandSets.ServerTag.blocking) == CommandSets.ServerTag.blocking);
+        }
     }
 
     static class CommandPacketExtensions
