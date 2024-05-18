@@ -1,19 +1,16 @@
 ﻿using FreeRedis.Internal;
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Threading;
 
 namespace FreeRedis
 {
-    public partial class RedisSentinelClient : IDisposable
+	public partial class RedisSentinelClient : IDisposable
     {
         readonly IRedisSocket _redisSocket;
 
         public RedisSentinelClient(ConnectionStringBuilder connectionString)
         {
-            _redisSocket = new DefaultRedisSocket(connectionString.Host, connectionString.Ssl);
+            _redisSocket = new DefaultRedisSocket(connectionString.Host, connectionString.Ssl, connectionString.CertificateValidation, connectionString.CertificateSelection);
             _redisSocket.ReceiveTimeout = connectionString.ReceiveTimeout;
             _redisSocket.SendTimeout = connectionString.SendTimeout;
             _redisSocket.Encoding = connectionString.Encoding;
@@ -65,26 +62,20 @@ namespace FreeRedis
         public long Reset(string pattern) => Call("SENTINEL".SubCommand("RESET").InputRaw(pattern), rt => rt.ThrowOrValue<long>());
         public void Failover(string masterName) => Call("SENTINEL".SubCommand("FAILOVER").InputRaw(masterName), rt => rt.ThrowOrNothing());
 
-
-
         public object PendingScripts() => Call("SENTINEL".SubCommand("PENDING-SCRIPTS"), rt => rt.ThrowOrValue());
         public object Monitor(string name, string ip, int port, int quorum) => Call("SENTINEL".SubCommand("MONITOR").Input(name, ip, port, quorum), rt => rt.ThrowOrValue());
-
-
 
         public void FlushConfig() => Call("SENTINEL".SubCommand("FLUSHCONFIG"), rt => rt.ThrowOrNothing());
         public void Remove(string masterName) => Call("SENTINEL".SubCommand("REMOVE").InputRaw(masterName), rt => rt.ThrowOrNothing());
         public string CkQuorum(string masterName) => Call("SENTINEL".SubCommand("CKQUORUM").InputRaw(masterName), rt => rt.ThrowOrValue<string>());
         public void Set(string masterName, string option, string value) => Call("SENTINEL".SubCommand("SET").Input(masterName, option, value), rt => rt.ThrowOrNothing());
 
-
-
         public object InfoCache(string masterName) => Call<object>("SENTINEL".SubCommand("INFO-CACHE").InputRaw(masterName), rt => rt.ThrowOrValue());
         public void SimulateFailure(bool crashAfterElection, bool crashAfterPromotion) => Call<object>("SENTINEL"
             .SubCommand("SIMULATE-FAILURE")
             .InputIf(crashAfterElection, "crash-after-election")
             .InputIf(crashAfterPromotion, "crash-after-promotion"), rt => rt.ThrowOrNothing());
-    }
+	}
 
     #region Model
     public class SentinelRoleResult

@@ -1,22 +1,15 @@
 ﻿using FreeRedis.Internal.ObjectPool;
 using System;
-using System.Collections.Generic;
 using System.Collections.Concurrent;
-using System.Net;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Threading;
-using System.Diagnostics;
-using System.Linq;
-using System.Net.Sockets;
+using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace FreeRedis.Internal
 {
     public class RedisClientPool : ObjectPool<RedisClient>, IDisposable
     {
-        public RedisClientPool(string connectionString, RedisClient topOwner) : base(null)
+        public RedisClientPool(ConnectionStringBuilder connectionString, RedisClient topOwner) : base(null)
         {
             _policy = new RedisClientPoolPolicy
             {
@@ -27,18 +20,18 @@ namespace FreeRedis.Internal
                 var cli = s as RedisClient;
                 var rds = cli.Adapter.GetRedisSocket(null);
                 var adapter = cli.Adapter as RedisClient.SingleInsideAdapter;
-                rds.Socket.ReceiveTimeout = (int)_policy._connectionStringBuilder.ReceiveTimeout.TotalMilliseconds;
-                rds.Socket.SendTimeout = (int)_policy._connectionStringBuilder.SendTimeout.TotalMilliseconds;
-                rds.Encoding = _policy._connectionStringBuilder.Encoding;
+                rds.Socket.ReceiveTimeout = (int)connectionString.ReceiveTimeout.TotalMilliseconds;
+                rds.Socket.SendTimeout = (int)connectionString.SendTimeout.TotalMilliseconds;
+                rds.Encoding = connectionString.Encoding;
                 var isIgnoreAop = rds.LastCommand.IsIgnoreAop;
 
                 var cmds = new List<CommandPacket>();
-                if (_policy._connectionStringBuilder.Protocol == RedisProtocol.RESP3)
+                if (connectionString.Protocol == RedisProtocol.RESP3)
                 {
                     //未开启 ACL 的情况
-                    if (string.IsNullOrWhiteSpace(_policy._connectionStringBuilder.User) && !string.IsNullOrWhiteSpace(_policy._connectionStringBuilder.Password))
+                    if (string.IsNullOrWhiteSpace(connectionString.User) && !string.IsNullOrWhiteSpace(connectionString.Password))
                         cmds.Add("AUTH".SubCommand(null)
-                             .Input(_policy._connectionStringBuilder.Password)
+                             .Input(connectionString.Password)
                              .OnData(rt =>
                              {
                                  if (rt.IsError && rt.SimpleError != "ERR Client sent AUTH, but no password is set")
@@ -47,47 +40,48 @@ namespace FreeRedis.Internal
                              }));
                     cmds.Add("HELLO"
                         .Input(3)
-                        .InputIf(!string.IsNullOrWhiteSpace(_policy._connectionStringBuilder.User) && !string.IsNullOrWhiteSpace(_policy._connectionStringBuilder.Password), "AUTH", _policy._connectionStringBuilder.User, _policy._connectionStringBuilder.Password)
-                        .InputIf(!string.IsNullOrWhiteSpace(_policy._connectionStringBuilder.ClientName), "SETNAME", _policy._connectionStringBuilder.ClientName)
+                        .InputIf(!string.IsNullOrWhiteSpace(connectionString.User) && !string.IsNullOrWhiteSpace(connectionString.Password), "AUTH", connectionString.User, connectionString.Password)
+                        .InputIf(!string.IsNullOrWhiteSpace(connectionString.ClientName), "SETNAME", connectionString.ClientName)
                         .OnData(rt =>
                         {
                             rt.ThrowOrNothing();
                             rds.Protocol = RedisProtocol.RESP3;
                         }));
                 }
-                else if (!string.IsNullOrEmpty(_policy._connectionStringBuilder.User) && !string.IsNullOrEmpty(_policy._connectionStringBuilder.Password))
+                else if (!string.IsNullOrEmpty(connectionString.User) && !string.IsNullOrEmpty(connectionString.Password))
                     cmds.Add("AUTH".SubCommand(null)
-                        .InputIf(!string.IsNullOrWhiteSpace(_policy._connectionStringBuilder.User), _policy._connectionStringBuilder.User)
-                        .Input(_policy._connectionStringBuilder.Password)
+                        .InputIf(!string.IsNullOrWhiteSpace(connectionString.User), connectionString.User)
+                        .Input(connectionString.Password)
                         .OnData(rt =>
                         {
                             rt.ThrowOrNothing();
                         }));
-                else if (!string.IsNullOrEmpty(_policy._connectionStringBuilder.Password))
+                else if (!string.IsNullOrEmpty(connectionString.Password))
                     cmds.Add("AUTH".SubCommand(null)
-                        .Input(_policy._connectionStringBuilder.Password)
+                        .Input(connectionString.Password)
                         .OnData(rt =>
                         {
                             if (rt.IsError && rt.SimpleError != "ERR Client sent AUTH, but no password is set")
                                 rt.ThrowOrNothing();
                         }));
 
-                if (_policy._connectionStringBuilder.Database > 0)
-                    cmds.Add("SELECT".Input(_policy._connectionStringBuilder.Database)
+                if (connectionString.Database > 0)
+                    cmds.Add("SELECT".Input(connectionString.Database)
                         .OnData(rt =>
                         {
                             if (rt.IsError)
                             {
-                                if (rt.SimpleError == "ERR SELECT is not allowed in cluster mode")
-                                    _policy._connectionStringBuilder.Database = 0;
+                                if (rt.SimpleError == "ERR SELECT is not allowed in cluster mode" ||
+                                    rt.SimpleError == "ERR invalid database index.") //Garnet
+                                    connectionString.Database = 0;
                                 else
-                                    rt.ThrowOrNothing();
+                                rt.ThrowOrNothing();
                             }
-                            (rds as IRedisSocketModify).SetDatabase(_policy._connectionStringBuilder.Database);
+                            (rds as IRedisSocketModify).SetDatabase(connectionString.Database);
                         }));
 
-                if (!string.IsNullOrEmpty(_policy._connectionStringBuilder.ClientName) && _policy._connectionStringBuilder.Protocol == RedisProtocol.RESP2)
-                    cmds.Add("CLIENT".SubCommand("SETNAME").InputRaw(_policy._connectionStringBuilder.ClientName)
+                if (!string.IsNullOrEmpty(connectionString.ClientName) && connectionString.Protocol == RedisProtocol.RESP2)
+                    cmds.Add("CLIENT".SubCommand("SETNAME").InputRaw(connectionString.ClientName)
                         .OnData(rt =>
                         {
                             rt.ThrowOrNothing();
@@ -126,13 +120,15 @@ namespace FreeRedis.Internal
                     }, false, true); //aop after
                 });
 
-                topOwner?.OnConnected(TopOwner, new ConnectedEventArgs(_policy._connectionStringBuilder.Host, this, cli));
+                topOwner?.OnConnected(TopOwner, new ConnectedEventArgs(connectionString.Host, this, cli));
                 if (isIgnoreAop == false)
-                    topOwner?.OnNotice(TopOwner, new NoticeEventArgs(NoticeType.Info, null, $"{_policy._connectionStringBuilder.Host.PadRight(21)} > Connected, ClientId: {rds.ClientId}, Database: {rds.Database}, Pool: {_freeObjects.Count}/{_allObjects.Count}", cli));
+                    topOwner?.OnNotice(TopOwner, new NoticeEventArgs(NoticeType.Info, null, $"{connectionString.Host.PadRight(21)} > Connected, ClientId: {rds.ClientId}, Database: {rds.Database}, Pool: {_freeObjects.Count}/{_allObjects.Count}", cli));
             };
             this.Policy = _policy;
             this.TopOwner = topOwner;
-            _policy.ConnectionString = connectionString;
+            _policy._connectionStringBuilder = connectionString;
+            if (connectionString.MinPoolSize > 0)
+                RedisClientPoolPolicy.PrevReheatConnectionPool(this, connectionString.MinPoolSize);
         }
 
         internal bool CheckAvailable() => base.LiveCheckAvailable();
@@ -159,27 +155,18 @@ namespace FreeRedis.Internal
         public bool IsAutoDisposeWithSystem { get => _connectionStringBuilder.ExitAutoDisposePool; set => _connectionStringBuilder.ExitAutoDisposePool = value; }
         public int CheckAvailableInterval { get; set; } = 5;
 
-        public string ConnectionString
-        {
-            get => _connectionStringBuilder.ToString();
-            set
-            {
-                _connectionStringBuilder = value;
-
-                if (_connectionStringBuilder.MinPoolSize > 0)
-                    PrevReheatConnectionPool(_pool, _connectionStringBuilder.MinPoolSize);
-            }
-        }
-
         public bool OnCheckAvailable(Object<RedisClient> obj)
         {
             obj.ResetValue();
-            return obj.Value.Ping("CheckAvailable") == "CheckAvailable";
+            CommandPacket cmd = "PING";
+            cmd.IsIgnoreAop = true;
+            return obj.Value.Call(cmd) as string == "PONG";
         }
 
         public RedisClient OnCreate()
         {
-            return new RedisClient(_pool.TopOwner, _connectionStringBuilder.Host, _connectionStringBuilder.Ssl, 
+            return new RedisClient(_pool.TopOwner, _connectionStringBuilder.Host, 
+                _connectionStringBuilder.Ssl, _connectionStringBuilder.CertificateValidation, _connectionStringBuilder.CertificateSelection,
                 _connectionStringBuilder.ConnectTimeout,
                 _connectionStringBuilder.ReceiveTimeout, _connectionStringBuilder.SendTimeout, 
                 cli => Connected(cli, new EventArgs()), 
@@ -208,8 +195,10 @@ namespace FreeRedis.Internal
                 {
                     try
                     {
-                        obj.Value.Ping("CheckAvailable");
-                    }
+						CommandPacket cmd = "PING";
+						cmd.IsIgnoreAop = true;
+						obj.Value.Call(cmd);
+					}
                     catch
                     {
                         obj.ResetValue();
@@ -218,11 +207,25 @@ namespace FreeRedis.Internal
             }
         }
 #if !NET40
-        public Task OnGetAsync(Object<RedisClient> obj)
+        async public Task OnGetAsync(Object<RedisClient> obj)
         {
-            OnGet(obj); //todo
-            return Task.FromResult(false);
-        }
+			if (_pool.IsAvailable)
+			{
+				if (DateTime.Now.Subtract(obj.LastReturnTime).TotalSeconds > 60 || obj.Value.Adapter.GetRedisSocket(null).IsConnected == false)
+				{
+					try
+					{
+						CommandPacket cmd = "PING";
+						cmd.IsIgnoreAop = true;
+						await obj.Value.CallAsync(cmd);
+					}
+					catch
+					{
+						obj.ResetValue();
+					}
+				}
+			}
+		}
 #endif
 
         public void OnGetTimeout() { }
@@ -245,8 +248,10 @@ namespace FreeRedis.Internal
             {
                 var conn = pool.Get();
                 initConns.Add(conn);
-                conn.Value.Ping("CheckAvailable");
-            }
+				CommandPacket cmd = "PING";
+				cmd.IsIgnoreAop = true;
+				conn.Value.Call(cmd);
+			}
             catch (Exception ex)
             {
                 initTestOk = false; //预热一次失败，后面将不进行

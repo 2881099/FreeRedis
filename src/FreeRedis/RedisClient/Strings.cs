@@ -596,22 +596,37 @@ namespace FreeRedis
                                                                                                                                       .InputIf(keepTtl, "KEEPTTL")
                                                                                                                                       .InputIf(nx, "NX")
                                                                                                                                       .InputIf(xx, "XX").InputIf(get, "GET"), rt => rt.ThrowOrValue<string>());
+		/// <summary>
+		/// SET key value EX seconds (A Synchronized Version) <br /><br />
+		/// <br />
+		/// Set key to hold the string value.<br /><br />
+		/// <br />
+		/// 设置键和值。<br /><br />
+		/// <br />
+		/// Document link: https://redis.io/commands/set <br />
+		/// Available since 2.6.12. 
+		/// </summary>
+		/// <param name="key">Key</param>
+		/// <param name="value">Value</param>
+		/// <param name="timeout">Timeout</param>
+		/// <typeparam name="T"></typeparam>
+		public Task SetAsync<T>(string key, T value, TimeSpan timeout) => SetAsync(key, value, timeout, false, false, false, false);
 
-        /// <summary>
-        /// SETBIT command (An Asynchronous Version) <br /><br />
-        ///<br />
-        /// Sets or clears the bit at offset in the string value stored at key.<br /><br />
-        /// <br />
-        /// 设置或清除键值字符串指定偏移量的位（bit）。<br /><br />
-        /// <br />
-        /// Document link: https://redis.io/commands/setbit <br />
-        /// Available since 2.2.0.   
-        /// </summary>
-        /// <param name="key">Key</param>
-        /// <param name="offset">Offset value</param>
-        /// <param name="value">New value</param>
-        /// <returns>The original bit value stored at offset.</returns>
-        public Task<long> SetBitAsync(string key, long offset, bool value) => CallAsync("SETBIT".InputKey(key, offset, value ? "1" : "0"), rt => rt.ThrowOrValue<long>());
+		/// <summary>
+		/// SETBIT command (An Asynchronous Version) <br /><br />
+		///<br />
+		/// Sets or clears the bit at offset in the string value stored at key.<br /><br />
+		/// <br />
+		/// 设置或清除键值字符串指定偏移量的位（bit）。<br /><br />
+		/// <br />
+		/// Document link: https://redis.io/commands/setbit <br />
+		/// Available since 2.2.0.   
+		/// </summary>
+		/// <param name="key">Key</param>
+		/// <param name="offset">Offset value</param>
+		/// <param name="value">New value</param>
+		/// <returns>The original bit value stored at offset.</returns>
+		public Task<long> SetBitAsync(string key, long offset, bool value) => CallAsync("SETBIT".InputKey(key, offset, value ? "1" : "0"), rt => rt.ThrowOrValue<long>());
 
         /// <summary>
         /// SETEX command (An Asynchronous Version) <br /><br />

@@ -358,7 +358,7 @@ namespace FreeRedis.Internal.ObjectPool
             }
             catch
             {
-                Return(obj);
+                Return(obj, true);
                 throw;
             }
 
@@ -410,7 +410,7 @@ namespace FreeRedis.Internal.ObjectPool
             }
             catch
             {
-                Return(obj);
+                Return(obj, true);
                 throw;
             }
 
@@ -423,7 +423,7 @@ namespace FreeRedis.Internal.ObjectPool
         }
 #endif
 
-        public void Return(Object<T> obj, bool isReset = false)
+		public void Return(Object<T> obj, bool isReset = false)
         {
             if (obj == null) return;
             if (obj._isReturned) return;

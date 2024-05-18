@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
+using System.Net.Security;
 using System.Text;
-using System.Threading;
 
 namespace FreeRedis
 {
@@ -36,9 +37,9 @@ namespace FreeRedis
         /// <summary>
         /// Cluster RedisClient
         /// </summary>
-        public RedisClient(ConnectionStringBuilder[] clusterConnectionStrings)
+        public RedisClient(ConnectionStringBuilder[] clusterConnectionStrings, Dictionary<string, string> hostMappings = null)
         {
-            Adapter = new ClusterAdapter(this, clusterConnectionStrings);
+            Adapter = new ClusterAdapter(this, clusterConnectionStrings, hostMappings);
             Prefix = clusterConnectionStrings[0].Prefix;
             ConnectionString = clusterConnectionStrings[0];
         }
@@ -65,11 +66,12 @@ namespace FreeRedis
         /// <summary>
         /// Single inside RedisClient
         /// </summary>
-        protected internal RedisClient(RedisClient topOwner, string host, bool ssl, 
+        protected internal RedisClient(RedisClient topOwner, string host, 
+            bool ssl, RemoteCertificateValidationCallback certificateValidation, LocalCertificateSelectionCallback certificateSelection,
             TimeSpan connectTimeout, TimeSpan receiveTimeout, TimeSpan sendTimeout, 
             Action<RedisClient> connected, Action<RedisClient> disconnected)
         {
-            Adapter = new SingleInsideAdapter(topOwner ?? this, this, host, ssl, 
+            Adapter = new SingleInsideAdapter(topOwner ?? this, this, host, ssl, certificateValidation, certificateSelection,
                 connectTimeout, receiveTimeout, sendTimeout, connected, disconnected);
             Prefix = topOwner.Prefix;
             ConnectionString = topOwner.ConnectionString;
@@ -231,40 +233,40 @@ namespace FreeRedis
                         else if (valueStr == "0") obj = false;
                         break;
                     case "System.Byte":
-                        if (byte.TryParse(valueStr, out var trybyte)) obj = trybyte;
+                        if (byte.TryParse(valueStr, NumberStyles.Any, CultureInfo.InvariantCulture.NumberFormat, out var trybyte)) obj = trybyte;
                         break;
                     case "System.Char":
                         if (valueStr.Length > 0) obj = valueStr[0];
                         break;
                     case "System.Decimal":
-                        if (Decimal.TryParse(valueStr, out var trydec)) obj = trydec;
+                        if (Decimal.TryParse(valueStr, NumberStyles.Any, CultureInfo.InvariantCulture.NumberFormat, out var trydec)) obj = trydec;
                         break;
                     case "System.Double":
-                        if (Double.TryParse(valueStr, out var trydb)) obj = trydb;
+                        if (Double.TryParse(valueStr, NumberStyles.Any, CultureInfo.InvariantCulture.NumberFormat, out var trydb)) obj = trydb;
                         break;
                     case "System.Single":
-                        if (Single.TryParse(valueStr, out var trysg)) obj = trysg;
+                        if (Single.TryParse(valueStr, NumberStyles.Any, CultureInfo.InvariantCulture.NumberFormat, out var trysg)) obj = trysg;
                         break;
                     case "System.Int32":
-                        if (Int32.TryParse(valueStr, out var tryint32)) obj = tryint32;
+                        if (Int32.TryParse(valueStr, NumberStyles.Any, CultureInfo.InvariantCulture.NumberFormat, out var tryint32)) obj = tryint32;
                         break;
                     case "System.Int64":
-                        if (Int64.TryParse(valueStr, out var tryint64)) obj = tryint64;
+                        if (Int64.TryParse(valueStr, NumberStyles.Any, CultureInfo.InvariantCulture.NumberFormat, out var tryint64)) obj = tryint64;
                         break;
                     case "System.SByte":
-                        if (SByte.TryParse(valueStr, out var trysb)) obj = trysb;
+                        if (SByte.TryParse(valueStr, NumberStyles.Any, CultureInfo.InvariantCulture.NumberFormat, out var trysb)) obj = trysb;
                         break;
                     case "System.Int16":
-                        if (Int16.TryParse(valueStr, out var tryint16)) obj = tryint16;
+                        if (Int16.TryParse(valueStr, NumberStyles.Any, CultureInfo.InvariantCulture.NumberFormat, out var tryint16)) obj = tryint16;
                         break;
                     case "System.UInt32":
-                        if (UInt32.TryParse(valueStr, out var tryuint32)) obj = tryuint32;
+                        if (UInt32.TryParse(valueStr, NumberStyles.Any, CultureInfo.InvariantCulture.NumberFormat, out var tryuint32)) obj = tryuint32;
                         break;
                     case "System.UInt64":
-                        if (UInt64.TryParse(valueStr, out var tryuint64)) obj = tryuint64;
+                        if (UInt64.TryParse(valueStr, NumberStyles.Any, CultureInfo.InvariantCulture.NumberFormat, out var tryuint64)) obj = tryuint64;
                         break;
                     case "System.UInt16":
-                        if (UInt16.TryParse(valueStr, out var tryuint16)) obj = tryuint16;
+                        if (UInt16.TryParse(valueStr, NumberStyles.Any, CultureInfo.InvariantCulture.NumberFormat, out var tryuint16)) obj = tryuint16;
                         break;
                     case "System.DateTime":
                         if (DateTime.TryParse(valueStr, out var trydt)) obj = trydt;
@@ -273,7 +275,7 @@ namespace FreeRedis
                         if (DateTimeOffset.TryParse(valueStr, out var trydtos)) obj = trydtos;
                         break;
                     case "System.TimeSpan":
-                        if (Int64.TryParse(valueStr, out tryint64)) obj = new TimeSpan(tryint64);
+                        if (Int64.TryParse(valueStr, NumberStyles.Any, CultureInfo.InvariantCulture.NumberFormat, out tryint64)) obj = new TimeSpan(tryint64);
                         break;
                     case "System.Guid":
                         if (Guid.TryParse(valueStr, out var tryguid)) obj = tryguid;

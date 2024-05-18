@@ -2,7 +2,7 @@
 
 <div align="center">
 
-基于 .NET 的 Redis 客户端，支持 .NET Core 2.1+、.NET Framework 4.0+ 以及 Xamarin。
+基于 .NET 的 Redis 客户端，支持 .NET Core 2.1+、.NET Framework 4.0+、Xamarin 以及 AOT。
 
 [![nuget](https://img.shields.io/nuget/v/FreeRedis.svg?style=flat-square)](https://www.nuget.org/packages/FreeRedis) 
 [![stats](https://img.shields.io/nuget/dt/FreeRedis.svg?style=flat-square)](https://www.nuget.org/stats/packages/FreeRedis?groupby=Version) 
@@ -65,7 +65,7 @@ string[] vals = cli.MGet("key1", "key2");
 | name              | \<empty\> | 连接名，使用 CLIENT LIST 命令查看 |
 | prefix            | \<empty\> | `key` 前辍，所有方法都会附带此前辍，cli.Set(prefix + "key", 111); |
 | exitAutoDisposePool | true | AppDomain.CurrentDomain.ProcessExit/Console.CancelKeyPress 事件自动释放 |
-| subscribleReadbytes | false | Subscrible 读取内容为 byte[] |
+| subscribeReadbytes | false | Subscribe 读取内容为 byte[] |
 
 > IPv6: [fe80::b164:55b3:4b4f:7ce6%15]:6379
 

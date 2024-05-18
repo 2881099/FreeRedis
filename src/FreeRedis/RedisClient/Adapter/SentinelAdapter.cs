@@ -2,6 +2,7 @@
 using FreeRedis.Internal.ObjectPool;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -17,6 +18,7 @@ namespace FreeRedis
             internal readonly IdleBus<RedisClientPool> _ib;
             internal readonly ConnectionStringBuilder _connectionString;
             readonly LinkedList<ConnectionStringBuilder> _sentinels;
+            readonly RedisClient _sentinelSubscribe;
             string _masterHost;
             readonly bool _rw_splitting;
             readonly bool _is_single;
@@ -31,6 +33,10 @@ namespace FreeRedis
                 {
                     var csb = ConnectionStringBuilder.Parse(a);
                     csb.Host = csb.Host.ToLower();
+                    csb.CertificateValidation = _connectionString.CertificateValidation;
+                    csb.CertificateSelection = _connectionString.CertificateSelection;
+                    csb.MaxPoolSize = 1;
+                    csb.MinPoolSize = 1;
                     return csb;
                 }).GroupBy(a => a.Host, a => a).Select(a => a.First()) ?? new ConnectionStringBuilder[0]);
                 _rw_splitting = rw_splitting;
@@ -40,12 +46,38 @@ namespace FreeRedis
 
                 _ib = new IdleBus<RedisClientPool>(TimeSpan.FromMinutes(10));
                 ResetSentinel();
-            }
+				_sentinelSubscribe = new RedisClient(_sentinels.First.Value);
+				_sentinelSubscribe.Subscribe("+switch-master", (chan, msg) =>
+				{
+					if (chan == "+switch-master" && msg != null)
+					{
+                        var args = msg?.ToString().Split(' '); //mymaster 127.0.0.1 6381 127.0.0.1 6379
+                        if (args == null || args.Length < 5) return;
+                        if (_connectionString.Host != args[0]) return;
+
+                        var masterhostEnd = $"{args[3]}:{args[4]}";
+                        _ib.TryRemove(_masterHost);
+
+						ConnectionStringBuilder connectionString = _connectionString.ToString();
+						connectionString.Host = masterhostEnd;
+						connectionString.MinPoolSize = _connectionString.MinPoolSize;
+						connectionString.MaxPoolSize = _connectionString.MaxPoolSize;
+						connectionString.CertificateValidation = _connectionString.CertificateValidation;
+						connectionString.CertificateSelection = _connectionString.CertificateSelection;
+						_ib.TryRegister(masterhostEnd, () => new RedisClientPool(connectionString, TopOwner));
+
+						Interlocked.Exchange(ref _masterHost, masterhostEnd);
+						if (!TopOwner.OnNotice(null, new NoticeEventArgs(NoticeType.Info, null, $"{_connectionString.Host.PadRight(21)} > Redis Sentinel switch to {_masterHost}", null)))
+							TestTrace.WriteLine($"【{_connectionString.Host}】Redis Sentinel switch to {_masterHost}", ConsoleColor.DarkGreen);
+					}
+				});
+			}
 
             bool isdisposed = false;
             public override void Dispose()
             {
-                foreach (var key in _ib.GetKeys())
+				_sentinelSubscribe.Dispose();
+				foreach (var key in _ib.GetKeys())
                 {
                     var pool = _ib.Get(key);
                     TopOwner.Unavailable?.Invoke(TopOwner, new UnavailableEventArgs(pool.Key, pool));
@@ -102,7 +134,7 @@ namespace FreeRedis
                         catch (Exception ex)
                         {
                             var pool = (rds as DefaultRedisSocket.TempProxyRedisSocket)._pool;
-                            if (pool?.SetUnavailable(ex, getTime) == true)
+                            if (cmd.IsBlockingCommand() == false && pool?.SetUnavailable(ex, getTime) == true)
                             {
                                 RecoverySentinel();
                             }
@@ -144,7 +176,7 @@ namespace FreeRedis
                         catch (Exception ex)
                         {
                             var pool = (rds as DefaultRedisSocket.TempProxyRedisSocket)._pool;
-                            if (pool?.SetUnavailable(ex, getTime) == true)
+                            if (cmd.IsBlockingCommand() == false && pool?.SetUnavailable(ex, getTime) == true)
                             {
                                 RecoverySentinel();
                             }
@@ -227,6 +259,8 @@ namespace FreeRedis
                             {
                                 ConnectionStringBuilder remoteSentinelHost = _sentinels.First.Value.ToString();
                                 remoteSentinelHost.Host = $"{sentinel.ip}:{sentinel.port}";
+                                remoteSentinelHost.CertificateValidation = _connectionString.CertificateValidation;
+                                remoteSentinelHost.CertificateSelection = _connectionString.CertificateSelection;
                                 if (_sentinels.Any(a => string.Compare(a.Host, remoteSentinelHost.Host, true) == 0)) continue;
                                 _sentinels.AddLast(remoteSentinelHost);
                             }
@@ -249,6 +283,8 @@ namespace FreeRedis
                     connectionString.Host = host;
                     connectionString.MinPoolSize = 1;
                     connectionString.MaxPoolSize = 1;
+                    connectionString.CertificateValidation = _connectionString.CertificateValidation;
+                    connectionString.CertificateSelection = _connectionString.CertificateSelection;
                     using (var cli = new RedisClient(connectionString))
                     {
                         if (cli.Role().role != role)
@@ -290,9 +326,10 @@ namespace FreeRedis
                             Thread.CurrentThread.Join(1000);
                             try
                             {
+                                var oldMasterHost = _masterHost;
                                 ResetSentinel();
 
-                                if (_ib.Get(_masterHost).CheckAvailable())
+                                if (oldMasterHost != _masterHost && _ib.Get(_masterHost).CheckAvailable())
                                 {
                                     if (!TopOwner.OnNotice(null, new NoticeEventArgs(NoticeType.Info, null, $"{_connectionString.Host.PadRight(21)} > Redis Sentinel switch to {_masterHost}", null)))
                                         TestTrace.WriteLine($"【{_connectionString.Host}】Redis Sentinel switch to {_masterHost}", ConsoleColor.DarkGreen);

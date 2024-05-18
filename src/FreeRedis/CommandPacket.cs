@@ -18,7 +18,7 @@ namespace FreeRedis
         internal bool? _IsIgnoreAop;
         public bool IsIgnoreAop
         {
-            get => _IsIgnoreAop ?? (_IsIgnoreAop = _command == "PING" && _input.Count == 2 && _input[1].ToString() == "CheckAvailable").Value;
+            get => _IsIgnoreAop ?? false;
             set => _IsIgnoreAop = value;
         }
 
@@ -203,6 +203,11 @@ namespace FreeRedis
         {
             var cmdset = CommandSets.Get(_command);
             return cmdset != null && ((cmdset.Tag & CommandSets.ServerTag.read) == CommandSets.ServerTag.read || (cmdset.Flag & CommandSets.ServerFlag.@readonly) == CommandSets.ServerFlag.@readonly);
+        }
+        internal bool IsBlockingCommand()
+        {
+            var cmdset = CommandSets.Get(_command);
+            return cmdset != null && ((cmdset.Tag & CommandSets.ServerTag.blocking) == CommandSets.ServerTag.blocking);
         }
     }
 

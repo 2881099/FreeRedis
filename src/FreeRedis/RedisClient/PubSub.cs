@@ -228,7 +228,7 @@ namespace FreeRedis
                             _topOwner.Adapter.Refersh(_redisSocket); //防止 IdleBus 超时回收
                             try { _redisSocket.Write("PING"); } catch { }
                         }, null, 10000, 10000);
-                        var readCmd = "PubSubRead".SubCommand(null).FlagReadbytes(_topOwner.ConnectionString.SubscribleReadbytes);
+                        var readCmd = "PubSubRead".SubCommand(null).FlagReadbytes(_topOwner.ConnectionString.SubscribeReadbytes);
                         while (_stoped == false)
                         {
                             RedisResult rt = null;

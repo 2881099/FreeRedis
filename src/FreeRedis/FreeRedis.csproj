@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net60;netstandard2.1;netstandard2.0;net451;net40</TargetFrameworks>
+		<TargetFrameworks>netstandard2.0;net451;net40</TargetFrameworks>
 		<AssemblyName>FreeRedis</AssemblyName>
 		<PackageId>FreeRedis</PackageId>
 		<RootNamespace>FreeRedis</RootNamespace>
-		<Version>1.2.2</Version>
+		<Version>1.2.15</Version>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<PackageProjectUrl>https://github.com/2881099/FreeRedis</PackageProjectUrl>
 		<Description>FreeRedis is .NET redis client, supports cluster, sentinel, master-slave, pipeline, transaction and connection pool.</Description>
@@ -20,8 +20,13 @@
 		<SignAssembly>true</SignAssembly>
 		<AssemblyOriginatorKeyFile>key.snk</AssemblyOriginatorKeyFile>
 		<DelaySign>false</DelaySign>
+		<PackageReadmeFile>readme.md</PackageReadmeFile>
 	</PropertyGroup>
 
+	<ItemGroup>
+		<None Include="../../readme.md" Pack="true" PackagePath="\"/>
+	</ItemGroup>
+	
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
 		<DocumentationFile>FreeRedis.xml</DocumentationFile>
 		<WarningLevel>3</WarningLevel>

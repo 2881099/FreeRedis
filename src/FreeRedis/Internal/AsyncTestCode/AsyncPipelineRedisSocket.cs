@@ -383,7 +383,7 @@
 //        static RedisResult ReadBigNumber(ref ReadOnlySequence<byte> buffer, ref long offset, RedisMessageType msgtype)
 //        {
 //            if (!TryReadLine(ref buffer, ref offset, out var line)) return null;
-//            if (!BigInteger.TryParse(line, NumberStyles.Any, null, out var num)) throw new ProtocolViolationException($"Expecting fail BigNumber '{msgtype}0', got '{msgtype}{line}'");
+//            if (!BigInteger.TryParse(line, NumberStyles.Any, CultureInfo.InvariantCulture.NumberFormat, out var num)) throw new ProtocolViolationException($"Expecting fail BigNumber '{msgtype}0', got '{msgtype}{line}'");
 //            return new RedisResult(num, false, msgtype);
 //        }
 //        static RedisResult ReadNull(ref ReadOnlySequence<byte> buffer, ref long offset, RedisMessageType msgtype)
@@ -400,7 +400,7 @@
 //                case "inf": num = double.PositiveInfinity; break;
 //                case "-inf": num = double.NegativeInfinity; break;
 //                default:
-//                    if (!double.TryParse(line, NumberStyles.Any, null, out num)) throw new ProtocolViolationException($"Expecting fail Double '{msgtype}1.23', got '{msgtype}{line}'");
+//                    if (!double.TryParse(line, NumberStyles.Any, CultureInfo.InvariantCulture.NumberFormat, out num)) throw new ProtocolViolationException($"Expecting fail Double '{msgtype}1.23', got '{msgtype}{line}'");
 //                    break;
 //            }
 //            return new RedisResult(num, false, msgtype);

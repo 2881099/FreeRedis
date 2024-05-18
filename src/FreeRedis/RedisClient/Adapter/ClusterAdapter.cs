@@ -1,4 +1,4 @@
-﻿using FreeRedis.Internal;
+using FreeRedis.Internal;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -15,8 +15,10 @@ namespace FreeRedis
         {
             internal readonly IdleBus<RedisClientPool> _ib;
             internal readonly ConnectionStringBuilder[] _clusterConnectionStrings;
+            internal readonly Dictionary<string, string> _hostMappings;
+            internal static Encoding _baseEncoding;
 
-            public ClusterAdapter(RedisClient topOwner, ConnectionStringBuilder[] clusterConnectionStrings)
+            public ClusterAdapter(RedisClient topOwner, ConnectionStringBuilder[] clusterConnectionStrings, Dictionary<string, string> hostMappings)
             {
                 UseType = UseType.Cluster;
                 TopOwner = topOwner;
@@ -25,6 +27,14 @@ namespace FreeRedis
                     throw new ArgumentNullException(nameof(clusterConnectionStrings));
 
                 _clusterConnectionStrings = clusterConnectionStrings.ToArray();
+                if (hostMappings != null)
+                {
+                    _hostMappings = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+                    foreach (var kv in hostMappings)
+                        _hostMappings.Add(kv.Key, kv.Value);
+                }
+                _hostMappings = hostMappings;
+                _baseEncoding = _clusterConnectionStrings.FirstOrDefault()?.Encoding;
                 _ib = new IdleBus<RedisClientPool>(TimeSpan.FromMinutes(10));
                 RefershClusterNodes();
             }
@@ -49,7 +59,7 @@ namespace FreeRedis
             }
             public override IRedisSocket GetRedisSocket(CommandPacket cmd)
             {
-                var slots = cmd?._keyIndexes.Select(a => GetClusterSlot(cmd._input[a].ToInvariantCultureToString())).Distinct().ToArray();
+                var slots = cmd?._keyIndexes.Select(a => GetClusterSlot(cmd._input[a].ToInvariantCultureToString(), _baseEncoding)).Distinct().ToArray();
                 var poolkeys = slots?.Select(a => _slotCache.TryGetValue(a, out var trykey) ? trykey : null).Distinct().Where(a => a != null).ToArray();
                 //if (poolkeys.Length > 1) throw new RedisClientException($"CROSSSLOT Keys in request don't hash to the same slot: {cmd}");
                 var poolkey = poolkeys?.FirstOrDefault();
@@ -134,7 +144,7 @@ namespace FreeRedis
                         }
                         catch (Exception ex)
                         {
-                            if (pool?.SetUnavailable(ex, getTime) == true)
+                            if (cmd.IsBlockingCommand() == false && pool?.SetUnavailable(ex, getTime) == true)
                             {
                             }
                             throw;
@@ -148,13 +158,16 @@ namespace FreeRedis
                         {
                             cmd._clusterMovedTryCount++;
 
+                            var testConnection = pool._policy._connectionStringBuilder;
                             if (moved.endpoint.StartsWith("127.0.0.1"))
-                                moved.endpoint = $"{DefaultRedisSocket.SplitHost(pool._policy._connectionStringBuilder.Host).Key}:{moved.endpoint.Substring(10)}";
+                                moved.endpoint = $"{DefaultRedisSocket.SplitHost(testConnection.Host).Key}:{moved.endpoint.Substring(10)}";
                             else if (moved.endpoint.StartsWith("localhost", StringComparison.CurrentCultureIgnoreCase))
-                                moved.endpoint = $"{DefaultRedisSocket.SplitHost(pool._policy._connectionStringBuilder.Host).Key}:{moved.endpoint.Substring(10)}";
+                                moved.endpoint = $"{DefaultRedisSocket.SplitHost(testConnection.Host).Key}:{moved.endpoint.Substring(10)}";
 
-                            ConnectionStringBuilder connectionString = pool._policy._connectionStringBuilder.ToString();
+                            ConnectionStringBuilder connectionString = testConnection.ToString();
                             connectionString.Host = moved.endpoint;
+                            connectionString.CertificateValidation = testConnection.CertificateValidation;
+                            connectionString.CertificateSelection = testConnection.CertificateSelection;
                             RegisterClusterNode(connectionString);
 
                             if (moved.ismoved)
@@ -229,7 +242,7 @@ namespace FreeRedis
                         }
                         catch (Exception ex)
                         {
-                            if (pool?.SetUnavailable(ex, getTime) == true)
+                            if (cmd.IsBlockingCommand() == false && pool?.SetUnavailable(ex, getTime) == true)
                             {
                             }
                             throw;
@@ -243,13 +256,16 @@ namespace FreeRedis
                         {
                             cmd._clusterMovedTryCount++;
 
+                            var testConnection = pool._policy._connectionStringBuilder;
                             if (moved.endpoint.StartsWith("127.0.0.1"))
-                                moved.endpoint = $"{DefaultRedisSocket.SplitHost(pool._policy._connectionStringBuilder.Host).Key}:{moved.endpoint.Substring(10)}";
+                                moved.endpoint = $"{DefaultRedisSocket.SplitHost(testConnection.Host).Key}:{moved.endpoint.Substring(10)}";
                             else if (moved.endpoint.StartsWith("localhost", StringComparison.CurrentCultureIgnoreCase))
-                                moved.endpoint = $"{DefaultRedisSocket.SplitHost(pool._policy._connectionStringBuilder.Host).Key}:{moved.endpoint.Substring(10)}";
+                                moved.endpoint = $"{DefaultRedisSocket.SplitHost(testConnection.Host).Key}:{moved.endpoint.Substring(10)}";
 
-                            ConnectionStringBuilder connectionString = pool._policy._connectionStringBuilder.ToString();
+                            ConnectionStringBuilder connectionString = testConnection.ToString();
                             connectionString.Host = moved.endpoint;
+                            connectionString.CertificateValidation = testConnection.CertificateValidation;
+                            connectionString.CertificateSelection = testConnection.CertificateSelection;
                             RegisterClusterNode(connectionString);
 
                             if (moved.ismoved)
@@ -296,8 +312,12 @@ namespace FreeRedis
                                 endpoint = $"{DefaultRedisSocket.SplitHost(testConnection.Host).Key}:{endpoint.Substring(10)}";
                             else if (endpoint.StartsWith("localhost", StringComparison.CurrentCultureIgnoreCase))
                                 endpoint = $"{DefaultRedisSocket.SplitHost(testConnection.Host).Key}:{endpoint.Substring(10)}";
+                            else if (_hostMappings?.TryGetValue(endpoint, out var endpointMapping) == true)
+                                endpoint = endpointMapping;
                             ConnectionStringBuilder connectionString = testConnection.ToString();
                             connectionString.Host = endpoint;
+                            connectionString.CertificateValidation = testConnection.CertificateValidation;
+                            connectionString.CertificateSelection = testConnection.CertificateSelection;
                             if (cnodesDict.ContainsKey(endpoint) == false) cnodesDict.Add(endpoint, true);
                             RegisterClusterNode(connectionString);
 
@@ -400,10 +420,11 @@ namespace FreeRedis
                 0xef1f,0xff3e,0xcf5d,0xdf7c,0xaf9b,0xbfba,0x8fd9,0x9ff8,
                 0x6e17,0x7e36,0x4e55,0x5e74,0x2e93,0x3eb2,0x0ed1,0x1ef0
             };
-            public static ushort GetClusterSlot(string key)
+            public static ushort GetClusterSlot(string key, System.Text.Encoding encoding = null)
             {
+                if (encoding == null) encoding = Encoding.UTF8;
                 //HASH_SLOT = CRC16(key) mod 16384
-                var blob = Encoding.ASCII.GetBytes(key);
+                var blob = encoding.GetBytes(key);
                 int offset = 0, count = blob.Length, start = -1, end = -1;
                 byte lt = (byte)'{', rt = (byte)'}';
                 for (int a = 0; a < count - 1; a++)

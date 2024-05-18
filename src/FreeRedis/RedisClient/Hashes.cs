@@ -40,12 +40,19 @@ namespace FreeRedis
         public Task HMSetAsync<T>(string key, string field, T value, params object[] fieldValues) => HSetAsync(true, key, field, value, fieldValues);
         public Task HMSetAsync<T>(string key, Dictionary<string, T> keyValues) => CallAsync("HMSET".InputKey(key).InputKv(keyValues, false, SerializeRedisValue), rt => rt.ThrowOrValue<string>());
 
-        public Task<ScanResult<string>> HScanAsync(string key, long cursor, string pattern, long count) => CallAsync("HSCAN"
-            .InputKey(key, cursor)
-            .InputIf(!string.IsNullOrWhiteSpace(pattern), "MATCH", pattern)
-            .InputIf(count != 0, "COUNT", count), rt => rt.ThrowOrValue((a, _) => new ScanResult<string>(a[0].ConvertTo<long>(), a[1].ConvertTo<string[]>())));
+		public Task<ScanResult<KeyValuePair<string, string>>> HScanAsync(string key, long cursor, string pattern, long count) => CallAsync("HSCAN"
+		   .InputKey(key, cursor)
+		   .InputIf(!string.IsNullOrWhiteSpace(pattern), "MATCH", pattern)
+		   .InputIf(count != 0, "COUNT", count), rt => rt.ThrowOrValue((a, _) => new ScanResult<KeyValuePair<string, string>>(a[0].ConvertTo<long>(),
+			   a[1].ConvertTo<string[]>().MapToList((k, v) => new KeyValuePair<string, string>(k.ConvertTo<string>(), v.ConvertTo<string>())).ToArray())));
+		public Task<ScanResult<KeyValuePair<string, T>>> HScanAsync<T>(string key, long cursor, string pattern, long count) => CallAsync("HSCAN"
+			.InputKey(key, cursor)
+			.FlagReadbytes(true)
+			.InputIf(!string.IsNullOrWhiteSpace(pattern), "MATCH", pattern)
+			.InputIf(count != 0, "COUNT", count), rt => rt.ThrowOrValue((a, _) => new ScanResult<KeyValuePair<string, T>>(a[0].ConvertTo<long>(),
+				a[1].ConvertTo<byte[][]>().MapToList((k, v) => new KeyValuePair<string, T>(k.ConvertTo<string>(), DeserializeRedisValue<T>(v.ConvertTo<byte[]>(), rt.Encoding))).ToArray())));
 
-        public Task<long> HSetAsync<T>(string key, string field, T value, params object[] fieldValues) => HSetAsync(false, key, field, value, fieldValues);
+		public Task<long> HSetAsync<T>(string key, string field, T value, params object[] fieldValues) => HSetAsync(false, key, field, value, fieldValues);
         public Task<long> HSetAsync<T>(string key, Dictionary<string, T> keyValues) => CallAsync("HSET".InputKey(key).InputKv(keyValues, false, SerializeRedisValue), rt => rt.ThrowOrValue<long>());
         Task<long> HSetAsync<T>(bool hmset, string key, string field, T value, params object[] fieldValues)
         {
@@ -94,13 +101,20 @@ namespace FreeRedis
         public void HMSet<T>(string key, Dictionary<string, T> keyValues) => Call("HMSET".InputKey(key).InputKv(keyValues, false, SerializeRedisValue), rt => rt.ThrowOrValue<string>());
 
         public ScanResult<KeyValuePair<string, string>> HScan(string key, long cursor, string pattern, long count) => Call("HSCAN"
+			.InputKey(key, cursor)
+			.InputIf(!string.IsNullOrWhiteSpace(pattern), "MATCH", pattern)
+			.InputIf(count != 0, "COUNT", count), rt => rt.ThrowOrValue((a, _) => new ScanResult<KeyValuePair<string, string>>(a[0].ConvertTo<long>(),
+				a[1].ConvertTo<string[]>().MapToList((k, v) => new KeyValuePair<string, string>(k.ConvertTo<string>(), v.ConvertTo<string>())).ToArray())));
+		public ScanResult<KeyValuePair<string, T>> HScan<T>(string key, long cursor, string pattern, long count) => Call("HSCAN"
             .InputKey(key, cursor)
+            .FlagReadbytes(true)
             .InputIf(!string.IsNullOrWhiteSpace(pattern), "MATCH", pattern)
-            .InputIf(count != 0, "COUNT", count), rt => rt.ThrowOrValue((a, _) => new ScanResult<KeyValuePair<string, string>>(a[0].ConvertTo<long>(), 
-                a[1].ConvertTo<string[]>().MapToList((k, v) => new KeyValuePair<string, string>(k.ConvertTo<string>(), v.ConvertTo<string>())).ToArray())));
+            .InputIf(count != 0, "COUNT", count), rt => rt.ThrowOrValue((a, _) => new ScanResult<KeyValuePair<string, T>>(a[0].ConvertTo<long>(), 
+                a[1].ConvertTo<byte[][]>().MapToList((k, v) => new KeyValuePair<string, T>(k.ConvertTo<string>(), DeserializeRedisValue<T>(v.ConvertTo<byte[]>(), rt.Encoding))).ToArray())));
         public IEnumerable<KeyValuePair<string, string>[]> HScan(string key, string pattern, long count) => new ScanCollection<KeyValuePair<string, string>>(this, "hscan", (cli, cursor) => cli.HScan(key, cursor, pattern, count));
+        public IEnumerable<KeyValuePair<string, T>[]> HScan<T>(string key, string pattern, long count) => new ScanCollection<KeyValuePair<string, T>>(this, "hscan", (cli, cursor) => cli.HScan<T>(key, cursor, pattern, count));
 
-        public long HSet<T>(string key, string field, T value, params object[] fieldValues) => HSet(false, key, field, value, fieldValues);
+		public long HSet<T>(string key, string field, T value, params object[] fieldValues) => HSet(false, key, field, value, fieldValues);
         public long HSet<T>(string key, Dictionary<string, T> keyValues) => Call("HSET".InputKey(key).InputKv(keyValues, false, SerializeRedisValue), rt => rt.ThrowOrValue<long>());
         long HSet<T>(bool hmset, string key, string field, T value, params object[] fieldValues)
         {

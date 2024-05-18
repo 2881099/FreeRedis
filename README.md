@@ -2,7 +2,7 @@
 
 <div align="center">
 
-FreeRedis is a redis client based on .NET, supports .NET Core 2.1+, .NET Framework 4.0+, and Xamarin.
+FreeRedis is a redis client based on .NET, supports .NET Core 2.1+, .NET Framework 4.0+, Xamarin, and AOT.
 
 [![nuget](https://img.shields.io/nuget/v/FreeRedis.svg?style=flat-square)](https://www.nuget.org/packages/FreeRedis) 
 [![stats](https://img.shields.io/nuget/dt/FreeRedis.svg?style=flat-square)](https://www.nuget.org/stats/packages/FreeRedis?groupby=Version) 
@@ -65,7 +65,7 @@ string[] vals = cli.MGet("key1", "key2");
 | name              | \<empty\> | Connection name, use client list command to view |
 | prefix            | \<empty\> | The prefix of the key, all methods will have this prefix. cli.Set(prefix + "key", 111); |
 | exitAutoDisposePool | true | AppDomain.CurrentDomain.ProcessExit/Console.CancelKeyPress auto disposed |
-| subscribleReadbytes | false | Subscrible read bytes |
+| subscribeReadbytes | false | Subscribe read bytes |
 
 > IPv6: [fe80::b164:55b3:4b4f:7ce6%15]:6379
 
