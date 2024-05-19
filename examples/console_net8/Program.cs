@@ -1,6 +1,7 @@
 ﻿using FreeRedis;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -49,6 +50,10 @@ namespace console_net8
 
         static void Main(string[] args)
         {
+            var vs1 = cli.Get<string[]>("sdlfksdjf");
+            var vs2 = cli.Get<List<string>>("sdlfksdjf");
+
+
 			Console.WriteLine(typeof(GeoUnit).FromObject(null));
             Console.WriteLine(typeof(GeoUnit).FromObject(""));
             Console.WriteLine(typeof(GeoUnit).FromObject("ft"));

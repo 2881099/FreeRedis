@@ -44,6 +44,12 @@ namespace FreeRedis
         /// <returns>The number of set bits in the string. Non-existent keys are treated as empty strings and will return zero.</returns>
         public Task<long> BitCountAsync(string key, long start, long end) => CallAsync("BITCOUNT".InputKey(key, start, end), rt => rt.ThrowOrValue<long>());
 
+        public Task<long[]> BitFieldAsync(string key, params BitFieldOperationArgument[] operations)
+        {
+            if (operations?.Any() != true) return null;
+            return CallAsync(GetBitFieldCommandPacket(key, operations), rt => rt.ThrowOrValue<long[]>());
+        }
+
         /// <summary>
         /// BITOP command (An Asynchronous Version) <br /><br />
         /// <br />
@@ -730,6 +736,44 @@ namespace FreeRedis
         /// <param name="end">Index of the end. It can contain negative values in order to index bytes starting from the end of the string.</param>
         /// <returns>The number of set bits in the string. Non-existent keys are treated as empty strings and will return zero.</returns>
         public long BitCount(string key, long start, long end) => Call("BITCOUNT".InputKey(key, start, end), rt => rt.ThrowOrValue<long>());
+
+        public long[] BitField(string key, params BitFieldOperationArgument[] operations)
+        {
+            if (operations?.Any() != true) return null;
+            return Call(GetBitFieldCommandPacket(key, operations), rt => rt.ThrowOrValue<long[]>());
+        }
+        CommandPacket GetBitFieldCommandPacket(string key, BitFieldOperationArgument[] operations)
+        {
+            var cmd = "BITFIELD".InputKey(key);
+            foreach (var opt in operations)
+            {
+                switch (opt.operation)
+                {
+                    case BitFieldOperation.get:
+                        cmd.InputIf(opt.arguments?.Length == 2, "GET");
+                        cmd.InputIf(opt.arguments?.Length == 2, opt.arguments);
+                        break;
+                    case BitFieldOperation.overflow_wrap:
+                        cmd.Input("OVERFLOW").Input("WRAP");
+                        break;
+                    case BitFieldOperation.overflow_sat:
+                        cmd.Input("OVERFLOW").Input("SAT");
+                        break;
+                    case BitFieldOperation.overflow_fail:
+                        cmd.Input("OVERFLOW").Input("FAIL");
+                        break;
+                    case BitFieldOperation.set:
+                        cmd.InputIf(opt.arguments?.Length == 3, "GET");
+                        cmd.InputIf(opt.arguments?.Length == 3, opt.arguments);
+                        break;
+                    case BitFieldOperation.incrby:
+                        cmd.InputIf(opt.arguments?.Length == 3, "INCRBY");
+                        cmd.InputIf(opt.arguments?.Length == 3, opt.arguments);
+                        break;
+                }
+            }
+            return cmd;
+        }
 
         /// <summary>
         /// BITOP command (A Synchronized Version) <br /><br />

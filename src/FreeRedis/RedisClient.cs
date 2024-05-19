@@ -311,6 +311,7 @@ namespace FreeRedis
     /// </summary>
     public enum ZAddThan { gt, lt }
     public enum BitOpOperation { and, or, xor, not }
+    public enum BitFieldOperation { get, overflow_wrap, overflow_sat, overflow_fail, set, incrby }
     public enum ClusterSetSlotType { importing, migrating, stable, node }
     public enum ClusterResetType { hard, soft }
     public enum ClusterFailOverType { force, takeover }
@@ -337,5 +338,9 @@ namespace FreeRedis
         public readonly long length;
         public ScanResult(long cursor, T[] items) { this.cursor = cursor; this.items = items; this.length = items.LongLength; }
     }
-
+    public class BitFieldOperationArgument
+    {
+        public BitFieldOperation operation;
+        public object[] arguments;
+    }
 }
