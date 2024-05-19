@@ -73,6 +73,24 @@ references:
   commentId: F:FreeRedis.AclGetUserResult.selectors
   fullName: FreeRedis.AclGetUserResult.selectors
   nameWithType: AclGetUserResult.selectors
+- uid: FreeRedis.BitFieldAction
+  name: BitFieldAction
+  href: docs/api/FreeRedis.BitFieldAction.html
+  commentId: T:FreeRedis.BitFieldAction
+  fullName: FreeRedis.BitFieldAction
+  nameWithType: BitFieldAction
+- uid: FreeRedis.BitFieldAction.arguments
+  name: arguments
+  href: docs/api/FreeRedis.BitFieldAction.html#FreeRedis_BitFieldAction_arguments
+  commentId: F:FreeRedis.BitFieldAction.arguments
+  fullName: FreeRedis.BitFieldAction.arguments
+  nameWithType: BitFieldAction.arguments
+- uid: FreeRedis.BitFieldAction.operation
+  name: operation
+  href: docs/api/FreeRedis.BitFieldAction.html#FreeRedis_BitFieldAction_operation
+  commentId: F:FreeRedis.BitFieldAction.operation
+  fullName: FreeRedis.BitFieldAction.operation
+  nameWithType: BitFieldAction.operation
 - uid: FreeRedis.BitFieldOperation
   name: BitFieldOperation
   href: docs/api/FreeRedis.BitFieldOperation.html
@@ -115,24 +133,6 @@ references:
   commentId: F:FreeRedis.BitFieldOperation.set
   fullName: FreeRedis.BitFieldOperation.set
   nameWithType: BitFieldOperation.set
-- uid: FreeRedis.BitFieldOperationArgument
-  name: BitFieldOperationArgument
-  href: docs/api/FreeRedis.BitFieldOperationArgument.html
-  commentId: T:FreeRedis.BitFieldOperationArgument
-  fullName: FreeRedis.BitFieldOperationArgument
-  nameWithType: BitFieldOperationArgument
-- uid: FreeRedis.BitFieldOperationArgument.arguments
-  name: arguments
-  href: docs/api/FreeRedis.BitFieldOperationArgument.html#FreeRedis_BitFieldOperationArgument_arguments
-  commentId: F:FreeRedis.BitFieldOperationArgument.arguments
-  fullName: FreeRedis.BitFieldOperationArgument.arguments
-  nameWithType: BitFieldOperationArgument.arguments
-- uid: FreeRedis.BitFieldOperationArgument.operation
-  name: operation
-  href: docs/api/FreeRedis.BitFieldOperationArgument.html#FreeRedis_BitFieldOperationArgument_operation
-  commentId: F:FreeRedis.BitFieldOperationArgument.operation
-  fullName: FreeRedis.BitFieldOperationArgument.operation
-  nameWithType: BitFieldOperationArgument.operation
 - uid: FreeRedis.BitOpOperation
   name: BitOpOperation
   href: docs/api/FreeRedis.BitOpOperation.html
@@ -5883,15 +5883,15 @@ references:
   isSpec: "True"
   fullName: FreeRedis.IRedisClient.BitCount
   nameWithType: IRedisClient.BitCount
-- uid: FreeRedis.IRedisClient.BitField(System.String,FreeRedis.BitFieldOperationArgument[])
-  name: BitField(String, BitFieldOperationArgument[])
-  href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_BitField_System_String_FreeRedis_BitFieldOperationArgument___
-  commentId: M:FreeRedis.IRedisClient.BitField(System.String,FreeRedis.BitFieldOperationArgument[])
-  name.vb: BitField(String, BitFieldOperationArgument())
-  fullName: FreeRedis.IRedisClient.BitField(System.String, FreeRedis.BitFieldOperationArgument[])
-  fullName.vb: FreeRedis.IRedisClient.BitField(System.String, FreeRedis.BitFieldOperationArgument())
-  nameWithType: IRedisClient.BitField(String, BitFieldOperationArgument[])
-  nameWithType.vb: IRedisClient.BitField(String, BitFieldOperationArgument())
+- uid: FreeRedis.IRedisClient.BitField(System.String,FreeRedis.BitFieldAction[])
+  name: BitField(String, BitFieldAction[])
+  href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_BitField_System_String_FreeRedis_BitFieldAction___
+  commentId: M:FreeRedis.IRedisClient.BitField(System.String,FreeRedis.BitFieldAction[])
+  name.vb: BitField(String, BitFieldAction())
+  fullName: FreeRedis.IRedisClient.BitField(System.String, FreeRedis.BitFieldAction[])
+  fullName.vb: FreeRedis.IRedisClient.BitField(System.String, FreeRedis.BitFieldAction())
+  nameWithType: IRedisClient.BitField(String, BitFieldAction[])
+  nameWithType.vb: IRedisClient.BitField(String, BitFieldAction())
 - uid: FreeRedis.IRedisClient.BitField*
   name: BitField
   href: docs/api/FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_BitField_
@@ -11218,15 +11218,15 @@ references:
   isSpec: "True"
   fullName: FreeRedis.RedisClient.BitCount
   nameWithType: RedisClient.BitCount
-- uid: FreeRedis.RedisClient.BitField(System.String,FreeRedis.BitFieldOperationArgument[])
-  name: BitField(String, BitFieldOperationArgument[])
-  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_BitField_System_String_FreeRedis_BitFieldOperationArgument___
-  commentId: M:FreeRedis.RedisClient.BitField(System.String,FreeRedis.BitFieldOperationArgument[])
-  name.vb: BitField(String, BitFieldOperationArgument())
-  fullName: FreeRedis.RedisClient.BitField(System.String, FreeRedis.BitFieldOperationArgument[])
-  fullName.vb: FreeRedis.RedisClient.BitField(System.String, FreeRedis.BitFieldOperationArgument())
-  nameWithType: RedisClient.BitField(String, BitFieldOperationArgument[])
-  nameWithType.vb: RedisClient.BitField(String, BitFieldOperationArgument())
+- uid: FreeRedis.RedisClient.BitField(System.String,FreeRedis.BitFieldAction[])
+  name: BitField(String, BitFieldAction[])
+  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_BitField_System_String_FreeRedis_BitFieldAction___
+  commentId: M:FreeRedis.RedisClient.BitField(System.String,FreeRedis.BitFieldAction[])
+  name.vb: BitField(String, BitFieldAction())
+  fullName: FreeRedis.RedisClient.BitField(System.String, FreeRedis.BitFieldAction[])
+  fullName.vb: FreeRedis.RedisClient.BitField(System.String, FreeRedis.BitFieldAction())
+  nameWithType: RedisClient.BitField(String, BitFieldAction[])
+  nameWithType.vb: RedisClient.BitField(String, BitFieldAction())
 - uid: FreeRedis.RedisClient.BitField*
   name: BitField
   href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_BitField_
