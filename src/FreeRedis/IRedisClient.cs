@@ -363,7 +363,7 @@ namespace FreeRedis
 		long XTrim(string key, long count);
 		long Append<T>(string key, T value);
 		long BitCount(string key, long start, long end);
-        long[] BitField(string key, params BitFieldOperationArgument[] operations);
+        long[] BitField(string key, params BitFieldAction[] actions);
         long BitOp(BitOpOperation operation, string destkey, params string[] keys);
 		long BitPos(string key, bool bit, long? start = null, long? end = null);
 		long Decr(string key);
@@ -684,7 +684,7 @@ namespace FreeRedis
 		Task<long> XTrimAsync(string key, long count);
 		Task<long> AppendAsync<T>(string key, T value);
 		Task<long> BitCountAsync(string key, long start, long end);
-		Task<long[]> BitFieldAsync(string key, params BitFieldOperationArgument[] operations);
+		Task<long[]> BitFieldAsync(string key, params BitFieldAction[] actions);
         Task<long> BitOpAsync(BitOpOperation operation, string destkey, params string[] keys);
 		Task<long> BitPosAsync(string key, bool bit, long? start = null, long? end = null);
 		Task<long> DecrAsync(string key);

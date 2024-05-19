@@ -338,7 +338,7 @@ namespace FreeRedis
         public readonly long length;
         public ScanResult(long cursor, T[] items) { this.cursor = cursor; this.items = items; this.length = items.LongLength; }
     }
-    public class BitFieldOperationArgument
+    public class BitFieldAction
     {
         public BitFieldOperation operation;
         public object[] arguments;

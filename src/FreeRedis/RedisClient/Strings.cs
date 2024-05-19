@@ -44,10 +44,10 @@ namespace FreeRedis
         /// <returns>The number of set bits in the string. Non-existent keys are treated as empty strings and will return zero.</returns>
         public Task<long> BitCountAsync(string key, long start, long end) => CallAsync("BITCOUNT".InputKey(key, start, end), rt => rt.ThrowOrValue<long>());
 
-        public Task<long[]> BitFieldAsync(string key, params BitFieldOperationArgument[] operations)
+        public Task<long[]> BitFieldAsync(string key, params BitFieldAction[] actions)
         {
-            if (operations?.Any() != true) return null;
-            return CallAsync(GetBitFieldCommandPacket(key, operations), rt => rt.ThrowOrValue<long[]>());
+            if (actions?.Any() != true) return null;
+            return CallAsync(GetBitFieldCommandPacket(key, actions), rt => rt.ThrowOrValue<long[]>());
         }
 
         /// <summary>
@@ -737,15 +737,15 @@ namespace FreeRedis
         /// <returns>The number of set bits in the string. Non-existent keys are treated as empty strings and will return zero.</returns>
         public long BitCount(string key, long start, long end) => Call("BITCOUNT".InputKey(key, start, end), rt => rt.ThrowOrValue<long>());
 
-        public long[] BitField(string key, params BitFieldOperationArgument[] operations)
+        public long[] BitField(string key, params BitFieldAction[] actions)
         {
-            if (operations?.Any() != true) return null;
-            return Call(GetBitFieldCommandPacket(key, operations), rt => rt.ThrowOrValue<long[]>());
+            if (actions?.Any() != true) return null;
+            return Call(GetBitFieldCommandPacket(key, actions), rt => rt.ThrowOrValue<long[]>());
         }
-        CommandPacket GetBitFieldCommandPacket(string key, BitFieldOperationArgument[] operations)
+        CommandPacket GetBitFieldCommandPacket(string key, BitFieldAction[] actions)
         {
             var cmd = "BITFIELD".InputKey(key);
-            foreach (var opt in operations)
+            foreach (var opt in actions)
             {
                 switch (opt.operation)
                 {
