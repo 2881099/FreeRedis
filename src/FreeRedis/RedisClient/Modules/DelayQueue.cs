@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace FreeRedis
 {
@@ -67,54 +68,71 @@ namespace FreeRedis
         /// <param name="choke">轮询队列时长，默认400毫秒，值越小越准确</param>
         public void Dequeue(Action<string> action, int choke = 400)
         {
-            while (true)
+            Thread thread = new Thread(() =>
             {
-                try
+                while (true)
                 {
-                    //阻塞节省CPU
-                    Thread.Sleep(choke);
-                    var res = InternalDequeue();
-                    if (!string.IsNullOrWhiteSpace(res))
-                        action.Invoke(res);
+                    try
+                    {
+                        //阻塞节省CPU
+                        Thread.Sleep(choke);
+                        var res = InternalDequeue();
+                        if (!string.IsNullOrWhiteSpace(res))
+                            action.Invoke(res);
+                    }
+                    catch
+                    {
+                        // ignored
+                    }
                 }
-                catch
-                {
-                    // ignored
-                }
-            }
+            });
+
+            thread.Start();
         }
 
 #if isasync
+
         /// <summary>
         /// 消费延时队列，多个消费端不会重复
         /// </summary>
         /// <param name="action">消费委托</param>
         /// <param name="choke">轮询队列时长，默认400毫秒，值越小越准确</param>
-        public async System.Threading.Tasks.Task DequeueAsync(Func<string, System.Threading.Tasks.Task> action,
-            int choke = 400)
+        /// <param name="token"></param>
+        public System.Threading.Tasks.Task DequeueAsync(Func<string, System.Threading.Tasks.Task> action,
+            int choke = 400, CancellationToken? token = null)
         {
-            while (true)
+            return Task.Factory.StartNew(async () =>
             {
-                try
+                while (true)
                 {
-                    //阻塞节省CPU
-                    await System.Threading.Tasks.Task.Delay(choke);
-                    var res = InternalDequeue();
-                    if (!string.IsNullOrWhiteSpace(res))
-                        await action.Invoke(res);
+                    try
+                    {
+                        if (token != null && token.Value.IsCancellationRequested)
+                        {
+                            break;
+                        }
+
+                        //阻塞节省CPU
+                        await System.Threading.Tasks.Task.Delay(choke);
+                        var res = InternalDequeue();
+                        if (!string.IsNullOrWhiteSpace(res))
+                            await action.Invoke(res);
+                    }
+                    catch
+                    {
+                        // ignored
+                    }
                 }
-                catch
-                {
-                    // ignored
-                }
-            }
+            }, TaskCreationOptions.LongRunning);
         }
+
 #endif
 
         //取队列任务
         private string InternalDequeue()
         {
             long timestamp = (DateTime.UtcNow.Ticks - new DateTime(1970, 1, 1).Ticks) / TimeSpan.TicksPerSecond;
+
             //lua脚本保持原子性
             var script = @"
                          local zkey = KEYS[1]
@@ -131,6 +149,7 @@ namespace FreeRedis
                          	return {}
                          end
                          ";
+
             if (_redisClient.Eval(script, new[] { _queueKey }, timestamp) is object[] eval && eval.Any())
             {
                 var item = eval[0].ToString() ?? string.Empty;
