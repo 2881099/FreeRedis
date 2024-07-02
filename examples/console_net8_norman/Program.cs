@@ -9,7 +9,7 @@ namespace console_net8_norman
     {
         static Lazy<RedisClient> _cliLazy = new Lazy<RedisClient>(() =>
         {
-            var r = new RedisClient(new ConnectionStringBuilder[] { "127.0.0.1:6379,database=1", "127.0.0.1:6379,database=2" }, null);
+            var r = new RedisClient(new ConnectionStringBuilder[] { "127.0.0.1:6379,database=1", "127.0.0.1:6379,database=2" }, default(Func<string,string>));
             r.Serialize = obj => JsonConvert.SerializeObject(obj);
             r.Deserialize = (json, type) => JsonConvert.DeserializeObject(json, type);
             r.Notice += (s, e) => Console.WriteLine(e.Log);
