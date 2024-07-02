@@ -1587,6 +1587,13 @@
             <param name="timeoutMilliseconds">Timeout milliseconds</param>
             <returns>The command returns the number of replicas reached by all the writes performed in the context of the current connection.</returns>
         </member>
+        <member name="M:FreeRedis.RedisClient.DelayQueue(System.String)">
+            <summary>
+            延时队列
+            </summary>
+            <param name="queueKey">延时队列Key</param>
+            <returns></returns>
+        </member>
         <member name="M:FreeRedis.RedisClient.Lock(System.String,System.Int32,System.Boolean)">
             <summary>
             开启分布式锁，若超时返回null
@@ -2989,6 +2996,42 @@
             <summary>
             redis version >=6.2: Added the GT and LT options.
             </summary>
+        </member>
+        <member name="T:FreeRedis.DelayQueue">
+            <summary>
+            延时队列
+            </summary>
+        </member>
+        <member name="M:FreeRedis.DelayQueue.Enqueue(System.String,System.TimeSpan)">
+            <summary>
+            写入延时队列
+            </summary>
+            <param name="value">队列值：值不可重复</param>
+            <param name="delay">延迟执行时间</param>
+            <returns></returns>
+        </member>
+        <member name="M:FreeRedis.DelayQueue.Enqueue(System.String,System.DateTime)">
+            <summary>
+            写入延时队列
+            </summary>
+            <param name="value">队列值：值不可重复</param>
+            <param name="delay">延迟执行时间</param>
+            <returns></returns>
+        </member>
+        <member name="M:FreeRedis.DelayQueue.Dequeue(System.Action{System.String},System.Int32)">
+            <summary>
+            消费延时队列，多个消费端不会重复
+            </summary>
+            <param name="action">消费委托</param>
+            <param name="choke">轮询队列时长，默认400毫秒，值越小越准确</param>
+        </member>
+        <member name="M:FreeRedis.DelayQueue.DequeueAsync(System.Func{System.String,System.Threading.Tasks.Task},System.Int32,System.Nullable{System.Threading.CancellationToken})">
+            <summary>
+            消费延时队列，多个消费端不会重复
+            </summary>
+            <param name="action">消费委托</param>
+            <param name="choke">轮询队列时长，默认400毫秒，值越小越准确</param>
+            <param name="token"></param>
         </member>
     </members>
 </doc>
