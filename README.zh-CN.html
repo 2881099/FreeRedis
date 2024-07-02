@@ -320,6 +320,25 @@ cli.Eval(&quot;return redis.call('set',KEYS[1],'bar')&quot;,
     Console.WriteLine(string.Join(&quot;, &quot;, keys));
 }
 </code></pre>
+<h3 id="delayqueue-延时队列">🍡DelayQueue (延时队列)</h3>
+<pre><code class="lang-c#">var delayQueue = cli.DelayQueue(&quot;TestDelayQueue&quot;);
+
+//添加队列
+delayQueue.Enqueue($&quot;Execute in 5 seconds.&quot;, TimeSpan.FromSeconds(5));
+delayQueue.Enqueue($&quot;Execute in 10 seconds.&quot;, DateTime.Now.AddSeconds(10));
+delayQueue.Enqueue($&quot;Execute in 15 seconds.&quot;, DateTime.Now.AddSeconds(15));
+delayQueue.Enqueue($&quot;Execute in 20 seconds.&quot;, TimeSpan.FromSeconds(20));
+delayQueue.Enqueue($&quot;Execute in 25 seconds.&quot;, DateTime.Now.AddSeconds(25));
+delayQueue.Enqueue($&quot;Execute in 2024-07-02 14:30:15&quot;, DateTime.Parse(&quot;2024-07-02 14:30:15&quot;));
+
+//消费延时队列
+await delayQueue.DequeueAsync(s =&gt;
+{
+    output.WriteLine($&quot;{DateTime.Now}：{s}&quot;);
+
+    return Task.CompletedTask;
+});
+</code></pre>
 <h2 id="-contributors-贡献者">👯 Contributors (贡献者)</h2>
 <a href="https://github.com/2881099/FreeRedis/graphs/contributors">
   <img src="https://contributors-img.web.app/image?repo=2881099/FreeRedis">

@@ -1499,6 +1499,60 @@ references:
   isSpec: "True"
   fullName: FreeRedis.ConnectionStringBuilder.User
   nameWithType: ConnectionStringBuilder.User
+- uid: FreeRedis.DelayQueue
+  name: DelayQueue
+  href: docs/api/FreeRedis.DelayQueue.html
+  commentId: T:FreeRedis.DelayQueue
+  fullName: FreeRedis.DelayQueue
+  nameWithType: DelayQueue
+- uid: FreeRedis.DelayQueue.#ctor(FreeRedis.RedisClient,System.String)
+  name: DelayQueue(RedisClient, String)
+  href: docs/api/FreeRedis.DelayQueue.html#FreeRedis_DelayQueue__ctor_FreeRedis_RedisClient_System_String_
+  commentId: M:FreeRedis.DelayQueue.#ctor(FreeRedis.RedisClient,System.String)
+  fullName: FreeRedis.DelayQueue.DelayQueue(FreeRedis.RedisClient, System.String)
+  nameWithType: DelayQueue.DelayQueue(RedisClient, String)
+- uid: FreeRedis.DelayQueue.#ctor*
+  name: DelayQueue
+  href: docs/api/FreeRedis.DelayQueue.html#FreeRedis_DelayQueue__ctor_
+  commentId: Overload:FreeRedis.DelayQueue.#ctor
+  isSpec: "True"
+  fullName: FreeRedis.DelayQueue.DelayQueue
+  nameWithType: DelayQueue.DelayQueue
+- uid: FreeRedis.DelayQueue.Dequeue(System.Action{System.String},System.Int32)
+  name: Dequeue(Action<String>, Int32)
+  href: docs/api/FreeRedis.DelayQueue.html#FreeRedis_DelayQueue_Dequeue_System_Action_System_String__System_Int32_
+  commentId: M:FreeRedis.DelayQueue.Dequeue(System.Action{System.String},System.Int32)
+  name.vb: Dequeue(Action(Of String), Int32)
+  fullName: FreeRedis.DelayQueue.Dequeue(System.Action<System.String>, System.Int32)
+  fullName.vb: FreeRedis.DelayQueue.Dequeue(System.Action(Of System.String), System.Int32)
+  nameWithType: DelayQueue.Dequeue(Action<String>, Int32)
+  nameWithType.vb: DelayQueue.Dequeue(Action(Of String), Int32)
+- uid: FreeRedis.DelayQueue.Dequeue*
+  name: Dequeue
+  href: docs/api/FreeRedis.DelayQueue.html#FreeRedis_DelayQueue_Dequeue_
+  commentId: Overload:FreeRedis.DelayQueue.Dequeue
+  isSpec: "True"
+  fullName: FreeRedis.DelayQueue.Dequeue
+  nameWithType: DelayQueue.Dequeue
+- uid: FreeRedis.DelayQueue.Enqueue(System.String,System.DateTime)
+  name: Enqueue(String, DateTime)
+  href: docs/api/FreeRedis.DelayQueue.html#FreeRedis_DelayQueue_Enqueue_System_String_System_DateTime_
+  commentId: M:FreeRedis.DelayQueue.Enqueue(System.String,System.DateTime)
+  fullName: FreeRedis.DelayQueue.Enqueue(System.String, System.DateTime)
+  nameWithType: DelayQueue.Enqueue(String, DateTime)
+- uid: FreeRedis.DelayQueue.Enqueue(System.String,System.TimeSpan)
+  name: Enqueue(String, TimeSpan)
+  href: docs/api/FreeRedis.DelayQueue.html#FreeRedis_DelayQueue_Enqueue_System_String_System_TimeSpan_
+  commentId: M:FreeRedis.DelayQueue.Enqueue(System.String,System.TimeSpan)
+  fullName: FreeRedis.DelayQueue.Enqueue(System.String, System.TimeSpan)
+  nameWithType: DelayQueue.Enqueue(String, TimeSpan)
+- uid: FreeRedis.DelayQueue.Enqueue*
+  name: Enqueue
+  href: docs/api/FreeRedis.DelayQueue.html#FreeRedis_DelayQueue_Enqueue_
+  commentId: Overload:FreeRedis.DelayQueue.Enqueue
+  isSpec: "True"
+  fullName: FreeRedis.DelayQueue.Enqueue
+  nameWithType: DelayQueue.Enqueue
 - uid: FreeRedis.DisconnectedEventArgs
   name: DisconnectedEventArgs
   href: docs/api/FreeRedis.DisconnectedEventArgs.html
@@ -12071,6 +12125,19 @@ references:
   isSpec: "True"
   fullName: FreeRedis.RedisClient.Del
   nameWithType: RedisClient.Del
+- uid: FreeRedis.RedisClient.DelayQueue(System.String)
+  name: DelayQueue(String)
+  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_DelayQueue_System_String_
+  commentId: M:FreeRedis.RedisClient.DelayQueue(System.String)
+  fullName: FreeRedis.RedisClient.DelayQueue(System.String)
+  nameWithType: RedisClient.DelayQueue(String)
+- uid: FreeRedis.RedisClient.DelayQueue*
+  name: DelayQueue
+  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_DelayQueue_
+  commentId: Overload:FreeRedis.RedisClient.DelayQueue
+  isSpec: "True"
+  fullName: FreeRedis.RedisClient.DelayQueue
+  nameWithType: RedisClient.DelayQueue
 - uid: FreeRedis.RedisClient.Deserialize
   name: Deserialize
   href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_Deserialize
