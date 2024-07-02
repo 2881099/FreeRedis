@@ -12,7 +12,6 @@ FreeRedis is a redis client based on .NET, supports .NET Core 2.1+, .NET Framewo
     <span>English</span> |  
     <a href="README.zh-CN.md">中文</a>
 </p>
-
 </div>
 
 - 🌈 RedisClient Keep all method names consistent with redis-cli
@@ -222,6 +221,28 @@ foreach (var keys in cli.Scan("*", 10, null))
 {
     Console.WriteLine(string.Join(", ", keys));
 }
+```
+
+### 🍡DelayQueue
+
+```c#
+var delayQueue = cli.DelayQueue("TestDelayQueue");
+
+//Add queue
+delayQueue.Enqueue($"Execute in 5 seconds.", TimeSpan.FromSeconds(5));
+delayQueue.Enqueue($"Execute in 10 seconds.", DateTime.Now.AddSeconds(10));
+delayQueue.Enqueue($"Execute in 15 seconds.", DateTime.Now.AddSeconds(15));
+delayQueue.Enqueue($"Execute in 20 seconds.", TimeSpan.FromSeconds(20));
+delayQueue.Enqueue($"Execute in 25 seconds.", DateTime.Now.AddSeconds(25));
+delayQueue.Enqueue($"Execute in 2024-07-02 14:30:15", DateTime.Parse("2024-07-02 14:30:15"));
+
+//Consumption queue
+await delayQueue.DequeueAsync(s =>
+{
+    output.WriteLine($"{DateTime.Now}：{s}");
+
+    return Task.CompletedTask;
+});
 ```
 
 ## 👯 Contributors

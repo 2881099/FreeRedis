@@ -223,6 +223,27 @@ foreach (var keys in cli.Scan("*", 10, null))
 }
 ```
 
+### 🍡DelayQueue (延时队列)
+
+```c#
+var delayQueue = cli.DelayQueue("TestDelayQueue");
+
+//添加队列
+delayQueue.Enqueue($"Execute in 5 seconds.", TimeSpan.FromSeconds(5));
+delayQueue.Enqueue($"Execute in 10 seconds.", DateTime.Now.AddSeconds(10));
+delayQueue.Enqueue($"Execute in 15 seconds.", DateTime.Now.AddSeconds(15));
+delayQueue.Enqueue($"Execute in 20 seconds.", TimeSpan.FromSeconds(20));
+delayQueue.Enqueue($"Execute in 25 seconds.", DateTime.Now.AddSeconds(25));
+delayQueue.Enqueue($"Execute in 2024-07-02 14:30:15", DateTime.Parse("2024-07-02 14:30:15"));
+
+//消费延时队列
+await delayQueue.DequeueAsync(s =>
+{
+    output.WriteLine($"{DateTime.Now}：{s}");
+
+    return Task.CompletedTask;
+});
+```
 
 ## 👯 Contributors (贡献者)
 
