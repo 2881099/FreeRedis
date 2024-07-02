@@ -9,7 +9,7 @@ using Xunit.Abstractions;
 
 namespace FreeRedis.Tests.RedisClientTests
 {
-    public class DelayQueueTest
+    public class DelayQueueTest(ITestOutputHelper output)
     {
         static readonly RedisClient _client = new RedisClient(
             new ConnectionStringBuilder[]
@@ -59,22 +59,31 @@ namespace FreeRedis.Tests.RedisClientTests
                 },
             }
         );
-        private ITestOutputHelper _output;
 
-        public DelayQueueTest(ITestOutputHelper output)
-        {
-            _output = output;
-        }
+        private readonly ITestOutputHelper _output = output;
 
         [Fact]
-        public void Test()
+        public async Task Test()
         {
             var delayQueue = _client.DelayQueue("TestDelayQueue");
-            delayQueue.Enqueue("1", DateTime.Now.AddSeconds(5));
-            delayQueue.Enqueue("2", DateTime.Now.AddSeconds(10));
-            delayQueue.Enqueue("3", DateTime.Now.AddSeconds(15));
-            delayQueue.Enqueue("4", DateTime.Now.AddSeconds(20));
-            delayQueue.Enqueue("5", DateTime.Now.AddSeconds(25));
+            
+            //添加队列
+            delayQueue.Enqueue($"Execute in 5 seconds.", TimeSpan.FromSeconds(5));
+            delayQueue.Enqueue($"Execute in 10 seconds.", DateTime.Now.AddSeconds(10));
+            delayQueue.Enqueue($"Execute in 15 seconds.", DateTime.Now.AddSeconds(15));
+            delayQueue.Enqueue($"Execute in 20 seconds.", TimeSpan.FromSeconds(20));
+            delayQueue.Enqueue($"Execute in 25 seconds.", DateTime.Now.AddSeconds(25));
+            delayQueue.Enqueue($"Execute in 2024-07-02 14:30:15", DateTime.Parse("2024-07-02 14:30:15"));
+
+
+            //消费延时队列
+            await delayQueue.DequeueAsync(s =>
+            {
+                _output.WriteLine($"{DateTime.Now}：{s}");
+
+                return Task.CompletedTask;
+            });
+            
         }
     }
 }
