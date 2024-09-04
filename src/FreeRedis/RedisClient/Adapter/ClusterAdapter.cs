@@ -132,7 +132,6 @@ namespace FreeRedis
                         }
                         catch (ProtocolViolationException)
                         {
-                            rds.ReleaseSocket();
                             cmd._protocolErrorTryCount++;
                             if (cmd._protocolErrorTryCount <= pool._policy._connectionStringBuilder.Retry)
                                 protocolRetry = true;
@@ -230,7 +229,6 @@ namespace FreeRedis
                         }
                         catch (ProtocolViolationException)
                         {
-                            rds.ReleaseSocket();
                             cmd._protocolErrorTryCount++;
                             if (cmd._protocolErrorTryCount <= pool._policy._connectionStringBuilder.Retry)
                                 protocolRetry = true;

@@ -22,7 +22,7 @@ namespace FreeRedis.Internal
     {
         public static TempProxyRedisSocket CreateTempProxy(IRedisSocket rds, Action dispose)
         {
-            if (rds is TempProxyRedisSocket proxy) 
+            if (rds is TempProxyRedisSocket proxy)
                 return new TempProxyRedisSocket(proxy._owner, dispose);
             return new TempProxyRedisSocket(rds, dispose);
         }
@@ -170,8 +170,19 @@ namespace FreeRedis.Internal
             {
                 new RespHelper.Resp3Writer(ms, Encoding, Protocol).WriteCommand(cmd);
                 ms.Position = 0;
-                ms.CopyTo(Stream);
-                ms.Close();
+                try
+                {
+                    ms.CopyTo(Stream);
+                }
+                catch(Exception ex)
+                {
+                    ReleaseSocket();
+                    throw new ProtocolViolationException($"Socket.Write error: {ex.Message}");
+                }
+                finally
+                {
+                    ms.Close();
+                }
             }
             WriteAfter(cmd);
         }
@@ -181,7 +192,16 @@ namespace FreeRedis.Internal
             if (ClientReply == ClientReplyType.on)
             {
                 if (IsConnected == false) Connect();
-                var rt = Reader.ReadObject(cmd?._flagReadbytes == true ? null : Encoding);
+                RedisResult rt;
+                try
+                {
+                    rt = Reader.ReadObject(cmd?._flagReadbytes == true ? null : Encoding);
+                }
+                catch (Exception ex)
+                {
+                    ReleaseSocket();
+                    throw new ProtocolViolationException($"Socket.Read error: {ex.Message}");
+                }
                 rt.Encoding = Encoding;
                 cmd?.OnDataTrigger(rt);
                 return rt;
@@ -193,7 +213,15 @@ namespace FreeRedis.Internal
             if (ClientReply == ClientReplyType.on)
             {
                 if (IsConnected == false) Connect();
-                Reader.ReadBlobStringChunk(destination, bufferSize);
+                try
+                {
+                    Reader.ReadBlobStringChunk(destination, bufferSize);
+                }
+                catch (Exception ex)
+                {
+                    ReleaseSocket();
+                    throw new ProtocolViolationException($"Socket.Read error: {ex.Message}");
+                }
             }
         }
 #if isasync
@@ -205,8 +233,19 @@ namespace FreeRedis.Internal
             {
                 new RespHelper.Resp3Writer(ms, Encoding, Protocol).WriteCommand(cmd);
                 ms.Position = 0;
-                await ms.CopyToAsync(Stream);
-                ms.Close();
+                try
+                {
+                    await ms.CopyToAsync(Stream);
+                }
+                catch (Exception ex)
+                {
+                    ReleaseSocket();
+                    throw new ProtocolViolationException($"Socket.Write error: {ex.Message}");
+                }
+                finally
+                {
+                    ms.Close();
+                }
             }
             WriteAfter(cmd);
         }
@@ -216,7 +255,16 @@ namespace FreeRedis.Internal
             if (ClientReply == ClientReplyType.on)
             {
                 if (IsConnected == false) Connect();
-                var rt = await Reader.ReadObjectAsync(cmd?._flagReadbytes == true ? null : Encoding);
+                RedisResult rt;
+                try
+                {
+                    rt = await Reader.ReadObjectAsync(cmd?._flagReadbytes == true ? null : Encoding);
+                }
+                catch (Exception ex)
+                {
+                    ReleaseSocket();
+                    throw new ProtocolViolationException($"Socket.Read error: {ex.Message}");
+                }
                 rt.Encoding = Encoding;
                 cmd?.OnDataTrigger(rt);
                 return rt;
@@ -228,7 +276,15 @@ namespace FreeRedis.Internal
             if (ClientReply == ClientReplyType.on)
             {
                 if (IsConnected == false) Connect();
-                await Reader.ReadBlobStringChunkAsync(destination, bufferSize);
+                try
+                {
+                    await Reader.ReadBlobStringChunkAsync(destination, bufferSize);
+                }
+                catch (Exception ex)
+                {
+                    ReleaseSocket();
+                    throw new ProtocolViolationException($"Socket.Read error: {ex.Message}");
+                }
             }
         }
 #endif
@@ -244,8 +300,8 @@ namespace FreeRedis.Internal
                     (EndPoint)new IPEndPoint(tryip, _port) :
                     new DnsEndPoint(_ip, _port);
 
-                var localSocket = endpoint.AddressFamily == AddressFamily.InterNetworkV6 ? 
-                    new Socket(AddressFamily.InterNetworkV6, SocketType.Stream, ProtocolType.Tcp):
+                var localSocket = endpoint.AddressFamily == AddressFamily.InterNetworkV6 ?
+                    new Socket(AddressFamily.InterNetworkV6, SocketType.Stream, ProtocolType.Tcp) :
                     new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
                 try
@@ -340,7 +396,7 @@ namespace FreeRedis.Internal
             host = host.Trim();
             var ipv6 = Regex.Match(host, @"^\[([^\]]+)\]\s*(:\s*(\d+))?$");
             if (ipv6.Success) //ipv6+port 格式： [fe80::b164:55b3:4b4f:7ce6%15]:6379
-                return new KeyValuePair<string, int>(ipv6.Groups[1].Value.Trim(), 
+                return new KeyValuePair<string, int>(ipv6.Groups[1].Value.Trim(),
                     int.TryParse(ipv6.Groups[3].Value, out var tryint) && tryint > 0 ? tryint : 6379);
 
             var spt = (host ?? "").Split(':');
