@@ -47,6 +47,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FreeRedis.DistributedCache"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "console_net8_cluster_client_side_caching", "examples\console_net8_cluster_client_side_caching\console_net8_cluster_client_side_caching.csproj", "{1C4387AA-C4BD-4388-97D1-3A769439705D}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FreeRedis.OpenTelemetry", "src\FreeRedis.OpenTelemetry\FreeRedis.OpenTelemetry.csproj", "{CA71A937-D939-4922-B1DB-0380833B7270}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTelemetryTest", "examples\OpenTelemetryTest\OpenTelemetryTest.csproj", "{37FAC646-809D-4BD4-8B74-1A9BEE02E963}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -225,6 +229,30 @@ Global
 		{1C4387AA-C4BD-4388-97D1-3A769439705D}.Release|x64.Build.0 = Release|Any CPU
 		{1C4387AA-C4BD-4388-97D1-3A769439705D}.Release|x86.ActiveCfg = Release|Any CPU
 		{1C4387AA-C4BD-4388-97D1-3A769439705D}.Release|x86.Build.0 = Release|Any CPU
+		{CA71A937-D939-4922-B1DB-0380833B7270}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA71A937-D939-4922-B1DB-0380833B7270}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA71A937-D939-4922-B1DB-0380833B7270}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{CA71A937-D939-4922-B1DB-0380833B7270}.Debug|x64.Build.0 = Debug|Any CPU
+		{CA71A937-D939-4922-B1DB-0380833B7270}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{CA71A937-D939-4922-B1DB-0380833B7270}.Debug|x86.Build.0 = Debug|Any CPU
+		{CA71A937-D939-4922-B1DB-0380833B7270}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA71A937-D939-4922-B1DB-0380833B7270}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA71A937-D939-4922-B1DB-0380833B7270}.Release|x64.ActiveCfg = Release|Any CPU
+		{CA71A937-D939-4922-B1DB-0380833B7270}.Release|x64.Build.0 = Release|Any CPU
+		{CA71A937-D939-4922-B1DB-0380833B7270}.Release|x86.ActiveCfg = Release|Any CPU
+		{CA71A937-D939-4922-B1DB-0380833B7270}.Release|x86.Build.0 = Release|Any CPU
+		{37FAC646-809D-4BD4-8B74-1A9BEE02E963}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37FAC646-809D-4BD4-8B74-1A9BEE02E963}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37FAC646-809D-4BD4-8B74-1A9BEE02E963}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{37FAC646-809D-4BD4-8B74-1A9BEE02E963}.Debug|x64.Build.0 = Debug|Any CPU
+		{37FAC646-809D-4BD4-8B74-1A9BEE02E963}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{37FAC646-809D-4BD4-8B74-1A9BEE02E963}.Debug|x86.Build.0 = Debug|Any CPU
+		{37FAC646-809D-4BD4-8B74-1A9BEE02E963}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37FAC646-809D-4BD4-8B74-1A9BEE02E963}.Release|Any CPU.Build.0 = Release|Any CPU
+		{37FAC646-809D-4BD4-8B74-1A9BEE02E963}.Release|x64.ActiveCfg = Release|Any CPU
+		{37FAC646-809D-4BD4-8B74-1A9BEE02E963}.Release|x64.Build.0 = Release|Any CPU
+		{37FAC646-809D-4BD4-8B74-1A9BEE02E963}.Release|x86.ActiveCfg = Release|Any CPU
+		{37FAC646-809D-4BD4-8B74-1A9BEE02E963}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -246,6 +274,8 @@ Global
 		{7AC68251-83D4-423F-849C-04BD89F4BDFB} = {DD1426BF-F56F-49A8-9D4E-2BA0E3BEFC72}
 		{B0B0B55E-4D41-4419-83FE-309F72699A3A} = {D8045351-59E4-45B9-81F5-D21CC0996344}
 		{1C4387AA-C4BD-4388-97D1-3A769439705D} = {DD1426BF-F56F-49A8-9D4E-2BA0E3BEFC72}
+		{CA71A937-D939-4922-B1DB-0380833B7270} = {D8045351-59E4-45B9-81F5-D21CC0996344}
+		{37FAC646-809D-4BD4-8B74-1A9BEE02E963} = {DD1426BF-F56F-49A8-9D4E-2BA0E3BEFC72}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B36AD060-F6AE-49C7-A310-B58B8467CE69}
