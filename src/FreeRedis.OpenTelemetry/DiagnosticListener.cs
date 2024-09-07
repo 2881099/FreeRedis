@@ -1,6 +1,4 @@
-﻿using OpenTelemetry;
-using OpenTelemetry.Context.Propagation;
-using OpenTelemetry.Trace;
+﻿using OpenTelemetry.Trace;
 using System.Diagnostics;
 
 namespace FreeRedis.OpenTelemetry;
@@ -9,9 +7,7 @@ public class DiagnosticListener : IObserver<KeyValuePair<string, object?>>
 {
     public const string SourceName = "FreeRedis.OpenTelemetry";
 
-    private const string OperateNamePrefix = "FreeRedis/";
     private static readonly ActivitySource ActivitySource = new(SourceName, "1.0.0");
-    private static readonly TextMapPropagator Propagator = Propagators.DefaultTextMapPropagator;
 
     /// <summary>Notifies the observer that the provider has finished sending push-based notifications.</summary>
     public void OnCompleted()
@@ -38,23 +34,31 @@ public class DiagnosticListener : IObserver<KeyValuePair<string, object?>>
                     if (activity != null)
                     {
                         activity.SetTag("db.system", "redis");
-                        activity.SetTag("db.namespace", 1);//TODO 不知道怎么获取db
                         activity.SetTag("db.operation.name", eventData.Command._command);
                         activity.SetTag("db.query.text", eventData.Command);
-                        //activity.SetTag("server.address", eventData.Operation);
-                        //activity.SetTag("server.port", 6379);
-                        //activity.SetTag("network.peer.address", eventData.Operation);
-                        //activity.SetTag("network.peer.port", eventData.Operation);
+                        //Activity.Current?.SetTag("network.peer.address", ip);
+                        //Activity.Current?.SetTag("network.peer.port", port);
 
                         activity.AddEvent(new ActivityEvent("redis command execute start",
                             DateTimeOffset.FromUnixTimeMilliseconds(eventData.OperationTimestamp!.Value)));
-
                     }
                 }
                 break;
             case FreeRedisDiagnosticListenerNames.NoticeCallAfter:
                 {
                     var eventData = (InterceptorAfterEventArgs)evt.Value!;
+                    var writeTarget = eventData.Command.WriteTarget;
+                    if (!string.IsNullOrEmpty(writeTarget))
+                    {
+                        var parts = writeTarget.Split([':', '/'], StringSplitOptions.RemoveEmptyEntries);
+                        var ip = parts[0];
+                        var port = int.Parse(parts[1]);
+                        var dbIndex = int.Parse(parts[2]);
+
+                        Activity.Current?.SetTag("server.address", ip);
+                        Activity.Current?.SetTag("server.port", port);
+                        Activity.Current?.SetTag("db.namespace", dbIndex);
+                    }
                     var tags = new ActivityTagsCollection { new("free_redis.duration", eventData.ElapsedMilliseconds) };
                     if (eventData.Exception != null)
                     {
