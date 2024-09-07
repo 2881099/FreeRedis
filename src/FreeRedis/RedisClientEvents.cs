@@ -1,84 +1,106 @@
-﻿using FreeRedis.Internal;
-using System;
-using System.Collections.Generic;
+﻿using System;
+using System.Diagnostics;
 using System.Text;
+using FreeRedis.Internal;
 
 namespace FreeRedis
 {
     public enum NoticeType
     {
-        Call, Info, Event
+        Call,
+        Info,
+        Event
     }
+
     public class NoticeEventArgs : EventArgs
     {
-        public NoticeType NoticeType { get; }
-        public Exception Exception { get; }
-        public string Log { get; }
-        public object Tag { get; }
-
         public NoticeEventArgs(NoticeType noticeType, Exception exception, string log, object tag)
         {
-            this.NoticeType = noticeType;
-            this.Exception = exception;
-            this.Log = log;
-            this.Tag = tag;
+            NoticeType = noticeType;
+            Exception = exception;
+            Log = log;
+            Tag = tag;
         }
+
+        public NoticeType NoticeType { get; }
+
+        public Exception Exception { get; }
+
+        public string Log { get; }
+
+        public object Tag { get; }
     }
+
     public class ConnectedEventArgs : EventArgs
     {
-        public string Host { get; }
-        public RedisClientPool Pool { get; }
-        public RedisClient Client { get; }
-
         public ConnectedEventArgs(string host, RedisClientPool pool, RedisClient cli)
         {
-            this.Host = host;
-            this.Pool = pool;
-            this.Client = cli;
+            Host = host;
+            Pool = pool;
+            Client = cli;
         }
+
+        public string Host { get; }
+
+        public RedisClientPool Pool { get; }
+
+        public RedisClient Client { get; }
     }
+
     public class DisconnectedEventArgs : EventArgs
     {
-        public string Host { get; }
-        public RedisClientPool Pool { get; }
-        public RedisClient Client { get; }
-
         public DisconnectedEventArgs(string host, RedisClientPool pool, RedisClient cli)
         {
-            this.Host = host;
-            this.Pool = pool;
-            this.Client = cli;
+            Host = host;
+            Pool = pool;
+            Client = cli;
         }
-    }
-    public class UnavailableEventArgs : EventArgs
-    {
+
         public string Host { get; }
+
         public RedisClientPool Pool { get; }
 
+        public RedisClient Client { get; }
+    }
+
+    public class UnavailableEventArgs : EventArgs
+    {
         public UnavailableEventArgs(string host, RedisClientPool pool)
         {
-            this.Host = host;
-            this.Pool = pool;
+            Host = host;
+            Pool = pool;
         }
+
+        public string Host { get; }
+
+        public RedisClientPool Pool { get; }
     }
 
     public interface IInterceptor
     {
         void Before(InterceptorBeforeEventArgs args);
+
         void After(InterceptorAfterEventArgs args);
     }
+
     public class InterceptorBeforeEventArgs
     {
-        public RedisClient Client { get; }
-        public CommandPacket Command { get; }
-        public Type ValueType { get; }
+        private object _value;
 
         public InterceptorBeforeEventArgs(RedisClient cli, CommandPacket cmd, Type valueType)
         {
-            this.Client = cli;
-            this.Command = cmd;
-            this.ValueType = valueType;
+            Client = cli;
+            Command = cmd;
+            ValueType = valueType;
         }
+
+        public long? OperationTimestamp { get; set; }
+
+        public RedisClient Client { get; }
+
+        public CommandPacket Command { get; }
+
+        public Type ValueType { get; }
 
         public object Value
         {
@@ -86,36 +108,48 @@ namespace FreeRedis
             set
             {
                 _value = value;
-                this.ValueIsChanged = true;
+                ValueIsChanged = true;
             }
         }
-        private object _value;
+
         public bool ValueIsChanged { get; private set; }
     }
+
     public class InterceptorAfterEventArgs
     {
+        public InterceptorAfterEventArgs(RedisClient cli, CommandPacket cmd, Type valueType, object value,
+            Exception exception, long elapsedMilliseconds)
+        {
+            Client = cli;
+            Command = cmd;
+            ValueType = valueType;
+            Value = value;
+            Exception = exception;
+            ElapsedMilliseconds = elapsedMilliseconds;
+        }
+
+        public long? OperationTimestamp { get; set; }
+
         public RedisClient Client { get; }
+
         public CommandPacket Command { get; }
+
         public Type ValueType { get; }
 
         public object Value { get; }
-        public Exception Exception { get; }
-        public long ElapsedMilliseconds { get; }
 
-        public InterceptorAfterEventArgs(RedisClient cli, CommandPacket cmd, Type valueType, object value, Exception exception, long elapsedMilliseconds)
-        {
-            this.Client = cli;
-            this.Command = cmd;
-            this.ValueType = valueType;
-            this.Value = value;
-            this.Exception = exception;
-            this.ElapsedMilliseconds = elapsedMilliseconds;
-        }
+        public Exception Exception { get; }
+
+        public long ElapsedMilliseconds { get; }
     }
 
-    class NoticeCallInterceptor : IInterceptor
+    internal class NoticeCallInterceptor : IInterceptor
     {
-        RedisClient _cli;
+#if NETSTANDARD2_0_OR_GREATER
+        private static readonly DiagnosticSource _diagnosticListener = new DiagnosticListener(FreeRedisDiagnosticListenerNames.DiagnosticListenerName);
+#endif
+        private readonly RedisClient _cli;
+
         public NoticeCallInterceptor(RedisClient cli)
         {
             _cli = cli;
@@ -123,8 +157,17 @@ namespace FreeRedis
 
         public void After(InterceptorAfterEventArgs args)
         {
+#if NETSTANDARD2_0_OR_GREATER
+            args.OperationTimestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            if (_diagnosticListener.IsEnabled(FreeRedisDiagnosticListenerNames.NoticeCallAfter))
+                _diagnosticListener.Write(FreeRedisDiagnosticListenerNames.NoticeCallAfter, args);
+#endif
+
             string log;
-            if (args.Exception != null) log = $"{args.Exception.Message}";
+            if (args.Exception != null)
+            {
+                log = $"{args.Exception.Message}";
+            }
             else if (args.Value is Array array)
             {
                 var sb = new StringBuilder().Append("[");
@@ -134,11 +177,15 @@ namespace FreeRedis
                     if (itemindex++ > 0) sb.Append(", ");
                     sb.Append(item.ToInvariantCultureToString());
                 }
+
                 log = sb.Append("]").ToString();
                 sb.Clear();
             }
             else
+            {
                 log = $"{args.Value.ToInvariantCultureToString()}";
+            }
+
             _cli.OnNotice(null, new NoticeEventArgs(
                 NoticeType.Call,
                 args.Exception,
@@ -148,6 +195,11 @@ namespace FreeRedis
 
         public void Before(InterceptorBeforeEventArgs args)
         {
+#if NETSTANDARD2_0_OR_GREATER
+            args.OperationTimestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            if (_diagnosticListener.IsEnabled(FreeRedisDiagnosticListenerNames.NoticeCallBefore))
+                _diagnosticListener.Write(FreeRedisDiagnosticListenerNames.NoticeCallBefore, args);
+#endif
         }
     }
 }
