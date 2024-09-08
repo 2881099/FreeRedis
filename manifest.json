@@ -803,11 +803,11 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "docs/api/FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.yml",
+      "source_relative_path": "docs/api/FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.yml",
       "output": {
         ".html": {
-          "relative_path": "docs/api/FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.html",
-          "hash": "qJOYaPc5LZg5pyf5xv3x8crW70fF6rEzyTnqxPNlFSk="
+          "relative_path": "docs/api/FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.html",
+          "hash": "o1WoLDoc26kTLYFWQ452kvk9y4BNRFaFRyegYWFM7W4="
         }
       },
       "is_incremental": false,
@@ -815,11 +815,11 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "docs/api/FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.TracerProviderBuilderExtensions.yml",
+      "source_relative_path": "docs/api/FreeRedis.OpenTelemetry.FreeRedisInstrumentation.yml",
       "output": {
         ".html": {
-          "relative_path": "docs/api/FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.TracerProviderBuilderExtensions.html",
-          "hash": "1P6K7kvDP945VnZ8emHG+OeoqHVje0gv+LqkS2+/+Bg="
+          "relative_path": "docs/api/FreeRedis.OpenTelemetry.FreeRedisInstrumentation.html",
+          "hash": "QvZMVOgOKvWkdB+hObNPrrVuHmYP1jB3TZ1uZzXb5Y4="
         }
       },
       "is_incremental": false,
@@ -827,47 +827,11 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "docs/api/FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.yml",
+      "source_relative_path": "docs/api/FreeRedis.OpenTelemetry.TracerProviderBuilderExtensions.yml",
       "output": {
         ".html": {
-          "relative_path": "docs/api/FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.html",
-          "hash": "lpTPzf6f4C9SxJxyVwq7O+DTKsRROE+Nrk8sDLEreKY="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "docs/api/FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedisInstrumentation.yml",
-      "output": {
-        ".html": {
-          "relative_path": "docs/api/FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedisInstrumentation.html",
-          "hash": "zBUyf1doIk6bfBZ8XU4sDjDXPC9xVqNNMYL3NO5pHzg="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "docs/api/FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.yml",
-      "output": {
-        ".html": {
-          "relative_path": "docs/api/FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.html",
-          "hash": "DN8vbYmOVBf3NXLsuwmq71U0e4z7JEsNAvBJmv1Nx50="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "docs/api/FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.yml",
-      "output": {
-        ".html": {
-          "relative_path": "docs/api/FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.html",
-          "hash": "MEMUwCoATLAURVSYLS90A0euVOYT/Etoh3r71mhwA3c="
+          "relative_path": "docs/api/FreeRedis.OpenTelemetry.TracerProviderBuilderExtensions.html",
+          "hash": "p8XOT1e5UVGYCKTsTDj64G5XDdZfHEgLWzHDj8D7IbE="
         }
       },
       "is_incremental": false,
@@ -879,7 +843,7 @@
       "output": {
         ".html": {
           "relative_path": "docs/api/FreeRedis.OpenTelemetry.html",
-          "hash": "v3jebqlzsiCCV2aRRqLoLa3zyikwYXRiBOQJahKG0qk="
+          "hash": "Ca9GFbS8sF207nofsbzOOVqSURs62Dr7NH/El2FgOYM="
         }
       },
       "is_incremental": false,
@@ -1431,7 +1395,7 @@
       "output": {
         ".html": {
           "relative_path": "docs/api/toc.html",
-          "hash": "l5E+MiNrNaQNDqH8NVNj/5qJx9Cx2xOV2gLOWJxmoIs="
+          "hash": "+lYX7HsViwMmLKWco0VoMJNITpnojvFzk1SYxv5cz3s="
         }
       },
       "is_incremental": false,
@@ -1470,7 +1434,7 @@
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 116,
+          "total_file_count": 113,
           "skipped_file_count": 0
         },
         "TocDocumentProcessor": {

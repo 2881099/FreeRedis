@@ -10860,177 +10860,159 @@ references:
   commentId: F:FreeRedis.OpenTelemetry.DiagnosticListener.SourceName
   fullName: FreeRedis.OpenTelemetry.DiagnosticListener.SourceName
   nameWithType: DiagnosticListener.SourceName
-- uid: FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry
-  name: FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry
-  href: docs/api/FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.html
-  commentId: N:FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry
-  fullName: FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry
-  nameWithType: FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry
-- uid: FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber
+- uid: FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber
   name: DiagnosticSourceSubscriber
-  href: docs/api/FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.html
-  commentId: T:FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber
-  fullName: FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber
+  href: docs/api/FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.html
+  commentId: T:FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber
+  fullName: FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber
   nameWithType: DiagnosticSourceSubscriber
-- uid: FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.#ctor(FreeRedis.OpenTelemetry.DiagnosticListener,System.Func{System.String,System.Object,System.Object,System.Boolean})
+- uid: FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.#ctor(FreeRedis.OpenTelemetry.DiagnosticListener,System.Func{System.String,System.Object,System.Object,System.Boolean})
   name: DiagnosticSourceSubscriber(DiagnosticListener, Func<String, Object, Object, Boolean>)
-  href: docs/api/FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.html#FreeRedis_OpenTelemetry_FreeRedis_OpenTelemetry_DiagnosticSourceSubscriber__ctor_FreeRedis_OpenTelemetry_DiagnosticListener_System_Func_System_String_System_Object_System_Object_System_Boolean__
-  commentId: M:FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.#ctor(FreeRedis.OpenTelemetry.DiagnosticListener,System.Func{System.String,System.Object,System.Object,System.Boolean})
+  href: docs/api/FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.html#FreeRedis_OpenTelemetry_DiagnosticSourceSubscriber__ctor_FreeRedis_OpenTelemetry_DiagnosticListener_System_Func_System_String_System_Object_System_Object_System_Boolean__
+  commentId: M:FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.#ctor(FreeRedis.OpenTelemetry.DiagnosticListener,System.Func{System.String,System.Object,System.Object,System.Boolean})
   name.vb: DiagnosticSourceSubscriber(DiagnosticListener, Func(Of String, Object, Object, Boolean))
-  fullName: FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.DiagnosticSourceSubscriber(FreeRedis.OpenTelemetry.DiagnosticListener, System.Func<System.String, System.Object, System.Object, System.Boolean>)
-  fullName.vb: FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.DiagnosticSourceSubscriber(FreeRedis.OpenTelemetry.DiagnosticListener, System.Func(Of System.String, System.Object, System.Object, System.Boolean))
+  fullName: FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.DiagnosticSourceSubscriber(FreeRedis.OpenTelemetry.DiagnosticListener, System.Func<System.String, System.Object, System.Object, System.Boolean>)
+  fullName.vb: FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.DiagnosticSourceSubscriber(FreeRedis.OpenTelemetry.DiagnosticListener, System.Func(Of System.String, System.Object, System.Object, System.Boolean))
   nameWithType: DiagnosticSourceSubscriber.DiagnosticSourceSubscriber(DiagnosticListener, Func<String, Object, Object, Boolean>)
   nameWithType.vb: DiagnosticSourceSubscriber.DiagnosticSourceSubscriber(DiagnosticListener, Func(Of String, Object, Object, Boolean))
-- uid: FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.#ctor(System.Func{System.String,FreeRedis.OpenTelemetry.DiagnosticListener},System.Func{System.Diagnostics.DiagnosticListener,System.Boolean},System.Func{System.String,System.Object,System.Object,System.Boolean})
+- uid: FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.#ctor(System.Func{System.String,FreeRedis.OpenTelemetry.DiagnosticListener},System.Func{System.Diagnostics.DiagnosticListener,System.Boolean},System.Func{System.String,System.Object,System.Object,System.Boolean})
   name: DiagnosticSourceSubscriber(Func<String, DiagnosticListener>, Func<DiagnosticListener, Boolean>, Func<String, Object, Object, Boolean>)
-  href: docs/api/FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.html#FreeRedis_OpenTelemetry_FreeRedis_OpenTelemetry_DiagnosticSourceSubscriber__ctor_System_Func_System_String_FreeRedis_OpenTelemetry_DiagnosticListener__System_Func_System_Diagnostics_DiagnosticListener_System_Boolean__System_Func_System_String_System_Object_System_Object_System_Boolean__
-  commentId: M:FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.#ctor(System.Func{System.String,FreeRedis.OpenTelemetry.DiagnosticListener},System.Func{System.Diagnostics.DiagnosticListener,System.Boolean},System.Func{System.String,System.Object,System.Object,System.Boolean})
+  href: docs/api/FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.html#FreeRedis_OpenTelemetry_DiagnosticSourceSubscriber__ctor_System_Func_System_String_FreeRedis_OpenTelemetry_DiagnosticListener__System_Func_System_Diagnostics_DiagnosticListener_System_Boolean__System_Func_System_String_System_Object_System_Object_System_Boolean__
+  commentId: M:FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.#ctor(System.Func{System.String,FreeRedis.OpenTelemetry.DiagnosticListener},System.Func{System.Diagnostics.DiagnosticListener,System.Boolean},System.Func{System.String,System.Object,System.Object,System.Boolean})
   name.vb: DiagnosticSourceSubscriber(Func(Of String, DiagnosticListener), Func(Of DiagnosticListener, Boolean), Func(Of String, Object, Object, Boolean))
-  fullName: FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.DiagnosticSourceSubscriber(System.Func<System.String, FreeRedis.OpenTelemetry.DiagnosticListener>, System.Func<System.Diagnostics.DiagnosticListener, System.Boolean>, System.Func<System.String, System.Object, System.Object, System.Boolean>)
-  fullName.vb: FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.DiagnosticSourceSubscriber(System.Func(Of System.String, FreeRedis.OpenTelemetry.DiagnosticListener), System.Func(Of System.Diagnostics.DiagnosticListener, System.Boolean), System.Func(Of System.String, System.Object, System.Object, System.Boolean))
+  fullName: FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.DiagnosticSourceSubscriber(System.Func<System.String, FreeRedis.OpenTelemetry.DiagnosticListener>, System.Func<System.Diagnostics.DiagnosticListener, System.Boolean>, System.Func<System.String, System.Object, System.Object, System.Boolean>)
+  fullName.vb: FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.DiagnosticSourceSubscriber(System.Func(Of System.String, FreeRedis.OpenTelemetry.DiagnosticListener), System.Func(Of System.Diagnostics.DiagnosticListener, System.Boolean), System.Func(Of System.String, System.Object, System.Object, System.Boolean))
   nameWithType: DiagnosticSourceSubscriber.DiagnosticSourceSubscriber(Func<String, DiagnosticListener>, Func<DiagnosticListener, Boolean>, Func<String, Object, Object, Boolean>)
   nameWithType.vb: DiagnosticSourceSubscriber.DiagnosticSourceSubscriber(Func(Of String, DiagnosticListener), Func(Of DiagnosticListener, Boolean), Func(Of String, Object, Object, Boolean))
-- uid: FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.#ctor*
+- uid: FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.#ctor*
   name: DiagnosticSourceSubscriber
-  href: docs/api/FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.html#FreeRedis_OpenTelemetry_FreeRedis_OpenTelemetry_DiagnosticSourceSubscriber__ctor_
-  commentId: Overload:FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.#ctor
+  href: docs/api/FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.html#FreeRedis_OpenTelemetry_DiagnosticSourceSubscriber__ctor_
+  commentId: Overload:FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.#ctor
   isSpec: "True"
-  fullName: FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.DiagnosticSourceSubscriber
+  fullName: FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.DiagnosticSourceSubscriber
   nameWithType: DiagnosticSourceSubscriber.DiagnosticSourceSubscriber
-- uid: FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.Dispose
+- uid: FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.Dispose
   name: Dispose()
-  href: docs/api/FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.html#FreeRedis_OpenTelemetry_FreeRedis_OpenTelemetry_DiagnosticSourceSubscriber_Dispose
-  commentId: M:FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.Dispose
-  fullName: FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.Dispose()
+  href: docs/api/FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.html#FreeRedis_OpenTelemetry_DiagnosticSourceSubscriber_Dispose
+  commentId: M:FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.Dispose
+  fullName: FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.Dispose()
   nameWithType: DiagnosticSourceSubscriber.Dispose()
-- uid: FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.Dispose(System.Boolean)
+- uid: FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.Dispose(System.Boolean)
   name: Dispose(Boolean)
-  href: docs/api/FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.html#FreeRedis_OpenTelemetry_FreeRedis_OpenTelemetry_DiagnosticSourceSubscriber_Dispose_System_Boolean_
-  commentId: M:FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.Dispose(System.Boolean)
-  fullName: FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.Dispose(System.Boolean)
+  href: docs/api/FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.html#FreeRedis_OpenTelemetry_DiagnosticSourceSubscriber_Dispose_System_Boolean_
+  commentId: M:FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.Dispose(System.Boolean)
+  fullName: FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.Dispose(System.Boolean)
   nameWithType: DiagnosticSourceSubscriber.Dispose(Boolean)
-- uid: FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.Dispose*
+- uid: FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.Dispose*
   name: Dispose
-  href: docs/api/FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.html#FreeRedis_OpenTelemetry_FreeRedis_OpenTelemetry_DiagnosticSourceSubscriber_Dispose_
-  commentId: Overload:FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.Dispose
+  href: docs/api/FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.html#FreeRedis_OpenTelemetry_DiagnosticSourceSubscriber_Dispose_
+  commentId: Overload:FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.Dispose
   isSpec: "True"
-  fullName: FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.Dispose
+  fullName: FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.Dispose
   nameWithType: DiagnosticSourceSubscriber.Dispose
-- uid: FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.OnCompleted
+- uid: FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.OnCompleted
   name: OnCompleted()
-  href: docs/api/FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.html#FreeRedis_OpenTelemetry_FreeRedis_OpenTelemetry_DiagnosticSourceSubscriber_OnCompleted
-  commentId: M:FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.OnCompleted
-  fullName: FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.OnCompleted()
+  href: docs/api/FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.html#FreeRedis_OpenTelemetry_DiagnosticSourceSubscriber_OnCompleted
+  commentId: M:FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.OnCompleted
+  fullName: FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.OnCompleted()
   nameWithType: DiagnosticSourceSubscriber.OnCompleted()
-- uid: FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.OnCompleted*
+- uid: FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.OnCompleted*
   name: OnCompleted
-  href: docs/api/FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.html#FreeRedis_OpenTelemetry_FreeRedis_OpenTelemetry_DiagnosticSourceSubscriber_OnCompleted_
-  commentId: Overload:FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.OnCompleted
+  href: docs/api/FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.html#FreeRedis_OpenTelemetry_DiagnosticSourceSubscriber_OnCompleted_
+  commentId: Overload:FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.OnCompleted
   isSpec: "True"
-  fullName: FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.OnCompleted
+  fullName: FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.OnCompleted
   nameWithType: DiagnosticSourceSubscriber.OnCompleted
-- uid: FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.OnError(System.Exception)
+- uid: FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.OnError(System.Exception)
   name: OnError(Exception)
-  href: docs/api/FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.html#FreeRedis_OpenTelemetry_FreeRedis_OpenTelemetry_DiagnosticSourceSubscriber_OnError_System_Exception_
-  commentId: M:FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.OnError(System.Exception)
-  fullName: FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.OnError(System.Exception)
+  href: docs/api/FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.html#FreeRedis_OpenTelemetry_DiagnosticSourceSubscriber_OnError_System_Exception_
+  commentId: M:FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.OnError(System.Exception)
+  fullName: FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.OnError(System.Exception)
   nameWithType: DiagnosticSourceSubscriber.OnError(Exception)
-- uid: FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.OnError*
+- uid: FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.OnError*
   name: OnError
-  href: docs/api/FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.html#FreeRedis_OpenTelemetry_FreeRedis_OpenTelemetry_DiagnosticSourceSubscriber_OnError_
-  commentId: Overload:FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.OnError
+  href: docs/api/FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.html#FreeRedis_OpenTelemetry_DiagnosticSourceSubscriber_OnError_
+  commentId: Overload:FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.OnError
   isSpec: "True"
-  fullName: FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.OnError
+  fullName: FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.OnError
   nameWithType: DiagnosticSourceSubscriber.OnError
-- uid: FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.OnNext(System.Diagnostics.DiagnosticListener)
+- uid: FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.OnNext(System.Diagnostics.DiagnosticListener)
   name: OnNext(DiagnosticListener)
-  href: docs/api/FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.html#FreeRedis_OpenTelemetry_FreeRedis_OpenTelemetry_DiagnosticSourceSubscriber_OnNext_System_Diagnostics_DiagnosticListener_
-  commentId: M:FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.OnNext(System.Diagnostics.DiagnosticListener)
-  fullName: FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.OnNext(System.Diagnostics.DiagnosticListener)
+  href: docs/api/FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.html#FreeRedis_OpenTelemetry_DiagnosticSourceSubscriber_OnNext_System_Diagnostics_DiagnosticListener_
+  commentId: M:FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.OnNext(System.Diagnostics.DiagnosticListener)
+  fullName: FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.OnNext(System.Diagnostics.DiagnosticListener)
   nameWithType: DiagnosticSourceSubscriber.OnNext(DiagnosticListener)
-- uid: FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.OnNext*
+- uid: FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.OnNext*
   name: OnNext
-  href: docs/api/FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.html#FreeRedis_OpenTelemetry_FreeRedis_OpenTelemetry_DiagnosticSourceSubscriber_OnNext_
-  commentId: Overload:FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.OnNext
+  href: docs/api/FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.html#FreeRedis_OpenTelemetry_DiagnosticSourceSubscriber_OnNext_
+  commentId: Overload:FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.OnNext
   isSpec: "True"
-  fullName: FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.OnNext
+  fullName: FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.OnNext
   nameWithType: DiagnosticSourceSubscriber.OnNext
-- uid: FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.Subscribe
+- uid: FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.Subscribe
   name: Subscribe()
-  href: docs/api/FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.html#FreeRedis_OpenTelemetry_FreeRedis_OpenTelemetry_DiagnosticSourceSubscriber_Subscribe
-  commentId: M:FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.Subscribe
-  fullName: FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.Subscribe()
+  href: docs/api/FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.html#FreeRedis_OpenTelemetry_DiagnosticSourceSubscriber_Subscribe
+  commentId: M:FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.Subscribe
+  fullName: FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.Subscribe()
   nameWithType: DiagnosticSourceSubscriber.Subscribe()
-- uid: FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.Subscribe*
+- uid: FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.Subscribe*
   name: Subscribe
-  href: docs/api/FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.html#FreeRedis_OpenTelemetry_FreeRedis_OpenTelemetry_DiagnosticSourceSubscriber_Subscribe_
-  commentId: Overload:FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.Subscribe
+  href: docs/api/FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.html#FreeRedis_OpenTelemetry_DiagnosticSourceSubscriber_Subscribe_
+  commentId: Overload:FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.Subscribe
   isSpec: "True"
-  fullName: FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.Subscribe
+  fullName: FreeRedis.OpenTelemetry.DiagnosticSourceSubscriber.Subscribe
   nameWithType: DiagnosticSourceSubscriber.Subscribe
-- uid: FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry
-  name: FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry
-  href: docs/api/FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.html
-  commentId: N:FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry
-  fullName: FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry
-  nameWithType: FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry
-- uid: FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry
-  name: FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry
-  href: docs/api/FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.html
-  commentId: N:FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry
-  fullName: FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry
-  nameWithType: FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry
-- uid: FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.TracerProviderBuilderExtensions
-  name: TracerProviderBuilderExtensions
-  href: docs/api/FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.TracerProviderBuilderExtensions.html
-  commentId: T:FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.TracerProviderBuilderExtensions
-  fullName: FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.TracerProviderBuilderExtensions
-  nameWithType: TracerProviderBuilderExtensions
-- uid: FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.TracerProviderBuilderExtensions.AddFreeRedisInstrumentation(TracerProviderBuilder,FreeRedis.RedisClient)
-  name: AddFreeRedisInstrumentation(TracerProviderBuilder, RedisClient)
-  href: docs/api/FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.TracerProviderBuilderExtensions.html#FreeRedis_OpenTelemetry_FreeRedis_OpenTelemetry_FreeRedis_OpenTelemetry_FreeRedis_OpenTelemetry_TracerProviderBuilderExtensions_AddFreeRedisInstrumentation_TracerProviderBuilder_FreeRedis_RedisClient_
-  commentId: M:FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.TracerProviderBuilderExtensions.AddFreeRedisInstrumentation(TracerProviderBuilder,FreeRedis.RedisClient)
-  fullName: FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.TracerProviderBuilderExtensions.AddFreeRedisInstrumentation(TracerProviderBuilder, FreeRedis.RedisClient)
-  nameWithType: TracerProviderBuilderExtensions.AddFreeRedisInstrumentation(TracerProviderBuilder, RedisClient)
-- uid: FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.TracerProviderBuilderExtensions.AddFreeRedisInstrumentation*
-  name: AddFreeRedisInstrumentation
-  href: docs/api/FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.TracerProviderBuilderExtensions.html#FreeRedis_OpenTelemetry_FreeRedis_OpenTelemetry_FreeRedis_OpenTelemetry_FreeRedis_OpenTelemetry_TracerProviderBuilderExtensions_AddFreeRedisInstrumentation_
-  commentId: Overload:FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.TracerProviderBuilderExtensions.AddFreeRedisInstrumentation
-  isSpec: "True"
-  fullName: FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.TracerProviderBuilderExtensions.AddFreeRedisInstrumentation
-  nameWithType: TracerProviderBuilderExtensions.AddFreeRedisInstrumentation
-- uid: FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedisInstrumentation
+- uid: FreeRedis.OpenTelemetry.FreeRedisInstrumentation
   name: FreeRedisInstrumentation
-  href: docs/api/FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedisInstrumentation.html
-  commentId: T:FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedisInstrumentation
-  fullName: FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedisInstrumentation
+  href: docs/api/FreeRedis.OpenTelemetry.FreeRedisInstrumentation.html
+  commentId: T:FreeRedis.OpenTelemetry.FreeRedisInstrumentation
+  fullName: FreeRedis.OpenTelemetry.FreeRedisInstrumentation
   nameWithType: FreeRedisInstrumentation
-- uid: FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedisInstrumentation.#ctor(FreeRedis.OpenTelemetry.DiagnosticListener)
+- uid: FreeRedis.OpenTelemetry.FreeRedisInstrumentation.#ctor(FreeRedis.OpenTelemetry.DiagnosticListener)
   name: FreeRedisInstrumentation(DiagnosticListener)
-  href: docs/api/FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedisInstrumentation.html#FreeRedis_OpenTelemetry_FreeRedis_OpenTelemetry_FreeRedis_OpenTelemetry_FreeRedisInstrumentation__ctor_FreeRedis_OpenTelemetry_DiagnosticListener_
-  commentId: M:FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedisInstrumentation.#ctor(FreeRedis.OpenTelemetry.DiagnosticListener)
-  fullName: FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedisInstrumentation.FreeRedisInstrumentation(FreeRedis.OpenTelemetry.DiagnosticListener)
+  href: docs/api/FreeRedis.OpenTelemetry.FreeRedisInstrumentation.html#FreeRedis_OpenTelemetry_FreeRedisInstrumentation__ctor_FreeRedis_OpenTelemetry_DiagnosticListener_
+  commentId: M:FreeRedis.OpenTelemetry.FreeRedisInstrumentation.#ctor(FreeRedis.OpenTelemetry.DiagnosticListener)
+  fullName: FreeRedis.OpenTelemetry.FreeRedisInstrumentation.FreeRedisInstrumentation(FreeRedis.OpenTelemetry.DiagnosticListener)
   nameWithType: FreeRedisInstrumentation.FreeRedisInstrumentation(DiagnosticListener)
-- uid: FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedisInstrumentation.#ctor*
+- uid: FreeRedis.OpenTelemetry.FreeRedisInstrumentation.#ctor*
   name: FreeRedisInstrumentation
-  href: docs/api/FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedisInstrumentation.html#FreeRedis_OpenTelemetry_FreeRedis_OpenTelemetry_FreeRedis_OpenTelemetry_FreeRedisInstrumentation__ctor_
-  commentId: Overload:FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedisInstrumentation.#ctor
+  href: docs/api/FreeRedis.OpenTelemetry.FreeRedisInstrumentation.html#FreeRedis_OpenTelemetry_FreeRedisInstrumentation__ctor_
+  commentId: Overload:FreeRedis.OpenTelemetry.FreeRedisInstrumentation.#ctor
   isSpec: "True"
-  fullName: FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedisInstrumentation.FreeRedisInstrumentation
+  fullName: FreeRedis.OpenTelemetry.FreeRedisInstrumentation.FreeRedisInstrumentation
   nameWithType: FreeRedisInstrumentation.FreeRedisInstrumentation
-- uid: FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedisInstrumentation.Dispose
+- uid: FreeRedis.OpenTelemetry.FreeRedisInstrumentation.Dispose
   name: Dispose()
-  href: docs/api/FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedisInstrumentation.html#FreeRedis_OpenTelemetry_FreeRedis_OpenTelemetry_FreeRedis_OpenTelemetry_FreeRedisInstrumentation_Dispose
-  commentId: M:FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedisInstrumentation.Dispose
-  fullName: FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedisInstrumentation.Dispose()
+  href: docs/api/FreeRedis.OpenTelemetry.FreeRedisInstrumentation.html#FreeRedis_OpenTelemetry_FreeRedisInstrumentation_Dispose
+  commentId: M:FreeRedis.OpenTelemetry.FreeRedisInstrumentation.Dispose
+  fullName: FreeRedis.OpenTelemetry.FreeRedisInstrumentation.Dispose()
   nameWithType: FreeRedisInstrumentation.Dispose()
-- uid: FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedisInstrumentation.Dispose*
+- uid: FreeRedis.OpenTelemetry.FreeRedisInstrumentation.Dispose*
   name: Dispose
-  href: docs/api/FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedisInstrumentation.html#FreeRedis_OpenTelemetry_FreeRedis_OpenTelemetry_FreeRedis_OpenTelemetry_FreeRedisInstrumentation_Dispose_
-  commentId: Overload:FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedisInstrumentation.Dispose
+  href: docs/api/FreeRedis.OpenTelemetry.FreeRedisInstrumentation.html#FreeRedis_OpenTelemetry_FreeRedisInstrumentation_Dispose_
+  commentId: Overload:FreeRedis.OpenTelemetry.FreeRedisInstrumentation.Dispose
   isSpec: "True"
-  fullName: FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedis.OpenTelemetry.FreeRedisInstrumentation.Dispose
+  fullName: FreeRedis.OpenTelemetry.FreeRedisInstrumentation.Dispose
   nameWithType: FreeRedisInstrumentation.Dispose
+- uid: FreeRedis.OpenTelemetry.TracerProviderBuilderExtensions
+  name: TracerProviderBuilderExtensions
+  href: docs/api/FreeRedis.OpenTelemetry.TracerProviderBuilderExtensions.html
+  commentId: T:FreeRedis.OpenTelemetry.TracerProviderBuilderExtensions
+  fullName: FreeRedis.OpenTelemetry.TracerProviderBuilderExtensions
+  nameWithType: TracerProviderBuilderExtensions
+- uid: FreeRedis.OpenTelemetry.TracerProviderBuilderExtensions.AddFreeRedisInstrumentation(TracerProviderBuilder,FreeRedis.RedisClient)
+  name: AddFreeRedisInstrumentation(TracerProviderBuilder, RedisClient)
+  href: docs/api/FreeRedis.OpenTelemetry.TracerProviderBuilderExtensions.html#FreeRedis_OpenTelemetry_TracerProviderBuilderExtensions_AddFreeRedisInstrumentation_TracerProviderBuilder_FreeRedis_RedisClient_
+  commentId: M:FreeRedis.OpenTelemetry.TracerProviderBuilderExtensions.AddFreeRedisInstrumentation(TracerProviderBuilder,FreeRedis.RedisClient)
+  fullName: FreeRedis.OpenTelemetry.TracerProviderBuilderExtensions.AddFreeRedisInstrumentation(TracerProviderBuilder, FreeRedis.RedisClient)
+  nameWithType: TracerProviderBuilderExtensions.AddFreeRedisInstrumentation(TracerProviderBuilder, RedisClient)
+- uid: FreeRedis.OpenTelemetry.TracerProviderBuilderExtensions.AddFreeRedisInstrumentation*
+  name: AddFreeRedisInstrumentation
+  href: docs/api/FreeRedis.OpenTelemetry.TracerProviderBuilderExtensions.html#FreeRedis_OpenTelemetry_TracerProviderBuilderExtensions_AddFreeRedisInstrumentation_
+  commentId: Overload:FreeRedis.OpenTelemetry.TracerProviderBuilderExtensions.AddFreeRedisInstrumentation
+  isSpec: "True"
+  fullName: FreeRedis.OpenTelemetry.TracerProviderBuilderExtensions.AddFreeRedisInstrumentation
+  nameWithType: TracerProviderBuilderExtensions.AddFreeRedisInstrumentation
 - uid: FreeRedis.RedisClient
   name: RedisClient
   href: docs/api/FreeRedis.RedisClient.html
