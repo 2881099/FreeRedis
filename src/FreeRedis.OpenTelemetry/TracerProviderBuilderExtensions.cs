@@ -1,25 +1,28 @@
 ﻿using OpenTelemetry.Trace;
+using System;
 using System.Diagnostics;
 
-namespace FreeRedis.OpenTelemetry;
-
-public static class TracerProviderBuilderExtensions
+namespace FreeRedis.OpenTelemetry
 {
-    public static TracerProviderBuilder AddFreeRedisInstrumentation(this TracerProviderBuilder builder, RedisClient redisClient)
+
+    public static class TracerProviderBuilderExtensions
     {
-        if (builder == null) throw new ArgumentNullException(nameof(builder));
-        if (redisClient == null) throw new ArgumentNullException(nameof(redisClient));
-
-        redisClient.Notice += (s, e) =>
+        public static TracerProviderBuilder AddFreeRedisInstrumentation(this TracerProviderBuilder builder, RedisClient redisClient)
         {
-            if (Debugger.IsAttached)
-                Debug.WriteLine(e.Log);
-        };
+            if (builder == null) throw new ArgumentNullException(nameof(builder));
+            if (redisClient == null) throw new ArgumentNullException(nameof(redisClient));
 
-        builder.AddSource(DiagnosticListener.SourceName);
+            redisClient.Notice += (s, e) =>
+            {
+                if (Debugger.IsAttached)
+                    Debug.WriteLine(e.Log);
+            };
 
-        var instrumentation = new FreeRedisInstrumentation(new DiagnosticListener());
+            builder.AddSource(DiagnosticListener.SourceName);
 
-        return builder.AddInstrumentation(() => instrumentation);
+            var instrumentation = new FreeRedisInstrumentation(new DiagnosticListener());
+
+            return builder.AddInstrumentation(() => instrumentation);
+        }
     }
 }

@@ -23,11 +23,8 @@ namespace FreeRedis
         }
 
         public NoticeType NoticeType { get; }
-
         public Exception Exception { get; }
-
         public string Log { get; }
-
         public object Tag { get; }
     }
 
@@ -41,9 +38,7 @@ namespace FreeRedis
         }
 
         public string Host { get; }
-
         public RedisClientPool Pool { get; }
-
         public RedisClient Client { get; }
     }
 
@@ -57,9 +52,7 @@ namespace FreeRedis
         }
 
         public string Host { get; }
-
         public RedisClientPool Pool { get; }
-
         public RedisClient Client { get; }
     }
 
@@ -72,14 +65,12 @@ namespace FreeRedis
         }
 
         public string Host { get; }
-
         public RedisClientPool Pool { get; }
     }
 
     public interface IInterceptor
     {
         void Before(InterceptorBeforeEventArgs args);
-
         void After(InterceptorAfterEventArgs args);
     }
 
@@ -95,13 +86,9 @@ namespace FreeRedis
         }
 
         public long? OperationTimestamp { get; set; }
-
         public RedisClient Client { get; }
-
         public CommandPacket Command { get; }
-
         public Type ValueType { get; }
-
         public object Value
         {
             get => _value;
@@ -111,7 +98,6 @@ namespace FreeRedis
                 ValueIsChanged = true;
             }
         }
-
         public bool ValueIsChanged { get; private set; }
     }
 
@@ -129,17 +115,11 @@ namespace FreeRedis
         }
 
         public long? OperationTimestamp { get; set; }
-
         public RedisClient Client { get; }
-
         public CommandPacket Command { get; }
-
         public Type ValueType { get; }
-
         public object Value { get; }
-
         public Exception Exception { get; }
-
         public long ElapsedMilliseconds { get; }
     }
 

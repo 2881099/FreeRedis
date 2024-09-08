@@ -1,18 +1,22 @@
-﻿namespace FreeRedis.OpenTelemetry;
+﻿using System;
 
-public class FreeRedisInstrumentation : IDisposable
+namespace FreeRedis.OpenTelemetry
 {
-    private readonly DiagnosticSourceSubscriber? _diagnosticSourceSubscriber;
 
-    public FreeRedisInstrumentation(DiagnosticListener diagnosticListener)
+    public class FreeRedisInstrumentation : IDisposable
     {
-        _diagnosticSourceSubscriber = new DiagnosticSourceSubscriber(diagnosticListener, null);
-        _diagnosticSourceSubscriber.Subscribe();
-    }
+        private readonly DiagnosticSourceSubscriber? _diagnosticSourceSubscriber;
 
-    /// <inheritdoc />
-    public void Dispose()
-    {
-        _diagnosticSourceSubscriber?.Dispose();
+        public FreeRedisInstrumentation(DiagnosticListener diagnosticListener)
+        {
+            _diagnosticSourceSubscriber = new DiagnosticSourceSubscriber(diagnosticListener, null);
+            _diagnosticSourceSubscriber.Subscribe();
+        }
+
+        /// <inheritdoc />
+        public void Dispose()
+        {
+            _diagnosticSourceSubscriber?.Dispose();
+        }
     }
 }

@@ -1,17 +1,36 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFrameworks>net80</TargetFrameworks>
+		<AssemblyName>FreeRedis.OpenTelemetry</AssemblyName>
+		<PackageId>FreeRedis.OpenTelemetry</PackageId>
+		<RootNamespace>FreeRedis.OpenTelemetry</RootNamespace>
+		<Version>1.3.2</Version>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<PackageProjectUrl>https://github.com/2881099/FreeRedis</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/2881099/FreeRedis</RepositoryUrl>
+		<PackageTags>FreeRedis redis-trib cluster rediscluster sentinel OpenTelemetry</PackageTags>
+		<RepositoryType>git</RepositoryType>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<Title>$(AssemblyName)</Title>
+		<IsPackable>true</IsPackable>
+		<GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+		<WarningLevel>3</WarningLevel>
+		<SignAssembly>true</SignAssembly>
+		<AssemblyOriginatorKeyFile>key.snk</AssemblyOriginatorKeyFile>
+		<DelaySign>false</DelaySign>
+		<PackageReadmeFile>readme.md</PackageReadmeFile>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="OpenTelemetry" Version="1.9.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="OpenTelemetry" Version="1.9.0" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\FreeRedis\FreeRedis.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<None Include="../../readme.md" Pack="true" PackagePath="\"/>
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\FreeRedis\FreeRedis.csproj" />
+	</ItemGroup>
 
 </Project>
