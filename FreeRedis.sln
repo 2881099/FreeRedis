@@ -41,8 +41,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "console_net8_client_side_ca
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "console_net8_norman", "examples\console_net8_norman\console_net8_norman.csproj", "{D6DF0DBA-F181-4F1C-B6AD-9D71A01A4431}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "console_net452_vs", "examples\console_net452_vs\console_net452_vs.csproj", "{7AC68251-83D4-423F-849C-04BD89F4BDFB}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FreeRedis.DistributedCache", "src\FreeRedis.DistributedCache\FreeRedis.DistributedCache.csproj", "{B0B0B55E-4D41-4419-83FE-309F72699A3A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "console_net8_cluster_client_side_caching", "examples\console_net8_cluster_client_side_caching\console_net8_cluster_client_side_caching.csproj", "{1C4387AA-C4BD-4388-97D1-3A769439705D}"
