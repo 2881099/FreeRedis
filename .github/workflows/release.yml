@@ -14,12 +14,17 @@ jobs:
     if: github.repository_owner == '2881099'
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
-      - name: Setup .NET Core
-        uses: actions/setup-dotnet@v1
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 3.1.300
+          dotnet-version: | 
+            3.1.x
+            5.0.x
+            6.0.x
+            7.0.x
+            8.0.x
 
       - name: Package and publish to Nuget📦
         run: |
