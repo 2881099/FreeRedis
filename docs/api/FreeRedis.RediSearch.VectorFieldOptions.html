@@ -5,10 +5,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Class FtSearchParams.FilterInfo
+    <title>Class VectorFieldOptions
    </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Class FtSearchParams.FilterInfo
+    <meta name="title" content="Class VectorFieldOptions
    ">
     <meta name="generator" content="docfx 2.59.4.0">
     
@@ -68,17 +68,17 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="FreeRedis.FtSearchParams.FilterInfo">
+            <article class="content wrap" id="_content" data-uid="FreeRedis.RediSearch.VectorFieldOptions">
   
   
-  <h1 id="FreeRedis_FtSearchParams_FilterInfo" data-uid="FreeRedis.FtSearchParams.FilterInfo" class="text-break">Class FtSearchParams.FilterInfo
+  <h1 id="FreeRedis_RediSearch_VectorFieldOptions" data-uid="FreeRedis.RediSearch.VectorFieldOptions" class="text-break">Class VectorFieldOptions
   </h1>
   <div class="markdown level0 summary"></div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
-    <div class="level1"><span class="xref">FtSearchParams.FilterInfo</span></div>
+    <div class="level1"><span class="xref">VectorFieldOptions</span></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
@@ -104,62 +104,48 @@
       <span class="xref">System.Object.MemberwiseClone()</span>
     </div>
   </div>
-  <h6><strong>Namespace</strong>: <a class="xref" href="FreeRedis.html">FreeRedis</a></h6>
+  <h6><strong>Namespace</strong>: <a class="xref" href="FreeRedis.RediSearch.html">FreeRedis.RediSearch</a></h6>
   <h6><strong>Assembly</strong>: cs.temp.dll.dll</h6>
-  <h5 id="FreeRedis_FtSearchParams_FilterInfo_syntax">Syntax</h5>
+  <h5 id="FreeRedis_RediSearch_VectorFieldOptions_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class FilterInfo</code></pre>
+    <pre><code class="lang-csharp hljs">public class VectorFieldOptions</code></pre>
   </div>
-  <h3 id="constructors">Constructors
-  </h3>
-  
-  
-  <a id="FreeRedis_FtSearchParams_FilterInfo__ctor_" data-uid="FreeRedis.FtSearchParams.FilterInfo.#ctor*"></a>
-  <h4 id="FreeRedis_FtSearchParams_FilterInfo__ctor_System_String_System_String_System_String_" data-uid="FreeRedis.FtSearchParams.FilterInfo.#ctor(System.String,System.String,System.String)">FilterInfo(String, String, String)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public FilterInfo(string field, string min, string max)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">field</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">min</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">max</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
   <h3 id="properties">Properties
   </h3>
   
   
-  <a id="FreeRedis_FtSearchParams_FilterInfo_Field_" data-uid="FreeRedis.FtSearchParams.FilterInfo.Field*"></a>
-  <h4 id="FreeRedis_FtSearchParams_FilterInfo_Field" data-uid="FreeRedis.FtSearchParams.FilterInfo.Field">Field</h4>
+  <a id="FreeRedis_RediSearch_VectorFieldOptions_Algorithm_" data-uid="FreeRedis.RediSearch.VectorFieldOptions.Algorithm*"></a>
+  <h4 id="FreeRedis_RediSearch_VectorFieldOptions_Algorithm" data-uid="FreeRedis.RediSearch.VectorFieldOptions.Algorithm">Algorithm</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string Field { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public VectorAlgo Algorithm { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="FreeRedis.RediSearch.VectorAlgo.html">VectorAlgo</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="FreeRedis_RediSearch_VectorFieldOptions_Alias_" data-uid="FreeRedis.RediSearch.VectorFieldOptions.Alias*"></a>
+  <h4 id="FreeRedis_RediSearch_VectorFieldOptions_Alias" data-uid="FreeRedis.RediSearch.VectorFieldOptions.Alias">Alias</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string Alias { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -178,13 +164,13 @@
   </table>
   
   
-  <a id="FreeRedis_FtSearchParams_FilterInfo_Max_" data-uid="FreeRedis.FtSearchParams.FilterInfo.Max*"></a>
-  <h4 id="FreeRedis_FtSearchParams_FilterInfo_Max" data-uid="FreeRedis.FtSearchParams.FilterInfo.Max">Max</h4>
+  <a id="FreeRedis_RediSearch_VectorFieldOptions_Attributes_" data-uid="FreeRedis.RediSearch.VectorFieldOptions.Attributes*"></a>
+  <h4 id="FreeRedis_RediSearch_VectorFieldOptions_Attributes" data-uid="FreeRedis.RediSearch.VectorFieldOptions.Attributes">Attributes</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string Max { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Dictionary&lt;string, object&gt; Attributes { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -196,20 +182,20 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.String</span></td>
+        <td><span class="xref">System.Collections.Generic.Dictionary</span>&lt;<span class="xref">System.String</span>, <span class="xref">System.Object</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
   </table>
   
   
-  <a id="FreeRedis_FtSearchParams_FilterInfo_Min_" data-uid="FreeRedis.FtSearchParams.FilterInfo.Min*"></a>
-  <h4 id="FreeRedis_FtSearchParams_FilterInfo_Min" data-uid="FreeRedis.FtSearchParams.FilterInfo.Min">Min</h4>
+  <a id="FreeRedis_RediSearch_VectorFieldOptions_MissingIndex_" data-uid="FreeRedis.RediSearch.VectorFieldOptions.MissingIndex*"></a>
+  <h4 id="FreeRedis_RediSearch_VectorFieldOptions_MissingIndex" data-uid="FreeRedis.RediSearch.VectorFieldOptions.MissingIndex">MissingIndex</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string Min { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public bool MissingIndex { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -221,7 +207,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.String</span></td>
+        <td><span class="xref">System.Boolean</span></td>
         <td></td>
       </tr>
     </tbody>

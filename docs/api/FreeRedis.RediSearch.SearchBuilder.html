@@ -5,10 +5,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Class FtSearchBuilder
+    <title>Class SearchBuilder
    </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Class FtSearchBuilder
+    <meta name="title" content="Class SearchBuilder
    ">
     <meta name="generator" content="docfx 2.59.4.0">
     
@@ -68,17 +68,17 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="FreeRedis.FtSearchBuilder">
+            <article class="content wrap" id="_content" data-uid="FreeRedis.RediSearch.SearchBuilder">
   
   
-  <h1 id="FreeRedis_FtSearchBuilder" data-uid="FreeRedis.FtSearchBuilder" class="text-break">Class FtSearchBuilder
+  <h1 id="FreeRedis_RediSearch_SearchBuilder" data-uid="FreeRedis.RediSearch.SearchBuilder" class="text-break">Class SearchBuilder
   </h1>
   <div class="markdown level0 summary"></div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
-    <div class="level1"><span class="xref">FtSearchBuilder</span></div>
+    <div class="level1"><span class="xref">SearchBuilder</span></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
@@ -104,23 +104,23 @@
       <span class="xref">System.Object.MemberwiseClone()</span>
     </div>
   </div>
-  <h6><strong>Namespace</strong>: <a class="xref" href="FreeRedis.html">FreeRedis</a></h6>
+  <h6><strong>Namespace</strong>: <a class="xref" href="FreeRedis.RediSearch.html">FreeRedis.RediSearch</a></h6>
   <h6><strong>Assembly</strong>: cs.temp.dll.dll</h6>
-  <h5 id="FreeRedis_FtSearchBuilder_syntax">Syntax</h5>
+  <h5 id="FreeRedis_RediSearch_SearchBuilder_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class FtSearchBuilder</code></pre>
+    <pre><code class="lang-csharp hljs">public class SearchBuilder</code></pre>
   </div>
   <h3 id="methods">Methods
   </h3>
   
   
-  <a id="FreeRedis_FtSearchBuilder_Dialect_" data-uid="FreeRedis.FtSearchBuilder.Dialect*"></a>
-  <h4 id="FreeRedis_FtSearchBuilder_Dialect_System_Int32_" data-uid="FreeRedis.FtSearchBuilder.Dialect(System.Int32)">Dialect(Int32)</h4>
+  <a id="FreeRedis_RediSearch_SearchBuilder_Dialect_" data-uid="FreeRedis.RediSearch.SearchBuilder.Dialect*"></a>
+  <h4 id="FreeRedis_RediSearch_SearchBuilder_Dialect_System_Int32_" data-uid="FreeRedis.RediSearch.SearchBuilder.Dialect(System.Int32)">Dialect(Int32)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public FtSearchBuilder Dialect(int value)</code></pre>
+    <pre><code class="lang-csharp hljs">public SearchBuilder Dialect(int value)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -149,20 +149,45 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="FreeRedis.FtSearchBuilder.html">FtSearchBuilder</a></td>
+        <td><a class="xref" href="FreeRedis.RediSearch.SearchBuilder.html">SearchBuilder</a></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   
   
-  <a id="FreeRedis_FtSearchBuilder_Expander_" data-uid="FreeRedis.FtSearchBuilder.Expander*"></a>
-  <h4 id="FreeRedis_FtSearchBuilder_Expander_System_String_" data-uid="FreeRedis.FtSearchBuilder.Expander(System.String)">Expander(String)</h4>
+  <a id="FreeRedis_RediSearch_SearchBuilder_Execute_" data-uid="FreeRedis.RediSearch.SearchBuilder.Execute*"></a>
+  <h4 id="FreeRedis_RediSearch_SearchBuilder_Execute" data-uid="FreeRedis.RediSearch.SearchBuilder.Execute">Execute()</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public FtSearchBuilder Expander(string value)</code></pre>
+    <pre><code class="lang-csharp hljs">public List&lt;Document&gt; Execute()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="FreeRedis.RediSearch.Document.html">Document</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="FreeRedis_RediSearch_SearchBuilder_Expander_" data-uid="FreeRedis.RediSearch.SearchBuilder.Expander*"></a>
+  <h4 id="FreeRedis_RediSearch_SearchBuilder_Expander_System_String_" data-uid="FreeRedis.RediSearch.SearchBuilder.Expander(System.String)">Expander(String)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public SearchBuilder Expander(string value)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -191,20 +216,20 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="FreeRedis.FtSearchBuilder.html">FtSearchBuilder</a></td>
+        <td><a class="xref" href="FreeRedis.RediSearch.SearchBuilder.html">SearchBuilder</a></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   
   
-  <a id="FreeRedis_FtSearchBuilder_ExplainScore_" data-uid="FreeRedis.FtSearchBuilder.ExplainScore*"></a>
-  <h4 id="FreeRedis_FtSearchBuilder_ExplainScore_System_Boolean_" data-uid="FreeRedis.FtSearchBuilder.ExplainScore(System.Boolean)">ExplainScore(Boolean)</h4>
+  <a id="FreeRedis_RediSearch_SearchBuilder_ExplainScore_" data-uid="FreeRedis.RediSearch.SearchBuilder.ExplainScore*"></a>
+  <h4 id="FreeRedis_RediSearch_SearchBuilder_ExplainScore_System_Boolean_" data-uid="FreeRedis.RediSearch.SearchBuilder.ExplainScore(System.Boolean)">ExplainScore(Boolean)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public FtSearchBuilder ExplainScore(bool value)</code></pre>
+    <pre><code class="lang-csharp hljs">public SearchBuilder ExplainScore(bool value = true)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -233,20 +258,20 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="FreeRedis.FtSearchBuilder.html">FtSearchBuilder</a></td>
+        <td><a class="xref" href="FreeRedis.RediSearch.SearchBuilder.html">SearchBuilder</a></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   
   
-  <a id="FreeRedis_FtSearchBuilder_Filter_" data-uid="FreeRedis.FtSearchBuilder.Filter*"></a>
-  <h4 id="FreeRedis_FtSearchBuilder_Filter_System_String_System_String_System_String_" data-uid="FreeRedis.FtSearchBuilder.Filter(System.String,System.String,System.String)">Filter(String, String, String)</h4>
+  <a id="FreeRedis_RediSearch_SearchBuilder_Filter_" data-uid="FreeRedis.RediSearch.SearchBuilder.Filter*"></a>
+  <h4 id="FreeRedis_RediSearch_SearchBuilder_Filter_System_String_System_Object_System_Object_" data-uid="FreeRedis.RediSearch.SearchBuilder.Filter(System.String,System.Object,System.Object)">Filter(String, Object, Object)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public FtSearchBuilder Filter(string field, string min, string max)</code></pre>
+    <pre><code class="lang-csharp hljs">public SearchBuilder Filter(string field, object min, object max)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -264,12 +289,12 @@
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">System.String</span></td>
+        <td><span class="xref">System.Object</span></td>
         <td><span class="parametername">min</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">System.String</span></td>
+        <td><span class="xref">System.Object</span></td>
         <td><span class="parametername">max</span></td>
         <td></td>
       </tr>
@@ -285,20 +310,20 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="FreeRedis.FtSearchBuilder.html">FtSearchBuilder</a></td>
+        <td><a class="xref" href="FreeRedis.RediSearch.SearchBuilder.html">SearchBuilder</a></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   
   
-  <a id="FreeRedis_FtSearchBuilder_GeoFilter_" data-uid="FreeRedis.FtSearchBuilder.GeoFilter*"></a>
-  <h4 id="FreeRedis_FtSearchBuilder_GeoFilter_System_String_System_String_System_String_System_Decimal_FreeRedis_GeoUnit_" data-uid="FreeRedis.FtSearchBuilder.GeoFilter(System.String,System.String,System.String,System.Decimal,FreeRedis.GeoUnit)">GeoFilter(String, String, String, Decimal, GeoUnit)</h4>
+  <a id="FreeRedis_RediSearch_SearchBuilder_GeoFilter_" data-uid="FreeRedis.RediSearch.SearchBuilder.GeoFilter*"></a>
+  <h4 id="FreeRedis_RediSearch_SearchBuilder_GeoFilter_System_String_System_Decimal_System_Decimal_System_Decimal_FreeRedis_GeoUnit_" data-uid="FreeRedis.RediSearch.SearchBuilder.GeoFilter(System.String,System.Decimal,System.Decimal,System.Decimal,FreeRedis.GeoUnit)">GeoFilter(String, Decimal, Decimal, Decimal, GeoUnit)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public FtSearchBuilder GeoFilter(string field, string lon, string lat, decimal radius, GeoUnit unit = GeoUnit.m)</code></pre>
+    <pre><code class="lang-csharp hljs">public SearchBuilder GeoFilter(string field, decimal lon, decimal lat, decimal radius, GeoUnit unit = GeoUnit.m)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -316,12 +341,12 @@
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">System.String</span></td>
+        <td><span class="xref">System.Decimal</span></td>
         <td><span class="parametername">lon</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">System.String</span></td>
+        <td><span class="xref">System.Decimal</span></td>
         <td><span class="parametername">lat</span></td>
         <td></td>
       </tr>
@@ -347,20 +372,20 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="FreeRedis.FtSearchBuilder.html">FtSearchBuilder</a></td>
+        <td><a class="xref" href="FreeRedis.RediSearch.SearchBuilder.html">SearchBuilder</a></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   
   
-  <a id="FreeRedis_FtSearchBuilder_HighLight_" data-uid="FreeRedis.FtSearchBuilder.HighLight*"></a>
-  <h4 id="FreeRedis_FtSearchBuilder_HighLight_System_String___System_String_System_String_" data-uid="FreeRedis.FtSearchBuilder.HighLight(System.String[],System.String,System.String)">HighLight(String[], String, String)</h4>
+  <a id="FreeRedis_RediSearch_SearchBuilder_HighLight_" data-uid="FreeRedis.RediSearch.SearchBuilder.HighLight*"></a>
+  <h4 id="FreeRedis_RediSearch_SearchBuilder_HighLight_System_String___System_String_System_String_" data-uid="FreeRedis.RediSearch.SearchBuilder.HighLight(System.String[],System.String,System.String)">HighLight(String[], String, String)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public FtSearchBuilder HighLight(string[] fields, string tagsOpen, string tagsClose)</code></pre>
+    <pre><code class="lang-csharp hljs">public SearchBuilder HighLight(string[] fields, string tagsOpen, string tagsClose)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -399,20 +424,20 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="FreeRedis.FtSearchBuilder.html">FtSearchBuilder</a></td>
+        <td><a class="xref" href="FreeRedis.RediSearch.SearchBuilder.html">SearchBuilder</a></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   
   
-  <a id="FreeRedis_FtSearchBuilder_InFields_" data-uid="FreeRedis.FtSearchBuilder.InFields*"></a>
-  <h4 id="FreeRedis_FtSearchBuilder_InFields_System_String___" data-uid="FreeRedis.FtSearchBuilder.InFields(System.String[])">InFields(String[])</h4>
+  <a id="FreeRedis_RediSearch_SearchBuilder_InFields_" data-uid="FreeRedis.RediSearch.SearchBuilder.InFields*"></a>
+  <h4 id="FreeRedis_RediSearch_SearchBuilder_InFields_System_String___" data-uid="FreeRedis.RediSearch.SearchBuilder.InFields(System.String[])">InFields(String[])</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public FtSearchBuilder InFields(params string[] field)</code></pre>
+    <pre><code class="lang-csharp hljs">public SearchBuilder InFields(params string[] fields)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -426,7 +451,7 @@
     <tbody>
       <tr>
         <td><span class="xref">System.String</span>[]</td>
-        <td><span class="parametername">field</span></td>
+        <td><span class="parametername">fields</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -441,20 +466,20 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="FreeRedis.FtSearchBuilder.html">FtSearchBuilder</a></td>
+        <td><a class="xref" href="FreeRedis.RediSearch.SearchBuilder.html">SearchBuilder</a></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   
   
-  <a id="FreeRedis_FtSearchBuilder_InKeys_" data-uid="FreeRedis.FtSearchBuilder.InKeys*"></a>
-  <h4 id="FreeRedis_FtSearchBuilder_InKeys_System_String___" data-uid="FreeRedis.FtSearchBuilder.InKeys(System.String[])">InKeys(String[])</h4>
+  <a id="FreeRedis_RediSearch_SearchBuilder_InKeys_" data-uid="FreeRedis.RediSearch.SearchBuilder.InKeys*"></a>
+  <h4 id="FreeRedis_RediSearch_SearchBuilder_InKeys_System_String___" data-uid="FreeRedis.RediSearch.SearchBuilder.InKeys(System.String[])">InKeys(String[])</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public FtSearchBuilder InKeys(params string[] key)</code></pre>
+    <pre><code class="lang-csharp hljs">public SearchBuilder InKeys(params string[] keys)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -468,7 +493,7 @@
     <tbody>
       <tr>
         <td><span class="xref">System.String</span>[]</td>
-        <td><span class="parametername">key</span></td>
+        <td><span class="parametername">keys</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -483,20 +508,20 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="FreeRedis.FtSearchBuilder.html">FtSearchBuilder</a></td>
+        <td><a class="xref" href="FreeRedis.RediSearch.SearchBuilder.html">SearchBuilder</a></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   
   
-  <a id="FreeRedis_FtSearchBuilder_InOrder_" data-uid="FreeRedis.FtSearchBuilder.InOrder*"></a>
-  <h4 id="FreeRedis_FtSearchBuilder_InOrder_System_Boolean_" data-uid="FreeRedis.FtSearchBuilder.InOrder(System.Boolean)">InOrder(Boolean)</h4>
+  <a id="FreeRedis_RediSearch_SearchBuilder_InOrder_" data-uid="FreeRedis.RediSearch.SearchBuilder.InOrder*"></a>
+  <h4 id="FreeRedis_RediSearch_SearchBuilder_InOrder_System_Boolean_" data-uid="FreeRedis.RediSearch.SearchBuilder.InOrder(System.Boolean)">InOrder(Boolean)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public FtSearchBuilder InOrder(bool value = true)</code></pre>
+    <pre><code class="lang-csharp hljs">public SearchBuilder InOrder(bool value = true)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -525,20 +550,20 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="FreeRedis.FtSearchBuilder.html">FtSearchBuilder</a></td>
+        <td><a class="xref" href="FreeRedis.RediSearch.SearchBuilder.html">SearchBuilder</a></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   
   
-  <a id="FreeRedis_FtSearchBuilder_Language_" data-uid="FreeRedis.FtSearchBuilder.Language*"></a>
-  <h4 id="FreeRedis_FtSearchBuilder_Language_System_String_" data-uid="FreeRedis.FtSearchBuilder.Language(System.String)">Language(String)</h4>
+  <a id="FreeRedis_RediSearch_SearchBuilder_Language_" data-uid="FreeRedis.RediSearch.SearchBuilder.Language*"></a>
+  <h4 id="FreeRedis_RediSearch_SearchBuilder_Language_System_String_" data-uid="FreeRedis.RediSearch.SearchBuilder.Language(System.String)">Language(String)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public FtSearchBuilder Language(string value)</code></pre>
+    <pre><code class="lang-csharp hljs">public SearchBuilder Language(string value)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -567,20 +592,20 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="FreeRedis.FtSearchBuilder.html">FtSearchBuilder</a></td>
+        <td><a class="xref" href="FreeRedis.RediSearch.SearchBuilder.html">SearchBuilder</a></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   
   
-  <a id="FreeRedis_FtSearchBuilder_Limit_" data-uid="FreeRedis.FtSearchBuilder.Limit*"></a>
-  <h4 id="FreeRedis_FtSearchBuilder_Limit_System_Int64_System_Int64_" data-uid="FreeRedis.FtSearchBuilder.Limit(System.Int64,System.Int64)">Limit(Int64, Int64)</h4>
+  <a id="FreeRedis_RediSearch_SearchBuilder_Limit_" data-uid="FreeRedis.RediSearch.SearchBuilder.Limit*"></a>
+  <h4 id="FreeRedis_RediSearch_SearchBuilder_Limit_System_Int64_System_Int64_" data-uid="FreeRedis.RediSearch.SearchBuilder.Limit(System.Int64,System.Int64)">Limit(Int64, Int64)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public FtSearchBuilder Limit(long offset, long num)</code></pre>
+    <pre><code class="lang-csharp hljs">public SearchBuilder Limit(long offset, long num)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -614,20 +639,20 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="FreeRedis.FtSearchBuilder.html">FtSearchBuilder</a></td>
+        <td><a class="xref" href="FreeRedis.RediSearch.SearchBuilder.html">SearchBuilder</a></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   
   
-  <a id="FreeRedis_FtSearchBuilder_NoContent_" data-uid="FreeRedis.FtSearchBuilder.NoContent*"></a>
-  <h4 id="FreeRedis_FtSearchBuilder_NoContent_System_Boolean_" data-uid="FreeRedis.FtSearchBuilder.NoContent(System.Boolean)">NoContent(Boolean)</h4>
+  <a id="FreeRedis_RediSearch_SearchBuilder_NoContent_" data-uid="FreeRedis.RediSearch.SearchBuilder.NoContent*"></a>
+  <h4 id="FreeRedis_RediSearch_SearchBuilder_NoContent_System_Boolean_" data-uid="FreeRedis.RediSearch.SearchBuilder.NoContent(System.Boolean)">NoContent(Boolean)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public FtSearchBuilder NoContent(bool value = true)</code></pre>
+    <pre><code class="lang-csharp hljs">public SearchBuilder NoContent(bool value = true)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -656,20 +681,20 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="FreeRedis.FtSearchBuilder.html">FtSearchBuilder</a></td>
+        <td><a class="xref" href="FreeRedis.RediSearch.SearchBuilder.html">SearchBuilder</a></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   
   
-  <a id="FreeRedis_FtSearchBuilder_NoStopWords_" data-uid="FreeRedis.FtSearchBuilder.NoStopWords*"></a>
-  <h4 id="FreeRedis_FtSearchBuilder_NoStopWords_System_Boolean_" data-uid="FreeRedis.FtSearchBuilder.NoStopWords(System.Boolean)">NoStopWords(Boolean)</h4>
+  <a id="FreeRedis_RediSearch_SearchBuilder_NoStopwords_" data-uid="FreeRedis.RediSearch.SearchBuilder.NoStopwords*"></a>
+  <h4 id="FreeRedis_RediSearch_SearchBuilder_NoStopwords_System_Boolean_" data-uid="FreeRedis.RediSearch.SearchBuilder.NoStopwords(System.Boolean)">NoStopwords(Boolean)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public FtSearchBuilder NoStopWords(bool value = true)</code></pre>
+    <pre><code class="lang-csharp hljs">public SearchBuilder NoStopwords(bool value = true)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -698,20 +723,20 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="FreeRedis.FtSearchBuilder.html">FtSearchBuilder</a></td>
+        <td><a class="xref" href="FreeRedis.RediSearch.SearchBuilder.html">SearchBuilder</a></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   
   
-  <a id="FreeRedis_FtSearchBuilder_Params_" data-uid="FreeRedis.FtSearchBuilder.Params*"></a>
-  <h4 id="FreeRedis_FtSearchBuilder_Params_System_String_System_String_" data-uid="FreeRedis.FtSearchBuilder.Params(System.String,System.String)">Params(String, String)</h4>
+  <a id="FreeRedis_RediSearch_SearchBuilder_Params_" data-uid="FreeRedis.RediSearch.SearchBuilder.Params*"></a>
+  <h4 id="FreeRedis_RediSearch_SearchBuilder_Params_System_String_System_String_" data-uid="FreeRedis.RediSearch.SearchBuilder.Params(System.String,System.String)">Params(String, String)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public FtSearchBuilder Params(string name, string value)</code></pre>
+    <pre><code class="lang-csharp hljs">public SearchBuilder Params(string name, string value)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -745,20 +770,20 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="FreeRedis.FtSearchBuilder.html">FtSearchBuilder</a></td>
+        <td><a class="xref" href="FreeRedis.RediSearch.SearchBuilder.html">SearchBuilder</a></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   
   
-  <a id="FreeRedis_FtSearchBuilder_PayLoad_" data-uid="FreeRedis.FtSearchBuilder.PayLoad*"></a>
-  <h4 id="FreeRedis_FtSearchBuilder_PayLoad_System_String_" data-uid="FreeRedis.FtSearchBuilder.PayLoad(System.String)">PayLoad(String)</h4>
+  <a id="FreeRedis_RediSearch_SearchBuilder_Payload_" data-uid="FreeRedis.RediSearch.SearchBuilder.Payload*"></a>
+  <h4 id="FreeRedis_RediSearch_SearchBuilder_Payload_System_String_" data-uid="FreeRedis.RediSearch.SearchBuilder.Payload(System.String)">Payload(String)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public FtSearchBuilder PayLoad(string value)</code></pre>
+    <pre><code class="lang-csharp hljs">public SearchBuilder Payload(string value)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -787,20 +812,20 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="FreeRedis.FtSearchBuilder.html">FtSearchBuilder</a></td>
+        <td><a class="xref" href="FreeRedis.RediSearch.SearchBuilder.html">SearchBuilder</a></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   
   
-  <a id="FreeRedis_FtSearchBuilder_Return_" data-uid="FreeRedis.FtSearchBuilder.Return*"></a>
-  <h4 id="FreeRedis_FtSearchBuilder_Return_System_Collections_Generic_Dictionary_System_String_System_String__" data-uid="FreeRedis.FtSearchBuilder.Return(System.Collections.Generic.Dictionary{System.String,System.String})">Return(Dictionary&lt;String, String&gt;)</h4>
+  <a id="FreeRedis_RediSearch_SearchBuilder_Return_" data-uid="FreeRedis.RediSearch.SearchBuilder.Return*"></a>
+  <h4 id="FreeRedis_RediSearch_SearchBuilder_Return_System_Collections_Generic_KeyValuePair_System_String_System_String____" data-uid="FreeRedis.RediSearch.SearchBuilder.Return(System.Collections.Generic.KeyValuePair{System.String,System.String}[])">Return(KeyValuePair&lt;String, String&gt;[])</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public FtSearchBuilder Return(Dictionary&lt;string, string&gt; identifier)</code></pre>
+    <pre><code class="lang-csharp hljs">public SearchBuilder Return(params KeyValuePair&lt;string, string&gt;[] identifierProperties)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -813,8 +838,8 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.Dictionary</span>&lt;<span class="xref">System.String</span>, <span class="xref">System.String</span>&gt;</td>
-        <td><span class="parametername">identifier</span></td>
+        <td><span class="xref">System.Collections.Generic.KeyValuePair</span>&lt;<span class="xref">System.String</span>, <span class="xref">System.String</span>&gt;[]</td>
+        <td><span class="parametername">identifierProperties</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -829,20 +854,20 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="FreeRedis.FtSearchBuilder.html">FtSearchBuilder</a></td>
+        <td><a class="xref" href="FreeRedis.RediSearch.SearchBuilder.html">SearchBuilder</a></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   
   
-  <a id="FreeRedis_FtSearchBuilder_Return_" data-uid="FreeRedis.FtSearchBuilder.Return*"></a>
-  <h4 id="FreeRedis_FtSearchBuilder_Return_System_String___" data-uid="FreeRedis.FtSearchBuilder.Return(System.String[])">Return(String[])</h4>
+  <a id="FreeRedis_RediSearch_SearchBuilder_Return_" data-uid="FreeRedis.RediSearch.SearchBuilder.Return*"></a>
+  <h4 id="FreeRedis_RediSearch_SearchBuilder_Return_System_String___" data-uid="FreeRedis.RediSearch.SearchBuilder.Return(System.String[])">Return(String[])</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public FtSearchBuilder Return(params string[] identifier)</code></pre>
+    <pre><code class="lang-csharp hljs">public SearchBuilder Return(params string[] identifiers)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -856,7 +881,7 @@
     <tbody>
       <tr>
         <td><span class="xref">System.String</span>[]</td>
-        <td><span class="parametername">identifier</span></td>
+        <td><span class="parametername">identifiers</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -871,20 +896,20 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="FreeRedis.FtSearchBuilder.html">FtSearchBuilder</a></td>
+        <td><a class="xref" href="FreeRedis.RediSearch.SearchBuilder.html">SearchBuilder</a></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   
   
-  <a id="FreeRedis_FtSearchBuilder_Scorer_" data-uid="FreeRedis.FtSearchBuilder.Scorer*"></a>
-  <h4 id="FreeRedis_FtSearchBuilder_Scorer_System_String_" data-uid="FreeRedis.FtSearchBuilder.Scorer(System.String)">Scorer(String)</h4>
+  <a id="FreeRedis_RediSearch_SearchBuilder_Scorer_" data-uid="FreeRedis.RediSearch.SearchBuilder.Scorer*"></a>
+  <h4 id="FreeRedis_RediSearch_SearchBuilder_Scorer_System_String_" data-uid="FreeRedis.RediSearch.SearchBuilder.Scorer(System.String)">Scorer(String)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public FtSearchBuilder Scorer(string value)</code></pre>
+    <pre><code class="lang-csharp hljs">public SearchBuilder Scorer(string value)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -913,20 +938,20 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="FreeRedis.FtSearchBuilder.html">FtSearchBuilder</a></td>
+        <td><a class="xref" href="FreeRedis.RediSearch.SearchBuilder.html">SearchBuilder</a></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   
   
-  <a id="FreeRedis_FtSearchBuilder_Slop_" data-uid="FreeRedis.FtSearchBuilder.Slop*"></a>
-  <h4 id="FreeRedis_FtSearchBuilder_Slop_System_Decimal_" data-uid="FreeRedis.FtSearchBuilder.Slop(System.Decimal)">Slop(Decimal)</h4>
+  <a id="FreeRedis_RediSearch_SearchBuilder_Slop_" data-uid="FreeRedis.RediSearch.SearchBuilder.Slop*"></a>
+  <h4 id="FreeRedis_RediSearch_SearchBuilder_Slop_System_Decimal_" data-uid="FreeRedis.RediSearch.SearchBuilder.Slop(System.Decimal)">Slop(Decimal)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public FtSearchBuilder Slop(decimal value)</code></pre>
+    <pre><code class="lang-csharp hljs">public SearchBuilder Slop(decimal value)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -955,20 +980,20 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="FreeRedis.FtSearchBuilder.html">FtSearchBuilder</a></td>
+        <td><a class="xref" href="FreeRedis.RediSearch.SearchBuilder.html">SearchBuilder</a></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   
   
-  <a id="FreeRedis_FtSearchBuilder_SortBy_" data-uid="FreeRedis.FtSearchBuilder.SortBy*"></a>
-  <h4 id="FreeRedis_FtSearchBuilder_SortBy_System_String_System_Boolean_System_Boolean_" data-uid="FreeRedis.FtSearchBuilder.SortBy(System.String,System.Boolean,System.Boolean)">SortBy(String, Boolean, Boolean)</h4>
+  <a id="FreeRedis_RediSearch_SearchBuilder_SortBy_" data-uid="FreeRedis.RediSearch.SearchBuilder.SortBy*"></a>
+  <h4 id="FreeRedis_RediSearch_SearchBuilder_SortBy_System_String_System_Boolean_" data-uid="FreeRedis.RediSearch.SearchBuilder.SortBy(System.String,System.Boolean)">SortBy(String, Boolean)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public FtSearchBuilder SortBy(string sortBy, bool desc = false, bool withCount = false)</code></pre>
+    <pre><code class="lang-csharp hljs">public SearchBuilder SortBy(string sortBy, bool desc = false)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -990,11 +1015,6 @@
         <td><span class="parametername">desc</span></td>
         <td></td>
       </tr>
-      <tr>
-        <td><span class="xref">System.Boolean</span></td>
-        <td><span class="parametername">withCount</span></td>
-        <td></td>
-      </tr>
     </tbody>
   </table>
   <h5 class="returns">Returns</h5>
@@ -1007,20 +1027,20 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="FreeRedis.FtSearchBuilder.html">FtSearchBuilder</a></td>
+        <td><a class="xref" href="FreeRedis.RediSearch.SearchBuilder.html">SearchBuilder</a></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   
   
-  <a id="FreeRedis_FtSearchBuilder_Sumarize_" data-uid="FreeRedis.FtSearchBuilder.Sumarize*"></a>
-  <h4 id="FreeRedis_FtSearchBuilder_Sumarize_System_String___System_Int64_System_Int64_System_String_" data-uid="FreeRedis.FtSearchBuilder.Sumarize(System.String[],System.Int64,System.Int64,System.String)">Sumarize(String[], Int64, Int64, String)</h4>
+  <a id="FreeRedis_RediSearch_SearchBuilder_Sumarize_" data-uid="FreeRedis.RediSearch.SearchBuilder.Sumarize*"></a>
+  <h4 id="FreeRedis_RediSearch_SearchBuilder_Sumarize_System_String___System_Int64_System_Int64_System_String_" data-uid="FreeRedis.RediSearch.SearchBuilder.Sumarize(System.String[],System.Int64,System.Int64,System.String)">Sumarize(String[], Int64, Int64, String)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public FtSearchBuilder Sumarize(string[] fields, long frags, long len, string separator)</code></pre>
+    <pre><code class="lang-csharp hljs">public SearchBuilder Sumarize(string[] fields, long frags, long len, string separator)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -1064,20 +1084,20 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="FreeRedis.FtSearchBuilder.html">FtSearchBuilder</a></td>
+        <td><a class="xref" href="FreeRedis.RediSearch.SearchBuilder.html">SearchBuilder</a></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   
   
-  <a id="FreeRedis_FtSearchBuilder_Timeout_" data-uid="FreeRedis.FtSearchBuilder.Timeout*"></a>
-  <h4 id="FreeRedis_FtSearchBuilder_Timeout_System_Int64_" data-uid="FreeRedis.FtSearchBuilder.Timeout(System.Int64)">Timeout(Int64)</h4>
+  <a id="FreeRedis_RediSearch_SearchBuilder_Timeout_" data-uid="FreeRedis.RediSearch.SearchBuilder.Timeout*"></a>
+  <h4 id="FreeRedis_RediSearch_SearchBuilder_Timeout_System_Int64_" data-uid="FreeRedis.RediSearch.SearchBuilder.Timeout(System.Int64)">Timeout(Int64)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public FtSearchBuilder Timeout(long milliseconds)</code></pre>
+    <pre><code class="lang-csharp hljs">public SearchBuilder Timeout(long milliseconds)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -1106,20 +1126,20 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="FreeRedis.FtSearchBuilder.html">FtSearchBuilder</a></td>
+        <td><a class="xref" href="FreeRedis.RediSearch.SearchBuilder.html">SearchBuilder</a></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   
   
-  <a id="FreeRedis_FtSearchBuilder_Verbatim_" data-uid="FreeRedis.FtSearchBuilder.Verbatim*"></a>
-  <h4 id="FreeRedis_FtSearchBuilder_Verbatim_System_Boolean_" data-uid="FreeRedis.FtSearchBuilder.Verbatim(System.Boolean)">Verbatim(Boolean)</h4>
+  <a id="FreeRedis_RediSearch_SearchBuilder_Verbatim_" data-uid="FreeRedis.RediSearch.SearchBuilder.Verbatim*"></a>
+  <h4 id="FreeRedis_RediSearch_SearchBuilder_Verbatim_System_Boolean_" data-uid="FreeRedis.RediSearch.SearchBuilder.Verbatim(System.Boolean)">Verbatim(Boolean)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public FtSearchBuilder Verbatim(bool value = true)</code></pre>
+    <pre><code class="lang-csharp hljs">public SearchBuilder Verbatim(bool value = true)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -1148,20 +1168,20 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="FreeRedis.FtSearchBuilder.html">FtSearchBuilder</a></td>
+        <td><a class="xref" href="FreeRedis.RediSearch.SearchBuilder.html">SearchBuilder</a></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   
   
-  <a id="FreeRedis_FtSearchBuilder_WithPayLoads_" data-uid="FreeRedis.FtSearchBuilder.WithPayLoads*"></a>
-  <h4 id="FreeRedis_FtSearchBuilder_WithPayLoads_System_Boolean_" data-uid="FreeRedis.FtSearchBuilder.WithPayLoads(System.Boolean)">WithPayLoads(Boolean)</h4>
+  <a id="FreeRedis_RediSearch_SearchBuilder_WithPayloads_" data-uid="FreeRedis.RediSearch.SearchBuilder.WithPayloads*"></a>
+  <h4 id="FreeRedis_RediSearch_SearchBuilder_WithPayloads_System_Boolean_" data-uid="FreeRedis.RediSearch.SearchBuilder.WithPayloads(System.Boolean)">WithPayloads(Boolean)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public FtSearchBuilder WithPayLoads(bool value = true)</code></pre>
+    <pre><code class="lang-csharp hljs">public SearchBuilder WithPayloads(bool value = true)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -1190,20 +1210,20 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="FreeRedis.FtSearchBuilder.html">FtSearchBuilder</a></td>
+        <td><a class="xref" href="FreeRedis.RediSearch.SearchBuilder.html">SearchBuilder</a></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   
   
-  <a id="FreeRedis_FtSearchBuilder_WithScores_" data-uid="FreeRedis.FtSearchBuilder.WithScores*"></a>
-  <h4 id="FreeRedis_FtSearchBuilder_WithScores_System_Boolean_" data-uid="FreeRedis.FtSearchBuilder.WithScores(System.Boolean)">WithScores(Boolean)</h4>
+  <a id="FreeRedis_RediSearch_SearchBuilder_WithScores_" data-uid="FreeRedis.RediSearch.SearchBuilder.WithScores*"></a>
+  <h4 id="FreeRedis_RediSearch_SearchBuilder_WithScores_System_Boolean_" data-uid="FreeRedis.RediSearch.SearchBuilder.WithScores(System.Boolean)">WithScores(Boolean)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public FtSearchBuilder WithScores(bool value = true)</code></pre>
+    <pre><code class="lang-csharp hljs">public SearchBuilder WithScores(bool value = true)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -1232,20 +1252,20 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="FreeRedis.FtSearchBuilder.html">FtSearchBuilder</a></td>
+        <td><a class="xref" href="FreeRedis.RediSearch.SearchBuilder.html">SearchBuilder</a></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   
   
-  <a id="FreeRedis_FtSearchBuilder_WithSortKeys_" data-uid="FreeRedis.FtSearchBuilder.WithSortKeys*"></a>
-  <h4 id="FreeRedis_FtSearchBuilder_WithSortKeys_System_Boolean_" data-uid="FreeRedis.FtSearchBuilder.WithSortKeys(System.Boolean)">WithSortKeys(Boolean)</h4>
+  <a id="FreeRedis_RediSearch_SearchBuilder_WithSortKeys_" data-uid="FreeRedis.RediSearch.SearchBuilder.WithSortKeys*"></a>
+  <h4 id="FreeRedis_RediSearch_SearchBuilder_WithSortKeys_System_Boolean_" data-uid="FreeRedis.RediSearch.SearchBuilder.WithSortKeys(System.Boolean)">WithSortKeys(Boolean)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public FtSearchBuilder WithSortKeys(bool value = true)</code></pre>
+    <pre><code class="lang-csharp hljs">public SearchBuilder WithSortKeys(bool value = true)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -1274,7 +1294,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="FreeRedis.FtSearchBuilder.html">FtSearchBuilder</a></td>
+        <td><a class="xref" href="FreeRedis.RediSearch.SearchBuilder.html">SearchBuilder</a></td>
         <td></td>
       </tr>
     </tbody>

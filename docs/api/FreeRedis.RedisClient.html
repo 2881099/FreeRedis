@@ -5095,13 +5095,35 @@ Available since 1.2.0.</p>
   
   
   <a id="FreeRedis_RedisClient_FtAggregate_" data-uid="FreeRedis.RedisClient.FtAggregate*"></a>
-  <h4 id="FreeRedis_RedisClient_FtAggregate" data-uid="FreeRedis.RedisClient.FtAggregate">FtAggregate()</h4>
+  <h4 id="FreeRedis_RedisClient_FtAggregate_System_String_System_String_" data-uid="FreeRedis.RedisClient.FtAggregate(System.String,System.String)">FtAggregate(String, String)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string[] FtAggregate()</code></pre>
+    <pre><code class="lang-csharp hljs">public AggregateBuilder FtAggregate(string index, string query)</code></pre>
   </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">index</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">query</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <h5 class="returns">Returns</h5>
   <table class="table table-bordered table-striped table-condensed">
     <thead>
@@ -5112,7 +5134,7 @@ Available since 1.2.0.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.String</span>[]</td>
+        <td><span class="xref">AggregateBuilder</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -5211,12 +5233,12 @@ Available since 1.2.0.</p>
   
   
   <a id="FreeRedis_RedisClient_FtAlter_" data-uid="FreeRedis.RedisClient.FtAlter*"></a>
-  <h4 id="FreeRedis_RedisClient_FtAlter_System_String_System_Boolean_" data-uid="FreeRedis.RedisClient.FtAlter(System.String,System.Boolean)">FtAlter(String, Boolean)</h4>
+  <h4 id="FreeRedis_RedisClient_FtAlter_System_String_" data-uid="FreeRedis.RedisClient.FtAlter(System.String)">FtAlter(String)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void FtAlter(string index, bool skipInitialScan = false)</code></pre>
+    <pre><code class="lang-csharp hljs">public AlterBuilder FtAlter(string index)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -5233,9 +5255,19 @@ Available since 1.2.0.</p>
         <td><span class="parametername">index</span></td>
         <td></td>
       </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
       <tr>
-        <td><span class="xref">System.Boolean</span></td>
-        <td><span class="parametername">skipInitialScan</span></td>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">AlterBuilder</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -5322,12 +5354,12 @@ Available since 1.2.0.</p>
   
   
   <a id="FreeRedis_RedisClient_FtCreate_" data-uid="FreeRedis.RedisClient.FtCreate*"></a>
-  <h4 id="FreeRedis_RedisClient_FtCreate_System_String_FieldInfo___FreeRedis_FtCreateParams_" data-uid="FreeRedis.RedisClient.FtCreate(System.String,FieldInfo[],FreeRedis.FtCreateParams)">FtCreate(String, FieldInfo[], FtCreateParams)</h4>
+  <h4 id="FreeRedis_RedisClient_FtCreate_System_String_" data-uid="FreeRedis.RedisClient.FtCreate(System.String)">FtCreate(String)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void FtCreate(string index, FieldInfo[] schema, FtCreateParams param)</code></pre>
+    <pre><code class="lang-csharp hljs">public CreateBuilder FtCreate(string index)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -5344,14 +5376,19 @@ Available since 1.2.0.</p>
         <td><span class="parametername">index</span></td>
         <td></td>
       </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
       <tr>
-        <td><span class="xref">FieldInfo</span>[]</td>
-        <td><span class="parametername">schema</span></td>
-        <td></td>
+        <th>Type</th>
+        <th>Description</th>
       </tr>
+    </thead>
+    <tbody>
       <tr>
-        <td><a class="xref" href="FreeRedis.FtCreateParams.html">FtCreateParams</a></td>
-        <td><span class="parametername">param</span></td>
+        <td><span class="xref">CreateBuilder</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -5396,7 +5433,7 @@ Available since 1.2.0.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public FtAggregationResult FtCursorRead(string index, long cursor_id, int count = 0)</code></pre>
+    <pre><code class="lang-csharp hljs">public AggregationResult FtCursorRead(string index, long cursorId, int count = 0)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -5415,7 +5452,7 @@ Available since 1.2.0.</p>
       </tr>
       <tr>
         <td><span class="xref">System.Int64</span></td>
-        <td><span class="parametername">cursor_id</span></td>
+        <td><span class="parametername">cursorId</span></td>
         <td></td>
       </tr>
       <tr>
@@ -5435,7 +5472,7 @@ Available since 1.2.0.</p>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="FreeRedis.FtAggregationResult.html">FtAggregationResult</a></td>
+        <td><span class="xref">AggregationResult</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -5662,97 +5699,13 @@ Available since 1.2.0.</p>
   </table>
   
   
-  <a id="FreeRedis_RedisClient_FtInfo_" data-uid="FreeRedis.RedisClient.FtInfo*"></a>
-  <h4 id="FreeRedis_RedisClient_FtInfo_System_String_" data-uid="FreeRedis.RedisClient.FtInfo(System.String)">FtInfo(String)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public object FtInfo(string index)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">index</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Object</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <a id="FreeRedis_RedisClient_FtProfile_" data-uid="FreeRedis.RedisClient.FtProfile*"></a>
-  <h4 id="FreeRedis_RedisClient_FtProfile_System_String_" data-uid="FreeRedis.RedisClient.FtProfile(System.String)">FtProfile(String)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public object FtProfile(string index)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">index</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Object</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
   <a id="FreeRedis_RedisClient_FtSearch_" data-uid="FreeRedis.RedisClient.FtSearch*"></a>
   <h4 id="FreeRedis_RedisClient_FtSearch_System_String_System_String_" data-uid="FreeRedis.RedisClient.FtSearch(System.String,System.String)">FtSearch(String, String)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public object FtSearch(string index, string query)</code></pre>
+    <pre><code class="lang-csharp hljs">public SearchBuilder FtSearch(string index, string query)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -5786,7 +5739,7 @@ Available since 1.2.0.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Object</span></td>
+        <td><span class="xref">SearchBuilder</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -5794,12 +5747,12 @@ Available since 1.2.0.</p>
   
   
   <a id="FreeRedis_RedisClient_FtSpellCheck_" data-uid="FreeRedis.RedisClient.FtSpellCheck*"></a>
-  <h4 id="FreeRedis_RedisClient_FtSpellCheck_System_String_" data-uid="FreeRedis.RedisClient.FtSpellCheck(System.String)">FtSpellCheck(String)</h4>
+  <h4 id="FreeRedis_RedisClient_FtSpellCheck_System_String_System_String_System_Int32_System_Nullable_System_Int32__" data-uid="FreeRedis.RedisClient.FtSpellCheck(System.String,System.String,System.Int32,System.Nullable{System.Int32})">FtSpellCheck(String, String, Int32, Nullable&lt;Int32&gt;)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public object FtSpellCheck(string index)</code></pre>
+    <pre><code class="lang-csharp hljs">public Dictionary&lt;string, Dictionary&lt;string, double&gt;&gt; FtSpellCheck(string index, string query, int distance = 1, int? dialect = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -5816,6 +5769,21 @@ Available since 1.2.0.</p>
         <td><span class="parametername">index</span></td>
         <td></td>
       </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">query</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">distance</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
+        <td><span class="parametername">dialect</span></td>
+        <td></td>
+      </tr>
     </tbody>
   </table>
   <h5 class="returns">Returns</h5>
@@ -5828,7 +5796,195 @@ Available since 1.2.0.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Object</span></td>
+        <td><span class="xref">System.Collections.Generic.Dictionary</span>&lt;<span class="xref">System.String</span>, <span class="xref">System.Collections.Generic.Dictionary</span>&lt;<span class="xref">System.String</span>, <span class="xref">System.Double</span>&gt;&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="FreeRedis_RedisClient_FtSugAdd_" data-uid="FreeRedis.RedisClient.FtSugAdd*"></a>
+  <h4 id="FreeRedis_RedisClient_FtSugAdd_System_String_System_String_System_Double_System_Boolean_System_String_" data-uid="FreeRedis.RedisClient.FtSugAdd(System.String,System.String,System.Double,System.Boolean,System.String)">FtSugAdd(String, String, Double, Boolean, String)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public long FtSugAdd(string key, string str, double score, bool incr = false, string payload = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">str</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">score</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">incr</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">payload</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int64</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="FreeRedis_RedisClient_FtSugDel_" data-uid="FreeRedis.RedisClient.FtSugDel*"></a>
+  <h4 id="FreeRedis_RedisClient_FtSugDel_System_String_System_String_" data-uid="FreeRedis.RedisClient.FtSugDel(System.String,System.String)">FtSugDel(String, String)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void FtSugDel(string key, string str)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">str</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="FreeRedis_RedisClient_FtSugGet_" data-uid="FreeRedis.RedisClient.FtSugGet*"></a>
+  <h4 id="FreeRedis_RedisClient_FtSugGet_System_String_System_String_System_Boolean_System_Boolean_System_Boolean_System_Nullable_System_Int32__" data-uid="FreeRedis.RedisClient.FtSugGet(System.String,System.String,System.Boolean,System.Boolean,System.Boolean,System.Nullable{System.Int32})">FtSugGet(String, String, Boolean, Boolean, Boolean, Nullable&lt;Int32&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string[] FtSugGet(string key, string prefix, bool fuzzy = false, bool withScores = false, bool withPayloads = false, int? max = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">prefix</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">fuzzy</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">withScores</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">withPayloads</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
+        <td><span class="parametername">max</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span>[]</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="FreeRedis_RedisClient_FtSugLen_" data-uid="FreeRedis.RedisClient.FtSugLen*"></a>
+  <h4 id="FreeRedis_RedisClient_FtSugLen_System_String_" data-uid="FreeRedis.RedisClient.FtSugLen(System.String)">FtSugLen(String)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void FtSugLen(string key)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -5883,7 +6039,7 @@ Available since 1.2.0.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void FtSynUpdate(string index, string synonym_group_id, bool skipInitialScan, params string[] terms)</code></pre>
+    <pre><code class="lang-csharp hljs">public void FtSynUpdate(string index, string synonymGroupId, bool skipInitialScan, params string[] terms)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -5902,7 +6058,7 @@ Available since 1.2.0.</p>
       </tr>
       <tr>
         <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">synonym_group_id</span></td>
+        <td><span class="parametername">synonymGroupId</span></td>
         <td></td>
       </tr>
       <tr>
@@ -5925,7 +6081,7 @@ Available since 1.2.0.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string[] FtTagVals(string index, string field_name)</code></pre>
+    <pre><code class="lang-csharp hljs">public string[] FtTagVals(string index, string fieldName)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -5944,7 +6100,7 @@ Available since 1.2.0.</p>
       </tr>
       <tr>
         <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">field_name</span></td>
+        <td><span class="parametername">fieldName</span></td>
         <td></td>
       </tr>
     </tbody>
