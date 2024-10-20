@@ -235,7 +235,7 @@ namespace FreeRedis.RediSearch
                 _schemaArgs.Add("TAG");
                 if (options.NoIndex) _schemaArgs.Add("NOINDEX");
                 if (options.WithSuffixTrie) _schemaArgs.Add("WITHSUFFIXTRIE");
-                if (options.Separator != ",")
+                if (!string.IsNullOrWhiteSpace(options.Separator) && options.Separator != ",")
                 {
 
                     _schemaArgs.Add("SEPARATOR");

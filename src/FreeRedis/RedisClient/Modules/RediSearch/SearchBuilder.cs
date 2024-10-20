@@ -54,7 +54,7 @@ namespace FreeRedis.RediSearch
             _dialect = redis.ConnectionString.FtDialect;
             _language = redis.ConnectionString.FtLanguage;
         }
-        public List<Document> Execute()
+        internal CommandPacket GetCommandPacket()
         {
             var cmd = "FT.SEARCH".Input(_index).Input(_query)
                 .InputIf(_noContent, "NOCONTENT")
@@ -69,7 +69,7 @@ namespace FreeRedis.RediSearch
             if (_inFields.Any()) cmd.Input("INFIELDS", _inFields.Count).Input(_inFields.ToArray());
             if (_return.Any())
             {
-                cmd.Input("RETURN", _return.Sum(a => a[1] == null ? 1 : 2));
+                cmd.Input("RETURN", _return.Sum(a => a[1] == null ? 1 : 3));
                 foreach (var ret in _return)
                     if (ret[1] == null) cmd.Input(ret[0]);
                     else cmd.Input(ret[0], "AS", ret[1]);
@@ -102,6 +102,11 @@ namespace FreeRedis.RediSearch
             if (_params.Any()) cmd.Input("PARAMS", _params.Count).Input(_params);
             cmd
                .InputIf(_dialect > 0, "DIALECT", _dialect);
+            return cmd;
+        }
+        public List<Document> Execute()
+        {
+            var cmd = GetCommandPacket();
             return _redis.Call(cmd, rt => rt.ThrowOrValue((a, _) =>
             {
                 var docs = new List<Document>();
@@ -234,7 +239,7 @@ namespace FreeRedis.RediSearch
             if (identifierProperties?.Any() == true) _return.AddRange(identifierProperties.Select(a => new[] { a.Key, a.Value }));
             return this;
         }
-        public SearchBuilder Sumarize(string[] fields, long frags, long len, string separator)
+        public SearchBuilder Sumarize(string[] fields, long frags = -1, long len = -1, string separator = null)
         {
             _sumarize = true;
             _sumarizeFields.AddRange(fields);
@@ -243,7 +248,7 @@ namespace FreeRedis.RediSearch
             _sumarizeSeparator = separator;
             return this;
         }
-        public SearchBuilder HighLight(string[] fields, string tagsOpen, string tagsClose)
+        public SearchBuilder HighLight(string[] fields, string tagsOpen = null, string tagsClose = null)
         {
             _highLight = true;
             _highLightFields.AddRange(fields);

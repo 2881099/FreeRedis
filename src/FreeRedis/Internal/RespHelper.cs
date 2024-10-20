@@ -580,13 +580,13 @@ namespace FreeRedis
             [typeof(decimal)] = 3,
             [typeof(decimal?)] = 3
         });
-        static bool IsIntegerType(this Type that) => that == null ? false : (_dicIsNumberType.Value.TryGetValue(that, out var tryval) ? tryval == 1 : false);
-        static bool IsNumberType(this Type that) => that == null ? false : _dicIsNumberType.Value.ContainsKey(that);
-        static bool IsNullableType(this Type that) => that.IsArray == false && that?.FullName.StartsWith("System.Nullable`1[") == true;
-        static bool IsAnonymousType(this Type that) => that?.FullName.StartsWith("<>f__AnonymousType") == true;
-        static bool IsArrayOrList(this Type that) => that == null ? false : (that.IsArray || typeof(IList).IsAssignableFrom(that));
-        static Type NullableTypeOrThis(this Type that) => that?.IsNullableType() == true ? that.GetGenericArguments().First() : that;
-        static string DisplayCsharp(this Type type, bool isNameSpace = true)
+        internal static bool IsIntegerType(this Type that) => that == null ? false : (_dicIsNumberType.Value.TryGetValue(that, out var tryval) ? tryval == 1 : false);
+        internal static bool IsNumberType(this Type that) => that == null ? false : _dicIsNumberType.Value.ContainsKey(that);
+        internal static bool IsNullableType(this Type that) => that.IsArray == false && that?.FullName.StartsWith("System.Nullable`1[") == true;
+        internal static bool IsAnonymousType(this Type that) => that?.FullName.StartsWith("<>f__AnonymousType") == true;
+        internal static bool IsArrayOrList(this Type that) => that == null ? false : (that.IsArray || typeof(IList).IsAssignableFrom(that));
+        internal static Type NullableTypeOrThis(this Type that) => that?.IsNullableType() == true ? that.GetGenericArguments().First() : that;
+        internal static string DisplayCsharp(this Type type, bool isNameSpace = true)
         {
             if (type == null) return null;
             if (type == typeof(void)) return "void";
@@ -743,7 +743,7 @@ namespace FreeRedis
         }
 #endregion
 
-#region 类型转换
+        #region 类型转换
         internal static string ToInvariantCultureToString(this object obj) => obj is string objstr ?  objstr : string.Format(CultureInfo.InvariantCulture, @"{0}", obj);
         public static void MapSetListValue(this object[] list, Dictionary<string, Func<object[], object>> valueHandlers)
         {
@@ -757,6 +757,21 @@ namespace FreeRedis
                     if (value != null) list[idx + 1] = tryFunc(value);
                 }
             }
+        }
+        public static T MapToClass<T>(this Dictionary<string, object> dict)
+        {
+            if (dict == null) return default(T); 
+            var ttype = typeof(T);
+            var ret = (T)ttype.CreateInstanceGetDefaultValue();
+            foreach(var kv in dict)
+            {
+                var name = kv.Key.Replace("-", "_");
+                var prop = ttype.GetPropertyOrFieldIgnoreCase(name);
+                if (prop == null) continue; // throw new ArgumentException($"{typeof(T).DisplayCsharp()} undefined Property {list[a]}");
+                if (kv.Value == null) continue;
+                ttype.SetPropertyOrFieldValue(ret, prop.Name, prop.GetPropertyOrFieldType().FromObject(kv.Value));
+            }
+            return ret;
         }
         public static T MapToClass<T>(this object[] list, Encoding encoding)
         {

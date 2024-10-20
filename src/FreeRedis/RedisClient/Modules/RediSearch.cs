@@ -1,11 +1,14 @@
 ﻿using FreeRedis.RediSearch;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace FreeRedis
 {
     partial class RedisClient
     {
+        public FtDocumentRepository<T> FtDocumentRepository<T>() => new FtDocumentRepository<T>(this);
+
         public string[] Ft_List() => Call("FT._LIST", rt => rt.ThrowOrValue<string[]>());
         public AggregateBuilder FtAggregate(string index, string query) => new AggregateBuilder(this, index, query);
 
@@ -91,5 +94,42 @@ namespace FreeRedis
            {
                return a;
            });
+
+        public static bool IsParameter(this Expression exp)
+        {
+            var test = new TestParameterExpressionVisitor();
+            test.Visit(exp);
+            return test.Result;
+        }
+    }
+
+    class ReplaceVisitor : ExpressionVisitor
+    {
+        private Expression _oldexp;
+        private Expression _newexp;
+        public Expression Modify(Expression find, Expression oldexp, Expression newexp)
+        {
+            this._oldexp = oldexp;
+            this._newexp = newexp;
+            return Visit(find);
+        }
+        protected override Expression VisitMember(MemberExpression node)
+        {
+            if (node.Expression == _oldexp)
+                return Expression.Property(_newexp, node.Member.Name);
+            if (node == _oldexp)
+                return _newexp;
+            return base.VisitMember(node);
+        }
+    }
+    class TestParameterExpressionVisitor : ExpressionVisitor
+    {
+        public bool Result { get; private set; }
+
+        protected override Expression VisitParameter(ParameterExpression node)
+        {
+            if (!Result) Result = true;
+            return node;
+        }
     }
 }

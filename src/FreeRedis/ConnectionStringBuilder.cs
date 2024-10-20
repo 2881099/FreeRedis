@@ -34,6 +34,8 @@ namespace FreeRedis
         public int Retry { get; set; } = 0;
         public bool ExitAutoDisposePool { get; set; } = true;
         public bool SubscribeReadbytes { get; set; } = false;
+        public int FtDialect { get; set; } = 0;
+        public string FtLanguage { get; set; }
 
         public RemoteCertificateValidationCallback CertificateValidation;
         public LocalCertificateSelectionCallback CertificateSelection;
@@ -64,6 +66,8 @@ namespace FreeRedis
             if (Retry != 0) sb.Append(",retry=").Append(Retry);
             if (ExitAutoDisposePool != true) sb.Append(",exitAutoDisposePool=false");
             if (SubscribeReadbytes != false) sb.Append(",subscribeReadbytes=true");
+            if (FtDialect != 0) sb.Append(",ftdialect=").Append(FtDialect);
+            if (!string.IsNullOrWhiteSpace(FtLanguage)) sb.Append(",ftlanguage=").Append(FtLanguage);
             return sb.ToString();
         }
 
@@ -106,6 +110,8 @@ namespace FreeRedis
                     case "exitautodisposepool": if (kv.Length > 1 && new[] { "false", "0" }.Contains(kv[1].Trim())) ret.ExitAutoDisposePool = false; break;
                     case "subscriblereadbytes": //history error
                     case "subscribereadbytes": if (kv.Length > 1 && kv[1].ToLower().Trim() == "true") ret.SubscribeReadbytes = true; break;
+                    case "ftdialect": if (kv.Length > 1 && int.TryParse(kv[1].Trim(), out var dialect) && dialect > 0) ret.FtDialect = dialect; break;
+                    case "ftlanguage": if (kv.Length > 1) ret.FtLanguage = kv[1].Trim(); break;
                 }
             }
             return ret;
