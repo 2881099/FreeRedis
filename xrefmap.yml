@@ -1276,6 +1276,32 @@ references:
   isSpec: "True"
   fullName: FreeRedis.ConnectionStringBuilder.ExitAutoDisposePool
   nameWithType: ConnectionStringBuilder.ExitAutoDisposePool
+- uid: FreeRedis.ConnectionStringBuilder.FtDialect
+  name: FtDialect
+  href: docs/api/FreeRedis.ConnectionStringBuilder.html#FreeRedis_ConnectionStringBuilder_FtDialect
+  commentId: P:FreeRedis.ConnectionStringBuilder.FtDialect
+  fullName: FreeRedis.ConnectionStringBuilder.FtDialect
+  nameWithType: ConnectionStringBuilder.FtDialect
+- uid: FreeRedis.ConnectionStringBuilder.FtDialect*
+  name: FtDialect
+  href: docs/api/FreeRedis.ConnectionStringBuilder.html#FreeRedis_ConnectionStringBuilder_FtDialect_
+  commentId: Overload:FreeRedis.ConnectionStringBuilder.FtDialect
+  isSpec: "True"
+  fullName: FreeRedis.ConnectionStringBuilder.FtDialect
+  nameWithType: ConnectionStringBuilder.FtDialect
+- uid: FreeRedis.ConnectionStringBuilder.FtLanguage
+  name: FtLanguage
+  href: docs/api/FreeRedis.ConnectionStringBuilder.html#FreeRedis_ConnectionStringBuilder_FtLanguage
+  commentId: P:FreeRedis.ConnectionStringBuilder.FtLanguage
+  fullName: FreeRedis.ConnectionStringBuilder.FtLanguage
+  nameWithType: ConnectionStringBuilder.FtLanguage
+- uid: FreeRedis.ConnectionStringBuilder.FtLanguage*
+  name: FtLanguage
+  href: docs/api/FreeRedis.ConnectionStringBuilder.html#FreeRedis_ConnectionStringBuilder_FtLanguage_
+  commentId: Overload:FreeRedis.ConnectionStringBuilder.FtLanguage
+  isSpec: "True"
+  fullName: FreeRedis.ConnectionStringBuilder.FtLanguage
+  nameWithType: ConnectionStringBuilder.FtLanguage
 - uid: FreeRedis.ConnectionStringBuilder.Host
   name: Host
   href: docs/api/FreeRedis.ConnectionStringBuilder.html#FreeRedis_ConnectionStringBuilder_Host
@@ -12758,6 +12784,22 @@ references:
   isSpec: "True"
   fullName: FreeRedis.RedisClient.FtDictDump
   nameWithType: RedisClient.FtDictDump
+- uid: FreeRedis.RedisClient.FtDocumentRepository*
+  name: FtDocumentRepository
+  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_FtDocumentRepository_
+  commentId: Overload:FreeRedis.RedisClient.FtDocumentRepository
+  isSpec: "True"
+  fullName: FreeRedis.RedisClient.FtDocumentRepository
+  nameWithType: RedisClient.FtDocumentRepository
+- uid: FreeRedis.RedisClient.FtDocumentRepository``1
+  name: FtDocumentRepository<T>()
+  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_FtDocumentRepository__1
+  commentId: M:FreeRedis.RedisClient.FtDocumentRepository``1
+  name.vb: FtDocumentRepository(Of T)()
+  fullName: FreeRedis.RedisClient.FtDocumentRepository<T>()
+  fullName.vb: FreeRedis.RedisClient.FtDocumentRepository(Of T)()
+  nameWithType: RedisClient.FtDocumentRepository<T>()
+  nameWithType.vb: RedisClient.FtDocumentRepository(Of T)()
 - uid: FreeRedis.RedisClient.FtDropIndex(System.String,System.Boolean)
   name: FtDropIndex(String, Boolean)
   href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_FtDropIndex_System_String_System_Boolean_
@@ -17661,6 +17703,1285 @@ references:
   commentId: F:FreeRedis.RediSearch.FieldType.Vector
   fullName: FreeRedis.RediSearch.FieldType.Vector
   nameWithType: FieldType.Vector
+- uid: FreeRedis.RediSearch.FtDocumentAttribute
+  name: FtDocumentAttribute
+  href: docs/api/FreeRedis.RediSearch.FtDocumentAttribute.html
+  commentId: T:FreeRedis.RediSearch.FtDocumentAttribute
+  fullName: FreeRedis.RediSearch.FtDocumentAttribute
+  nameWithType: FtDocumentAttribute
+- uid: FreeRedis.RediSearch.FtDocumentAttribute.#ctor(System.String)
+  name: FtDocumentAttribute(String)
+  href: docs/api/FreeRedis.RediSearch.FtDocumentAttribute.html#FreeRedis_RediSearch_FtDocumentAttribute__ctor_System_String_
+  commentId: M:FreeRedis.RediSearch.FtDocumentAttribute.#ctor(System.String)
+  fullName: FreeRedis.RediSearch.FtDocumentAttribute.FtDocumentAttribute(System.String)
+  nameWithType: FtDocumentAttribute.FtDocumentAttribute(String)
+- uid: FreeRedis.RediSearch.FtDocumentAttribute.#ctor*
+  name: FtDocumentAttribute
+  href: docs/api/FreeRedis.RediSearch.FtDocumentAttribute.html#FreeRedis_RediSearch_FtDocumentAttribute__ctor_
+  commentId: Overload:FreeRedis.RediSearch.FtDocumentAttribute.#ctor
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtDocumentAttribute.FtDocumentAttribute
+  nameWithType: FtDocumentAttribute.FtDocumentAttribute
+- uid: FreeRedis.RediSearch.FtDocumentAttribute.Filter
+  name: Filter
+  href: docs/api/FreeRedis.RediSearch.FtDocumentAttribute.html#FreeRedis_RediSearch_FtDocumentAttribute_Filter
+  commentId: P:FreeRedis.RediSearch.FtDocumentAttribute.Filter
+  fullName: FreeRedis.RediSearch.FtDocumentAttribute.Filter
+  nameWithType: FtDocumentAttribute.Filter
+- uid: FreeRedis.RediSearch.FtDocumentAttribute.Filter*
+  name: Filter
+  href: docs/api/FreeRedis.RediSearch.FtDocumentAttribute.html#FreeRedis_RediSearch_FtDocumentAttribute_Filter_
+  commentId: Overload:FreeRedis.RediSearch.FtDocumentAttribute.Filter
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtDocumentAttribute.Filter
+  nameWithType: FtDocumentAttribute.Filter
+- uid: FreeRedis.RediSearch.FtDocumentAttribute.Language
+  name: Language
+  href: docs/api/FreeRedis.RediSearch.FtDocumentAttribute.html#FreeRedis_RediSearch_FtDocumentAttribute_Language
+  commentId: P:FreeRedis.RediSearch.FtDocumentAttribute.Language
+  fullName: FreeRedis.RediSearch.FtDocumentAttribute.Language
+  nameWithType: FtDocumentAttribute.Language
+- uid: FreeRedis.RediSearch.FtDocumentAttribute.Language*
+  name: Language
+  href: docs/api/FreeRedis.RediSearch.FtDocumentAttribute.html#FreeRedis_RediSearch_FtDocumentAttribute_Language_
+  commentId: Overload:FreeRedis.RediSearch.FtDocumentAttribute.Language
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtDocumentAttribute.Language
+  nameWithType: FtDocumentAttribute.Language
+- uid: FreeRedis.RediSearch.FtDocumentAttribute.Name
+  name: Name
+  href: docs/api/FreeRedis.RediSearch.FtDocumentAttribute.html#FreeRedis_RediSearch_FtDocumentAttribute_Name
+  commentId: P:FreeRedis.RediSearch.FtDocumentAttribute.Name
+  fullName: FreeRedis.RediSearch.FtDocumentAttribute.Name
+  nameWithType: FtDocumentAttribute.Name
+- uid: FreeRedis.RediSearch.FtDocumentAttribute.Name*
+  name: Name
+  href: docs/api/FreeRedis.RediSearch.FtDocumentAttribute.html#FreeRedis_RediSearch_FtDocumentAttribute_Name_
+  commentId: Overload:FreeRedis.RediSearch.FtDocumentAttribute.Name
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtDocumentAttribute.Name
+  nameWithType: FtDocumentAttribute.Name
+- uid: FreeRedis.RediSearch.FtDocumentAttribute.Prefix
+  name: Prefix
+  href: docs/api/FreeRedis.RediSearch.FtDocumentAttribute.html#FreeRedis_RediSearch_FtDocumentAttribute_Prefix
+  commentId: P:FreeRedis.RediSearch.FtDocumentAttribute.Prefix
+  fullName: FreeRedis.RediSearch.FtDocumentAttribute.Prefix
+  nameWithType: FtDocumentAttribute.Prefix
+- uid: FreeRedis.RediSearch.FtDocumentAttribute.Prefix*
+  name: Prefix
+  href: docs/api/FreeRedis.RediSearch.FtDocumentAttribute.html#FreeRedis_RediSearch_FtDocumentAttribute_Prefix_
+  commentId: Overload:FreeRedis.RediSearch.FtDocumentAttribute.Prefix
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtDocumentAttribute.Prefix
+  nameWithType: FtDocumentAttribute.Prefix
+- uid: FreeRedis.RediSearch.FtDocumentRepository`1
+  name: FtDocumentRepository<T>
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepository-1.html
+  commentId: T:FreeRedis.RediSearch.FtDocumentRepository`1
+  name.vb: FtDocumentRepository(Of T)
+  fullName: FreeRedis.RediSearch.FtDocumentRepository<T>
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepository(Of T)
+  nameWithType: FtDocumentRepository<T>
+  nameWithType.vb: FtDocumentRepository(Of T)
+- uid: FreeRedis.RediSearch.FtDocumentRepository`1.#ctor(FreeRedis.RedisClient)
+  name: FtDocumentRepository(RedisClient)
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepository-1.html#FreeRedis_RediSearch_FtDocumentRepository_1__ctor_FreeRedis_RedisClient_
+  commentId: M:FreeRedis.RediSearch.FtDocumentRepository`1.#ctor(FreeRedis.RedisClient)
+  fullName: FreeRedis.RediSearch.FtDocumentRepository<T>.FtDocumentRepository(FreeRedis.RedisClient)
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepository(Of T).FtDocumentRepository(FreeRedis.RedisClient)
+  nameWithType: FtDocumentRepository<T>.FtDocumentRepository(RedisClient)
+  nameWithType.vb: FtDocumentRepository(Of T).FtDocumentRepository(RedisClient)
+- uid: FreeRedis.RediSearch.FtDocumentRepository`1.#ctor*
+  name: FtDocumentRepository
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepository-1.html#FreeRedis_RediSearch_FtDocumentRepository_1__ctor_
+  commentId: Overload:FreeRedis.RediSearch.FtDocumentRepository`1.#ctor
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtDocumentRepository<T>.FtDocumentRepository
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepository(Of T).FtDocumentRepository
+  nameWithType: FtDocumentRepository<T>.FtDocumentRepository
+  nameWithType.vb: FtDocumentRepository(Of T).FtDocumentRepository
+- uid: FreeRedis.RediSearch.FtDocumentRepository`1._client
+  name: _client
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepository-1.html#FreeRedis_RediSearch_FtDocumentRepository_1__client
+  commentId: F:FreeRedis.RediSearch.FtDocumentRepository`1._client
+  fullName: FreeRedis.RediSearch.FtDocumentRepository<T>._client
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepository(Of T)._client
+  nameWithType: FtDocumentRepository<T>._client
+  nameWithType.vb: FtDocumentRepository(Of T)._client
+- uid: FreeRedis.RediSearch.FtDocumentRepository`1._schema
+  name: _schema
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepository-1.html#FreeRedis_RediSearch_FtDocumentRepository_1__schema
+  commentId: F:FreeRedis.RediSearch.FtDocumentRepository`1._schema
+  fullName: FreeRedis.RediSearch.FtDocumentRepository<T>._schema
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepository(Of T)._schema
+  nameWithType: FtDocumentRepository<T>._schema
+  nameWithType.vb: FtDocumentRepository(Of T)._schema
+- uid: FreeRedis.RediSearch.FtDocumentRepository`1.CreateIndex
+  name: CreateIndex()
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepository-1.html#FreeRedis_RediSearch_FtDocumentRepository_1_CreateIndex
+  commentId: M:FreeRedis.RediSearch.FtDocumentRepository`1.CreateIndex
+  fullName: FreeRedis.RediSearch.FtDocumentRepository<T>.CreateIndex()
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepository(Of T).CreateIndex()
+  nameWithType: FtDocumentRepository<T>.CreateIndex()
+  nameWithType.vb: FtDocumentRepository(Of T).CreateIndex()
+- uid: FreeRedis.RediSearch.FtDocumentRepository`1.CreateIndex*
+  name: CreateIndex
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepository-1.html#FreeRedis_RediSearch_FtDocumentRepository_1_CreateIndex_
+  commentId: Overload:FreeRedis.RediSearch.FtDocumentRepository`1.CreateIndex
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtDocumentRepository<T>.CreateIndex
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepository(Of T).CreateIndex
+  nameWithType: FtDocumentRepository<T>.CreateIndex
+  nameWithType.vb: FtDocumentRepository(Of T).CreateIndex
+- uid: FreeRedis.RediSearch.FtDocumentRepository`1.Delete(System.Int64[])
+  name: Delete(Int64[])
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepository-1.html#FreeRedis_RediSearch_FtDocumentRepository_1_Delete_System_Int64___
+  commentId: M:FreeRedis.RediSearch.FtDocumentRepository`1.Delete(System.Int64[])
+  name.vb: Delete(Int64())
+  fullName: FreeRedis.RediSearch.FtDocumentRepository<T>.Delete(System.Int64[])
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepository(Of T).Delete(System.Int64())
+  nameWithType: FtDocumentRepository<T>.Delete(Int64[])
+  nameWithType.vb: FtDocumentRepository(Of T).Delete(Int64())
+- uid: FreeRedis.RediSearch.FtDocumentRepository`1.Delete(System.String[])
+  name: Delete(String[])
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepository-1.html#FreeRedis_RediSearch_FtDocumentRepository_1_Delete_System_String___
+  commentId: M:FreeRedis.RediSearch.FtDocumentRepository`1.Delete(System.String[])
+  name.vb: Delete(String())
+  fullName: FreeRedis.RediSearch.FtDocumentRepository<T>.Delete(System.String[])
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepository(Of T).Delete(System.String())
+  nameWithType: FtDocumentRepository<T>.Delete(String[])
+  nameWithType.vb: FtDocumentRepository(Of T).Delete(String())
+- uid: FreeRedis.RediSearch.FtDocumentRepository`1.Delete*
+  name: Delete
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepository-1.html#FreeRedis_RediSearch_FtDocumentRepository_1_Delete_
+  commentId: Overload:FreeRedis.RediSearch.FtDocumentRepository`1.Delete
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtDocumentRepository<T>.Delete
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepository(Of T).Delete
+  nameWithType: FtDocumentRepository<T>.Delete
+  nameWithType.vb: FtDocumentRepository(Of T).Delete
+- uid: FreeRedis.RediSearch.FtDocumentRepository`1.DocumentSchemaFieldInfo
+  name: FtDocumentRepository<T>.DocumentSchemaFieldInfo
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepository-1.DocumentSchemaFieldInfo.html
+  commentId: T:FreeRedis.RediSearch.FtDocumentRepository`1.DocumentSchemaFieldInfo
+  name.vb: FtDocumentRepository(Of T).DocumentSchemaFieldInfo
+  fullName: FreeRedis.RediSearch.FtDocumentRepository<T>.DocumentSchemaFieldInfo
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepository(Of T).DocumentSchemaFieldInfo
+  nameWithType: FtDocumentRepository<T>.DocumentSchemaFieldInfo
+  nameWithType.vb: FtDocumentRepository(Of T).DocumentSchemaFieldInfo
+- uid: FreeRedis.RediSearch.FtDocumentRepository`1.DocumentSchemaFieldInfo.DocumentSchema
+  name: DocumentSchema
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepository-1.DocumentSchemaFieldInfo.html#FreeRedis_RediSearch_FtDocumentRepository_1_DocumentSchemaFieldInfo_DocumentSchema
+  commentId: P:FreeRedis.RediSearch.FtDocumentRepository`1.DocumentSchemaFieldInfo.DocumentSchema
+  fullName: FreeRedis.RediSearch.FtDocumentRepository<T>.DocumentSchemaFieldInfo.DocumentSchema
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepository(Of T).DocumentSchemaFieldInfo.DocumentSchema
+  nameWithType: FtDocumentRepository<T>.DocumentSchemaFieldInfo.DocumentSchema
+  nameWithType.vb: FtDocumentRepository(Of T).DocumentSchemaFieldInfo.DocumentSchema
+- uid: FreeRedis.RediSearch.FtDocumentRepository`1.DocumentSchemaFieldInfo.DocumentSchema*
+  name: DocumentSchema
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepository-1.DocumentSchemaFieldInfo.html#FreeRedis_RediSearch_FtDocumentRepository_1_DocumentSchemaFieldInfo_DocumentSchema_
+  commentId: Overload:FreeRedis.RediSearch.FtDocumentRepository`1.DocumentSchemaFieldInfo.DocumentSchema
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtDocumentRepository<T>.DocumentSchemaFieldInfo.DocumentSchema
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepository(Of T).DocumentSchemaFieldInfo.DocumentSchema
+  nameWithType: FtDocumentRepository<T>.DocumentSchemaFieldInfo.DocumentSchema
+  nameWithType.vb: FtDocumentRepository(Of T).DocumentSchemaFieldInfo.DocumentSchema
+- uid: FreeRedis.RediSearch.FtDocumentRepository`1.DocumentSchemaFieldInfo.FieldAttribute
+  name: FieldAttribute
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepository-1.DocumentSchemaFieldInfo.html#FreeRedis_RediSearch_FtDocumentRepository_1_DocumentSchemaFieldInfo_FieldAttribute
+  commentId: P:FreeRedis.RediSearch.FtDocumentRepository`1.DocumentSchemaFieldInfo.FieldAttribute
+  fullName: FreeRedis.RediSearch.FtDocumentRepository<T>.DocumentSchemaFieldInfo.FieldAttribute
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepository(Of T).DocumentSchemaFieldInfo.FieldAttribute
+  nameWithType: FtDocumentRepository<T>.DocumentSchemaFieldInfo.FieldAttribute
+  nameWithType.vb: FtDocumentRepository(Of T).DocumentSchemaFieldInfo.FieldAttribute
+- uid: FreeRedis.RediSearch.FtDocumentRepository`1.DocumentSchemaFieldInfo.FieldAttribute*
+  name: FieldAttribute
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepository-1.DocumentSchemaFieldInfo.html#FreeRedis_RediSearch_FtDocumentRepository_1_DocumentSchemaFieldInfo_FieldAttribute_
+  commentId: Overload:FreeRedis.RediSearch.FtDocumentRepository`1.DocumentSchemaFieldInfo.FieldAttribute
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtDocumentRepository<T>.DocumentSchemaFieldInfo.FieldAttribute
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepository(Of T).DocumentSchemaFieldInfo.FieldAttribute
+  nameWithType: FtDocumentRepository<T>.DocumentSchemaFieldInfo.FieldAttribute
+  nameWithType.vb: FtDocumentRepository(Of T).DocumentSchemaFieldInfo.FieldAttribute
+- uid: FreeRedis.RediSearch.FtDocumentRepository`1.DocumentSchemaFieldInfo.FieldType
+  name: FieldType
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepository-1.DocumentSchemaFieldInfo.html#FreeRedis_RediSearch_FtDocumentRepository_1_DocumentSchemaFieldInfo_FieldType
+  commentId: P:FreeRedis.RediSearch.FtDocumentRepository`1.DocumentSchemaFieldInfo.FieldType
+  fullName: FreeRedis.RediSearch.FtDocumentRepository<T>.DocumentSchemaFieldInfo.FieldType
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepository(Of T).DocumentSchemaFieldInfo.FieldType
+  nameWithType: FtDocumentRepository<T>.DocumentSchemaFieldInfo.FieldType
+  nameWithType.vb: FtDocumentRepository(Of T).DocumentSchemaFieldInfo.FieldType
+- uid: FreeRedis.RediSearch.FtDocumentRepository`1.DocumentSchemaFieldInfo.FieldType*
+  name: FieldType
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepository-1.DocumentSchemaFieldInfo.html#FreeRedis_RediSearch_FtDocumentRepository_1_DocumentSchemaFieldInfo_FieldType_
+  commentId: Overload:FreeRedis.RediSearch.FtDocumentRepository`1.DocumentSchemaFieldInfo.FieldType
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtDocumentRepository<T>.DocumentSchemaFieldInfo.FieldType
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepository(Of T).DocumentSchemaFieldInfo.FieldType
+  nameWithType: FtDocumentRepository<T>.DocumentSchemaFieldInfo.FieldType
+  nameWithType.vb: FtDocumentRepository(Of T).DocumentSchemaFieldInfo.FieldType
+- uid: FreeRedis.RediSearch.FtDocumentRepository`1.DocumentSchemaFieldInfo.Property
+  name: Property
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepository-1.DocumentSchemaFieldInfo.html#FreeRedis_RediSearch_FtDocumentRepository_1_DocumentSchemaFieldInfo_Property
+  commentId: P:FreeRedis.RediSearch.FtDocumentRepository`1.DocumentSchemaFieldInfo.Property
+  fullName: FreeRedis.RediSearch.FtDocumentRepository<T>.DocumentSchemaFieldInfo.Property
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepository(Of T).DocumentSchemaFieldInfo.Property
+  nameWithType: FtDocumentRepository<T>.DocumentSchemaFieldInfo.Property
+  nameWithType.vb: FtDocumentRepository(Of T).DocumentSchemaFieldInfo.Property
+- uid: FreeRedis.RediSearch.FtDocumentRepository`1.DocumentSchemaFieldInfo.Property*
+  name: Property
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepository-1.DocumentSchemaFieldInfo.html#FreeRedis_RediSearch_FtDocumentRepository_1_DocumentSchemaFieldInfo_Property_
+  commentId: Overload:FreeRedis.RediSearch.FtDocumentRepository`1.DocumentSchemaFieldInfo.Property
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtDocumentRepository<T>.DocumentSchemaFieldInfo.Property
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepository(Of T).DocumentSchemaFieldInfo.Property
+  nameWithType: FtDocumentRepository<T>.DocumentSchemaFieldInfo.Property
+  nameWithType.vb: FtDocumentRepository(Of T).DocumentSchemaFieldInfo.Property
+- uid: FreeRedis.RediSearch.FtDocumentRepository`1.DocumentSchemaInfo
+  name: FtDocumentRepository<T>.DocumentSchemaInfo
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepository-1.DocumentSchemaInfo.html
+  commentId: T:FreeRedis.RediSearch.FtDocumentRepository`1.DocumentSchemaInfo
+  name.vb: FtDocumentRepository(Of T).DocumentSchemaInfo
+  fullName: FreeRedis.RediSearch.FtDocumentRepository<T>.DocumentSchemaInfo
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepository(Of T).DocumentSchemaInfo
+  nameWithType: FtDocumentRepository<T>.DocumentSchemaInfo
+  nameWithType.vb: FtDocumentRepository(Of T).DocumentSchemaInfo
+- uid: FreeRedis.RediSearch.FtDocumentRepository`1.DocumentSchemaInfo.DocumentAttribute
+  name: DocumentAttribute
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepository-1.DocumentSchemaInfo.html#FreeRedis_RediSearch_FtDocumentRepository_1_DocumentSchemaInfo_DocumentAttribute
+  commentId: P:FreeRedis.RediSearch.FtDocumentRepository`1.DocumentSchemaInfo.DocumentAttribute
+  fullName: FreeRedis.RediSearch.FtDocumentRepository<T>.DocumentSchemaInfo.DocumentAttribute
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepository(Of T).DocumentSchemaInfo.DocumentAttribute
+  nameWithType: FtDocumentRepository<T>.DocumentSchemaInfo.DocumentAttribute
+  nameWithType.vb: FtDocumentRepository(Of T).DocumentSchemaInfo.DocumentAttribute
+- uid: FreeRedis.RediSearch.FtDocumentRepository`1.DocumentSchemaInfo.DocumentAttribute*
+  name: DocumentAttribute
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepository-1.DocumentSchemaInfo.html#FreeRedis_RediSearch_FtDocumentRepository_1_DocumentSchemaInfo_DocumentAttribute_
+  commentId: Overload:FreeRedis.RediSearch.FtDocumentRepository`1.DocumentSchemaInfo.DocumentAttribute
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtDocumentRepository<T>.DocumentSchemaInfo.DocumentAttribute
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepository(Of T).DocumentSchemaInfo.DocumentAttribute
+  nameWithType: FtDocumentRepository<T>.DocumentSchemaInfo.DocumentAttribute
+  nameWithType.vb: FtDocumentRepository(Of T).DocumentSchemaInfo.DocumentAttribute
+- uid: FreeRedis.RediSearch.FtDocumentRepository`1.DocumentSchemaInfo.DocumentType
+  name: DocumentType
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepository-1.DocumentSchemaInfo.html#FreeRedis_RediSearch_FtDocumentRepository_1_DocumentSchemaInfo_DocumentType
+  commentId: P:FreeRedis.RediSearch.FtDocumentRepository`1.DocumentSchemaInfo.DocumentType
+  fullName: FreeRedis.RediSearch.FtDocumentRepository<T>.DocumentSchemaInfo.DocumentType
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepository(Of T).DocumentSchemaInfo.DocumentType
+  nameWithType: FtDocumentRepository<T>.DocumentSchemaInfo.DocumentType
+  nameWithType.vb: FtDocumentRepository(Of T).DocumentSchemaInfo.DocumentType
+- uid: FreeRedis.RediSearch.FtDocumentRepository`1.DocumentSchemaInfo.DocumentType*
+  name: DocumentType
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepository-1.DocumentSchemaInfo.html#FreeRedis_RediSearch_FtDocumentRepository_1_DocumentSchemaInfo_DocumentType_
+  commentId: Overload:FreeRedis.RediSearch.FtDocumentRepository`1.DocumentSchemaInfo.DocumentType
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtDocumentRepository<T>.DocumentSchemaInfo.DocumentType
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepository(Of T).DocumentSchemaInfo.DocumentType
+  nameWithType: FtDocumentRepository<T>.DocumentSchemaInfo.DocumentType
+  nameWithType.vb: FtDocumentRepository(Of T).DocumentSchemaInfo.DocumentType
+- uid: FreeRedis.RediSearch.FtDocumentRepository`1.DocumentSchemaInfo.Fields
+  name: Fields
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepository-1.DocumentSchemaInfo.html#FreeRedis_RediSearch_FtDocumentRepository_1_DocumentSchemaInfo_Fields
+  commentId: P:FreeRedis.RediSearch.FtDocumentRepository`1.DocumentSchemaInfo.Fields
+  fullName: FreeRedis.RediSearch.FtDocumentRepository<T>.DocumentSchemaInfo.Fields
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepository(Of T).DocumentSchemaInfo.Fields
+  nameWithType: FtDocumentRepository<T>.DocumentSchemaInfo.Fields
+  nameWithType.vb: FtDocumentRepository(Of T).DocumentSchemaInfo.Fields
+- uid: FreeRedis.RediSearch.FtDocumentRepository`1.DocumentSchemaInfo.Fields*
+  name: Fields
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepository-1.DocumentSchemaInfo.html#FreeRedis_RediSearch_FtDocumentRepository_1_DocumentSchemaInfo_Fields_
+  commentId: Overload:FreeRedis.RediSearch.FtDocumentRepository`1.DocumentSchemaInfo.Fields
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtDocumentRepository<T>.DocumentSchemaInfo.Fields
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepository(Of T).DocumentSchemaInfo.Fields
+  nameWithType: FtDocumentRepository<T>.DocumentSchemaInfo.Fields
+  nameWithType.vb: FtDocumentRepository(Of T).DocumentSchemaInfo.Fields
+- uid: FreeRedis.RediSearch.FtDocumentRepository`1.DocumentSchemaInfo.FieldsMap
+  name: FieldsMap
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepository-1.DocumentSchemaInfo.html#FreeRedis_RediSearch_FtDocumentRepository_1_DocumentSchemaInfo_FieldsMap
+  commentId: P:FreeRedis.RediSearch.FtDocumentRepository`1.DocumentSchemaInfo.FieldsMap
+  fullName: FreeRedis.RediSearch.FtDocumentRepository<T>.DocumentSchemaInfo.FieldsMap
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepository(Of T).DocumentSchemaInfo.FieldsMap
+  nameWithType: FtDocumentRepository<T>.DocumentSchemaInfo.FieldsMap
+  nameWithType.vb: FtDocumentRepository(Of T).DocumentSchemaInfo.FieldsMap
+- uid: FreeRedis.RediSearch.FtDocumentRepository`1.DocumentSchemaInfo.FieldsMap*
+  name: FieldsMap
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepository-1.DocumentSchemaInfo.html#FreeRedis_RediSearch_FtDocumentRepository_1_DocumentSchemaInfo_FieldsMap_
+  commentId: Overload:FreeRedis.RediSearch.FtDocumentRepository`1.DocumentSchemaInfo.FieldsMap
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtDocumentRepository<T>.DocumentSchemaInfo.FieldsMap
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepository(Of T).DocumentSchemaInfo.FieldsMap
+  nameWithType: FtDocumentRepository<T>.DocumentSchemaInfo.FieldsMap
+  nameWithType.vb: FtDocumentRepository(Of T).DocumentSchemaInfo.FieldsMap
+- uid: FreeRedis.RediSearch.FtDocumentRepository`1.DocumentSchemaInfo.KeyProperty
+  name: KeyProperty
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepository-1.DocumentSchemaInfo.html#FreeRedis_RediSearch_FtDocumentRepository_1_DocumentSchemaInfo_KeyProperty
+  commentId: P:FreeRedis.RediSearch.FtDocumentRepository`1.DocumentSchemaInfo.KeyProperty
+  fullName: FreeRedis.RediSearch.FtDocumentRepository<T>.DocumentSchemaInfo.KeyProperty
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepository(Of T).DocumentSchemaInfo.KeyProperty
+  nameWithType: FtDocumentRepository<T>.DocumentSchemaInfo.KeyProperty
+  nameWithType.vb: FtDocumentRepository(Of T).DocumentSchemaInfo.KeyProperty
+- uid: FreeRedis.RediSearch.FtDocumentRepository`1.DocumentSchemaInfo.KeyProperty*
+  name: KeyProperty
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepository-1.DocumentSchemaInfo.html#FreeRedis_RediSearch_FtDocumentRepository_1_DocumentSchemaInfo_KeyProperty_
+  commentId: Overload:FreeRedis.RediSearch.FtDocumentRepository`1.DocumentSchemaInfo.KeyProperty
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtDocumentRepository<T>.DocumentSchemaInfo.KeyProperty
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepository(Of T).DocumentSchemaInfo.KeyProperty
+  nameWithType: FtDocumentRepository<T>.DocumentSchemaInfo.KeyProperty
+  nameWithType.vb: FtDocumentRepository(Of T).DocumentSchemaInfo.KeyProperty
+- uid: FreeRedis.RediSearch.FtDocumentRepository`1.DropIndex(System.Boolean)
+  name: DropIndex(Boolean)
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepository-1.html#FreeRedis_RediSearch_FtDocumentRepository_1_DropIndex_System_Boolean_
+  commentId: M:FreeRedis.RediSearch.FtDocumentRepository`1.DropIndex(System.Boolean)
+  fullName: FreeRedis.RediSearch.FtDocumentRepository<T>.DropIndex(System.Boolean)
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepository(Of T).DropIndex(System.Boolean)
+  nameWithType: FtDocumentRepository<T>.DropIndex(Boolean)
+  nameWithType.vb: FtDocumentRepository(Of T).DropIndex(Boolean)
+- uid: FreeRedis.RediSearch.FtDocumentRepository`1.DropIndex*
+  name: DropIndex
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepository-1.html#FreeRedis_RediSearch_FtDocumentRepository_1_DropIndex_
+  commentId: Overload:FreeRedis.RediSearch.FtDocumentRepository`1.DropIndex
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtDocumentRepository<T>.DropIndex
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepository(Of T).DropIndex
+  nameWithType: FtDocumentRepository<T>.DropIndex
+  nameWithType.vb: FtDocumentRepository(Of T).DropIndex
+- uid: FreeRedis.RediSearch.FtDocumentRepository`1.GetMapFieldType(PropertyInfo,FreeRedis.RediSearch.FtFieldAttribute)
+  name: GetMapFieldType(PropertyInfo, FtFieldAttribute)
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepository-1.html#FreeRedis_RediSearch_FtDocumentRepository_1_GetMapFieldType_PropertyInfo_FreeRedis_RediSearch_FtFieldAttribute_
+  commentId: M:FreeRedis.RediSearch.FtDocumentRepository`1.GetMapFieldType(PropertyInfo,FreeRedis.RediSearch.FtFieldAttribute)
+  fullName: FreeRedis.RediSearch.FtDocumentRepository<T>.GetMapFieldType(PropertyInfo, FreeRedis.RediSearch.FtFieldAttribute)
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepository(Of T).GetMapFieldType(PropertyInfo, FreeRedis.RediSearch.FtFieldAttribute)
+  nameWithType: FtDocumentRepository<T>.GetMapFieldType(PropertyInfo, FtFieldAttribute)
+  nameWithType.vb: FtDocumentRepository(Of T).GetMapFieldType(PropertyInfo, FtFieldAttribute)
+- uid: FreeRedis.RediSearch.FtDocumentRepository`1.GetMapFieldType*
+  name: GetMapFieldType
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepository-1.html#FreeRedis_RediSearch_FtDocumentRepository_1_GetMapFieldType_
+  commentId: Overload:FreeRedis.RediSearch.FtDocumentRepository`1.GetMapFieldType
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtDocumentRepository<T>.GetMapFieldType
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepository(Of T).GetMapFieldType
+  nameWithType: FtDocumentRepository<T>.GetMapFieldType
+  nameWithType.vb: FtDocumentRepository(Of T).GetMapFieldType
+- uid: FreeRedis.RediSearch.FtDocumentRepository`1.ParseQueryExpression(Expression,FreeRedis.RediSearch.FtDocumentRepository{`0}.ParseQueryExpressionOptions)
+  name: ParseQueryExpression(Expression, FtDocumentRepository<T>.ParseQueryExpressionOptions)
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepository-1.html#FreeRedis_RediSearch_FtDocumentRepository_1_ParseQueryExpression_Expression_FreeRedis_RediSearch_FtDocumentRepository__0__ParseQueryExpressionOptions_
+  commentId: M:FreeRedis.RediSearch.FtDocumentRepository`1.ParseQueryExpression(Expression,FreeRedis.RediSearch.FtDocumentRepository{`0}.ParseQueryExpressionOptions)
+  name.vb: ParseQueryExpression(Expression, FtDocumentRepository(Of T).ParseQueryExpressionOptions)
+  fullName: FreeRedis.RediSearch.FtDocumentRepository<T>.ParseQueryExpression(Expression, FreeRedis.RediSearch.FtDocumentRepository<T>.ParseQueryExpressionOptions)
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepository(Of T).ParseQueryExpression(Expression, FreeRedis.RediSearch.FtDocumentRepository(Of T).ParseQueryExpressionOptions)
+  nameWithType: FtDocumentRepository<T>.ParseQueryExpression(Expression, FtDocumentRepository<T>.ParseQueryExpressionOptions)
+  nameWithType.vb: FtDocumentRepository(Of T).ParseQueryExpression(Expression, FtDocumentRepository(Of T).ParseQueryExpressionOptions)
+- uid: FreeRedis.RediSearch.FtDocumentRepository`1.ParseQueryExpression*
+  name: ParseQueryExpression
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepository-1.html#FreeRedis_RediSearch_FtDocumentRepository_1_ParseQueryExpression_
+  commentId: Overload:FreeRedis.RediSearch.FtDocumentRepository`1.ParseQueryExpression
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtDocumentRepository<T>.ParseQueryExpression
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepository(Of T).ParseQueryExpression
+  nameWithType: FtDocumentRepository<T>.ParseQueryExpression
+  nameWithType.vb: FtDocumentRepository(Of T).ParseQueryExpression
+- uid: FreeRedis.RediSearch.FtDocumentRepository`1.ParseQueryExpressionOptions
+  name: FtDocumentRepository<T>.ParseQueryExpressionOptions
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepository-1.ParseQueryExpressionOptions.html
+  commentId: T:FreeRedis.RediSearch.FtDocumentRepository`1.ParseQueryExpressionOptions
+  name.vb: FtDocumentRepository(Of T).ParseQueryExpressionOptions
+  fullName: FreeRedis.RediSearch.FtDocumentRepository<T>.ParseQueryExpressionOptions
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepository(Of T).ParseQueryExpressionOptions
+  nameWithType: FtDocumentRepository<T>.ParseQueryExpressionOptions
+  nameWithType.vb: FtDocumentRepository(Of T).ParseQueryExpressionOptions
+- uid: FreeRedis.RediSearch.FtDocumentRepository`1.ParseQueryExpressionOptions.IsQuoteFieldName
+  name: IsQuoteFieldName
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepository-1.ParseQueryExpressionOptions.html#FreeRedis_RediSearch_FtDocumentRepository_1_ParseQueryExpressionOptions_IsQuoteFieldName
+  commentId: P:FreeRedis.RediSearch.FtDocumentRepository`1.ParseQueryExpressionOptions.IsQuoteFieldName
+  fullName: FreeRedis.RediSearch.FtDocumentRepository<T>.ParseQueryExpressionOptions.IsQuoteFieldName
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepository(Of T).ParseQueryExpressionOptions.IsQuoteFieldName
+  nameWithType: FtDocumentRepository<T>.ParseQueryExpressionOptions.IsQuoteFieldName
+  nameWithType.vb: FtDocumentRepository(Of T).ParseQueryExpressionOptions.IsQuoteFieldName
+- uid: FreeRedis.RediSearch.FtDocumentRepository`1.ParseQueryExpressionOptions.IsQuoteFieldName*
+  name: IsQuoteFieldName
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepository-1.ParseQueryExpressionOptions.html#FreeRedis_RediSearch_FtDocumentRepository_1_ParseQueryExpressionOptions_IsQuoteFieldName_
+  commentId: Overload:FreeRedis.RediSearch.FtDocumentRepository`1.ParseQueryExpressionOptions.IsQuoteFieldName
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtDocumentRepository<T>.ParseQueryExpressionOptions.IsQuoteFieldName
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepository(Of T).ParseQueryExpressionOptions.IsQuoteFieldName
+  nameWithType: FtDocumentRepository<T>.ParseQueryExpressionOptions.IsQuoteFieldName
+  nameWithType.vb: FtDocumentRepository(Of T).ParseQueryExpressionOptions.IsQuoteFieldName
+- uid: FreeRedis.RediSearch.FtDocumentRepository`1.ParseSelectorExpression(Expression)
+  name: ParseSelectorExpression(Expression)
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepository-1.html#FreeRedis_RediSearch_FtDocumentRepository_1_ParseSelectorExpression_Expression_
+  commentId: M:FreeRedis.RediSearch.FtDocumentRepository`1.ParseSelectorExpression(Expression)
+  fullName: FreeRedis.RediSearch.FtDocumentRepository<T>.ParseSelectorExpression(Expression)
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepository(Of T).ParseSelectorExpression(Expression)
+  nameWithType: FtDocumentRepository<T>.ParseSelectorExpression(Expression)
+  nameWithType.vb: FtDocumentRepository(Of T).ParseSelectorExpression(Expression)
+- uid: FreeRedis.RediSearch.FtDocumentRepository`1.ParseSelectorExpression*
+  name: ParseSelectorExpression
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepository-1.html#FreeRedis_RediSearch_FtDocumentRepository_1_ParseSelectorExpression_
+  commentId: Overload:FreeRedis.RediSearch.FtDocumentRepository`1.ParseSelectorExpression
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtDocumentRepository<T>.ParseSelectorExpression
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepository(Of T).ParseSelectorExpression
+  nameWithType: FtDocumentRepository<T>.ParseSelectorExpression
+  nameWithType.vb: FtDocumentRepository(Of T).ParseSelectorExpression
+- uid: FreeRedis.RediSearch.FtDocumentRepository`1.ParseTryGetField(Expression,FreeRedis.RediSearch.FtDocumentRepository{`0}.DocumentSchemaFieldInfo@)
+  name: ParseTryGetField(Expression, out FtDocumentRepository<T>.DocumentSchemaFieldInfo)
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepository-1.html#FreeRedis_RediSearch_FtDocumentRepository_1_ParseTryGetField_Expression_FreeRedis_RediSearch_FtDocumentRepository__0__DocumentSchemaFieldInfo__
+  commentId: M:FreeRedis.RediSearch.FtDocumentRepository`1.ParseTryGetField(Expression,FreeRedis.RediSearch.FtDocumentRepository{`0}.DocumentSchemaFieldInfo@)
+  name.vb: ParseTryGetField(Expression, ByRef FtDocumentRepository(Of T).DocumentSchemaFieldInfo)
+  fullName: FreeRedis.RediSearch.FtDocumentRepository<T>.ParseTryGetField(Expression, out FreeRedis.RediSearch.FtDocumentRepository<T>.DocumentSchemaFieldInfo)
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepository(Of T).ParseTryGetField(Expression, ByRef FreeRedis.RediSearch.FtDocumentRepository(Of T).DocumentSchemaFieldInfo)
+  nameWithType: FtDocumentRepository<T>.ParseTryGetField(Expression, out FtDocumentRepository<T>.DocumentSchemaFieldInfo)
+  nameWithType.vb: FtDocumentRepository(Of T).ParseTryGetField(Expression, ByRef FtDocumentRepository(Of T).DocumentSchemaFieldInfo)
+- uid: FreeRedis.RediSearch.FtDocumentRepository`1.ParseTryGetField*
+  name: ParseTryGetField
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepository-1.html#FreeRedis_RediSearch_FtDocumentRepository_1_ParseTryGetField_
+  commentId: Overload:FreeRedis.RediSearch.FtDocumentRepository`1.ParseTryGetField
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtDocumentRepository<T>.ParseTryGetField
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepository(Of T).ParseTryGetField
+  nameWithType: FtDocumentRepository<T>.ParseTryGetField
+  nameWithType.vb: FtDocumentRepository(Of T).ParseTryGetField
+- uid: FreeRedis.RediSearch.FtDocumentRepository`1.Save(`0)
+  name: Save(T)
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepository-1.html#FreeRedis_RediSearch_FtDocumentRepository_1_Save__0_
+  commentId: M:FreeRedis.RediSearch.FtDocumentRepository`1.Save(`0)
+  fullName: FreeRedis.RediSearch.FtDocumentRepository<T>.Save(T)
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepository(Of T).Save(T)
+  nameWithType: FtDocumentRepository<T>.Save(T)
+  nameWithType.vb: FtDocumentRepository(Of T).Save(T)
+- uid: FreeRedis.RediSearch.FtDocumentRepository`1.Save(`0[])
+  name: Save(T[])
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepository-1.html#FreeRedis_RediSearch_FtDocumentRepository_1_Save__0___
+  commentId: M:FreeRedis.RediSearch.FtDocumentRepository`1.Save(`0[])
+  name.vb: Save(T())
+  fullName: FreeRedis.RediSearch.FtDocumentRepository<T>.Save(T[])
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepository(Of T).Save(T())
+  nameWithType: FtDocumentRepository<T>.Save(T[])
+  nameWithType.vb: FtDocumentRepository(Of T).Save(T())
+- uid: FreeRedis.RediSearch.FtDocumentRepository`1.Save(System.Collections.Generic.IEnumerable{`0})
+  name: Save(IEnumerable<T>)
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepository-1.html#FreeRedis_RediSearch_FtDocumentRepository_1_Save_System_Collections_Generic_IEnumerable__0__
+  commentId: M:FreeRedis.RediSearch.FtDocumentRepository`1.Save(System.Collections.Generic.IEnumerable{`0})
+  name.vb: Save(IEnumerable(Of T))
+  fullName: FreeRedis.RediSearch.FtDocumentRepository<T>.Save(System.Collections.Generic.IEnumerable<T>)
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepository(Of T).Save(System.Collections.Generic.IEnumerable(Of T))
+  nameWithType: FtDocumentRepository<T>.Save(IEnumerable<T>)
+  nameWithType.vb: FtDocumentRepository(Of T).Save(IEnumerable(Of T))
+- uid: FreeRedis.RediSearch.FtDocumentRepository`1.Save*
+  name: Save
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepository-1.html#FreeRedis_RediSearch_FtDocumentRepository_1_Save_
+  commentId: Overload:FreeRedis.RediSearch.FtDocumentRepository`1.Save
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtDocumentRepository<T>.Save
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepository(Of T).Save
+  nameWithType: FtDocumentRepository<T>.Save
+  nameWithType.vb: FtDocumentRepository(Of T).Save
+- uid: FreeRedis.RediSearch.FtDocumentRepository`1.Search(Expression{System.Func{`0,System.Boolean}})
+  name: Search(Expression<Func<T, Boolean>>)
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepository-1.html#FreeRedis_RediSearch_FtDocumentRepository_1_Search_Expression_System_Func__0_System_Boolean___
+  commentId: M:FreeRedis.RediSearch.FtDocumentRepository`1.Search(Expression{System.Func{`0,System.Boolean}})
+  name.vb: Search(Expression(Of Func(Of T, Boolean)))
+  fullName: FreeRedis.RediSearch.FtDocumentRepository<T>.Search(Expression<System.Func<T, System.Boolean>>)
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepository(Of T).Search(Expression(Of System.Func(Of T, System.Boolean)))
+  nameWithType: FtDocumentRepository<T>.Search(Expression<Func<T, Boolean>>)
+  nameWithType.vb: FtDocumentRepository(Of T).Search(Expression(Of Func(Of T, Boolean)))
+- uid: FreeRedis.RediSearch.FtDocumentRepository`1.Search(System.String)
+  name: Search(String)
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepository-1.html#FreeRedis_RediSearch_FtDocumentRepository_1_Search_System_String_
+  commentId: M:FreeRedis.RediSearch.FtDocumentRepository`1.Search(System.String)
+  fullName: FreeRedis.RediSearch.FtDocumentRepository<T>.Search(System.String)
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepository(Of T).Search(System.String)
+  nameWithType: FtDocumentRepository<T>.Search(String)
+  nameWithType.vb: FtDocumentRepository(Of T).Search(String)
+- uid: FreeRedis.RediSearch.FtDocumentRepository`1.Search*
+  name: Search
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepository-1.html#FreeRedis_RediSearch_FtDocumentRepository_1_Search_
+  commentId: Overload:FreeRedis.RediSearch.FtDocumentRepository`1.Search
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtDocumentRepository<T>.Search
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepository(Of T).Search
+  nameWithType: FtDocumentRepository<T>.Search
+  nameWithType.vb: FtDocumentRepository(Of T).Search
+- uid: FreeRedis.RediSearch.FtDocumentRepository`1.ToTimestamp(System.DateTime)
+  name: ToTimestamp(DateTime)
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepository-1.html#FreeRedis_RediSearch_FtDocumentRepository_1_ToTimestamp_System_DateTime_
+  commentId: M:FreeRedis.RediSearch.FtDocumentRepository`1.ToTimestamp(System.DateTime)
+  fullName: FreeRedis.RediSearch.FtDocumentRepository<T>.ToTimestamp(System.DateTime)
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepository(Of T).ToTimestamp(System.DateTime)
+  nameWithType: FtDocumentRepository<T>.ToTimestamp(DateTime)
+  nameWithType.vb: FtDocumentRepository(Of T).ToTimestamp(DateTime)
+- uid: FreeRedis.RediSearch.FtDocumentRepository`1.ToTimestamp*
+  name: ToTimestamp
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepository-1.html#FreeRedis_RediSearch_FtDocumentRepository_1_ToTimestamp_
+  commentId: Overload:FreeRedis.RediSearch.FtDocumentRepository`1.ToTimestamp
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtDocumentRepository<T>.ToTimestamp
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepository(Of T).ToTimestamp
+  nameWithType: FtDocumentRepository<T>.ToTimestamp
+  nameWithType.vb: FtDocumentRepository(Of T).ToTimestamp
+- uid: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1
+  name: FtDocumentRepositorySearchBuilder<T>
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder-1.html
+  commentId: T:FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1
+  name.vb: FtDocumentRepositorySearchBuilder(Of T)
+  fullName: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder<T>
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder(Of T)
+  nameWithType: FtDocumentRepositorySearchBuilder<T>
+  nameWithType.vb: FtDocumentRepositorySearchBuilder(Of T)
+- uid: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.Dialect(System.Int32)
+  name: Dialect(Int32)
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder-1.html#FreeRedis_RediSearch_FtDocumentRepositorySearchBuilder_1_Dialect_System_Int32_
+  commentId: M:FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.Dialect(System.Int32)
+  fullName: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder<T>.Dialect(System.Int32)
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder(Of T).Dialect(System.Int32)
+  nameWithType: FtDocumentRepositorySearchBuilder<T>.Dialect(Int32)
+  nameWithType.vb: FtDocumentRepositorySearchBuilder(Of T).Dialect(Int32)
+- uid: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.Dialect*
+  name: Dialect
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder-1.html#FreeRedis_RediSearch_FtDocumentRepositorySearchBuilder_1_Dialect_
+  commentId: Overload:FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.Dialect
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder<T>.Dialect
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder(Of T).Dialect
+  nameWithType: FtDocumentRepositorySearchBuilder<T>.Dialect
+  nameWithType.vb: FtDocumentRepositorySearchBuilder(Of T).Dialect
+- uid: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.Filter(Expression{System.Func{`0,System.Object}},System.Object,System.Object)
+  name: Filter(Expression<Func<T, Object>>, Object, Object)
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder-1.html#FreeRedis_RediSearch_FtDocumentRepositorySearchBuilder_1_Filter_Expression_System_Func__0_System_Object___System_Object_System_Object_
+  commentId: M:FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.Filter(Expression{System.Func{`0,System.Object}},System.Object,System.Object)
+  name.vb: Filter(Expression(Of Func(Of T, Object)), Object, Object)
+  fullName: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder<T>.Filter(Expression<System.Func<T, System.Object>>, System.Object, System.Object)
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder(Of T).Filter(Expression(Of System.Func(Of T, System.Object)), System.Object, System.Object)
+  nameWithType: FtDocumentRepositorySearchBuilder<T>.Filter(Expression<Func<T, Object>>, Object, Object)
+  nameWithType.vb: FtDocumentRepositorySearchBuilder(Of T).Filter(Expression(Of Func(Of T, Object)), Object, Object)
+- uid: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.Filter(System.String,System.Object,System.Object)
+  name: Filter(String, Object, Object)
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder-1.html#FreeRedis_RediSearch_FtDocumentRepositorySearchBuilder_1_Filter_System_String_System_Object_System_Object_
+  commentId: M:FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.Filter(System.String,System.Object,System.Object)
+  fullName: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder<T>.Filter(System.String, System.Object, System.Object)
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder(Of T).Filter(System.String, System.Object, System.Object)
+  nameWithType: FtDocumentRepositorySearchBuilder<T>.Filter(String, Object, Object)
+  nameWithType.vb: FtDocumentRepositorySearchBuilder(Of T).Filter(String, Object, Object)
+- uid: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.Filter*
+  name: Filter
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder-1.html#FreeRedis_RediSearch_FtDocumentRepositorySearchBuilder_1_Filter_
+  commentId: Overload:FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.Filter
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder<T>.Filter
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder(Of T).Filter
+  nameWithType: FtDocumentRepositorySearchBuilder<T>.Filter
+  nameWithType.vb: FtDocumentRepositorySearchBuilder(Of T).Filter
+- uid: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.HighLight(Expression{System.Func{`0,System.Object}},System.String,System.String)
+  name: HighLight(Expression<Func<T, Object>>, String, String)
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder-1.html#FreeRedis_RediSearch_FtDocumentRepositorySearchBuilder_1_HighLight_Expression_System_Func__0_System_Object___System_String_System_String_
+  commentId: M:FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.HighLight(Expression{System.Func{`0,System.Object}},System.String,System.String)
+  name.vb: HighLight(Expression(Of Func(Of T, Object)), String, String)
+  fullName: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder<T>.HighLight(Expression<System.Func<T, System.Object>>, System.String, System.String)
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder(Of T).HighLight(Expression(Of System.Func(Of T, System.Object)), System.String, System.String)
+  nameWithType: FtDocumentRepositorySearchBuilder<T>.HighLight(Expression<Func<T, Object>>, String, String)
+  nameWithType.vb: FtDocumentRepositorySearchBuilder(Of T).HighLight(Expression(Of Func(Of T, Object)), String, String)
+- uid: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.HighLight(System.String[],System.String,System.String)
+  name: HighLight(String[], String, String)
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder-1.html#FreeRedis_RediSearch_FtDocumentRepositorySearchBuilder_1_HighLight_System_String___System_String_System_String_
+  commentId: M:FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.HighLight(System.String[],System.String,System.String)
+  name.vb: HighLight(String(), String, String)
+  fullName: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder<T>.HighLight(System.String[], System.String, System.String)
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder(Of T).HighLight(System.String(), System.String, System.String)
+  nameWithType: FtDocumentRepositorySearchBuilder<T>.HighLight(String[], String, String)
+  nameWithType.vb: FtDocumentRepositorySearchBuilder(Of T).HighLight(String(), String, String)
+- uid: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.HighLight*
+  name: HighLight
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder-1.html#FreeRedis_RediSearch_FtDocumentRepositorySearchBuilder_1_HighLight_
+  commentId: Overload:FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.HighLight
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder<T>.HighLight
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder(Of T).HighLight
+  nameWithType: FtDocumentRepositorySearchBuilder<T>.HighLight
+  nameWithType.vb: FtDocumentRepositorySearchBuilder(Of T).HighLight
+- uid: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.InFields(Expression{System.Func{`0,System.Object}})
+  name: InFields(Expression<Func<T, Object>>)
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder-1.html#FreeRedis_RediSearch_FtDocumentRepositorySearchBuilder_1_InFields_Expression_System_Func__0_System_Object___
+  commentId: M:FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.InFields(Expression{System.Func{`0,System.Object}})
+  name.vb: InFields(Expression(Of Func(Of T, Object)))
+  fullName: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder<T>.InFields(Expression<System.Func<T, System.Object>>)
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder(Of T).InFields(Expression(Of System.Func(Of T, System.Object)))
+  nameWithType: FtDocumentRepositorySearchBuilder<T>.InFields(Expression<Func<T, Object>>)
+  nameWithType.vb: FtDocumentRepositorySearchBuilder(Of T).InFields(Expression(Of Func(Of T, Object)))
+- uid: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.InFields*
+  name: InFields
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder-1.html#FreeRedis_RediSearch_FtDocumentRepositorySearchBuilder_1_InFields_
+  commentId: Overload:FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.InFields
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder<T>.InFields
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder(Of T).InFields
+  nameWithType: FtDocumentRepositorySearchBuilder<T>.InFields
+  nameWithType.vb: FtDocumentRepositorySearchBuilder(Of T).InFields
+- uid: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.InKeys(System.String[])
+  name: InKeys(String[])
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder-1.html#FreeRedis_RediSearch_FtDocumentRepositorySearchBuilder_1_InKeys_System_String___
+  commentId: M:FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.InKeys(System.String[])
+  name.vb: InKeys(String())
+  fullName: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder<T>.InKeys(System.String[])
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder(Of T).InKeys(System.String())
+  nameWithType: FtDocumentRepositorySearchBuilder<T>.InKeys(String[])
+  nameWithType.vb: FtDocumentRepositorySearchBuilder(Of T).InKeys(String())
+- uid: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.InKeys*
+  name: InKeys
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder-1.html#FreeRedis_RediSearch_FtDocumentRepositorySearchBuilder_1_InKeys_
+  commentId: Overload:FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.InKeys
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder<T>.InKeys
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder(Of T).InKeys
+  nameWithType: FtDocumentRepositorySearchBuilder<T>.InKeys
+  nameWithType.vb: FtDocumentRepositorySearchBuilder(Of T).InKeys
+- uid: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.InOrder(System.Boolean)
+  name: InOrder(Boolean)
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder-1.html#FreeRedis_RediSearch_FtDocumentRepositorySearchBuilder_1_InOrder_System_Boolean_
+  commentId: M:FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.InOrder(System.Boolean)
+  fullName: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder<T>.InOrder(System.Boolean)
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder(Of T).InOrder(System.Boolean)
+  nameWithType: FtDocumentRepositorySearchBuilder<T>.InOrder(Boolean)
+  nameWithType.vb: FtDocumentRepositorySearchBuilder(Of T).InOrder(Boolean)
+- uid: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.InOrder*
+  name: InOrder
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder-1.html#FreeRedis_RediSearch_FtDocumentRepositorySearchBuilder_1_InOrder_
+  commentId: Overload:FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.InOrder
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder<T>.InOrder
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder(Of T).InOrder
+  nameWithType: FtDocumentRepositorySearchBuilder<T>.InOrder
+  nameWithType.vb: FtDocumentRepositorySearchBuilder(Of T).InOrder
+- uid: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.Language(System.String)
+  name: Language(String)
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder-1.html#FreeRedis_RediSearch_FtDocumentRepositorySearchBuilder_1_Language_System_String_
+  commentId: M:FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.Language(System.String)
+  fullName: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder<T>.Language(System.String)
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder(Of T).Language(System.String)
+  nameWithType: FtDocumentRepositorySearchBuilder<T>.Language(String)
+  nameWithType.vb: FtDocumentRepositorySearchBuilder(Of T).Language(String)
+- uid: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.Language*
+  name: Language
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder-1.html#FreeRedis_RediSearch_FtDocumentRepositorySearchBuilder_1_Language_
+  commentId: Overload:FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.Language
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder<T>.Language
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder(Of T).Language
+  nameWithType: FtDocumentRepositorySearchBuilder<T>.Language
+  nameWithType.vb: FtDocumentRepositorySearchBuilder(Of T).Language
+- uid: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.Limit(System.Int64,System.Int64)
+  name: Limit(Int64, Int64)
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder-1.html#FreeRedis_RediSearch_FtDocumentRepositorySearchBuilder_1_Limit_System_Int64_System_Int64_
+  commentId: M:FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.Limit(System.Int64,System.Int64)
+  fullName: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder<T>.Limit(System.Int64, System.Int64)
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder(Of T).Limit(System.Int64, System.Int64)
+  nameWithType: FtDocumentRepositorySearchBuilder<T>.Limit(Int64, Int64)
+  nameWithType.vb: FtDocumentRepositorySearchBuilder(Of T).Limit(Int64, Int64)
+- uid: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.Limit*
+  name: Limit
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder-1.html#FreeRedis_RediSearch_FtDocumentRepositorySearchBuilder_1_Limit_
+  commentId: Overload:FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.Limit
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder<T>.Limit
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder(Of T).Limit
+  nameWithType: FtDocumentRepositorySearchBuilder<T>.Limit
+  nameWithType.vb: FtDocumentRepositorySearchBuilder(Of T).Limit
+- uid: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.NoContent(System.Boolean)
+  name: NoContent(Boolean)
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder-1.html#FreeRedis_RediSearch_FtDocumentRepositorySearchBuilder_1_NoContent_System_Boolean_
+  commentId: M:FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.NoContent(System.Boolean)
+  fullName: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder<T>.NoContent(System.Boolean)
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder(Of T).NoContent(System.Boolean)
+  nameWithType: FtDocumentRepositorySearchBuilder<T>.NoContent(Boolean)
+  nameWithType.vb: FtDocumentRepositorySearchBuilder(Of T).NoContent(Boolean)
+- uid: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.NoContent*
+  name: NoContent
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder-1.html#FreeRedis_RediSearch_FtDocumentRepositorySearchBuilder_1_NoContent_
+  commentId: Overload:FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.NoContent
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder<T>.NoContent
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder(Of T).NoContent
+  nameWithType: FtDocumentRepositorySearchBuilder<T>.NoContent
+  nameWithType.vb: FtDocumentRepositorySearchBuilder(Of T).NoContent
+- uid: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.Params(System.String,System.String)
+  name: Params(String, String)
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder-1.html#FreeRedis_RediSearch_FtDocumentRepositorySearchBuilder_1_Params_System_String_System_String_
+  commentId: M:FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.Params(System.String,System.String)
+  fullName: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder<T>.Params(System.String, System.String)
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder(Of T).Params(System.String, System.String)
+  nameWithType: FtDocumentRepositorySearchBuilder<T>.Params(String, String)
+  nameWithType.vb: FtDocumentRepositorySearchBuilder(Of T).Params(String, String)
+- uid: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.Params*
+  name: Params
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder-1.html#FreeRedis_RediSearch_FtDocumentRepositorySearchBuilder_1_Params_
+  commentId: Overload:FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.Params
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder<T>.Params
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder(Of T).Params
+  nameWithType: FtDocumentRepositorySearchBuilder<T>.Params
+  nameWithType.vb: FtDocumentRepositorySearchBuilder(Of T).Params
+- uid: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.Return(Expression{System.Func{`0,System.Object}})
+  name: Return(Expression<Func<T, Object>>)
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder-1.html#FreeRedis_RediSearch_FtDocumentRepositorySearchBuilder_1_Return_Expression_System_Func__0_System_Object___
+  commentId: M:FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.Return(Expression{System.Func{`0,System.Object}})
+  name.vb: Return(Expression(Of Func(Of T, Object)))
+  fullName: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder<T>.Return(Expression<System.Func<T, System.Object>>)
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder(Of T).Return(Expression(Of System.Func(Of T, System.Object)))
+  nameWithType: FtDocumentRepositorySearchBuilder<T>.Return(Expression<Func<T, Object>>)
+  nameWithType.vb: FtDocumentRepositorySearchBuilder(Of T).Return(Expression(Of Func(Of T, Object)))
+- uid: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.Return*
+  name: Return
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder-1.html#FreeRedis_RediSearch_FtDocumentRepositorySearchBuilder_1_Return_
+  commentId: Overload:FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.Return
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder<T>.Return
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder(Of T).Return
+  nameWithType: FtDocumentRepositorySearchBuilder<T>.Return
+  nameWithType.vb: FtDocumentRepositorySearchBuilder(Of T).Return
+- uid: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.Scorer(System.String)
+  name: Scorer(String)
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder-1.html#FreeRedis_RediSearch_FtDocumentRepositorySearchBuilder_1_Scorer_System_String_
+  commentId: M:FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.Scorer(System.String)
+  fullName: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder<T>.Scorer(System.String)
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder(Of T).Scorer(System.String)
+  nameWithType: FtDocumentRepositorySearchBuilder<T>.Scorer(String)
+  nameWithType.vb: FtDocumentRepositorySearchBuilder(Of T).Scorer(String)
+- uid: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.Scorer*
+  name: Scorer
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder-1.html#FreeRedis_RediSearch_FtDocumentRepositorySearchBuilder_1_Scorer_
+  commentId: Overload:FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.Scorer
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder<T>.Scorer
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder(Of T).Scorer
+  nameWithType: FtDocumentRepositorySearchBuilder<T>.Scorer
+  nameWithType.vb: FtDocumentRepositorySearchBuilder(Of T).Scorer
+- uid: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.Slop(System.Decimal)
+  name: Slop(Decimal)
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder-1.html#FreeRedis_RediSearch_FtDocumentRepositorySearchBuilder_1_Slop_System_Decimal_
+  commentId: M:FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.Slop(System.Decimal)
+  fullName: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder<T>.Slop(System.Decimal)
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder(Of T).Slop(System.Decimal)
+  nameWithType: FtDocumentRepositorySearchBuilder<T>.Slop(Decimal)
+  nameWithType.vb: FtDocumentRepositorySearchBuilder(Of T).Slop(Decimal)
+- uid: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.Slop*
+  name: Slop
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder-1.html#FreeRedis_RediSearch_FtDocumentRepositorySearchBuilder_1_Slop_
+  commentId: Overload:FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.Slop
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder<T>.Slop
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder(Of T).Slop
+  nameWithType: FtDocumentRepositorySearchBuilder<T>.Slop
+  nameWithType.vb: FtDocumentRepositorySearchBuilder(Of T).Slop
+- uid: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.SortBy(Expression{System.Func{`0,System.Object}})
+  name: SortBy(Expression<Func<T, Object>>)
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder-1.html#FreeRedis_RediSearch_FtDocumentRepositorySearchBuilder_1_SortBy_Expression_System_Func__0_System_Object___
+  commentId: M:FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.SortBy(Expression{System.Func{`0,System.Object}})
+  name.vb: SortBy(Expression(Of Func(Of T, Object)))
+  fullName: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder<T>.SortBy(Expression<System.Func<T, System.Object>>)
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder(Of T).SortBy(Expression(Of System.Func(Of T, System.Object)))
+  nameWithType: FtDocumentRepositorySearchBuilder<T>.SortBy(Expression<Func<T, Object>>)
+  nameWithType.vb: FtDocumentRepositorySearchBuilder(Of T).SortBy(Expression(Of Func(Of T, Object)))
+- uid: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.SortBy(System.String,System.Boolean)
+  name: SortBy(String, Boolean)
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder-1.html#FreeRedis_RediSearch_FtDocumentRepositorySearchBuilder_1_SortBy_System_String_System_Boolean_
+  commentId: M:FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.SortBy(System.String,System.Boolean)
+  fullName: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder<T>.SortBy(System.String, System.Boolean)
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder(Of T).SortBy(System.String, System.Boolean)
+  nameWithType: FtDocumentRepositorySearchBuilder<T>.SortBy(String, Boolean)
+  nameWithType.vb: FtDocumentRepositorySearchBuilder(Of T).SortBy(String, Boolean)
+- uid: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.SortBy*
+  name: SortBy
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder-1.html#FreeRedis_RediSearch_FtDocumentRepositorySearchBuilder_1_SortBy_
+  commentId: Overload:FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.SortBy
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder<T>.SortBy
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder(Of T).SortBy
+  nameWithType: FtDocumentRepositorySearchBuilder<T>.SortBy
+  nameWithType.vb: FtDocumentRepositorySearchBuilder(Of T).SortBy
+- uid: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.SortByDesc(Expression{System.Func{`0,System.Object}})
+  name: SortByDesc(Expression<Func<T, Object>>)
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder-1.html#FreeRedis_RediSearch_FtDocumentRepositorySearchBuilder_1_SortByDesc_Expression_System_Func__0_System_Object___
+  commentId: M:FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.SortByDesc(Expression{System.Func{`0,System.Object}})
+  name.vb: SortByDesc(Expression(Of Func(Of T, Object)))
+  fullName: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder<T>.SortByDesc(Expression<System.Func<T, System.Object>>)
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder(Of T).SortByDesc(Expression(Of System.Func(Of T, System.Object)))
+  nameWithType: FtDocumentRepositorySearchBuilder<T>.SortByDesc(Expression<Func<T, Object>>)
+  nameWithType.vb: FtDocumentRepositorySearchBuilder(Of T).SortByDesc(Expression(Of Func(Of T, Object)))
+- uid: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.SortByDesc*
+  name: SortByDesc
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder-1.html#FreeRedis_RediSearch_FtDocumentRepositorySearchBuilder_1_SortByDesc_
+  commentId: Overload:FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.SortByDesc
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder<T>.SortByDesc
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder(Of T).SortByDesc
+  nameWithType: FtDocumentRepositorySearchBuilder<T>.SortByDesc
+  nameWithType.vb: FtDocumentRepositorySearchBuilder(Of T).SortByDesc
+- uid: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.Sumarize(Expression{System.Func{`0,System.Object}},System.Int64,System.Int64,System.String)
+  name: Sumarize(Expression<Func<T, Object>>, Int64, Int64, String)
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder-1.html#FreeRedis_RediSearch_FtDocumentRepositorySearchBuilder_1_Sumarize_Expression_System_Func__0_System_Object___System_Int64_System_Int64_System_String_
+  commentId: M:FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.Sumarize(Expression{System.Func{`0,System.Object}},System.Int64,System.Int64,System.String)
+  name.vb: Sumarize(Expression(Of Func(Of T, Object)), Int64, Int64, String)
+  fullName: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder<T>.Sumarize(Expression<System.Func<T, System.Object>>, System.Int64, System.Int64, System.String)
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder(Of T).Sumarize(Expression(Of System.Func(Of T, System.Object)), System.Int64, System.Int64, System.String)
+  nameWithType: FtDocumentRepositorySearchBuilder<T>.Sumarize(Expression<Func<T, Object>>, Int64, Int64, String)
+  nameWithType.vb: FtDocumentRepositorySearchBuilder(Of T).Sumarize(Expression(Of Func(Of T, Object)), Int64, Int64, String)
+- uid: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.Sumarize(System.String[],System.Int64,System.Int64,System.String)
+  name: Sumarize(String[], Int64, Int64, String)
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder-1.html#FreeRedis_RediSearch_FtDocumentRepositorySearchBuilder_1_Sumarize_System_String___System_Int64_System_Int64_System_String_
+  commentId: M:FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.Sumarize(System.String[],System.Int64,System.Int64,System.String)
+  name.vb: Sumarize(String(), Int64, Int64, String)
+  fullName: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder<T>.Sumarize(System.String[], System.Int64, System.Int64, System.String)
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder(Of T).Sumarize(System.String(), System.Int64, System.Int64, System.String)
+  nameWithType: FtDocumentRepositorySearchBuilder<T>.Sumarize(String[], Int64, Int64, String)
+  nameWithType.vb: FtDocumentRepositorySearchBuilder(Of T).Sumarize(String(), Int64, Int64, String)
+- uid: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.Sumarize*
+  name: Sumarize
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder-1.html#FreeRedis_RediSearch_FtDocumentRepositorySearchBuilder_1_Sumarize_
+  commentId: Overload:FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.Sumarize
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder<T>.Sumarize
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder(Of T).Sumarize
+  nameWithType: FtDocumentRepositorySearchBuilder<T>.Sumarize
+  nameWithType.vb: FtDocumentRepositorySearchBuilder(Of T).Sumarize
+- uid: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.Timeout(System.Int64)
+  name: Timeout(Int64)
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder-1.html#FreeRedis_RediSearch_FtDocumentRepositorySearchBuilder_1_Timeout_System_Int64_
+  commentId: M:FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.Timeout(System.Int64)
+  fullName: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder<T>.Timeout(System.Int64)
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder(Of T).Timeout(System.Int64)
+  nameWithType: FtDocumentRepositorySearchBuilder<T>.Timeout(Int64)
+  nameWithType.vb: FtDocumentRepositorySearchBuilder(Of T).Timeout(Int64)
+- uid: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.Timeout*
+  name: Timeout
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder-1.html#FreeRedis_RediSearch_FtDocumentRepositorySearchBuilder_1_Timeout_
+  commentId: Overload:FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.Timeout
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder<T>.Timeout
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder(Of T).Timeout
+  nameWithType: FtDocumentRepositorySearchBuilder<T>.Timeout
+  nameWithType.vb: FtDocumentRepositorySearchBuilder(Of T).Timeout
+- uid: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.ToList
+  name: ToList()
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder-1.html#FreeRedis_RediSearch_FtDocumentRepositorySearchBuilder_1_ToList
+  commentId: M:FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.ToList
+  fullName: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder<T>.ToList()
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder(Of T).ToList()
+  nameWithType: FtDocumentRepositorySearchBuilder<T>.ToList()
+  nameWithType.vb: FtDocumentRepositorySearchBuilder(Of T).ToList()
+- uid: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.ToList*
+  name: ToList
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder-1.html#FreeRedis_RediSearch_FtDocumentRepositorySearchBuilder_1_ToList_
+  commentId: Overload:FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.ToList
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder<T>.ToList
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder(Of T).ToList
+  nameWithType: FtDocumentRepositorySearchBuilder<T>.ToList
+  nameWithType.vb: FtDocumentRepositorySearchBuilder(Of T).ToList
+- uid: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.Verbatim(System.Boolean)
+  name: Verbatim(Boolean)
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder-1.html#FreeRedis_RediSearch_FtDocumentRepositorySearchBuilder_1_Verbatim_System_Boolean_
+  commentId: M:FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.Verbatim(System.Boolean)
+  fullName: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder<T>.Verbatim(System.Boolean)
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder(Of T).Verbatim(System.Boolean)
+  nameWithType: FtDocumentRepositorySearchBuilder<T>.Verbatim(Boolean)
+  nameWithType.vb: FtDocumentRepositorySearchBuilder(Of T).Verbatim(Boolean)
+- uid: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.Verbatim*
+  name: Verbatim
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder-1.html#FreeRedis_RediSearch_FtDocumentRepositorySearchBuilder_1_Verbatim_
+  commentId: Overload:FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.Verbatim
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder<T>.Verbatim
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder(Of T).Verbatim
+  nameWithType: FtDocumentRepositorySearchBuilder<T>.Verbatim
+  nameWithType.vb: FtDocumentRepositorySearchBuilder(Of T).Verbatim
+- uid: FreeRedis.RediSearch.FtFieldAttribute
+  name: FtFieldAttribute
+  href: docs/api/FreeRedis.RediSearch.FtFieldAttribute.html
+  commentId: T:FreeRedis.RediSearch.FtFieldAttribute
+  fullName: FreeRedis.RediSearch.FtFieldAttribute
+  nameWithType: FtFieldAttribute
+- uid: FreeRedis.RediSearch.FtFieldAttribute.Alias
+  name: Alias
+  href: docs/api/FreeRedis.RediSearch.FtFieldAttribute.html#FreeRedis_RediSearch_FtFieldAttribute_Alias
+  commentId: P:FreeRedis.RediSearch.FtFieldAttribute.Alias
+  fullName: FreeRedis.RediSearch.FtFieldAttribute.Alias
+  nameWithType: FtFieldAttribute.Alias
+- uid: FreeRedis.RediSearch.FtFieldAttribute.Alias*
+  name: Alias
+  href: docs/api/FreeRedis.RediSearch.FtFieldAttribute.html#FreeRedis_RediSearch_FtFieldAttribute_Alias_
+  commentId: Overload:FreeRedis.RediSearch.FtFieldAttribute.Alias
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtFieldAttribute.Alias
+  nameWithType: FtFieldAttribute.Alias
+- uid: FreeRedis.RediSearch.FtFieldAttribute.FieldName
+  name: FieldName
+  href: docs/api/FreeRedis.RediSearch.FtFieldAttribute.html#FreeRedis_RediSearch_FtFieldAttribute_FieldName
+  commentId: P:FreeRedis.RediSearch.FtFieldAttribute.FieldName
+  fullName: FreeRedis.RediSearch.FtFieldAttribute.FieldName
+  nameWithType: FtFieldAttribute.FieldName
+- uid: FreeRedis.RediSearch.FtFieldAttribute.FieldName*
+  name: FieldName
+  href: docs/api/FreeRedis.RediSearch.FtFieldAttribute.html#FreeRedis_RediSearch_FtFieldAttribute_FieldName_
+  commentId: Overload:FreeRedis.RediSearch.FtFieldAttribute.FieldName
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtFieldAttribute.FieldName
+  nameWithType: FtFieldAttribute.FieldName
+- uid: FreeRedis.RediSearch.FtFieldAttribute.Name
+  name: Name
+  href: docs/api/FreeRedis.RediSearch.FtFieldAttribute.html#FreeRedis_RediSearch_FtFieldAttribute_Name
+  commentId: P:FreeRedis.RediSearch.FtFieldAttribute.Name
+  fullName: FreeRedis.RediSearch.FtFieldAttribute.Name
+  nameWithType: FtFieldAttribute.Name
+- uid: FreeRedis.RediSearch.FtFieldAttribute.Name*
+  name: Name
+  href: docs/api/FreeRedis.RediSearch.FtFieldAttribute.html#FreeRedis_RediSearch_FtFieldAttribute_Name_
+  commentId: Overload:FreeRedis.RediSearch.FtFieldAttribute.Name
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtFieldAttribute.Name
+  nameWithType: FtFieldAttribute.Name
+- uid: FreeRedis.RediSearch.FtKeyAttribute
+  name: FtKeyAttribute
+  href: docs/api/FreeRedis.RediSearch.FtKeyAttribute.html
+  commentId: T:FreeRedis.RediSearch.FtKeyAttribute
+  fullName: FreeRedis.RediSearch.FtKeyAttribute
+  nameWithType: FtKeyAttribute
+- uid: FreeRedis.RediSearch.FtNumericFieldAttribute
+  name: FtNumericFieldAttribute
+  href: docs/api/FreeRedis.RediSearch.FtNumericFieldAttribute.html
+  commentId: T:FreeRedis.RediSearch.FtNumericFieldAttribute
+  fullName: FreeRedis.RediSearch.FtNumericFieldAttribute
+  nameWithType: FtNumericFieldAttribute
+- uid: FreeRedis.RediSearch.FtNumericFieldAttribute.#ctor
+  name: FtNumericFieldAttribute()
+  href: docs/api/FreeRedis.RediSearch.FtNumericFieldAttribute.html#FreeRedis_RediSearch_FtNumericFieldAttribute__ctor
+  commentId: M:FreeRedis.RediSearch.FtNumericFieldAttribute.#ctor
+  fullName: FreeRedis.RediSearch.FtNumericFieldAttribute.FtNumericFieldAttribute()
+  nameWithType: FtNumericFieldAttribute.FtNumericFieldAttribute()
+- uid: FreeRedis.RediSearch.FtNumericFieldAttribute.#ctor(System.String)
+  name: FtNumericFieldAttribute(String)
+  href: docs/api/FreeRedis.RediSearch.FtNumericFieldAttribute.html#FreeRedis_RediSearch_FtNumericFieldAttribute__ctor_System_String_
+  commentId: M:FreeRedis.RediSearch.FtNumericFieldAttribute.#ctor(System.String)
+  fullName: FreeRedis.RediSearch.FtNumericFieldAttribute.FtNumericFieldAttribute(System.String)
+  nameWithType: FtNumericFieldAttribute.FtNumericFieldAttribute(String)
+- uid: FreeRedis.RediSearch.FtNumericFieldAttribute.#ctor*
+  name: FtNumericFieldAttribute
+  href: docs/api/FreeRedis.RediSearch.FtNumericFieldAttribute.html#FreeRedis_RediSearch_FtNumericFieldAttribute__ctor_
+  commentId: Overload:FreeRedis.RediSearch.FtNumericFieldAttribute.#ctor
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtNumericFieldAttribute.FtNumericFieldAttribute
+  nameWithType: FtNumericFieldAttribute.FtNumericFieldAttribute
+- uid: FreeRedis.RediSearch.FtNumericFieldAttribute.MissingIndex
+  name: MissingIndex
+  href: docs/api/FreeRedis.RediSearch.FtNumericFieldAttribute.html#FreeRedis_RediSearch_FtNumericFieldAttribute_MissingIndex
+  commentId: P:FreeRedis.RediSearch.FtNumericFieldAttribute.MissingIndex
+  fullName: FreeRedis.RediSearch.FtNumericFieldAttribute.MissingIndex
+  nameWithType: FtNumericFieldAttribute.MissingIndex
+- uid: FreeRedis.RediSearch.FtNumericFieldAttribute.MissingIndex*
+  name: MissingIndex
+  href: docs/api/FreeRedis.RediSearch.FtNumericFieldAttribute.html#FreeRedis_RediSearch_FtNumericFieldAttribute_MissingIndex_
+  commentId: Overload:FreeRedis.RediSearch.FtNumericFieldAttribute.MissingIndex
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtNumericFieldAttribute.MissingIndex
+  nameWithType: FtNumericFieldAttribute.MissingIndex
+- uid: FreeRedis.RediSearch.FtNumericFieldAttribute.NoIndex
+  name: NoIndex
+  href: docs/api/FreeRedis.RediSearch.FtNumericFieldAttribute.html#FreeRedis_RediSearch_FtNumericFieldAttribute_NoIndex
+  commentId: P:FreeRedis.RediSearch.FtNumericFieldAttribute.NoIndex
+  fullName: FreeRedis.RediSearch.FtNumericFieldAttribute.NoIndex
+  nameWithType: FtNumericFieldAttribute.NoIndex
+- uid: FreeRedis.RediSearch.FtNumericFieldAttribute.NoIndex*
+  name: NoIndex
+  href: docs/api/FreeRedis.RediSearch.FtNumericFieldAttribute.html#FreeRedis_RediSearch_FtNumericFieldAttribute_NoIndex_
+  commentId: Overload:FreeRedis.RediSearch.FtNumericFieldAttribute.NoIndex
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtNumericFieldAttribute.NoIndex
+  nameWithType: FtNumericFieldAttribute.NoIndex
+- uid: FreeRedis.RediSearch.FtNumericFieldAttribute.Sortable
+  name: Sortable
+  href: docs/api/FreeRedis.RediSearch.FtNumericFieldAttribute.html#FreeRedis_RediSearch_FtNumericFieldAttribute_Sortable
+  commentId: P:FreeRedis.RediSearch.FtNumericFieldAttribute.Sortable
+  fullName: FreeRedis.RediSearch.FtNumericFieldAttribute.Sortable
+  nameWithType: FtNumericFieldAttribute.Sortable
+- uid: FreeRedis.RediSearch.FtNumericFieldAttribute.Sortable*
+  name: Sortable
+  href: docs/api/FreeRedis.RediSearch.FtNumericFieldAttribute.html#FreeRedis_RediSearch_FtNumericFieldAttribute_Sortable_
+  commentId: Overload:FreeRedis.RediSearch.FtNumericFieldAttribute.Sortable
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtNumericFieldAttribute.Sortable
+  nameWithType: FtNumericFieldAttribute.Sortable
+- uid: FreeRedis.RediSearch.FtTagFieldAttribute
+  name: FtTagFieldAttribute
+  href: docs/api/FreeRedis.RediSearch.FtTagFieldAttribute.html
+  commentId: T:FreeRedis.RediSearch.FtTagFieldAttribute
+  fullName: FreeRedis.RediSearch.FtTagFieldAttribute
+  nameWithType: FtTagFieldAttribute
+- uid: FreeRedis.RediSearch.FtTagFieldAttribute.#ctor
+  name: FtTagFieldAttribute()
+  href: docs/api/FreeRedis.RediSearch.FtTagFieldAttribute.html#FreeRedis_RediSearch_FtTagFieldAttribute__ctor
+  commentId: M:FreeRedis.RediSearch.FtTagFieldAttribute.#ctor
+  fullName: FreeRedis.RediSearch.FtTagFieldAttribute.FtTagFieldAttribute()
+  nameWithType: FtTagFieldAttribute.FtTagFieldAttribute()
+- uid: FreeRedis.RediSearch.FtTagFieldAttribute.#ctor(System.String)
+  name: FtTagFieldAttribute(String)
+  href: docs/api/FreeRedis.RediSearch.FtTagFieldAttribute.html#FreeRedis_RediSearch_FtTagFieldAttribute__ctor_System_String_
+  commentId: M:FreeRedis.RediSearch.FtTagFieldAttribute.#ctor(System.String)
+  fullName: FreeRedis.RediSearch.FtTagFieldAttribute.FtTagFieldAttribute(System.String)
+  nameWithType: FtTagFieldAttribute.FtTagFieldAttribute(String)
+- uid: FreeRedis.RediSearch.FtTagFieldAttribute.#ctor*
+  name: FtTagFieldAttribute
+  href: docs/api/FreeRedis.RediSearch.FtTagFieldAttribute.html#FreeRedis_RediSearch_FtTagFieldAttribute__ctor_
+  commentId: Overload:FreeRedis.RediSearch.FtTagFieldAttribute.#ctor
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtTagFieldAttribute.FtTagFieldAttribute
+  nameWithType: FtTagFieldAttribute.FtTagFieldAttribute
+- uid: FreeRedis.RediSearch.FtTagFieldAttribute.CaseSensitive
+  name: CaseSensitive
+  href: docs/api/FreeRedis.RediSearch.FtTagFieldAttribute.html#FreeRedis_RediSearch_FtTagFieldAttribute_CaseSensitive
+  commentId: P:FreeRedis.RediSearch.FtTagFieldAttribute.CaseSensitive
+  fullName: FreeRedis.RediSearch.FtTagFieldAttribute.CaseSensitive
+  nameWithType: FtTagFieldAttribute.CaseSensitive
+- uid: FreeRedis.RediSearch.FtTagFieldAttribute.CaseSensitive*
+  name: CaseSensitive
+  href: docs/api/FreeRedis.RediSearch.FtTagFieldAttribute.html#FreeRedis_RediSearch_FtTagFieldAttribute_CaseSensitive_
+  commentId: Overload:FreeRedis.RediSearch.FtTagFieldAttribute.CaseSensitive
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtTagFieldAttribute.CaseSensitive
+  nameWithType: FtTagFieldAttribute.CaseSensitive
+- uid: FreeRedis.RediSearch.FtTagFieldAttribute.EmptyIndex
+  name: EmptyIndex
+  href: docs/api/FreeRedis.RediSearch.FtTagFieldAttribute.html#FreeRedis_RediSearch_FtTagFieldAttribute_EmptyIndex
+  commentId: P:FreeRedis.RediSearch.FtTagFieldAttribute.EmptyIndex
+  fullName: FreeRedis.RediSearch.FtTagFieldAttribute.EmptyIndex
+  nameWithType: FtTagFieldAttribute.EmptyIndex
+- uid: FreeRedis.RediSearch.FtTagFieldAttribute.EmptyIndex*
+  name: EmptyIndex
+  href: docs/api/FreeRedis.RediSearch.FtTagFieldAttribute.html#FreeRedis_RediSearch_FtTagFieldAttribute_EmptyIndex_
+  commentId: Overload:FreeRedis.RediSearch.FtTagFieldAttribute.EmptyIndex
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtTagFieldAttribute.EmptyIndex
+  nameWithType: FtTagFieldAttribute.EmptyIndex
+- uid: FreeRedis.RediSearch.FtTagFieldAttribute.MissingIndex
+  name: MissingIndex
+  href: docs/api/FreeRedis.RediSearch.FtTagFieldAttribute.html#FreeRedis_RediSearch_FtTagFieldAttribute_MissingIndex
+  commentId: P:FreeRedis.RediSearch.FtTagFieldAttribute.MissingIndex
+  fullName: FreeRedis.RediSearch.FtTagFieldAttribute.MissingIndex
+  nameWithType: FtTagFieldAttribute.MissingIndex
+- uid: FreeRedis.RediSearch.FtTagFieldAttribute.MissingIndex*
+  name: MissingIndex
+  href: docs/api/FreeRedis.RediSearch.FtTagFieldAttribute.html#FreeRedis_RediSearch_FtTagFieldAttribute_MissingIndex_
+  commentId: Overload:FreeRedis.RediSearch.FtTagFieldAttribute.MissingIndex
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtTagFieldAttribute.MissingIndex
+  nameWithType: FtTagFieldAttribute.MissingIndex
+- uid: FreeRedis.RediSearch.FtTagFieldAttribute.NoIndex
+  name: NoIndex
+  href: docs/api/FreeRedis.RediSearch.FtTagFieldAttribute.html#FreeRedis_RediSearch_FtTagFieldAttribute_NoIndex
+  commentId: P:FreeRedis.RediSearch.FtTagFieldAttribute.NoIndex
+  fullName: FreeRedis.RediSearch.FtTagFieldAttribute.NoIndex
+  nameWithType: FtTagFieldAttribute.NoIndex
+- uid: FreeRedis.RediSearch.FtTagFieldAttribute.NoIndex*
+  name: NoIndex
+  href: docs/api/FreeRedis.RediSearch.FtTagFieldAttribute.html#FreeRedis_RediSearch_FtTagFieldAttribute_NoIndex_
+  commentId: Overload:FreeRedis.RediSearch.FtTagFieldAttribute.NoIndex
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtTagFieldAttribute.NoIndex
+  nameWithType: FtTagFieldAttribute.NoIndex
+- uid: FreeRedis.RediSearch.FtTagFieldAttribute.Separator
+  name: Separator
+  href: docs/api/FreeRedis.RediSearch.FtTagFieldAttribute.html#FreeRedis_RediSearch_FtTagFieldAttribute_Separator
+  commentId: P:FreeRedis.RediSearch.FtTagFieldAttribute.Separator
+  fullName: FreeRedis.RediSearch.FtTagFieldAttribute.Separator
+  nameWithType: FtTagFieldAttribute.Separator
+- uid: FreeRedis.RediSearch.FtTagFieldAttribute.Separator*
+  name: Separator
+  href: docs/api/FreeRedis.RediSearch.FtTagFieldAttribute.html#FreeRedis_RediSearch_FtTagFieldAttribute_Separator_
+  commentId: Overload:FreeRedis.RediSearch.FtTagFieldAttribute.Separator
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtTagFieldAttribute.Separator
+  nameWithType: FtTagFieldAttribute.Separator
+- uid: FreeRedis.RediSearch.FtTagFieldAttribute.Sortable
+  name: Sortable
+  href: docs/api/FreeRedis.RediSearch.FtTagFieldAttribute.html#FreeRedis_RediSearch_FtTagFieldAttribute_Sortable
+  commentId: P:FreeRedis.RediSearch.FtTagFieldAttribute.Sortable
+  fullName: FreeRedis.RediSearch.FtTagFieldAttribute.Sortable
+  nameWithType: FtTagFieldAttribute.Sortable
+- uid: FreeRedis.RediSearch.FtTagFieldAttribute.Sortable*
+  name: Sortable
+  href: docs/api/FreeRedis.RediSearch.FtTagFieldAttribute.html#FreeRedis_RediSearch_FtTagFieldAttribute_Sortable_
+  commentId: Overload:FreeRedis.RediSearch.FtTagFieldAttribute.Sortable
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtTagFieldAttribute.Sortable
+  nameWithType: FtTagFieldAttribute.Sortable
+- uid: FreeRedis.RediSearch.FtTagFieldAttribute.Unf
+  name: Unf
+  href: docs/api/FreeRedis.RediSearch.FtTagFieldAttribute.html#FreeRedis_RediSearch_FtTagFieldAttribute_Unf
+  commentId: P:FreeRedis.RediSearch.FtTagFieldAttribute.Unf
+  fullName: FreeRedis.RediSearch.FtTagFieldAttribute.Unf
+  nameWithType: FtTagFieldAttribute.Unf
+- uid: FreeRedis.RediSearch.FtTagFieldAttribute.Unf*
+  name: Unf
+  href: docs/api/FreeRedis.RediSearch.FtTagFieldAttribute.html#FreeRedis_RediSearch_FtTagFieldAttribute_Unf_
+  commentId: Overload:FreeRedis.RediSearch.FtTagFieldAttribute.Unf
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtTagFieldAttribute.Unf
+  nameWithType: FtTagFieldAttribute.Unf
+- uid: FreeRedis.RediSearch.FtTagFieldAttribute.WithSuffixTrie
+  name: WithSuffixTrie
+  href: docs/api/FreeRedis.RediSearch.FtTagFieldAttribute.html#FreeRedis_RediSearch_FtTagFieldAttribute_WithSuffixTrie
+  commentId: P:FreeRedis.RediSearch.FtTagFieldAttribute.WithSuffixTrie
+  fullName: FreeRedis.RediSearch.FtTagFieldAttribute.WithSuffixTrie
+  nameWithType: FtTagFieldAttribute.WithSuffixTrie
+- uid: FreeRedis.RediSearch.FtTagFieldAttribute.WithSuffixTrie*
+  name: WithSuffixTrie
+  href: docs/api/FreeRedis.RediSearch.FtTagFieldAttribute.html#FreeRedis_RediSearch_FtTagFieldAttribute_WithSuffixTrie_
+  commentId: Overload:FreeRedis.RediSearch.FtTagFieldAttribute.WithSuffixTrie
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtTagFieldAttribute.WithSuffixTrie
+  nameWithType: FtTagFieldAttribute.WithSuffixTrie
+- uid: FreeRedis.RediSearch.FtTextFieldAttribute
+  name: FtTextFieldAttribute
+  href: docs/api/FreeRedis.RediSearch.FtTextFieldAttribute.html
+  commentId: T:FreeRedis.RediSearch.FtTextFieldAttribute
+  fullName: FreeRedis.RediSearch.FtTextFieldAttribute
+  nameWithType: FtTextFieldAttribute
+- uid: FreeRedis.RediSearch.FtTextFieldAttribute.#ctor
+  name: FtTextFieldAttribute()
+  href: docs/api/FreeRedis.RediSearch.FtTextFieldAttribute.html#FreeRedis_RediSearch_FtTextFieldAttribute__ctor
+  commentId: M:FreeRedis.RediSearch.FtTextFieldAttribute.#ctor
+  fullName: FreeRedis.RediSearch.FtTextFieldAttribute.FtTextFieldAttribute()
+  nameWithType: FtTextFieldAttribute.FtTextFieldAttribute()
+- uid: FreeRedis.RediSearch.FtTextFieldAttribute.#ctor(System.String)
+  name: FtTextFieldAttribute(String)
+  href: docs/api/FreeRedis.RediSearch.FtTextFieldAttribute.html#FreeRedis_RediSearch_FtTextFieldAttribute__ctor_System_String_
+  commentId: M:FreeRedis.RediSearch.FtTextFieldAttribute.#ctor(System.String)
+  fullName: FreeRedis.RediSearch.FtTextFieldAttribute.FtTextFieldAttribute(System.String)
+  nameWithType: FtTextFieldAttribute.FtTextFieldAttribute(String)
+- uid: FreeRedis.RediSearch.FtTextFieldAttribute.#ctor*
+  name: FtTextFieldAttribute
+  href: docs/api/FreeRedis.RediSearch.FtTextFieldAttribute.html#FreeRedis_RediSearch_FtTextFieldAttribute__ctor_
+  commentId: Overload:FreeRedis.RediSearch.FtTextFieldAttribute.#ctor
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtTextFieldAttribute.FtTextFieldAttribute
+  nameWithType: FtTextFieldAttribute.FtTextFieldAttribute
+- uid: FreeRedis.RediSearch.FtTextFieldAttribute.EmptyIndex
+  name: EmptyIndex
+  href: docs/api/FreeRedis.RediSearch.FtTextFieldAttribute.html#FreeRedis_RediSearch_FtTextFieldAttribute_EmptyIndex
+  commentId: P:FreeRedis.RediSearch.FtTextFieldAttribute.EmptyIndex
+  fullName: FreeRedis.RediSearch.FtTextFieldAttribute.EmptyIndex
+  nameWithType: FtTextFieldAttribute.EmptyIndex
+- uid: FreeRedis.RediSearch.FtTextFieldAttribute.EmptyIndex*
+  name: EmptyIndex
+  href: docs/api/FreeRedis.RediSearch.FtTextFieldAttribute.html#FreeRedis_RediSearch_FtTextFieldAttribute_EmptyIndex_
+  commentId: Overload:FreeRedis.RediSearch.FtTextFieldAttribute.EmptyIndex
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtTextFieldAttribute.EmptyIndex
+  nameWithType: FtTextFieldAttribute.EmptyIndex
+- uid: FreeRedis.RediSearch.FtTextFieldAttribute.MissingIndex
+  name: MissingIndex
+  href: docs/api/FreeRedis.RediSearch.FtTextFieldAttribute.html#FreeRedis_RediSearch_FtTextFieldAttribute_MissingIndex
+  commentId: P:FreeRedis.RediSearch.FtTextFieldAttribute.MissingIndex
+  fullName: FreeRedis.RediSearch.FtTextFieldAttribute.MissingIndex
+  nameWithType: FtTextFieldAttribute.MissingIndex
+- uid: FreeRedis.RediSearch.FtTextFieldAttribute.MissingIndex*
+  name: MissingIndex
+  href: docs/api/FreeRedis.RediSearch.FtTextFieldAttribute.html#FreeRedis_RediSearch_FtTextFieldAttribute_MissingIndex_
+  commentId: Overload:FreeRedis.RediSearch.FtTextFieldAttribute.MissingIndex
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtTextFieldAttribute.MissingIndex
+  nameWithType: FtTextFieldAttribute.MissingIndex
+- uid: FreeRedis.RediSearch.FtTextFieldAttribute.NoIndex
+  name: NoIndex
+  href: docs/api/FreeRedis.RediSearch.FtTextFieldAttribute.html#FreeRedis_RediSearch_FtTextFieldAttribute_NoIndex
+  commentId: P:FreeRedis.RediSearch.FtTextFieldAttribute.NoIndex
+  fullName: FreeRedis.RediSearch.FtTextFieldAttribute.NoIndex
+  nameWithType: FtTextFieldAttribute.NoIndex
+- uid: FreeRedis.RediSearch.FtTextFieldAttribute.NoIndex*
+  name: NoIndex
+  href: docs/api/FreeRedis.RediSearch.FtTextFieldAttribute.html#FreeRedis_RediSearch_FtTextFieldAttribute_NoIndex_
+  commentId: Overload:FreeRedis.RediSearch.FtTextFieldAttribute.NoIndex
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtTextFieldAttribute.NoIndex
+  nameWithType: FtTextFieldAttribute.NoIndex
+- uid: FreeRedis.RediSearch.FtTextFieldAttribute.NoStem
+  name: NoStem
+  href: docs/api/FreeRedis.RediSearch.FtTextFieldAttribute.html#FreeRedis_RediSearch_FtTextFieldAttribute_NoStem
+  commentId: P:FreeRedis.RediSearch.FtTextFieldAttribute.NoStem
+  fullName: FreeRedis.RediSearch.FtTextFieldAttribute.NoStem
+  nameWithType: FtTextFieldAttribute.NoStem
+- uid: FreeRedis.RediSearch.FtTextFieldAttribute.NoStem*
+  name: NoStem
+  href: docs/api/FreeRedis.RediSearch.FtTextFieldAttribute.html#FreeRedis_RediSearch_FtTextFieldAttribute_NoStem_
+  commentId: Overload:FreeRedis.RediSearch.FtTextFieldAttribute.NoStem
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtTextFieldAttribute.NoStem
+  nameWithType: FtTextFieldAttribute.NoStem
+- uid: FreeRedis.RediSearch.FtTextFieldAttribute.Phonetic
+  name: Phonetic
+  href: docs/api/FreeRedis.RediSearch.FtTextFieldAttribute.html#FreeRedis_RediSearch_FtTextFieldAttribute_Phonetic
+  commentId: P:FreeRedis.RediSearch.FtTextFieldAttribute.Phonetic
+  fullName: FreeRedis.RediSearch.FtTextFieldAttribute.Phonetic
+  nameWithType: FtTextFieldAttribute.Phonetic
+- uid: FreeRedis.RediSearch.FtTextFieldAttribute.Phonetic*
+  name: Phonetic
+  href: docs/api/FreeRedis.RediSearch.FtTextFieldAttribute.html#FreeRedis_RediSearch_FtTextFieldAttribute_Phonetic_
+  commentId: Overload:FreeRedis.RediSearch.FtTextFieldAttribute.Phonetic
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtTextFieldAttribute.Phonetic
+  nameWithType: FtTextFieldAttribute.Phonetic
+- uid: FreeRedis.RediSearch.FtTextFieldAttribute.Sortable
+  name: Sortable
+  href: docs/api/FreeRedis.RediSearch.FtTextFieldAttribute.html#FreeRedis_RediSearch_FtTextFieldAttribute_Sortable
+  commentId: P:FreeRedis.RediSearch.FtTextFieldAttribute.Sortable
+  fullName: FreeRedis.RediSearch.FtTextFieldAttribute.Sortable
+  nameWithType: FtTextFieldAttribute.Sortable
+- uid: FreeRedis.RediSearch.FtTextFieldAttribute.Sortable*
+  name: Sortable
+  href: docs/api/FreeRedis.RediSearch.FtTextFieldAttribute.html#FreeRedis_RediSearch_FtTextFieldAttribute_Sortable_
+  commentId: Overload:FreeRedis.RediSearch.FtTextFieldAttribute.Sortable
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtTextFieldAttribute.Sortable
+  nameWithType: FtTextFieldAttribute.Sortable
+- uid: FreeRedis.RediSearch.FtTextFieldAttribute.Unf
+  name: Unf
+  href: docs/api/FreeRedis.RediSearch.FtTextFieldAttribute.html#FreeRedis_RediSearch_FtTextFieldAttribute_Unf
+  commentId: P:FreeRedis.RediSearch.FtTextFieldAttribute.Unf
+  fullName: FreeRedis.RediSearch.FtTextFieldAttribute.Unf
+  nameWithType: FtTextFieldAttribute.Unf
+- uid: FreeRedis.RediSearch.FtTextFieldAttribute.Unf*
+  name: Unf
+  href: docs/api/FreeRedis.RediSearch.FtTextFieldAttribute.html#FreeRedis_RediSearch_FtTextFieldAttribute_Unf_
+  commentId: Overload:FreeRedis.RediSearch.FtTextFieldAttribute.Unf
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtTextFieldAttribute.Unf
+  nameWithType: FtTextFieldAttribute.Unf
+- uid: FreeRedis.RediSearch.FtTextFieldAttribute.Weight
+  name: Weight
+  href: docs/api/FreeRedis.RediSearch.FtTextFieldAttribute.html#FreeRedis_RediSearch_FtTextFieldAttribute_Weight
+  commentId: P:FreeRedis.RediSearch.FtTextFieldAttribute.Weight
+  fullName: FreeRedis.RediSearch.FtTextFieldAttribute.Weight
+  nameWithType: FtTextFieldAttribute.Weight
+- uid: FreeRedis.RediSearch.FtTextFieldAttribute.Weight*
+  name: Weight
+  href: docs/api/FreeRedis.RediSearch.FtTextFieldAttribute.html#FreeRedis_RediSearch_FtTextFieldAttribute_Weight_
+  commentId: Overload:FreeRedis.RediSearch.FtTextFieldAttribute.Weight
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtTextFieldAttribute.Weight
+  nameWithType: FtTextFieldAttribute.Weight
+- uid: FreeRedis.RediSearch.FtTextFieldAttribute.WithSuffixTrie
+  name: WithSuffixTrie
+  href: docs/api/FreeRedis.RediSearch.FtTextFieldAttribute.html#FreeRedis_RediSearch_FtTextFieldAttribute_WithSuffixTrie
+  commentId: P:FreeRedis.RediSearch.FtTextFieldAttribute.WithSuffixTrie
+  fullName: FreeRedis.RediSearch.FtTextFieldAttribute.WithSuffixTrie
+  nameWithType: FtTextFieldAttribute.WithSuffixTrie
+- uid: FreeRedis.RediSearch.FtTextFieldAttribute.WithSuffixTrie*
+  name: WithSuffixTrie
+  href: docs/api/FreeRedis.RediSearch.FtTextFieldAttribute.html#FreeRedis_RediSearch_FtTextFieldAttribute_WithSuffixTrie_
+  commentId: Overload:FreeRedis.RediSearch.FtTextFieldAttribute.WithSuffixTrie
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtTextFieldAttribute.WithSuffixTrie
+  nameWithType: FtTextFieldAttribute.WithSuffixTrie
 - uid: FreeRedis.RediSearch.GeoFieldOptions
   name: GeoFieldOptions
   href: docs/api/FreeRedis.RediSearch.GeoFieldOptions.html
@@ -19395,6 +20716,15 @@ references:
   isSpec: "True"
   fullName: FreeRedis.RespHelper.MapToClass
   nameWithType: RespHelper.MapToClass
+- uid: FreeRedis.RespHelper.MapToClass``1(System.Collections.Generic.Dictionary{System.String,System.Object})
+  name: MapToClass<T>(Dictionary<String, Object>)
+  href: docs/api/FreeRedis.RespHelper.html#FreeRedis_RespHelper_MapToClass__1_System_Collections_Generic_Dictionary_System_String_System_Object__
+  commentId: M:FreeRedis.RespHelper.MapToClass``1(System.Collections.Generic.Dictionary{System.String,System.Object})
+  name.vb: MapToClass(Of T)(Dictionary(Of String, Object))
+  fullName: FreeRedis.RespHelper.MapToClass<T>(System.Collections.Generic.Dictionary<System.String, System.Object>)
+  fullName.vb: FreeRedis.RespHelper.MapToClass(Of T)(System.Collections.Generic.Dictionary(Of System.String, System.Object))
+  nameWithType: RespHelper.MapToClass<T>(Dictionary<String, Object>)
+  nameWithType.vb: RespHelper.MapToClass(Of T)(Dictionary(Of String, Object))
 - uid: FreeRedis.RespHelper.MapToClass``1(System.Object[],System.Text.Encoding)
   name: MapToClass<T>(Object[], Encoding)
   href: docs/api/FreeRedis.RespHelper.html#FreeRedis_RespHelper_MapToClass__1_System_Object___System_Text_Encoding_

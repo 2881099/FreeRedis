@@ -291,7 +291,7 @@
       "output": {
         ".html": {
           "relative_path": "docs/api/FreeRedis.ConnectionStringBuilder.html",
-          "hash": "WyRuhhL/qWD9MgIaGhBAaBJ1qMxzX83Jx3HQ8Sujxj4="
+          "hash": "3p6LComULOLHsuggzf29vk9SHy2dO/jZ6Sa6BL9U20w="
         }
       },
       "is_incremental": false,
@@ -947,6 +947,138 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "docs/api/FreeRedis.RediSearch.FtDocumentAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "docs/api/FreeRedis.RediSearch.FtDocumentAttribute.html",
+          "hash": "eMp39yu1R7tbONyi6spf/mMol9u11tQjDA9UPhBV8zk="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "docs/api/FreeRedis.RediSearch.FtDocumentRepository-1.DocumentSchemaFieldInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "docs/api/FreeRedis.RediSearch.FtDocumentRepository-1.DocumentSchemaFieldInfo.html",
+          "hash": "Koumpgjxl1eznDov7RfhqgRk2bNgPe4F3pJgSuqoYJA="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "docs/api/FreeRedis.RediSearch.FtDocumentRepository-1.DocumentSchemaInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "docs/api/FreeRedis.RediSearch.FtDocumentRepository-1.DocumentSchemaInfo.html",
+          "hash": "W5gRsWDaq98ayn3QzKbeDgoYWiIaJsive2r04kcw9RY="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "docs/api/FreeRedis.RediSearch.FtDocumentRepository-1.ParseQueryExpressionOptions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "docs/api/FreeRedis.RediSearch.FtDocumentRepository-1.ParseQueryExpressionOptions.html",
+          "hash": "F5+zg+ptlYmI1DbWc4uGs10xuMsKjB1Ch/iZmhm7mvg="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "docs/api/FreeRedis.RediSearch.FtDocumentRepository-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "docs/api/FreeRedis.RediSearch.FtDocumentRepository-1.html",
+          "hash": "Fop7C74QP3OGs6dHQ46R2acoLywoZB6pr3axozSHfl8="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "docs/api/FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "docs/api/FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder-1.html",
+          "hash": "u2gPZYROaSVHreyIdaQt7OMc5gwjwxWhGUDbpjdSOrE="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "docs/api/FreeRedis.RediSearch.FtFieldAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "docs/api/FreeRedis.RediSearch.FtFieldAttribute.html",
+          "hash": "Z/nfPShL7CeJ9C1sKuKYlcvS447bBhJ8jGfqut9VPC4="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "docs/api/FreeRedis.RediSearch.FtKeyAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "docs/api/FreeRedis.RediSearch.FtKeyAttribute.html",
+          "hash": "BajXbXPy+trnd3kdAxGDEehWl9LFRJ2us+j7KTPbEFQ="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "docs/api/FreeRedis.RediSearch.FtNumericFieldAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "docs/api/FreeRedis.RediSearch.FtNumericFieldAttribute.html",
+          "hash": "2RRqzA58P5wrWak4m928LOP9JEBePBJDLW0tDJEesyo="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "docs/api/FreeRedis.RediSearch.FtTagFieldAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "docs/api/FreeRedis.RediSearch.FtTagFieldAttribute.html",
+          "hash": "gPvapFuC2wWOu7hZtSJxwx87RayUbu5bYiJdRpRrkbE="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "docs/api/FreeRedis.RediSearch.FtTextFieldAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "docs/api/FreeRedis.RediSearch.FtTextFieldAttribute.html",
+          "hash": "SC0OeNjqdt3f7uxBlJlf/Xzeo16WAJAEYpcN+/jM7v0="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "docs/api/FreeRedis.RediSearch.GeoFieldOptions.yml",
       "output": {
         ".html": {
@@ -1011,7 +1143,7 @@
       "output": {
         ".html": {
           "relative_path": "docs/api/FreeRedis.RediSearch.SearchBuilder.html",
-          "hash": "DznnBmqKG+171ofqhZJNm58YvsEasNTAXgeDamKjEmU="
+          "hash": "ft8Ig6WI5vHm2lRNnyTn2YHIhnPS3OU1ckcHXLPuGvo="
         }
       },
       "is_incremental": false,
@@ -1071,7 +1203,7 @@
       "output": {
         ".html": {
           "relative_path": "docs/api/FreeRedis.RediSearch.html",
-          "hash": "X5abzAaDpEWndTgB44wvGIhfQtR1KvKRHiN7Mxur7Cg="
+          "hash": "ihqsZQ+EVW2YyBGJeyY8ytCobJpE5T4u+WyFHhMaxVE="
         }
       },
       "is_incremental": false,
@@ -1095,7 +1227,7 @@
       "output": {
         ".html": {
           "relative_path": "docs/api/FreeRedis.RedisClient.DatabaseHook.html",
-          "hash": "SO7DdkuZKxhVYUHYb/zya92tAxqm9RQGzqWJI8vubTM="
+          "hash": "Cz4ovFDepx2xEvRxPt97qbwcHEbbuR2n8D33EFGWZUo="
         }
       },
       "is_incremental": false,
@@ -1119,7 +1251,7 @@
       "output": {
         ".html": {
           "relative_path": "docs/api/FreeRedis.RedisClient.PipelineHook.html",
-          "hash": "lCgazcAwCoBhbWIXv+tOdTVnjGDmO20BnUDI6RBESJg="
+          "hash": "4k4AJ1USSPKHaU2C0iHS6zGbsLhlcvC76kck9V5qgTI="
         }
       },
       "is_incremental": false,
@@ -1131,7 +1263,7 @@
       "output": {
         ".html": {
           "relative_path": "docs/api/FreeRedis.RedisClient.TransactionHook.html",
-          "hash": "BqWhRzpQl8xtIHJ17J2DivvaUOpEO+1OnOUozwKLHZ4="
+          "hash": "XVb63qzAMgSnK2lEN4U7YevEC+gj9aoHCZMEJWL0DCs="
         }
       },
       "is_incremental": false,
@@ -1155,7 +1287,7 @@
       "output": {
         ".html": {
           "relative_path": "docs/api/FreeRedis.RedisClient.html",
-          "hash": "z2+QGR3Cs80D7/IQcXbvXp65csO9XvBqYbjz9V0Fpic="
+          "hash": "FNn9TN/gP+ECAB2M96yWdAL94iJugqbKIByLKkQD9tU="
         }
       },
       "is_incremental": false,
@@ -1263,7 +1395,7 @@
       "output": {
         ".html": {
           "relative_path": "docs/api/FreeRedis.RespHelper.html",
-          "hash": "KiKPJFJYHAtcrKByxotqUvEbWxtAIWOPGaa/3YsBV+c="
+          "hash": "FRzzekzkw7dQmR1lLpTbr6lZiv1HNlqHdaOjuUrDgrI="
         }
       },
       "is_incremental": false,
@@ -1623,7 +1755,7 @@
       "output": {
         ".html": {
           "relative_path": "docs/api/toc.html",
-          "hash": "EsetvA4+NBfiNXAiXB5plWugQY+XJ/SPpfcwoio2Uf0="
+          "hash": "aI2WSKPCYbb2xnooAtI6wd/4qJs2cPIfsTQ8JRCtjCQ="
         }
       },
       "is_incremental": false,
@@ -1662,7 +1794,7 @@
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 132,
+          "total_file_count": 143,
           "skipped_file_count": 0
         },
         "TocDocumentProcessor": {
