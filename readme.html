@@ -321,7 +321,7 @@ cli.Eval(&quot;return redis.call('set',KEYS[1],'bar')&quot;,
 }
 </code></pre>
 <h3 id="delayqueue">🍡DelayQueue</h3>
-<pre><code class="lang-c#">var delayQueue = cli.DelayQueue(&quot;TestDelayQueue&quot;);
+<pre><code class="lang-csharp">var delayQueue = cli.DelayQueue(&quot;TestDelayQueue&quot;);
 
 //Add queue
 delayQueue.Enqueue($&quot;Execute in 5 seconds.&quot;, TimeSpan.FromSeconds(5));
@@ -338,6 +338,58 @@ await delayQueue.DequeueAsync(s =&gt;
 
     return Task.CompletedTask;
 });
+</code></pre>
+<h3 id="-redisearch">🐆 RediSearch</h3>
+<pre><code class="lang-csharp">cli.FtCreate(...).Execute();
+cli.FtSearch(...).Execute();
+cli.FtAggregate(...).Execute();
+//... or ...
+
+[FtDocument(&quot;index_post&quot;, Prefix = &quot;blog:post:&quot;)]
+class TestDoc
+{
+    [FtKey]
+    public int Id { get; set; }
+
+    [FtTextField(&quot;title&quot;, Weight = 5.0)]
+    public string Title { get; set; }
+
+    [FtTextField(&quot;category&quot;)]
+    public string Category { get; set; }
+
+    [FtTextField(&quot;content&quot;, Weight = 1.0, NoIndex = true)]
+    public string Content { get; set; }
+
+    [FtTagField(&quot;tags&quot;)]
+    public string Tags { get; set; }
+
+    [FtNumericField(&quot;views&quot;)]
+    public int Views { get; set; }
+}
+
+var repo = cli.FtDocumentRepository&lt;TestDoc&gt;();
+repo.CreateIndex();
+
+repo.Save(new TestDoc { Id = 1, Title = &quot;test title1 word&quot;, Category = &quot;class 1&quot;, Content = &quot;test content 1 suffix&quot;, Tags = &quot;user1,user2&quot;, Views = 101 });
+repo.Save(new TestDoc { Id = 2, Title = &quot;prefix test title2&quot;, Category = &quot;class 2&quot;, Content = &quot;test infix content 2&quot;, Tags = &quot;user2,user3&quot;, Views = 201 });
+repo.Save(new TestDoc { Id = 3, Title = &quot;test title3 word&quot;, Category = &quot;class 1&quot;, Content = &quot;test word content 3&quot;, Tags = &quot;user2,user5&quot;, Views = 301 });
+
+repo.Delete(1, 2, 3);
+
+repo.Save(new[]
+{
+    new TestDoc { Id = 1, Title = &quot;test title1 word&quot;, Category = &quot;class 1&quot;, Content = &quot;test content 1 suffix&quot;, Tags = &quot;user1,user2&quot;, Views = 101 },
+    new TestDoc { Id = 2, Title = &quot;prefix test title2&quot;, Category = &quot;class 2&quot;, Content = &quot;test infix content 2&quot;, Tags = &quot;user2,user3&quot;, Views = 201 },
+    new TestDoc { Id = 3, Title = &quot;test title3 word&quot;, Category = &quot;class 1&quot;, Content = &quot;test word content 3&quot;, Tags = &quot;user2,user5&quot;, Views = 301 }
+});
+
+var list = repo.Search(&quot;*&quot;).InFields(a =&gt; new { a.Title }).ToList();
+list = repo.Search(&quot;*&quot;).Return(a =&gt; new { a.Title, a.Tags }).ToList();
+list = repo.Search(&quot;*&quot;).Return(a =&gt; new { tit1 = a.Title, tgs1 = a.Tags, a.Title, a.Tags }).ToList();
+
+list = repo.Search(a =&gt; a.Title == &quot;word&quot;).Filter(a =&gt; a.Views, 1, 1000).ToList();
+list = repo.Search(&quot;word&quot;).ToList();
+list = repo.Search(&quot;@title:word&quot;).ToList();
 </code></pre>
 <h2 id="-contributors">👯 Contributors</h2>
 <a href="https://github.com/2881099/FreeRedis/graphs/contributors">
