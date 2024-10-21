@@ -20,8 +20,7 @@ FreeRedis is a redis client based on .NET, supports .NET Core 2.1+, .NET Framewo
 - 🎣 Support Redis Master-Slave
 - 📡 Support Redis Pub-Sub
 - 📃 Support Redis Lua Scripting
-- 💻 Support Pipeline
-- 📰 Support Transaction
+- 💻 Support Pipeline、Transaction、DelayQueue、RediSearch
 - 🌴 Support Geo type commands (requires redis-server 3.2 and above)
 - 🌲 Support Streams type commands (requires redis-server 5.0 and above)
 - ⚡ Support Client-side-caching (requires redis-server 6.0 and above)
