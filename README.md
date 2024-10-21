@@ -225,7 +225,7 @@ foreach (var keys in cli.Scan("*", 10, null))
 
 ### 🍡DelayQueue
 
-```c#
+```csharp
 var delayQueue = cli.DelayQueue("TestDelayQueue");
 
 //Add queue
@@ -243,6 +243,61 @@ await delayQueue.DequeueAsync(s =>
 
     return Task.CompletedTask;
 });
+```
+
+### 🐆 RediSearch
+
+```csharp
+cli.FtCreate(...).Execute();
+cli.FtSearch(...).Execute();
+cli.FtAggregate(...).Execute();
+//... or ...
+
+[FtDocument("index_post", Prefix = "blog:post:")]
+class TestDoc
+{
+    [FtKey]
+    public int Id { get; set; }
+
+    [FtTextField("title", Weight = 5.0)]
+    public string Title { get; set; }
+
+    [FtTextField("category")]
+    public string Category { get; set; }
+
+    [FtTextField("content", Weight = 1.0, NoIndex = true)]
+    public string Content { get; set; }
+
+    [FtTagField("tags")]
+    public string Tags { get; set; }
+
+    [FtNumericField("views")]
+    public int Views { get; set; }
+}
+
+var repo = cli.FtDocumentRepository<TestDoc>();
+repo.CreateIndex();
+
+repo.Save(new TestDoc { Id = 1, Title = "test title1 word", Category = "class 1", Content = "test content 1 suffix", Tags = "user1,user2", Views = 101 });
+repo.Save(new TestDoc { Id = 2, Title = "prefix test title2", Category = "class 2", Content = "test infix content 2", Tags = "user2,user3", Views = 201 });
+repo.Save(new TestDoc { Id = 3, Title = "test title3 word", Category = "class 1", Content = "test word content 3", Tags = "user2,user5", Views = 301 });
+
+repo.Delete(1, 2, 3);
+
+repo.Save(new[]
+{
+    new TestDoc { Id = 1, Title = "test title1 word", Category = "class 1", Content = "test content 1 suffix", Tags = "user1,user2", Views = 101 },
+    new TestDoc { Id = 2, Title = "prefix test title2", Category = "class 2", Content = "test infix content 2", Tags = "user2,user3", Views = 201 },
+    new TestDoc { Id = 3, Title = "test title3 word", Category = "class 1", Content = "test word content 3", Tags = "user2,user5", Views = 301 }
+});
+
+var list = repo.Search("*").InFields(a => new { a.Title }).ToList();
+list = repo.Search("*").Return(a => new { a.Title, a.Tags }).ToList();
+list = repo.Search("*").Return(a => new { tit1 = a.Title, tgs1 = a.Tags, a.Title, a.Tags }).ToList();
+
+list = repo.Search(a => a.Title == "word").Filter(a => a.Views, 1, 1000).ToList();
+list = repo.Search("word").ToList();
+list = repo.Search("@title:word").ToList();
 ```
 
 ## 👯 Contributors
