@@ -21,8 +21,7 @@
 - 🎣 支持主从分离（Master-Slave）
 - 📡 支持发布订阅（Pub-Sub）
 - 📃 支持 Redis Lua 脚本
-- 💻 支持管道（Pipeline）
-- 📰 支持事务
+- 💻 支持管道（Pipeline）、支持事务、延迟队列、RediSearch
 - 🌴 支持 GEO 命令（服务端要求 3.2 及以上版本）
 - 🌲 支持 STREAM 类型命令（服务端要求 5.0 及以上版本）
 - ⚡ 支持本地缓存（Client-side-cahing，服务端要求 6.0 及以上版本）
