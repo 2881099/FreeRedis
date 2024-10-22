@@ -579,12 +579,14 @@ namespace FreeRedis.RediSearch
             _searchBuilder = new SearchBuilder(_repository._client, index, query);
         }
 
-        public List<T> ToList()
+        public List<T> ToList() => ToList(out var _);
+        public List<T> ToList(out long total)
         {
             var prefix = _repository._schema.DocumentAttribute.Prefix;
             var keyProperty = _repository._schema.KeyProperty;
-            var docs = _searchBuilder.Execute();
-            return docs.Select(doc => {
+            var result = _searchBuilder.Execute();
+            total = result.Total;
+            return result.Documents.Select(doc => {
                 var item = doc.Body.MapToClass<T>();
                 var itemId = doc.Id;
                 if (!string.IsNullOrEmpty(prefix))

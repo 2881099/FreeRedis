@@ -3,6 +3,17 @@ using System.Linq;
 
 namespace FreeRedis.RediSearch
 {
+    public class SearchResult
+    {
+        public long Total { get; }
+        public List<Document> Documents { get; }
+        
+        public SearchResult(long total, List<Document> docs)
+        {
+            Total = total;
+            Documents = docs;
+        }
+    }
     public class Document
     {
         public string Id { get; }
@@ -104,15 +115,13 @@ namespace FreeRedis.RediSearch
                .InputIf(_dialect > 0, "DIALECT", _dialect);
             return cmd;
         }
-        public List<Document> Execute()
+        public SearchResult Execute()
         {
             var cmd = GetCommandPacket();
             return _redis.Call(cmd, rt => rt.ThrowOrValue((a, _) =>
             {
-                var docs = new List<Document>();
-                if (a.Any() != true) return docs;
-                var totalResults = a[0].ConvertTo<int>();
-                if (totalResults < 1) return docs;
+                var ret = new SearchResult(a[0].ConvertTo<long>(), new List<Document>());
+                if (a.Any() != true || ret.Total <= 0) return ret;
 
                 int step = 1;
                 int scoreOffset = 0;
@@ -145,9 +154,9 @@ namespace FreeRedis.RediSearch
                     if (_withScores) score = a[x + scoreOffset].ConvertTo<double>();
                     if (_withPayloads) payload = a[x + payloadOffset].ConvertTo<byte[]>();
                     if (_noContent == false) fieldValues = a[x + contentOffset].ConvertTo<object[]>();
-                    docs.Add(Document.Load(id, score, payload, fieldValues, scoreExplained));
+                    ret.Documents.Add(Document.Load(id, score, payload, fieldValues, scoreExplained));
                 }
-                return docs;
+                return ret;
             }));
         }
 

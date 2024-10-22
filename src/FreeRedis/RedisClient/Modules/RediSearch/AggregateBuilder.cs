@@ -72,9 +72,9 @@ namespace FreeRedis.RediSearch
         private long _timeout = -1;
         private List<object> _groupBy = new List<object>();
         private List<AggregateReduce> _groupByReduces = new List<AggregateReduce>();
-        private List<object> _sortBy;
+        private List<object> _sortBy = new List<object>();
         private int _sortByMax;
-        private List<object> _applies;
+        private List<object> _applies = new List<object>();
         private long _limitOffset, _limitNum = 10;
         private string _filter;
         private bool _withCursor;

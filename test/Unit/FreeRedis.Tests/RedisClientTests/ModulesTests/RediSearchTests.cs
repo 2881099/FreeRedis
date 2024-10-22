@@ -12,7 +12,7 @@ namespace FreeRedis.Tests.RedisClientTests.Other
 		
 		protected static ConnectionStringBuilder Connection = new ConnectionStringBuilder()
         {
-            Host = "8.154.26.11",
+            Host = "8.154.26.119",
             MaxPoolSize = 10,
             Protocol = RedisProtocol.RESP2,
             ClientName = "FreeRedis",
@@ -54,6 +54,8 @@ namespace FreeRedis.Tests.RedisClientTests.Other
         [Fact]
         public void FtDocumentRepository()
         {
+            var connStr = Connection.ToString();
+
             var repo = cli.FtDocumentRepository<TestDoc>();
 
             try
@@ -187,28 +189,28 @@ namespace FreeRedis.Tests.RedisClientTests.Other
             cli.HSet("blog:post:2", "title", "prefix测试标题2", "content", "测试infix内容2", "author", "作者2,作者3", "created_date", "10001", "views", 201);
             cli.HSet("blog:post:3", "title", "测试标题3 word", "content", "测试word内容3", "author", "作者2,作者5", "created_date", "10002", "views", 301);
 
-            var list = cli.FtSearch(idxName, "word").Execute();
-            list = cli.FtSearch(idxName, "@title:word").Execute();
-            list = cli.FtSearch(idxName, "prefix*").Execute();
-            list = cli.FtSearch(idxName, "@title:prefix*").Execute();
-            list = cli.FtSearch(idxName, "*suffix").Execute();
-            list = cli.FtSearch(idxName, "*infix*").Execute();
-            list = cli.FtSearch(idxName, "%word%").Execute();
+            var list = cli.FtAggregate(idxName, "word").Execute();
+            list = cli.FtAggregate(idxName, "@title:word").Execute();
+            list = cli.FtAggregate(idxName, "prefix*").Execute();
+            list = cli.FtAggregate(idxName, "@title:prefix*").Execute();
+            list = cli.FtAggregate(idxName, "*suffix").Execute();
+            list = cli.FtAggregate(idxName, "*infix*").Execute();
+            list = cli.FtAggregate(idxName, "%word%").Execute();
 
 
-            list = cli.FtSearch(idxName, "@views:[200 300]").Execute();
-            list = cli.FtSearch(idxName, "@views:[-inf 2000]").SortBy("views").Limit(0, 5).Execute();
-            list = cli.FtSearch(idxName, "@views:[(200 (300]").Execute();
-            list = cli.FtSearch(idxName, "@views>=200").Dialect(4).Execute();
-            list = cli.FtSearch(idxName, "@views:[200 +inf]").Execute();
-            list = cli.FtSearch(idxName, "@views<=300").Dialect(4).Execute();
-            list = cli.FtSearch(idxName, "@views:[-inf 300]").Execute();
-            list = cli.FtSearch(idxName, "@views==200").Dialect(4).Execute();
-            list = cli.FtSearch(idxName, "@views:[200 200]").Execute();
-            list = cli.FtSearch(idxName, "@views!=200").Dialect(4).Execute();
-            list = cli.FtSearch(idxName, "-@views:[200 200]").Execute();
-            list = cli.FtSearch(idxName, "@views==200 | @views==300").Dialect(4).Execute();
-            list = cli.FtSearch(idxName, "*").Filter("views", 200, 300).Dialect(4).Execute();
+            list = cli.FtAggregate(idxName, "@views:[200 300]").Execute();
+            list = cli.FtAggregate(idxName, "@views:[-inf 2000]").SortBy("views").Limit(0, 5).Execute();
+            list = cli.FtAggregate(idxName, "@views:[(200 (300]").Execute();
+            list = cli.FtAggregate(idxName, "@views>=200").Dialect(4).Execute();
+            list = cli.FtAggregate(idxName, "@views:[200 +inf]").Execute();
+            list = cli.FtAggregate(idxName, "@views<=300").Dialect(4).Execute();
+            list = cli.FtAggregate(idxName, "@views:[-inf 300]").Execute();
+            list = cli.FtAggregate(idxName, "@views==200").Dialect(4).Execute();
+            list = cli.FtAggregate(idxName, "@views:[200 200]").Execute();
+            list = cli.FtAggregate(idxName, "@views!=200").Dialect(4).Execute();
+            list = cli.FtAggregate(idxName, "-@views:[200 200]").Execute();
+            list = cli.FtAggregate(idxName, "@views==200 | @views==300").Dialect(4).Execute();
+            list = cli.FtAggregate(idxName, "*").Filter("views:[200 300]").Dialect(4).Execute();
         }
 
         [Fact]
