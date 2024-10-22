@@ -18570,6 +18570,15 @@ references:
   fullName.vb: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder(Of T).ToList()
   nameWithType: FtDocumentRepositorySearchBuilder<T>.ToList()
   nameWithType.vb: FtDocumentRepositorySearchBuilder(Of T).ToList()
+- uid: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.ToList(System.Int64@)
+  name: ToList(out Int64)
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder-1.html#FreeRedis_RediSearch_FtDocumentRepositorySearchBuilder_1_ToList_System_Int64__
+  commentId: M:FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.ToList(System.Int64@)
+  name.vb: ToList(ByRef Int64)
+  fullName: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder<T>.ToList(out System.Int64)
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder(Of T).ToList(ByRef System.Int64)
+  nameWithType: FtDocumentRepositorySearchBuilder<T>.ToList(out Int64)
+  nameWithType.vb: FtDocumentRepositorySearchBuilder(Of T).ToList(ByRef Int64)
 - uid: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.ToList*
   name: ToList
   href: docs/api/FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder-1.html#FreeRedis_RediSearch_FtDocumentRepositorySearchBuilder_1_ToList_
@@ -19697,6 +19706,54 @@ references:
   isSpec: "True"
   fullName: FreeRedis.RediSearch.SearchBuilder.WithSortKeys
   nameWithType: SearchBuilder.WithSortKeys
+- uid: FreeRedis.RediSearch.SearchResult
+  name: SearchResult
+  href: docs/api/FreeRedis.RediSearch.SearchResult.html
+  commentId: T:FreeRedis.RediSearch.SearchResult
+  fullName: FreeRedis.RediSearch.SearchResult
+  nameWithType: SearchResult
+- uid: FreeRedis.RediSearch.SearchResult.#ctor(System.Int64,System.Collections.Generic.List{FreeRedis.RediSearch.Document})
+  name: SearchResult(Int64, List<Document>)
+  href: docs/api/FreeRedis.RediSearch.SearchResult.html#FreeRedis_RediSearch_SearchResult__ctor_System_Int64_System_Collections_Generic_List_FreeRedis_RediSearch_Document__
+  commentId: M:FreeRedis.RediSearch.SearchResult.#ctor(System.Int64,System.Collections.Generic.List{FreeRedis.RediSearch.Document})
+  name.vb: SearchResult(Int64, List(Of Document))
+  fullName: FreeRedis.RediSearch.SearchResult.SearchResult(System.Int64, System.Collections.Generic.List<FreeRedis.RediSearch.Document>)
+  fullName.vb: FreeRedis.RediSearch.SearchResult.SearchResult(System.Int64, System.Collections.Generic.List(Of FreeRedis.RediSearch.Document))
+  nameWithType: SearchResult.SearchResult(Int64, List<Document>)
+  nameWithType.vb: SearchResult.SearchResult(Int64, List(Of Document))
+- uid: FreeRedis.RediSearch.SearchResult.#ctor*
+  name: SearchResult
+  href: docs/api/FreeRedis.RediSearch.SearchResult.html#FreeRedis_RediSearch_SearchResult__ctor_
+  commentId: Overload:FreeRedis.RediSearch.SearchResult.#ctor
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.SearchResult.SearchResult
+  nameWithType: SearchResult.SearchResult
+- uid: FreeRedis.RediSearch.SearchResult.Documents
+  name: Documents
+  href: docs/api/FreeRedis.RediSearch.SearchResult.html#FreeRedis_RediSearch_SearchResult_Documents
+  commentId: P:FreeRedis.RediSearch.SearchResult.Documents
+  fullName: FreeRedis.RediSearch.SearchResult.Documents
+  nameWithType: SearchResult.Documents
+- uid: FreeRedis.RediSearch.SearchResult.Documents*
+  name: Documents
+  href: docs/api/FreeRedis.RediSearch.SearchResult.html#FreeRedis_RediSearch_SearchResult_Documents_
+  commentId: Overload:FreeRedis.RediSearch.SearchResult.Documents
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.SearchResult.Documents
+  nameWithType: SearchResult.Documents
+- uid: FreeRedis.RediSearch.SearchResult.Total
+  name: Total
+  href: docs/api/FreeRedis.RediSearch.SearchResult.html#FreeRedis_RediSearch_SearchResult_Total
+  commentId: P:FreeRedis.RediSearch.SearchResult.Total
+  fullName: FreeRedis.RediSearch.SearchResult.Total
+  nameWithType: SearchResult.Total
+- uid: FreeRedis.RediSearch.SearchResult.Total*
+  name: Total
+  href: docs/api/FreeRedis.RediSearch.SearchResult.html#FreeRedis_RediSearch_SearchResult_Total_
+  commentId: Overload:FreeRedis.RediSearch.SearchResult.Total
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.SearchResult.Total
+  nameWithType: SearchResult.Total
 - uid: FreeRedis.RediSearch.TagFieldOptions
   name: TagFieldOptions
   href: docs/api/FreeRedis.RediSearch.TagFieldOptions.html
