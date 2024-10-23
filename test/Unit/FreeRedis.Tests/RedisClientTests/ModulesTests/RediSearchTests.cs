@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Diagnostics;
-using System.Xml.Linq;
+using System.Linq;
 using Xunit;
 
 namespace FreeRedis.Tests.RedisClientTests.Other
@@ -49,6 +49,54 @@ namespace FreeRedis.Tests.RedisClientTests.Other
 
             [FtNumericField("views")]
             public int Views { get; set; }
+        }
+
+        [FtDocument("index_post100", Prefix = "blog:post:")]
+        class TagMapArrayIndex
+        {
+            [FtKey]
+            public int Id { get; set; }
+
+            [FtTextField("title", Weight = 5.0)]
+            public string Title { get; set; }
+
+            [FtTextField("category")]
+            public string Category { get; set; }
+
+            [FtTextField("content", Weight = 1.0, NoIndex = true)]
+            public string Content { get; set; }
+
+            [FtTagField("tags")]
+            public string[] Tags { get; set; }
+
+            [FtNumericField("views")]
+            public int Views { get; set; }
+        }
+        [Fact]
+        public void TagMapArray()
+        {
+            var repo = cli.FtDocumentRepository<TagMapArrayIndex>();
+
+            try
+            {
+                repo.DropIndex();
+            }
+            catch { }
+            repo.CreateIndex();
+
+            repo.Save(new TagMapArrayIndex { Id = 1, Title = "测试标题1 word", Category = "一级分类", Content = "测试内容1suffix", Tags = ["作者1","作者2"], Views = 101 });
+            repo.Save(new TagMapArrayIndex { Id = 2, Title = "prefix测试标题2", Category = "二级分类", Content = "测试infix内容2", Tags = ["作者2","作者3"], Views = 201 });
+            repo.Save(new TagMapArrayIndex { Id = 3, Title = "测试标题3 word", Category = "一级分类", Content = "测试word内容3", Tags = ["作者2","作者5"], Views = 301 });
+
+            repo.Delete(1, 2, 3);
+
+            repo.Save(new[]{
+                new TagMapArrayIndex { Id = 1, Title = "测试标题1 word", Category = "一级分类", Content = "测试内容1suffix", Tags = ["作者1","作者2"], Views = 101 },
+                new TagMapArrayIndex { Id = 2, Title = "prefix测试标题2", Category = "二级分类", Content = "测试infix内容2", Tags = ["作者2","作者3"], Views = 201 },
+                new TagMapArrayIndex { Id = 3, Title = "测试标题3 word", Category = "一级分类", Content = "测试word内容3", Tags = ["作者2","作者5"], Views = 301 }
+            });
+
+            var list = repo.Search(a => a.Tags.Contains("作者1")).ToList();
         }
 
         [Fact]

@@ -617,6 +617,9 @@ namespace FreeRedis
             if (genericParameters.Any() == false)
                 return sb.Append(type.Name).ToString();
 
+            var idxof = type.Name.IndexOf('`');
+            if (idxof == -1) return sb.Append(type.Name).ToString();
+            
             sb.Append(type.Name.Remove(type.Name.IndexOf('`'))).Append("<");
             var genericTypeIndex = 0;
             foreach (var genericType in genericParameters)

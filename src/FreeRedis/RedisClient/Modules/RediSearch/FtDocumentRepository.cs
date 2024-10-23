@@ -139,11 +139,26 @@ namespace FreeRedis.RediSearch
         void Save(T doc, RedisClient.PipelineHook pipe)
         {
             var key = $"{_schema.DocumentAttribute.Prefix}{_schema.KeyProperty.GetValue(doc, null)}";
-            var opts = _schema.Fields.Where((a, b) => b > 0).Select((a, b) => new object[] { a.FieldAttribute.FieldName, a.Property.GetValue(doc, null) }).SelectMany(a => a).ToArray();
+            var opts = _schema.Fields.Where((a, b) => b > 0).Select((a, b) => new object[]
+            {
+                a.FieldAttribute.FieldName,
+                toRedisValue(a)
+            }).SelectMany(a => a).ToArray();
             var field = _schema.Fields[0].FieldAttribute.FieldName;
             var value = _schema.Fields[0].Property.GetValue(doc, null);
             if (pipe != null) pipe.HMSet(key, field, value, opts);
             else _client.HMSet(key, field, value, opts);
+
+            object toRedisValue(DocumentSchemaFieldInfo dsf)
+            {
+                var val = dsf.Property.GetValue(doc, null);
+                if (dsf.FieldType == FieldType.Tag)
+                {
+                    if (dsf.Property.PropertyType.IsArrayOrList())
+                        val = string.Join((dsf.FieldAttribute as FtTagFieldAttribute).Separator ?? ",", typeof(string[]).FromObject(val) as string[]);
+                }
+                return val;
+            }
         }
         public void Save(T doc) => Save(doc, null);
         public void Save(T[] docs) => Save(docs as IEnumerable<T>);
@@ -236,6 +251,14 @@ namespace FreeRedis.RediSearch
                     return ToTimestamp((DateTime)param);
 
                 return string.Concat("\"", param.ToString().Replace("\\", "\\\\").Replace("\"", "\\\""), "\"");
+            }
+            string toFtTagString(string expResultStr)
+            {
+                if (expResultStr == null) return "";
+                if (expResultStr.StartsWith("\"") && expResultStr.EndsWith("\""))
+                    return expResultStr.Substring(1, expResultStr.Length - 2)
+                        .Replace("\\\"", "\"").Replace("\\\\", "\\");
+                return expResultStr;
             }
             if (exp == null) return "";
 
@@ -341,6 +364,7 @@ namespace FreeRedis.RediSearch
                         case "System.String": callParseResult = ParseCallString(); break;
                         case "System.Math": callParseResult = ParseCallMath(); break;
                         case "System.DateTime": callParseResult = ParseCallDateTime(); break;
+                        default: callParseResult = ParseCallOther(); break;
                     }
                     if (!string.IsNullOrEmpty(callParseResult)) return callParseResult;
                     break;
@@ -439,6 +463,44 @@ namespace FreeRedis.RediSearch
                         }
                         return null;
                     }
+                    string ParseCallOther()
+                    {
+                        var objExp = callExp.Object;
+                        var objType = objExp?.Type;
+                        if (objType?.FullName == "System.Byte[]") return null;
+
+                        var argIndex = 0;
+                        if (objType == null && callExp.Method.DeclaringType == typeof(Enumerable))
+                        {
+                            objExp = callExp.Arguments.FirstOrDefault();
+                            objType = objExp?.Type;
+                            argIndex++;
+
+                            if (objType == typeof(string))
+                            {
+                                switch (callExp.Method.Name)
+                                {
+                                    case "First":
+                                    case "FirstOrDefault":
+                                        return $"substr({parseExp(callExp.Arguments[0])},0,1)";
+                                }
+                            }
+                        }
+                        if (objType == null) objType = callExp.Method.DeclaringType;
+                        if (objType != null || objType.IsArrayOrList())
+                        {
+                            string left = null;
+                            switch (callExp.Method.Name)
+                            {
+                                case "Contains":
+
+                                    left = objExp == null ? null : parseExp(objExp);
+                                    var args1 = parseExp(callExp.Arguments[argIndex]);
+                                    return $"{left}:{{{toFtTagString(args1)}}}";
+                            }
+                        }
+                        return null;
+                    }
             }
             if (exp is BinaryExpression expBinary && expBinary != null)
             {
@@ -467,7 +529,7 @@ namespace FreeRedis.RediSearch
                             if (field.FieldType == FieldType.Text)
                                 return $"{(expBinary.NodeType == ExpressionType.NotEqual ? "-" : "")}{parseExp(expBinary.Left)}:{equalRight}";
                             else if (field.FieldType == FieldType.Tag)
-                                return $"{(expBinary.NodeType == ExpressionType.NotEqual ? "-" : "")}{parseExp(expBinary.Left)}:{{{equalRight}}}";
+                                return $"{(expBinary.NodeType == ExpressionType.NotEqual ? "-" : "")}{parseExp(expBinary.Left)}:{{{toFtTagString(equalRight)}}}";
                         }
                         return $"{(expBinary.NodeType == ExpressionType.NotEqual ? "-" : "")}{parseExp(expBinary.Left)}:[{equalRight} {equalRight}]";
                     case ExpressionType.Add:
@@ -586,8 +648,21 @@ namespace FreeRedis.RediSearch
             var keyProperty = _repository._schema.KeyProperty;
             var result = _searchBuilder.Execute();
             total = result.Total;
-            return result.Documents.Select(doc => {
-                var item = doc.Body.MapToClass<T>();
+            var ttype = typeof(T);
+            return result.Documents.Select(doc =>
+            {
+                var item = (T)ttype.CreateInstanceGetDefaultValue();
+                foreach (var kv in doc.Body)
+                {
+                    var name = kv.Key.Replace("-", "_");
+                    var prop = ttype.GetPropertyOrFieldIgnoreCase(name);
+                    if (prop == null) continue;
+                    if (kv.Value == null) continue;
+                    if (kv.Value is string valstr && _repository._schema.FieldsMap.TryGetValue(prop.Name, out var field) && field.FieldType == FieldType.Tag)
+                        ttype.SetPropertyOrFieldValue(item, prop.Name, valstr.Split(new[] { (field.FieldAttribute as FtTagFieldAttribute).Separator ?? "," }, StringSplitOptions.None));
+                    else
+                        ttype.SetPropertyOrFieldValue(item, prop.Name, prop.GetPropertyOrFieldType().FromObject(kv.Value));
+                }
                 var itemId = doc.Id;
                 if (!string.IsNullOrEmpty(prefix))
                     if (itemId.StartsWith(prefix))
