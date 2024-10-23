@@ -12,7 +12,7 @@ namespace FreeRedis.Tests.RedisClientTests.Other
 		
 		protected static ConnectionStringBuilder Connection = new ConnectionStringBuilder()
         {
-            Host = "8.154.26.119",
+            Host = "8.154.26.11",
             MaxPoolSize = 10,
             Protocol = RedisProtocol.RESP2,
             ClientName = "FreeRedis",
