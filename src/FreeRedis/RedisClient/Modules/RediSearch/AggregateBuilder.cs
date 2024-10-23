@@ -42,18 +42,21 @@ namespace FreeRedis.RediSearch
         }
         public AggregationResult Execute()
         {
-            var cmd = "FT.SEARCH".Input(_index).Input(_query)
+            var cmd = "FT.AGGREGATE".Input(_index).Input(_query)
                 .InputIf(_verbatim, "VERBATIM");
             if (_load.Any()) cmd.Input("LOAD", _load.Count).Input(_load.ToArray());
-            cmd.InputIf(_timeout >= 0, "TIMEOUT", _timeout);
+            cmd.InputIf(_applies.Any(), _applies.ToArray())
+                .InputIf(_timeout >= 0, "TIMEOUT", _timeout);
             if (_groupBy.Any())
             {
                 cmd.Input("GROUPBY", _groupBy.Count).Input(_groupBy.ToArray());
                 foreach (var reduce in _groupByReduces)
-                    cmd.Input("REDUCE", reduce.Function, reduce.Arguments?.Length ?? 0).InputIf(!string.IsNullOrWhiteSpace(reduce.Alias), reduce.Alias);
+                    cmd.Input("REDUCE", reduce.Function, reduce.Arguments?.Length ?? 0)
+                        .InputIf(reduce.Arguments?.Any() == true, reduce.Arguments)
+                        .InputIf(!string.IsNullOrWhiteSpace(reduce.Alias), "AS", reduce.Alias);
             }
             if (_sortBy.Any()) cmd.InputIf(_sortBy.Any(), "SORTBY").Input(_sortBy.ToArray()).InputIf(_sortByMax > 0, "MAX", _sortByMax);
-            cmd.InputIf(_applies.Any(), _applies.ToArray())
+            cmd
                 .InputIf(_limitOffset > 0 || _limitNum != 10, "LIMIT", _limitOffset, _limitNum)
                 .InputIf(!string.IsNullOrWhiteSpace(_filter), "FILTER", _filter);
             if (_withCursor) cmd.Input("WITHCURSOR").InputIf(_withCursorCount != -1, "COUNT", _withCursorCount).InputIf(_withCursorMaxIdle != -1, "MAXIDLE", _withCursorMaxIdle);
