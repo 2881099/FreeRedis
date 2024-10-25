@@ -179,6 +179,11 @@ namespace FreeRedis.Tests.RedisClientTests.Other
         [Fact]
         public void FtSearch()
         {
+            var rt = cli.FtSearch("index_contacts", "(@email:*wjx\\.cn*) (@companyid==10096)")
+                .Limit(0, 10)
+                .Dialect(4)
+                .Execute();
+
             var idxName = Guid.NewGuid().ToString();
             cli.FtCreate(idxName)
                 .On(IndexDataType.Hash)
@@ -301,5 +306,99 @@ namespace FreeRedis.Tests.RedisClientTests.Other
                 .AddTagField("$.categories", alias: "categories")
                 .Execute();
         }
+
+
+        [Fact]
+        public void TestContactsUserIndex()
+        {
+            var repo = cli.FtDocumentRepository<ContactsUserIndex>();
+            //FT.SEARCH index_contacts "(@email:*wjx\\.cn*) (@companyid==10096)" dialect 4
+            var rt = repo.Search(@"(@email:*wjx\.cn*) (@companyid==10096)").Dialect(4).ToList();
+
+            var rt2 = repo.Search(a => a.UEmail.Contains("wjx.cn") && a.CompanyId == 10096).Dialect(4).ToList();
+        }
+
+        [FtDocument("index_contacts", Prefix = "contactsuser:")]
+        public class ContactsUserIndex
+        {
+            /// <summary>
+            /// 用户唯一编号
+            /// </summary>
+
+            [FtKey]
+            public long Id { get; set; }
+
+            /// <summary>
+            /// 用户编号
+            /// </summary>
+            [FtTextField("userid")]
+            public string UserId { get; set; }
+            /// <summary>
+            /// 用户姓名
+            /// </summary>
+            [FtTextField("name")]
+            public string Name { get; set; }
+            /// <summary>
+            /// 用户所属部门
+            /// </summary>
+            [FtTagField("department")]
+            public string Department { get; set; }
+
+            /// <summary>
+            /// 企业编号
+            /// </summary>
+            [FtNumericField("companyid")]
+            public int CompanyId { get; set; }
+
+            /// <summary>
+            /// 用户自定义标签
+            /// </summary>
+            [FtTagField("utags")]
+            public string UTags { get; set; }
+            /// <summary>
+            /// 添加时间
+            /// </summary>
+            [FtNumericField("addtime", Sortable = true)]
+            public long AddTime { get; set; }
+            /// <summary>
+            /// 更新时间
+            /// </summary>
+            [FtNumericField("updatetime")]
+            public long UpdateTime { get; set; }
+
+            /// <summary>
+            /// 手机号
+            /// </summary>
+            [FtTextField("umobile")]
+            public string UMobile { get; set; }
+            /// <summary>
+            /// 邮箱
+            /// </summary>
+            [FtTextField("uemail")]
+            public string UEmail { get; set; }
+            /// <summary>
+            /// 昵称
+            /// </summary>
+            [FtTextField("unickname")]
+            public string UNickname { get; set; }
+            /// <summary>
+            /// 生日
+            /// </summary>
+            [FtNumericField("ubirthday")]
+            public long UBirthday { get; set; }
+
+            [FtNumericField("lastmsgtime")]
+            public long LastMsgTime { get; set; }
+
+            [FtNumericField("lastjointime")]
+            public long LastJoinTime { get; set; }
+
+            /// <summary>
+            /// 用户信息标识位
+            /// </summary>
+            [FtNumericField("uinfomap")]
+            public long UInfoMap { get; set; }
+        }
     }
+
 }
