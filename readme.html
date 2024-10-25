@@ -360,7 +360,7 @@ class TestDoc
     public string Content { get; set; }
 
     [FtTagField(&quot;tags&quot;)]
-    public string Tags { get; set; }
+    public string[] Tags { get; set; } //or string
 
     [FtNumericField(&quot;views&quot;)]
     public int Views { get; set; }
@@ -386,7 +386,7 @@ var list = repo.Search(&quot;*&quot;).InFields(a =&gt; new { a.Title }).ToList()
 list = repo.Search(&quot;*&quot;).Return(a =&gt; new { a.Title, a.Tags }).ToList();
 list = repo.Search(&quot;*&quot;).Return(a =&gt; new { tit1 = a.Title, tgs1 = a.Tags, a.Title, a.Tags }).ToList();
 
-list = repo.Search(a =&gt; a.Title == &quot;word&quot;).Filter(a =&gt; a.Views, 1, 1000).ToList();
+list = repo.Search(a =&gt; a.Title == &quot;word&quot; &amp;&amp; a.Tags.Contains(&quot;user1&quot;)).Filter(a =&gt; a.Views, 1, 1000).ToList();
 list = repo.Search(&quot;word&quot;).ToList();
 list = repo.Search(&quot;@title:word&quot;).ToList();
 </code></pre>

@@ -12,7 +12,7 @@
       "output": {
         ".html": {
           "relative_path": "README.html",
-          "hash": "776Bx6uh5eDMKnv2b1D53P981i1QWTLeR7VjIxKSA10="
+          "hash": "2UtC4LHM+fQiqexqCoS1JcXZnAHA+ZZYxY++WVTbv2w="
         }
       },
       "is_incremental": false,
@@ -27,7 +27,7 @@
       "output": {
         ".html": {
           "relative_path": "README.zh-CN.html",
-          "hash": "NRCYLf6/YYkktIot33gQXioSx4sMXMgLDCKxohxAdwQ="
+          "hash": "p3oJreA8jd5R6uDe/zMMqwl+bh+LWlSYTAlOsNwDs0M="
         }
       },
       "is_incremental": false,
@@ -999,7 +999,19 @@
       "output": {
         ".html": {
           "relative_path": "docs/api/FreeRedis.RediSearch.FtDocumentRepository-1.html",
-          "hash": "Fop7C74QP3OGs6dHQ46R2acoLywoZB6pr3axozSHfl8="
+          "hash": "yT02wjuwlBHEDwKiDAVGJKgIKy5gO91KE2/6CMfUk80="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "docs/api/FreeRedis.RediSearch.FtDocumentRepositoryAggregateBuilder-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "docs/api/FreeRedis.RediSearch.FtDocumentRepositoryAggregateBuilder-1.html",
+          "hash": "SCsILuJ0onN/gwoO1g8IJTWE+LoAdQSEXilZdKpthlk="
         }
       },
       "is_incremental": false,
@@ -1215,7 +1227,7 @@
       "output": {
         ".html": {
           "relative_path": "docs/api/FreeRedis.RediSearch.html",
-          "hash": "WteyyhsfYAAxym7BA1idr/CskvOXtH45CzM2DXHrbyk="
+          "hash": "wR6PL1VG5wNKfhhJTa1O0tdIxwjm6VTM7T9iu4vtm+g="
         }
       },
       "is_incremental": false,
@@ -1767,7 +1779,7 @@
       "output": {
         ".html": {
           "relative_path": "docs/api/toc.html",
-          "hash": "+Cjr1HLPa13CFdYv3w09qEqAJTgo/IfaWcOcI+FR1mk="
+          "hash": "KQnJd1kw5wshcpe8wBwrg6v6qB8jx329a0wRSt/qaYY="
         }
       },
       "is_incremental": false,
@@ -1806,7 +1818,7 @@
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 144,
+          "total_file_count": 145,
           "skipped_file_count": 0
         },
         "TocDocumentProcessor": {
