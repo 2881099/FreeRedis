@@ -114,6 +114,34 @@
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public class LockController : IDisposable</code></pre>
   </div>
+  <h3 id="properties">Properties
+  </h3>
+  
+  
+  <a id="FreeRedis_RedisClient_LockController_HandleLostToken_" data-uid="FreeRedis.RedisClient.LockController.HandleLostToken*"></a>
+  <h4 id="FreeRedis_RedisClient_LockController_HandleLostToken" data-uid="FreeRedis.RedisClient.LockController.HandleLostToken">HandleLostToken</h4>
+  <div class="markdown level1 summary"><p>当刷新锁时间的看门狗线程失去与Redis连接时，导致无法刷新延长锁时间时，触发此HandelLostToken Cancel</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public CancellationToken? HandleLostToken { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Threading.CancellationToken</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <h3 id="methods">Methods
   </h3>
   

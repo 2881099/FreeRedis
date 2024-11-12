@@ -14018,6 +14018,19 @@ references:
   isSpec: "True"
   fullName: FreeRedis.RedisClient.LockController.Dispose
   nameWithType: RedisClient.LockController.Dispose
+- uid: FreeRedis.RedisClient.LockController.HandleLostToken
+  name: HandleLostToken
+  href: docs/api/FreeRedis.RedisClient.LockController.html#FreeRedis_RedisClient_LockController_HandleLostToken
+  commentId: P:FreeRedis.RedisClient.LockController.HandleLostToken
+  fullName: FreeRedis.RedisClient.LockController.HandleLostToken
+  nameWithType: RedisClient.LockController.HandleLostToken
+- uid: FreeRedis.RedisClient.LockController.HandleLostToken*
+  name: HandleLostToken
+  href: docs/api/FreeRedis.RedisClient.LockController.html#FreeRedis_RedisClient_LockController_HandleLostToken_
+  commentId: Overload:FreeRedis.RedisClient.LockController.HandleLostToken
+  isSpec: "True"
+  fullName: FreeRedis.RedisClient.LockController.HandleLostToken
+  nameWithType: RedisClient.LockController.HandleLostToken
 - uid: FreeRedis.RedisClient.LockController.Refresh(System.Int32)
   name: Refresh(Int32)
   href: docs/api/FreeRedis.RedisClient.LockController.html#FreeRedis_RedisClient_LockController_Refresh_System_Int32_
