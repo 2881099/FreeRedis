@@ -987,7 +987,7 @@
       "output": {
         ".html": {
           "relative_path": "docs/api/FreeRedis.RediSearch.FtDocumentRepository-1.ParseQueryExpressionOptions.html",
-          "hash": "F5+zg+ptlYmI1DbWc4uGs10xuMsKjB1Ch/iZmhm7mvg="
+          "hash": "a1qjOwjfJUFsCqTk5hNgXKjCu+ksuftlXVtn6NaSpe8="
         }
       },
       "is_incremental": false,
@@ -1007,11 +1007,23 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "docs/api/FreeRedis.RediSearch.FtDocumentRepositoryAggregateBuilder-1.yml",
+      "source_relative_path": "docs/api/FreeRedis.RediSearch.FtDocumentRepositoryAggregateBuilder-2.yml",
       "output": {
         ".html": {
-          "relative_path": "docs/api/FreeRedis.RediSearch.FtDocumentRepositoryAggregateBuilder-1.html",
-          "hash": "SCsILuJ0onN/gwoO1g8IJTWE+LoAdQSEXilZdKpthlk="
+          "relative_path": "docs/api/FreeRedis.RediSearch.FtDocumentRepositoryAggregateBuilder-2.html",
+          "hash": "h9q6WXa1qSCr45er++jbVIQHvFoG9EzrWqS+QZDyZ1M="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "docs/api/FreeRedis.RediSearch.FtDocumentRepositoryAggregateTuple-2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "docs/api/FreeRedis.RediSearch.FtDocumentRepositoryAggregateTuple-2.html",
+          "hash": "wOhhRDLTuyQDrfc8SCqVls6pULp77GGO9COOZoJnnH4="
         }
       },
       "is_incremental": false,
@@ -1227,7 +1239,7 @@
       "output": {
         ".html": {
           "relative_path": "docs/api/FreeRedis.RediSearch.html",
-          "hash": "wR6PL1VG5wNKfhhJTa1O0tdIxwjm6VTM7T9iu4vtm+g="
+          "hash": "23MLQ5cFoxLBS4sm2Agx6CH93D+TA4qUQ0QY2PFMlaY="
         }
       },
       "is_incremental": false,
@@ -1779,7 +1791,7 @@
       "output": {
         ".html": {
           "relative_path": "docs/api/toc.html",
-          "hash": "KQnJd1kw5wshcpe8wBwrg6v6qB8jx329a0wRSt/qaYY="
+          "hash": "u+4iOIQeTs6X5yVUfimcnAn+HWDTdmvKY9NMGoZ2UDk="
         }
       },
       "is_incremental": false,
@@ -1818,7 +1830,7 @@
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 145,
+          "total_file_count": 146,
           "skipped_file_count": 0
         },
         "TocDocumentProcessor": {
