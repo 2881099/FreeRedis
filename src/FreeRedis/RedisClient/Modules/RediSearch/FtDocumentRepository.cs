@@ -226,6 +226,7 @@ namespace FreeRedis.RediSearch
         internal protected class ParseQueryExpressionOptions
         {
             public bool IsQuoteFieldName { get; set; } = true;
+            public Func<MemberExpression, string> DiyParse { get; set; }
         }
         internal protected string ParseQueryExpression(Expression exp, ParseQueryExpressionOptions options)
         {
@@ -239,25 +240,25 @@ namespace FreeRedis.RediSearch
                 if (param is bool || param is bool?)
                     return (bool)param ? 1 : 0;
                 else if (param is string str)
-                    return string.Concat("\"", str.Replace("\\", "\\\\").Replace("\"", "\\\""), "\"");
+                    return string.Concat("'", str.Replace("\\", "\\\\").Replace("'", "\\'"), "'");
                 else if (param is char chr)
-                    return string.Concat("\"", chr.ToString().Replace("\\", "\\\\").Replace("\"", "\\\"").Replace('\0', ' '), "\"");
+                    return string.Concat("'", chr.ToString().Replace("\\", "\\\\").Replace("'", "\\'").Replace('\0', ' '), "'");
                 else if (param is Enum enm)
-                    return string.Concat("\"", enm.ToString().Replace("\\", "\\\\").Replace("\"", "\\\"").Replace(", ", ","), "\"");
+                    return string.Concat("'", enm.ToString().Replace("\\", "\\\\").Replace("'", "\\'").Replace(", ", ","), "'");
                 else if (decimal.TryParse(string.Concat(param), out var trydec))
                     return param;
 
                 else if (param is DateTime || param is DateTime?)
                     return ToTimestamp((DateTime)param);
 
-                return string.Concat("\"", param.ToString().Replace("\\", "\\\\").Replace("\"", "\\\""), "\"");
+                return string.Concat("\"", param.ToString().Replace("\\", "\\\\").Replace("'", "\\'"), "'");
             }
             string toFtTagString(string expResultStr)
             {
                 if (expResultStr == null) return "";
-                if (expResultStr.StartsWith("\"") && expResultStr.EndsWith("\""))
+                if (expResultStr.StartsWith("'") && expResultStr.EndsWith("'"))
                     return expResultStr.Substring(1, expResultStr.Length - 2)
-                        .Replace("\\\"", "\"").Replace("\\\\", "\\");
+                        .Replace("\\'", "'").Replace("\\\\", "\\");
                 return expResultStr;
             }
             if (exp == null) return "";
@@ -309,10 +310,17 @@ namespace FreeRedis.RediSearch
                     if (string.IsNullOrEmpty(memberParseResult) == false) return memberParseResult;
 
                     if (memberExp.IsParameter() == false) return toFt(Expression.Lambda(exp).Compile().DynamicInvoke());
-                    if (_schema.KeyProperty.Name == memberExp.Member.Name)
-                        return options.IsQuoteFieldName ? $"@__key" : "__key";
-                    if (_schema.FieldsMap.TryGetValue(memberExp.Member.Name, out var field))
-                        return options.IsQuoteFieldName ? $"@{field.FieldAttribute.FieldName}" : field.FieldAttribute.FieldName;
+                    if (memberExp.Expression.NodeType == ExpressionType.Parameter)
+                    {
+                        if (_schema.KeyProperty.Name == memberExp.Member.Name)
+                            return options.IsQuoteFieldName ? $"@__key" : "__key";
+                        if (_schema.FieldsMap.TryGetValue(memberExp.Member.Name, out var field))
+                            return options.IsQuoteFieldName ? $"@{field.FieldAttribute.FieldName}" : field.FieldAttribute.FieldName;
+                    }
+                    else
+                    {
+                        return options?.DiyParse(memberExp);
+                    }
                     break;
 
                     string ParseMemberAccessString()
@@ -378,9 +386,31 @@ namespace FreeRedis.RediSearch
                             var left = parseExp(callExp.Object);
                             switch (callExp.Method.Name)
                             {
-                                case "StartsWith": return $"startswith({left},{parseExp(callExp.Arguments[0])})";
-                                case "EndsWith": return $"endswith({left},{parseExp(callExp.Arguments[0])})";
-                                case "Contains": return $"contains({left},{parseExp(callExp.Arguments[0])})";
+                                case "StartsWith":
+                                case "EndsWith":
+                                case "Contains":
+                                    var right = parseExp(callExp.Arguments[0]);
+                                    if (right.StartsWith("'"))
+                                    {
+                                        switch (callExp.Method.Name)
+                                        {
+                                            case "StartsWith":
+                                            case "Contains":
+                                                right = $"'*{right.Substring(1)}";
+                                                break;
+                                        }
+                                    }
+                                    if (right.EndsWith("'"))
+                                    {
+                                        switch (callExp.Method.Name)
+                                        {
+                                            case "EndsWith":
+                                            case "Contains":
+                                                right = $"{right.Substring(0, right.Length - 1)}*'";
+                                                break;
+                                        }
+                                    }
+                                    return $"{left}:{right}";
                                 case "ToLower": return $"lower({left})";
                                 case "ToUpper": return $"upper({left})";
                                 case "Substring":
@@ -661,7 +691,7 @@ namespace FreeRedis.RediSearch
                     if (prop == null) continue;
                     if (kv.Value == null) continue;
                     if (kv.Value is string valstr && _repository._schema.FieldsMap.TryGetValue(prop.Name, out var field) && field.FieldType == FieldType.Tag)
-                        ttype.SetPropertyOrFieldValue(item, prop.Name, 
+                        ttype.SetPropertyOrFieldValue(item, prop.Name,
                             field.Property.PropertyType.IsArrayOrList() ?
                             field.Property.PropertyType.FromObject(valstr.Split(new[] { (field.FieldAttribute as FtTagFieldAttribute).Separator ?? "," }, StringSplitOptions.None)) : valstr
                             );
@@ -797,11 +827,21 @@ namespace FreeRedis.RediSearch
     }
 
 
-    public class FtDocumentRepositoryAggregateBuilder<T>
+    public class FtDocumentRepositoryAggregateTuple<TDocument, TExtra>
+    {
+        public TDocument Document { get; set; }
+        public TExtra Extra { get; set; }
+    }
+    public class FtDocumentRepositoryAggregateBuilder<TDocument, TExtra>
     {
         AggregateBuilder _aggregateBuilder;
-        FtDocumentRepository<T> _repository;
-        internal FtDocumentRepositoryAggregateBuilder(FtDocumentRepository<T> repository, string index, string query)
+        FtDocumentRepository<TDocument> _repository;
+        internal FtDocumentRepositoryAggregateBuilder(FtDocumentRepository<TDocument> repository, AggregateBuilder aggregateBuilder)
+        {
+            _repository = repository;
+            _aggregateBuilder = aggregateBuilder;
+        }
+        internal FtDocumentRepositoryAggregateBuilder(FtDocumentRepository<TDocument> repository, string index, string query)
         {
             _repository = repository;
             _aggregateBuilder = new AggregateBuilder(_repository._client, index, query);
@@ -838,70 +878,95 @@ namespace FreeRedis.RediSearch
         //    }).ToList();
         //}
 
-        public FtDocumentRepositoryAggregateBuilder<T> Verbatim(bool value = true)
+        public FtDocumentRepositoryAggregateBuilder<TDocument, TExtra> Verbatim(bool value = true)
         {
             _aggregateBuilder.Verbatim(value);
             return this;
         }
-        public FtDocumentRepositoryAggregateBuilder<T> Load(Expression<Func<T, object>> selector)
+        public FtDocumentRepositoryAggregateBuilder<TDocument, TExtra> Load(Expression<Func<TDocument, object>> selector)
         {
             var fields = _repository.ParseSelectorExpression(selector.Body).Select(a => a.Value).ToArray();
             if (fields.Any()) _aggregateBuilder.Load(fields);
             return this;
         }
-        public FtDocumentRepositoryAggregateBuilder<T> Timeout(long milliseconds)
+        public FtDocumentRepositoryAggregateBuilder<TDocument, TExtra> Timeout(long milliseconds)
         {
             _aggregateBuilder.Timeout(milliseconds);
             return this;
         }
-        public FtDocumentRepositoryAggregateBuilder<T> GroupBy(params string[] properties)
+        public FtDocumentRepositoryAggregateBuilder<TDocument, TNewExtra> GroupBy<TNewExtra>(Expression<Func<FtDocumentRepositoryAggregateTuple<TDocument, TExtra>, TNewExtra>> selector)
         {
-            _aggregateBuilder.GroupBy(properties);
-            return this;
+            var fieldValues = new List<KeyValuePair<string, string>>();
+            var exp = selector.Body;
+
+            if (exp.NodeType == ExpressionType.New)
+            {
+                var newExp = exp as NewExpression;
+                for (var a = 0; a < newExp?.Members?.Count; a++)
+                {
+                    var left = newExp.Members[a].Name;
+                    var right = _repository.ParseQueryExpression(newExp.Arguments[a], new FtDocumentRepository<TDocument>.ParseQueryExpressionOptions { IsQuoteFieldName = false });
+                    fieldValues.Add(new KeyValuePair<string, string>(left, right));
+                }
+            }
+            else if (exp.NodeType == ExpressionType.MemberInit)
+            {
+                var initExp = exp as MemberInitExpression;
+                for (var a = 0; a < initExp?.Bindings.Count; a++)
+                {
+                    var initAssignExp = (initExp.Bindings[a] as MemberAssignment);
+                    if (initAssignExp == null) continue;
+                    var left = initAssignExp.Member.Name;
+                    var right = _repository.ParseQueryExpression(initAssignExp.Expression, new FtDocumentRepository<TDocument>.ParseQueryExpressionOptions { IsQuoteFieldName = false });
+                    fieldValues.Add(new KeyValuePair<string, string>(left, right));
+                }
+            }
+            return new FtDocumentRepositoryAggregateBuilder<TDocument, TNewExtra>(_repository, _aggregateBuilder);
         }
-        public FtDocumentRepositoryAggregateBuilder<T> GroupBy(string[] properties = null, params AggregateReduce[] reduces)
+        public FtDocumentRepositoryAggregateBuilder<TDocument, TExtra> GroupBy(string[] properties = null, params AggregateReduce[] reduces)
         {
             _aggregateBuilder.GroupBy(properties, reduces);
             return this;
         }
-        public FtDocumentRepositoryAggregateBuilder<T> SortBy(string property, bool desc = false)
+        public FtDocumentRepositoryAggregateBuilder<TDocument, TExtra> SortBy(string property, bool desc = false)
         {
             _aggregateBuilder.SortBy(property, desc);
             return this;
         }
-        public FtDocumentRepositoryAggregateBuilder<T> SortBy(string[] properties, bool[] desc, int max = 0)
+        public FtDocumentRepositoryAggregateBuilder<TDocument, TExtra> SortBy(string[] properties, bool[] desc, int max = 0)
         {
             _aggregateBuilder.SortBy(properties, desc, max);
             return this;
         }
-        public FtDocumentRepositoryAggregateBuilder<T> Apply(Expression<Func<T, object>> selector)
+        public FtDocumentRepositoryAggregateBuilder<TDocument, TNewExtra> Apply<TNewExtra>(Expression<Func<TDocument, TExtra, TNewExtra>> selector)
         {
             var applies = _repository.ParseSelectorExpression(selector.Body, true);
+            _aggregateBuilder._applies.Clear();
             foreach (var apply in applies)
                 _aggregateBuilder.Apply(apply.Value, apply.Key);
-            return this;
+            return new FtDocumentRepositoryAggregateBuilder<TDocument, TNewExtra>(_repository, _aggregateBuilder);
         }
-        public FtDocumentRepositoryAggregateBuilder<T> Limit(long offset, long num)
+        public FtDocumentRepositoryAggregateBuilder<TDocument, TExtra> Limit(long offset, long num)
         {
             _aggregateBuilder.Limit(offset, num);
             return this;
         }
-        public FtDocumentRepositoryAggregateBuilder<T> Filter(string value)
+        public FtDocumentRepositoryAggregateBuilder<TDocument, TExtra> Filter(string value)
         {
             _aggregateBuilder.Filter(value);
             return this;
         }
-        public FtDocumentRepositoryAggregateBuilder<T> WithCursor(int count = -1, long maxIdle = -1)
+        public FtDocumentRepositoryAggregateBuilder<TDocument, TExtra> WithCursor(int count = -1, long maxIdle = -1)
         {
             _aggregateBuilder.WithCursor(count, maxIdle);
             return this;
         }
-        public FtDocumentRepositoryAggregateBuilder<T> Params(string name, string value)
+        public FtDocumentRepositoryAggregateBuilder<TDocument, TExtra> Params(string name, string value)
         {
             _aggregateBuilder.Params(name, value);
             return this;
         }
-        public FtDocumentRepositoryAggregateBuilder<T> Dialect(int value)
+        public FtDocumentRepositoryAggregateBuilder<TDocument, TExtra> Dialect(int value)
         {
             _aggregateBuilder.Dialect(value);
             return this;

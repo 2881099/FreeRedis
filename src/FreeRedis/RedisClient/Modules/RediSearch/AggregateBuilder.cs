@@ -77,7 +77,7 @@ namespace FreeRedis.RediSearch
         private List<AggregateReduce> _groupByReduces = new List<AggregateReduce>();
         private List<object> _sortBy = new List<object>();
         private int _sortByMax;
-        private List<object> _applies = new List<object>();
+        internal List<object> _applies = new List<object>();
         private long _limitOffset, _limitNum = 10;
         private string _filter;
         private bool _withCursor;
@@ -93,7 +93,11 @@ namespace FreeRedis.RediSearch
         }
         public AggregateBuilder Load(params string[] fields)
         {
-            if (fields?.Any() == true) _load.AddRange(fields);
+            if (fields?.Any() == true)
+            {
+                _load.Clear();
+                _load.AddRange(fields);
+            }
             return this;
         }
         public AggregateBuilder Timeout(long milliseconds)
@@ -103,13 +107,25 @@ namespace FreeRedis.RediSearch
         }
         public AggregateBuilder GroupBy(params string[] properties)
         {
-            if (properties?.Any() == true) _groupBy.AddRange(properties);
+            if (properties?.Any() == true)
+            {
+                _groupBy.Clear();
+                _groupBy.AddRange(properties);
+            }
             return this;
         }
         public AggregateBuilder GroupBy(string[] properties = null, params AggregateReduce[] reduces)
         {
-            if (properties?.Any() == true) _groupBy.AddRange(properties);
-            if (reduces?.Any() == true) _groupByReduces.AddRange(reduces);
+            if (properties?.Any() == true)
+            {
+                _groupBy.Clear();
+                _groupBy.AddRange(properties);
+            }
+            if (reduces?.Any() == true)
+            {
+                _groupByReduces.Clear();
+                _groupByReduces.AddRange(reduces);
+            }
             return this;
         }
         public AggregateBuilder SortBy(string property, bool desc = false)
