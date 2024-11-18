@@ -18878,6 +18878,23 @@ references:
   fullName.vb: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder(Of T).ToList
   nameWithType: FtDocumentRepositorySearchBuilder<T>.ToList
   nameWithType.vb: FtDocumentRepositorySearchBuilder(Of T).ToList
+- uid: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.Total
+  name: Total
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder-1.html#FreeRedis_RediSearch_FtDocumentRepositorySearchBuilder_1_Total
+  commentId: P:FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.Total
+  fullName: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder<T>.Total
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder(Of T).Total
+  nameWithType: FtDocumentRepositorySearchBuilder<T>.Total
+  nameWithType.vb: FtDocumentRepositorySearchBuilder(Of T).Total
+- uid: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.Total*
+  name: Total
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder-1.html#FreeRedis_RediSearch_FtDocumentRepositorySearchBuilder_1_Total_
+  commentId: Overload:FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.Total
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder<T>.Total
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder(Of T).Total
+  nameWithType: FtDocumentRepositorySearchBuilder<T>.Total
+  nameWithType.vb: FtDocumentRepositorySearchBuilder(Of T).Total
 - uid: FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder`1.Verbatim(System.Boolean)
   name: Verbatim(Boolean)
   href: docs/api/FreeRedis.RediSearch.FtDocumentRepositorySearchBuilder-1.html#FreeRedis_RediSearch_FtDocumentRepositorySearchBuilder_1_Verbatim_System_Boolean_
