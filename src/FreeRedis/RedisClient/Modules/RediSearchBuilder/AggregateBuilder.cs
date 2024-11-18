@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace FreeRedis.RediSearch
 {
@@ -40,7 +41,20 @@ namespace FreeRedis.RediSearch
             _query = query;
             _dialect = redis.ConnectionString.FtDialect;
         }
-        public AggregationResult Execute()
+        public AggregationResult Execute() => _redis.Call(GetCommandPacket(), rt => rt.ThrowOrValue((a, _) =>
+        {
+            if (_withCursor) return new AggregationResult(a[0], a[1].ConvertTo<long>());
+            else return new AggregationResult(a);
+        }));
+#if isasync
+        public Task<AggregationResult> ExecuteAsync() => _redis.CallAsync(GetCommandPacket(), rt => rt.ThrowOrValue((a, _) =>
+        {
+            if (_withCursor) return new AggregationResult(a[0], a[1].ConvertTo<long>());
+            else return new AggregationResult(a);
+        }));
+#endif
+
+        CommandPacket GetCommandPacket()
         {
             var cmd = "FT.AGGREGATE".Input(_index).Input(_query)
                 .InputIf(_verbatim, "VERBATIM");
@@ -63,11 +77,7 @@ namespace FreeRedis.RediSearch
             if (_params.Any()) cmd.Input("PARAMS", _params.Count).Input(_params);
             cmd
                .InputIf(_dialect > 0, "DIALECT", _dialect);
-            return _redis.Call(cmd, rt => rt.ThrowOrValue((a, _) =>
-            {
-                if (_withCursor) return new AggregationResult(a[0], a[1].ConvertTo<long>());
-                else return new AggregationResult(a);
-            }));
+            return cmd;
         }
 
         private bool _verbatim;

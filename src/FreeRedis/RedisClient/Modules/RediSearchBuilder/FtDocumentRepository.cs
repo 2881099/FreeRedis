@@ -6,6 +6,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace FreeRedis.RediSearch
 {
@@ -69,11 +70,7 @@ namespace FreeRedis.RediSearch
             return FieldType.Text;
         }
 
-        public void DropIndex(bool dd = false)
-        {
-            _client.FtDropIndex(_schema.DocumentAttribute.Name, dd);
-        }
-        public void CreateIndex()
+        CreateBuilder GetCreateBuilder()
         {
             var attr = _schema.DocumentAttribute;
             var createBuilder = _client.FtCreate(attr.Name);
@@ -133,8 +130,10 @@ namespace FreeRedis.RediSearch
                         break;
                 }
             }
-            createBuilder.Execute();
+            return createBuilder;
         }
+        public void DropIndex(bool dd = false) => _client.FtDropIndex(_schema.DocumentAttribute.Name, dd);
+        public void CreateIndex() => GetCreateBuilder().Execute();
 
         void Save(T doc, RedisClient.PipelineHook pipe)
         {
@@ -183,6 +182,59 @@ namespace FreeRedis.RediSearch
             if (id == null || id.Length == 0) return 0;
             return _client.Del(id.Select(a => $"{_schema.DocumentAttribute.Prefix}{a}").ToArray());
         }
+
+#if isasync
+        public Task DropIndexAsync(bool dd = false) => _client.FtDropIndexAsync(_schema.DocumentAttribute.Name, dd);
+        public Task CreateIndexAsync() => GetCreateBuilder().ExecuteAsync();
+
+        async Task SaveAsync(T doc, RedisClient.PipelineHook pipe)
+        {
+            var key = $"{_schema.DocumentAttribute.Prefix}{_schema.KeyProperty.GetValue(doc, null)}";
+            var opts = _schema.Fields.Where((a, b) => b > 0).Select((a, b) => new object[]
+            {
+                a.FieldAttribute.FieldName,
+                toRedisValue(a)
+            }).SelectMany(a => a).ToArray();
+            var field = _schema.Fields[0].FieldAttribute.FieldName;
+            var value = _schema.Fields[0].Property.GetValue(doc, null);
+            if (pipe != null) pipe.HMSet(key, field, value, opts);
+            else await _client.HMSetAsync(key, field, value, opts);
+
+            object toRedisValue(DocumentSchemaFieldInfo dsf)
+            {
+                var val = dsf.Property.GetValue(doc, null);
+                if (dsf.FieldType == FieldType.Tag)
+                {
+                    if (dsf.Property.PropertyType.IsArrayOrList())
+                        val = string.Join((dsf.FieldAttribute as FtTagFieldAttribute).Separator ?? ",", typeof(string[]).FromObject(val) as string[]);
+                }
+                return val;
+            }
+        }
+        public Task SaveAsync(T doc) => SaveAsync(doc, null);
+        public Task SaveAsync(T[] docs) => SaveAsync(docs as IEnumerable<T>);
+        async public Task SaveAsync(IEnumerable<T> docs)
+        {
+            if (docs == null) return;
+            using (var pipe = _client.StartPipe())
+            {
+                foreach (var doc in docs)
+                    await SaveAsync(doc, pipe);
+                pipe.EndPipe();
+            }
+        }
+
+        async public Task<long> DeleteAsync(params long[] id)
+        {
+            if (id == null || id.Length == 0) return 0;
+            return await _client.DelAsync(id.Select(a => $"{_schema.DocumentAttribute.Prefix}{a}").ToArray());
+        }
+        async public Task<long> DeleteAsync(params string[] id)
+        {
+            if (id == null || id.Length == 0) return 0;
+            return await _client.DelAsync(id.Select(a => $"{_schema.DocumentAttribute.Prefix}{a}").ToArray());
+        }
+#endif
 
         public FtDocumentRepositorySearchBuilder<T> Search(Expression<Func<T, bool>> query) => Search(ParseQueryExpression(query.Body, null));
         public FtDocumentRepositorySearchBuilder<T> Search(string query = "*")
@@ -643,14 +695,11 @@ namespace FreeRedis.RediSearch
             _searchBuilder = new SearchBuilder(_repository._client, index, query);
         }
 
-        public List<T> ToList() => ToList(out var _);
-        public List<T> ToList(out long total)
+        List<T> FetchResult(SearchResult result)
         {
+            var ttype = typeof(T);
             var prefix = _repository._schema.DocumentAttribute.Prefix;
             var keyProperty = _repository._schema.KeyProperty;
-            var result = _searchBuilder.Execute();
-            total = result.Total;
-            var ttype = typeof(T);
             return result.Documents.Select(doc =>
             {
                 var item = (T)ttype.CreateInstanceGetDefaultValue();
@@ -661,7 +710,7 @@ namespace FreeRedis.RediSearch
                     if (prop == null) continue;
                     if (kv.Value == null) continue;
                     if (kv.Value is string valstr && _repository._schema.FieldsMap.TryGetValue(prop.Name, out var field) && field.FieldType == FieldType.Tag)
-                        ttype.SetPropertyOrFieldValue(item, prop.Name, 
+                        ttype.SetPropertyOrFieldValue(item, prop.Name,
                             field.Property.PropertyType.IsArrayOrList() ?
                             field.Property.PropertyType.FromObject(valstr.Split(new[] { (field.FieldAttribute as FtTagFieldAttribute).Separator ?? "," }, StringSplitOptions.None)) : valstr
                             );
@@ -676,6 +725,22 @@ namespace FreeRedis.RediSearch
                 return item;
             }).ToList();
         }
+        public long Total { get; private set; }
+        public List<T> ToList() => ToList(out var _);
+        public List<T> ToList(out long total)
+        {
+            var result = _searchBuilder.Execute();
+            total = Total = result.Total;
+            return FetchResult(result);
+        }
+#if isasync
+        async public Task<List<T>> ToListAsync()
+        {
+            var result = await _searchBuilder.ExecuteAsync();
+            Total = result.Total;
+            return FetchResult(result);
+        }
+#endif
 
         public FtDocumentRepositorySearchBuilder<T> NoContent(bool value = true)
         {

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace FreeRedis.RediSearch
 {
@@ -12,14 +13,15 @@ namespace FreeRedis.RediSearch
             _redis = redis;
             _index = index;
         }
-        public void Execute()
-        {
-            var cmd = "FT.ALTER".Input(_index)
-                .InputIf(_skipInitialScan, "SKIPINITIALSCAN")
-                .Input("SCHEMA")
-                .Input(_schemaArgs.ToArray());
-            _redis.Call(cmd, rt => rt.ThrowOrValue<string>() == "OK");
-        }
+        public void Execute() => _redis.Call(GetCommandPacket(), rt => rt.ThrowOrValue<string>() == "OK");
+#if isasync
+        public Task ExecuteAsync() => _redis.CallAsync(GetCommandPacket(), rt => rt.ThrowOrValue<string>() == "OK");
+#endif
+
+        CommandPacket GetCommandPacket() => "FT.ALTER".Input(_index)
+            .InputIf(_skipInitialScan, "SKIPINITIALSCAN")
+            .Input("SCHEMA")
+            .Input(_schemaArgs.ToArray());
 
         private bool _skipInitialScan;
         public AlterBuilder SkipInitialScan(bool value = true)
@@ -39,7 +41,12 @@ namespace FreeRedis.RediSearch
             _index = index;
             _language = redis.ConnectionString.FtLanguage;
         }
-        public void Execute()
+        public void Execute() => _redis.Call(GetCommandPacket(), rt => rt.ThrowOrValue<string>() == "OK");
+#if isasync
+        public Task ExecuteAsync() => _redis.CallAsync(GetCommandPacket(), rt => rt.ThrowOrValue<string>() == "OK");
+#endif
+
+        CommandPacket GetCommandPacket()
         {
             var cmd = "FT.CREATE".Input(_index).InputIf(_on.HasValue, "ON", _on.ToString().ToUpper());
             if (_prefix?.Any() == true) cmd.Input("PREFIX", _prefix.Length).Input(_prefix.Select(a => (object)a).ToArray());
@@ -60,7 +67,7 @@ namespace FreeRedis.RediSearch
             cmd.InputIf(_skipInitialScan, "SKIPINITIALSCAN")
                 .Input("SCHEMA")
                 .Input(_schemaArgs.ToArray());
-            _redis.Call(cmd, rt => rt.ThrowOrValue<string>() == "OK");
+            return cmd;
         }
 
         private IndexDataType? _on = IndexDataType.Hash;

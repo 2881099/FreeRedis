@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace FreeRedis.RediSearch
 {
@@ -115,50 +116,58 @@ namespace FreeRedis.RediSearch
                .InputIf(_dialect > 0, "DIALECT", _dialect);
             return cmd;
         }
+        SearchResult FetchResult(RedisResult rt) => rt.ThrowOrValue((a, _) =>
+        {
+            var ret = new SearchResult(a[0].ConvertTo<long>(), new List<Document>());
+            if (a.Any() != true || ret.Total <= 0) return ret;
+
+            int step = 1;
+            int scoreOffset = 0;
+            int contentOffset = 1;
+            int payloadOffset = 0;
+            if (_withScores)
+            {
+                step++;
+                scoreOffset = 1;
+                contentOffset++;
+
+            }
+            if (_noContent == false)
+            {
+                step++;
+                if (_withPayloads)
+                {
+                    payloadOffset = scoreOffset + 1;
+                    step++;
+                    contentOffset++;
+                }
+            }
+            for (var x = 1; x < a.Length; x += step)
+            {
+                var id = a[x].ConvertTo<string>();
+                double score = 1.0;
+                byte[] payload = null;
+                object[] fieldValues = null;
+                string[] scoreExplained = null;
+                if (_withScores) score = a[x + scoreOffset].ConvertTo<double>();
+                if (_withPayloads) payload = a[x + payloadOffset].ConvertTo<byte[]>();
+                if (_noContent == false) fieldValues = a[x + contentOffset].ConvertTo<object[]>();
+                ret.Documents.Add(Document.Load(id, score, payload, fieldValues, scoreExplained));
+            }
+            return ret;
+        });
         public SearchResult Execute()
         {
             var cmd = GetCommandPacket();
-            return _redis.Call(cmd, rt => rt.ThrowOrValue((a, _) =>
-            {
-                var ret = new SearchResult(a[0].ConvertTo<long>(), new List<Document>());
-                if (a.Any() != true || ret.Total <= 0) return ret;
-
-                int step = 1;
-                int scoreOffset = 0;
-                int contentOffset = 1;
-                int payloadOffset = 0;
-                if (_withScores)
-                {
-                    step++;
-                    scoreOffset = 1;
-                    contentOffset++;
-
-                }
-                if (_noContent == false)
-                {
-                    step++;
-                    if (_withPayloads)
-                    {
-                        payloadOffset = scoreOffset + 1;
-                        step++;
-                        contentOffset++;
-                    }
-                }
-                for (var x = 1; x < a.Length; x += step)
-                {
-                    var id = a[x].ConvertTo<string>();
-                    double score = 1.0;
-                    byte[] payload = null;
-                    object[] fieldValues = null;
-                    string[] scoreExplained = null;
-                    if (_withScores) score = a[x + scoreOffset].ConvertTo<double>();
-                    if (_withPayloads) payload = a[x + payloadOffset].ConvertTo<byte[]>();
-                    if (_noContent == false) fieldValues = a[x + contentOffset].ConvertTo<object[]>();
-                    ret.Documents.Add(Document.Load(id, score, payload, fieldValues, scoreExplained));
-                }
-                return ret;
-            }));
+            return _redis.Call(cmd, FetchResult);
         }
+#if isasync
+        public Task<SearchResult> ExecuteAsync()
+        {
+            var cmd = GetCommandPacket();
+            return _redis.CallAsync(cmd, FetchResult);
+        }
+#endif
 
         private bool _noContent, _verbatim, _noStopwords, _withScores, _withPayloads, _withSortKeys;
         private List<object> _filters = new List<object>();
