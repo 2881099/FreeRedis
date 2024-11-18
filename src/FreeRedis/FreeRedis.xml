@@ -1615,6 +1615,11 @@
             <param name="token">CancellationToken 自动取消锁</param>
             <returns></returns>
         </member>
+        <member name="P:FreeRedis.RedisClient.LockController.HandleLostToken">
+            <summary>
+            当刷新锁时间的看门狗线程失去与Redis连接时，导致无法刷新延长锁时间时，触发此HandelLostToken Cancel
+            </summary>
+        </member>
         <member name="M:FreeRedis.RedisClient.LockController.Delay(System.Int32)">
             <summary>
             延长锁时间，锁在占用期内操作时返回true，若因锁超时被其他使用者占用则返回false
