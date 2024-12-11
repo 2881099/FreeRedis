@@ -1,6 +1,7 @@
 ﻿using FreeRedis.RediSearch;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Xunit;
@@ -12,7 +13,7 @@ namespace FreeRedis.Tests.RedisClientTests.Other
 		
 		protected static ConnectionStringBuilder Connection = new ConnectionStringBuilder()
         {
-            Host = "8.154.26.11",
+            Host = "8.154.26.119",
             MaxPoolSize = 10,
             Protocol = RedisProtocol.RESP2,
             ClientName = "FreeRedis",
@@ -97,6 +98,64 @@ namespace FreeRedis.Tests.RedisClientTests.Other
             });
 
             var list = repo.Search(a => a.Tags.Contains("作者1")).ToList();
+            list = repo.Search(a => a.Title.Contains("word")).ToList();
+            var list2 = repo.Search("@title:我是中国人").ToList();
+            list2 = repo.Search("@title:中国人").ToList();
+            list2 = repo.Search("@title:中国").ToList();
+            list2 = repo.Search("@title:国").ToList();
+        }
+
+        [FtDocument("index_post101", Prefix = "blog:post101:")]
+        class TagMapListIndex
+        {
+            [FtKey]
+            public int Id { get; set; }
+
+            [FtTextField("title", Weight = 5.0)]
+            public string Title { get; set; }
+
+            [FtTextField("category")]
+            public string Category { get; set; }
+
+            [FtTextField("content", Weight = 1.0, NoIndex = true)]
+            public string Content { get; set; }
+
+            [FtTagField("tags")]
+            public List<string> Tags { get; set; }
+
+            [FtNumericField("views")]
+            public int Views { get; set; }
+        }
+        [Fact]
+        public void TagMapList()
+        {
+            var repo = cli.FtDocumentRepository<TagMapListIndex>();
+
+            try
+            {
+                repo.DropIndex();
+            }
+            catch { }
+            repo.CreateIndex();
+
+            repo.Save(new TagMapListIndex { Id = 1, Title = "测试标题1 word", Category = "一级分类", Content = "测试内容1suffix", Tags = ["作者1", "作者2"], Views = 101 });
+            repo.Save(new TagMapListIndex { Id = 2, Title = "prefix测试标题2", Category = "二级分类", Content = "测试infix内容2", Tags = ["作者2", "作者3"], Views = 201 });
+            repo.Save(new TagMapListIndex { Id = 3, Title = "测试标题3 word", Category = "一级分类", Content = "测试word内容3", Tags = ["作者2", "作者5"], Views = 301 });
+
+            repo.Delete(1, 2, 3);
+
+            repo.Save(new[]{
+                new TagMapListIndex { Id = 1, Title = "测试标题1 word", Category = "一级分类", Content = "测试内容1suffix", Tags = ["作者1","作者2"], Views = 101 },
+                new TagMapListIndex { Id = 2, Title = "prefix测试标题2", Category = "二级分类", Content = "测试infix内容2", Tags = ["作者2","作者3"], Views = 201 },
+                new TagMapListIndex { Id = 3, Title = "测试标题3 word", Category = "一级分类", Content = "测试word内容3", Tags = ["作者2","作者5"], Views = 301 }
+            });
+
+            var list = repo.Search(a => a.Tags.Contains("作者1")).ToList();
+            list = repo.Search(a => a.Title.Contains("word")).ToList();
+            var list2 = repo.Search("@title:我是中国人").ToList();
+            list2 = repo.Search("@title:中国人").ToList();
+            list2 = repo.Search("@title:中国").ToList();
+            list2 = repo.Search("@title:国").ToList();
         }
 
         [Fact]

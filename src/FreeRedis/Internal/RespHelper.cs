@@ -876,22 +876,39 @@ namespace FreeRedis
             }
             else if (targetType.IsArray)
             {
+                var targetElementType = targetType.GetElementType();
                 if (value is Array valueArr)
                 {
-                    var targetElementType = targetType.GetElementType();
                     var sourceArrLen = valueArr.Length;
                     var target = Array.CreateInstance(targetElementType, sourceArrLen);
                     for (var a = 0; a < sourceArrLen; a++) target.SetValue(targetElementType.FromObject(valueArr.GetValue(a), encoding), a);
                     return target;
                 }
-                //if (value is IList valueList)
-                //{
-                //    var targetElementType = targetType.GetElementType();
-                //    var sourceArrLen = valueList.Count;
-                //    var target = Array.CreateInstance(targetElementType, sourceArrLen);
-                //    for (var a = 0; a < sourceArrLen; a++) target.SetValue(targetElementType.FromObject(valueList[a], encoding), a);
-                //    return target;
-                //}
+                if (value is IList valueList)
+                {
+                    var sourceArrLen = valueList.Count;
+                    var target = Array.CreateInstance(targetElementType, sourceArrLen);
+                    for (var a = 0; a < sourceArrLen; a++) target.SetValue(targetElementType.FromObject(valueList[a], encoding), a);
+                    return target;
+                }
+            }
+            else if (targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(List<>))
+            {
+                var targetElementType = targetType.GetGenericArguments()[0];
+                if (value is Array valueArr)
+                {
+                    var sourceArrLen = valueArr.Length;
+                    var target = Activator.CreateInstance(targetType) as IList;
+                    for (var a = 0; a < sourceArrLen; a++) target.Add(targetElementType.FromObject(valueArr.GetValue(a), encoding));
+                    return target;
+                }
+                if (value is IList valueList)
+                {
+                    var sourceArrLen = valueList.Count;
+                    var target = Activator.CreateInstance(targetType) as IList;
+                    for (var a = 0; a < sourceArrLen; a++) target.Add(targetElementType.FromObject(valueList[a], encoding));
+                    return target;
+                }
             }
             var func = _dicFromObject.GetOrAdd(targetType, tt =>
             {
