@@ -18,8 +18,9 @@ namespace FreeRedis.RediSearch
             public Type DocumentType { get; set; }
             public FtDocumentAttribute DocumentAttribute { get; set; }
             public PropertyInfo KeyProperty { get; set; }
-            public List<DocumentSchemaFieldInfo> Fields { get; set; }
-            public Dictionary<string, DocumentSchemaFieldInfo> FieldsMap { get; set; }
+            public List<DocumentSchemaFieldInfo> Fields { get; set; } = new List<DocumentSchemaFieldInfo>();
+            public Dictionary<string, DocumentSchemaFieldInfo> FieldsMap { get; set; } = new Dictionary<string, DocumentSchemaFieldInfo>();
+            public Dictionary<string, DocumentSchemaFieldInfo> FieldsMapRead { get; set; } = new Dictionary<string, DocumentSchemaFieldInfo>();
         }
         internal protected class DocumentSchemaFieldInfo
         {
@@ -41,23 +42,27 @@ namespace FreeRedis.RediSearch
                 {
                     attribute = p.GetCustomAttributes(false).FirstOrDefault(a => a is FtFieldAttribute) as FtFieldAttribute,
                     property = p
-                }).Where(a => a.attribute != null).ToList();
-                if (fieldProprties.Any() == false) throw new Exception($"Not found: [FtFieldAttribute]");
+                }).Where(a => a.attribute != null);
                 var schema = new DocumentSchemaInfo
                 {
                     DocumentType = type,
-                    DocumentAttribute = type.GetCustomAttributes(false).FirstOrDefault(a => a is FtDocumentAttribute) as FtDocumentAttribute,
-                    KeyProperty = type.GetProperties().FirstOrDefault(p => p.GetCustomAttributes(false).FirstOrDefault(a => a is FtKeyAttribute) != null),
                 };
-                var fields = fieldProprties.Select(a => new DocumentSchemaFieldInfo
+                foreach (var fieldProperty in fieldProprties)
                 {
-                    DocumentSchema = schema,
-                    Property = a.property,
-                    FieldAttribute = a.attribute,
-                    FieldType = GetMapFieldType(a.property, a.attribute)
-                }).ToList();
-                schema.Fields = fields;
-                schema.FieldsMap = fields.ToDictionary(a => a.Property.Name, a => a);
+                    var field = new DocumentSchemaFieldInfo
+                    {
+                        DocumentSchema = schema,
+                        Property = fieldProperty.property,
+                        FieldAttribute = fieldProperty.attribute,
+                        FieldType = GetMapFieldType(fieldProperty.property, fieldProperty.attribute)
+                    };
+                    schema.Fields.Add(field);
+                    schema.FieldsMap[field.Property.Name] = field;
+                    schema.FieldsMapRead[field.FieldAttribute.Name] = field;
+                }
+                if (schema.Fields.Any() == false) throw new Exception($"Not found: [FtFieldAttribute]");
+                schema.DocumentAttribute = type.GetCustomAttributes(false).FirstOrDefault(a => a is FtDocumentAttribute) as FtDocumentAttribute;
+                schema.KeyProperty = type.GetProperties().FirstOrDefault(p => p.GetCustomAttributes(false).FirstOrDefault(a => a is FtKeyAttribute) != null);
                 return schema;
             });
         }
@@ -250,28 +255,41 @@ namespace FreeRedis.RediSearch
         {
             var fieldValues = new List<KeyValuePair<string, string>>();
             if (selector is LambdaExpression lambdaExp) selector = lambdaExp.Body;
-
-            if (selector.NodeType == ExpressionType.New)
+            if (selector is UnaryExpression unaryExp) selector = unaryExp.Operand;
+            switch (selector.NodeType)
             {
-                var newExp = selector as NewExpression;
-                for (var a = 0; a < newExp?.Members?.Count; a++)
-                {
-                    var left = newExp.Members[a].Name;
-                    var right = ParseQueryExpression(newExp.Arguments[a], new ParseQueryExpressionOptions { IsQuoteFieldName = isQuoteFieldName });
-                    fieldValues.Add(new KeyValuePair<string, string>(left, right));
-                }
-            }
-            else if (selector.NodeType == ExpressionType.MemberInit)
-            {
-                var initExp = selector as MemberInitExpression;
-                for (var a = 0; a < initExp?.Bindings.Count; a++)
-                {
-                    var initAssignExp = (initExp.Bindings[a] as MemberAssignment);
-                    if (initAssignExp == null) continue;
-                    var left = initAssignExp.Member.Name;
-                    var right = ParseQueryExpression(initAssignExp.Expression, new ParseQueryExpressionOptions { IsQuoteFieldName = isQuoteFieldName });
-                    fieldValues.Add(new KeyValuePair<string, string>(left, right));
-                }
+                case ExpressionType.MemberAccess:
+                    {
+                        var memExp = selector as MemberExpression;
+                        var left = memExp.Member.Name;
+                        var right = ParseQueryExpression(memExp, new ParseQueryExpressionOptions { IsQuoteFieldName = isQuoteFieldName });
+                        fieldValues.Add(new KeyValuePair<string, string>(left, right));
+                    }
+                    break;
+                case ExpressionType.New:
+                    {
+                        var newExp = selector as NewExpression;
+                        for (var a = 0; a < newExp?.Members?.Count; a++)
+                        {
+                            var left = newExp.Members[a].Name;
+                            var right = ParseQueryExpression(newExp.Arguments[a], new ParseQueryExpressionOptions { IsQuoteFieldName = isQuoteFieldName });
+                            fieldValues.Add(new KeyValuePair<string, string>(left, right));
+                        }
+                    }
+                    break;
+                case ExpressionType.MemberInit:
+                    {
+                        var initExp = selector as MemberInitExpression;
+                        for (var a = 0; a < initExp?.Bindings.Count; a++)
+                        {
+                            var initAssignExp = (initExp.Bindings[a] as MemberAssignment);
+                            if (initAssignExp == null) continue;
+                            var left = initAssignExp.Member.Name;
+                            var right = ParseQueryExpression(initAssignExp.Expression, new ParseQueryExpressionOptions { IsQuoteFieldName = isQuoteFieldName });
+                            fieldValues.Add(new KeyValuePair<string, string>(left, right));
+                        }
+                    }
+                    break;
             }
             return fieldValues;
         }
@@ -736,16 +754,21 @@ namespace FreeRedis.RediSearch
                 foreach (var kv in doc.Body)
                 {
                     var name = kv.Key.Replace("-", "_");
-                    var prop = ttype.GetPropertyOrFieldIgnoreCase(name);
-                    if (prop == null) continue;
+                    FtDocumentRepository<T>.DocumentSchemaFieldInfo field = null;
+                    if (_searchBuilder._return.Any()) //属性匹配
+                    {
+                        var prop = ttype.GetPropertyOrFieldIgnoreCase(name);
+                        if (prop == null || !_repository._schema.FieldsMap.TryGetValue(prop.Name, out field)) continue;
+                    }
+                    else if (!_repository._schema.FieldsMapRead.TryGetValue(name, out field)) continue;
                     if (kv.Value == null) continue;
-                    if (kv.Value is string valstr && _repository._schema.FieldsMap.TryGetValue(prop.Name, out var field) && field.FieldType == FieldType.Tag)
-                        ttype.SetPropertyOrFieldValue(item, prop.Name,
+                    if (kv.Value is string valstr && field.FieldType == FieldType.Tag)
+                        ttype.SetPropertyOrFieldValue(item, field.Property.Name,
                             field.Property.PropertyType.IsArrayOrList() ?
                             field.Property.PropertyType.FromObject(valstr.Split(new[] { (field.FieldAttribute as FtTagFieldAttribute).Separator ?? "," }, StringSplitOptions.None)) : valstr
                             );
                     else
-                        ttype.SetPropertyOrFieldValue(item, prop.Name, prop.GetPropertyOrFieldType().FromObject(kv.Value));
+                        ttype.SetPropertyOrFieldValue(item, field.Property.Name, field.Property.PropertyType.FromObject(kv.Value));
                 }
                 var itemId = doc.Id;
                 if (!string.IsNullOrEmpty(prefix))

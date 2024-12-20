@@ -13,7 +13,7 @@ namespace FreeRedis.Tests.RedisClientTests.Other
 		
 		protected static ConnectionStringBuilder Connection = new ConnectionStringBuilder()
         {
-            Host = "8.154.26.119",
+            Host = "8.154.26.119:63791",
             MaxPoolSize = 10,
             Protocol = RedisProtocol.RESP2,
             ClientName = "FreeRedis",
@@ -36,16 +36,16 @@ namespace FreeRedis.Tests.RedisClientTests.Other
             [FtKey]
             public int Id { get; set; }
 
-            [FtTextField("title", Weight = 5.0)]
+            [FtTextField("title22", Weight = 5.0)]
             public string Title { get; set; }
 
-            [FtTextField("category")]
+            [FtTextField("category22")]
             public string Category { get; set; }
 
-            [FtTextField("content", Weight = 1.0, NoIndex = true)]
+            [FtTextField("content22", Weight = 1.0, NoIndex = true)]
             public string Content { get; set; }
 
-            [FtTagField("tags")]
+            [FtTagField("tags22")]
             public string Tags { get; set; }
 
             [FtNumericField("views")]
@@ -111,16 +111,16 @@ namespace FreeRedis.Tests.RedisClientTests.Other
             [FtKey]
             public int Id { get; set; }
 
-            [FtTextField("title", Weight = 5.0)]
+            [FtTextField("title1", Weight = 5.0)]
             public string Title { get; set; }
 
-            [FtTextField("category")]
+            [FtTextField("category1")]
             public string Category { get; set; }
 
-            [FtTextField("content", Weight = 1.0, NoIndex = true)]
+            [FtTextField("content2", Weight = 1.0, NoIndex = true)]
             public string Content { get; set; }
 
-            [FtTagField("tags")]
+            [FtTagField("tags11")]
             public List<string> Tags { get; set; }
 
             [FtNumericField("views")]
