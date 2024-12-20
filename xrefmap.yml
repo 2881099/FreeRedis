@@ -18027,6 +18027,23 @@ references:
   fullName.vb: FreeRedis.RediSearch.FtDocumentRepository(Of T).DocumentSchemaInfo.FieldsMap
   nameWithType: FtDocumentRepository<T>.DocumentSchemaInfo.FieldsMap
   nameWithType.vb: FtDocumentRepository(Of T).DocumentSchemaInfo.FieldsMap
+- uid: FreeRedis.RediSearch.FtDocumentRepository`1.DocumentSchemaInfo.FieldsMapRead
+  name: FieldsMapRead
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepository-1.DocumentSchemaInfo.html#FreeRedis_RediSearch_FtDocumentRepository_1_DocumentSchemaInfo_FieldsMapRead
+  commentId: P:FreeRedis.RediSearch.FtDocumentRepository`1.DocumentSchemaInfo.FieldsMapRead
+  fullName: FreeRedis.RediSearch.FtDocumentRepository<T>.DocumentSchemaInfo.FieldsMapRead
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepository(Of T).DocumentSchemaInfo.FieldsMapRead
+  nameWithType: FtDocumentRepository<T>.DocumentSchemaInfo.FieldsMapRead
+  nameWithType.vb: FtDocumentRepository(Of T).DocumentSchemaInfo.FieldsMapRead
+- uid: FreeRedis.RediSearch.FtDocumentRepository`1.DocumentSchemaInfo.FieldsMapRead*
+  name: FieldsMapRead
+  href: docs/api/FreeRedis.RediSearch.FtDocumentRepository-1.DocumentSchemaInfo.html#FreeRedis_RediSearch_FtDocumentRepository_1_DocumentSchemaInfo_FieldsMapRead_
+  commentId: Overload:FreeRedis.RediSearch.FtDocumentRepository`1.DocumentSchemaInfo.FieldsMapRead
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.FtDocumentRepository<T>.DocumentSchemaInfo.FieldsMapRead
+  fullName.vb: FreeRedis.RediSearch.FtDocumentRepository(Of T).DocumentSchemaInfo.FieldsMapRead
+  nameWithType: FtDocumentRepository<T>.DocumentSchemaInfo.FieldsMapRead
+  nameWithType.vb: FtDocumentRepository(Of T).DocumentSchemaInfo.FieldsMapRead
 - uid: FreeRedis.RediSearch.FtDocumentRepository`1.DocumentSchemaInfo.KeyProperty
   name: KeyProperty
   href: docs/api/FreeRedis.RediSearch.FtDocumentRepository-1.DocumentSchemaInfo.html#FreeRedis_RediSearch_FtDocumentRepository_1_DocumentSchemaInfo_KeyProperty
