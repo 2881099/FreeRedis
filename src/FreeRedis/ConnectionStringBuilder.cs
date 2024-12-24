@@ -59,8 +59,8 @@ namespace FreeRedis
 
             if (IdleTimeout != TimeSpan.FromSeconds(20)) sb.Append(",idle timeout=").Append((long)IdleTimeout.TotalMilliseconds);
             if (ConnectTimeout != TimeSpan.FromSeconds(10)) sb.Append(",connect timeout=").Append((long)ConnectTimeout.TotalMilliseconds);
-            if (ReceiveTimeout != TimeSpan.FromSeconds(10)) sb.Append(",receive timeout=").Append((long)ReceiveTimeout.TotalMilliseconds);
-            if (SendTimeout != TimeSpan.FromSeconds(10)) sb.Append(",send timeout=").Append((long)SendTimeout.TotalMilliseconds);
+            if (ReceiveTimeout != TimeSpan.FromSeconds(20)) sb.Append(",receive timeout=").Append((long)ReceiveTimeout.TotalMilliseconds);
+            if (SendTimeout != TimeSpan.FromSeconds(20)) sb.Append(",send timeout=").Append((long)SendTimeout.TotalMilliseconds);
             if (MaxPoolSize != 100) sb.Append(",max pool size=").Append(MaxPoolSize);
             if (MinPoolSize != 1) sb.Append(",min pool size=").Append(MinPoolSize);
             if (Retry != 0) sb.Append(",retry=").Append(Retry);
