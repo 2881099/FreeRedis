@@ -169,32 +169,32 @@ namespace FreeRedis.RediSearch
         }
 #endif
 
-        private bool _noContent, _verbatim, _noStopwords, _withScores, _withPayloads, _withSortKeys;
-        private List<object> _filters = new List<object>();
-        private List<object> _geoFilter = new List<object>();
-        private List<object> _inKeys = new List<object>();
-        private List<object> _inFields = new List<object>();
-        private List<string[]> _return = new List<string[]>();
-        private bool _sumarize;
-        private List<object> _sumarizeFields = new List<object>();
-        private long _sumarizeFrags = -1;
-        private long _sumarizeLen = -1;
-        private string _sumarizeSeparator;
-        private bool _highLight;
-        private List<object> _highLightFields = new List<object>();
-        private object[] _highLightTags;
-        private decimal _slop = -1;
-        private long _timeout = -1;
-        private bool _inOrder;
-        private string _language;
-        private string _expander, _scorer;
-        private bool _explainScore;
-        private string _payLoad;
-        private string _sortBy;
-        private bool _sortByDesc;
-        private long _limitOffset, _limitNum = 10;
-        private List<object> _params = new List<object>();
-        private int _dialect;
+        internal bool _noContent, _verbatim, _noStopwords, _withScores, _withPayloads, _withSortKeys;
+        internal List<object> _filters = new List<object>();
+        internal List<object> _geoFilter = new List<object>();
+        internal List<object> _inKeys = new List<object>();
+        internal List<object> _inFields = new List<object>();
+        internal List<string[]> _return = new List<string[]>();
+        internal bool _sumarize;
+        internal List<object> _sumarizeFields = new List<object>();
+        internal long _sumarizeFrags = -1;
+        internal long _sumarizeLen = -1;
+        internal string _sumarizeSeparator;
+        internal bool _highLight;
+        internal List<object> _highLightFields = new List<object>();
+        internal object[] _highLightTags;
+        internal decimal _slop = -1;
+        internal long _timeout = -1;
+        internal bool _inOrder;
+        internal string _language;
+        internal string _expander, _scorer;
+        internal bool _explainScore;
+        internal string _payLoad;
+        internal string _sortBy;
+        internal bool _sortByDesc;
+        internal long _limitOffset, _limitNum = 10;
+        internal List<object> _params = new List<object>();
+        internal int _dialect;
 
         public SearchBuilder NoContent(bool value = true)
         {
