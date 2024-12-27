@@ -1544,15 +1544,15 @@ references:
   isSpec: "True"
   fullName: FreeRedis.DelayQueue.DelayQueue
   nameWithType: DelayQueue.DelayQueue
-- uid: FreeRedis.DelayQueue.Dequeue(System.Action{System.String},System.Int32)
-  name: Dequeue(Action<String>, Int32)
-  href: docs/api/FreeRedis.DelayQueue.html#FreeRedis_DelayQueue_Dequeue_System_Action_System_String__System_Int32_
-  commentId: M:FreeRedis.DelayQueue.Dequeue(System.Action{System.String},System.Int32)
-  name.vb: Dequeue(Action(Of String), Int32)
-  fullName: FreeRedis.DelayQueue.Dequeue(System.Action<System.String>, System.Int32)
-  fullName.vb: FreeRedis.DelayQueue.Dequeue(System.Action(Of System.String), System.Int32)
-  nameWithType: DelayQueue.Dequeue(Action<String>, Int32)
-  nameWithType.vb: DelayQueue.Dequeue(Action(Of String), Int32)
+- uid: FreeRedis.DelayQueue.Dequeue(System.Action{System.String},System.Int32,System.Nullable{System.Threading.CancellationToken})
+  name: Dequeue(Action<String>, Int32, Nullable<CancellationToken>)
+  href: docs/api/FreeRedis.DelayQueue.html#FreeRedis_DelayQueue_Dequeue_System_Action_System_String__System_Int32_System_Nullable_System_Threading_CancellationToken__
+  commentId: M:FreeRedis.DelayQueue.Dequeue(System.Action{System.String},System.Int32,System.Nullable{System.Threading.CancellationToken})
+  name.vb: Dequeue(Action(Of String), Int32, Nullable(Of CancellationToken))
+  fullName: FreeRedis.DelayQueue.Dequeue(System.Action<System.String>, System.Int32, System.Nullable<System.Threading.CancellationToken>)
+  fullName.vb: FreeRedis.DelayQueue.Dequeue(System.Action(Of System.String), System.Int32, System.Nullable(Of System.Threading.CancellationToken))
+  nameWithType: DelayQueue.Dequeue(Action<String>, Int32, Nullable<CancellationToken>)
+  nameWithType.vb: DelayQueue.Dequeue(Action(Of String), Int32, Nullable(Of CancellationToken))
 - uid: FreeRedis.DelayQueue.Dequeue*
   name: Dequeue
   href: docs/api/FreeRedis.DelayQueue.html#FreeRedis_DelayQueue_Dequeue_

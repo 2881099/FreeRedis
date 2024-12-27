@@ -150,13 +150,13 @@
   
   
   <a id="FreeRedis_DelayQueue_Dequeue_" data-uid="FreeRedis.DelayQueue.Dequeue*"></a>
-  <h4 id="FreeRedis_DelayQueue_Dequeue_System_Action_System_String__System_Int32_" data-uid="FreeRedis.DelayQueue.Dequeue(System.Action{System.String},System.Int32)">Dequeue(Action&lt;String&gt;, Int32)</h4>
+  <h4 id="FreeRedis_DelayQueue_Dequeue_System_Action_System_String__System_Int32_System_Nullable_System_Threading_CancellationToken__" data-uid="FreeRedis.DelayQueue.Dequeue(System.Action{System.String},System.Int32,System.Nullable{System.Threading.CancellationToken})">Dequeue(Action&lt;String&gt;, Int32, Nullable&lt;CancellationToken&gt;)</h4>
   <div class="markdown level1 summary"><p>消费延时队列，多个消费端不会重复</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void Dequeue(Action&lt;string&gt; action, int choke = 400)</code></pre>
+    <pre><code class="lang-csharp hljs">public void Dequeue(Action&lt;string&gt; action, int choke = 400, CancellationToken? token = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -179,6 +179,11 @@
         <td><span class="parametername">choke</span></td>
         <td><p>轮询队列时长，默认400毫秒，值越小越准确</p>
 </td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Threading.CancellationToken</span>&gt;</td>
+        <td><span class="parametername">token</span></td>
+        <td></td>
       </tr>
     </tbody>
   </table>
