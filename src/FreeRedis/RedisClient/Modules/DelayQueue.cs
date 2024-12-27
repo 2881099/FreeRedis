@@ -41,7 +41,7 @@ namespace FreeRedis
         public bool Enqueue(string value, TimeSpan delay)
         {
             var time = DateTime.UtcNow.Add(delay);
-            long timestamp = (time.Ticks - new DateTime(1970, 1, 1).Ticks) / TimeSpan.TicksPerSecond;
+            long timestamp = (time.Ticks - new DateTime(1970, 1, 1).Ticks) / TimeSpan.TicksPerMillisecond;
 
             var res = _redisClient.ZAdd(_queueKey, timestamp, value);
             return res > 0;
@@ -56,7 +56,7 @@ namespace FreeRedis
         public bool Enqueue(string value, DateTime delay)
         {
             var time = TimeZoneInfo.ConvertTimeToUtc(delay);
-            long timestamp = (time.Ticks - new DateTime(1970, 1, 1).Ticks) / TimeSpan.TicksPerSecond;
+            long timestamp = (time.Ticks - new DateTime(1970, 1, 1).Ticks) / TimeSpan.TicksPerMillisecond;
             var res = _redisClient.ZAdd(_queueKey, timestamp, value);
             return res > 0;
         }
@@ -66,7 +66,7 @@ namespace FreeRedis
         /// </summary>
         /// <param name="action">消费委托</param>
         /// <param name="choke">轮询队列时长，默认400毫秒，值越小越准确</param>
-        public void Dequeue(Action<string> action, int choke = 400)
+        public void Dequeue(Action<string> action, int choke = 400, CancellationToken? token = null)
         {
             Thread thread = new Thread(() =>
             {
@@ -74,6 +74,9 @@ namespace FreeRedis
                 {
                     try
                     {
+                        if (token != null && token.Value.IsCancellationRequested)
+                            break;
+
                         //阻塞节省CPU
                         Thread.Sleep(choke);
                         var res = InternalDequeue();
@@ -98,8 +101,7 @@ namespace FreeRedis
         /// <param name="action">消费委托</param>
         /// <param name="choke">轮询队列时长，默认400毫秒，值越小越准确</param>
         /// <param name="token"></param>
-        public System.Threading.Tasks.Task DequeueAsync(Func<string, System.Threading.Tasks.Task> action,
-            int choke = 400, CancellationToken? token = null)
+        public Task DequeueAsync(Func<string, Task> action, int choke = 400, CancellationToken? token = null)
         {
             return Task.Factory.StartNew(async () =>
             {
@@ -108,12 +110,10 @@ namespace FreeRedis
                     try
                     {
                         if (token != null && token.Value.IsCancellationRequested)
-                        {
                             break;
-                        }
 
                         //阻塞节省CPU
-                        await System.Threading.Tasks.Task.Delay(choke);
+                        await Task.Delay(choke);
                         var res = InternalDequeue();
                         if (!string.IsNullOrWhiteSpace(res))
                             await action.Invoke(res);
@@ -131,16 +131,14 @@ namespace FreeRedis
         //取队列任务
         private string InternalDequeue()
         {
-            long timestamp = (DateTime.UtcNow.Ticks - new DateTime(1970, 1, 1).Ticks) / TimeSpan.TicksPerSecond;
+            long timestamp = (DateTime.UtcNow.Ticks - new DateTime(1970, 1, 1).Ticks) / TimeSpan.TicksPerMillisecond;
 
             //lua脚本保持原子性
             var script = @"
-                         local zkey = KEYS[1]
-                         local score = ARGV[1]
-                         local zrange = redis.call('zrangebyscore',zkey,0,score,'LIMIT',0,1)
+                         local zrange = redis.call('zrangebyscore',KEYS[1],0,ARGV[1],'LIMIT',0,1)
                          if next(zrange) ~= nil and #zrange > 0
                          then
-                         	local rmnum = redis.call('zrem',zkey,unpack(zrange))
+                         	local rmnum = redis.call('zrem',KEYS[1],unpack(zrange))
                          	if(rmnum > 0)
                          	then
                          		return zrange

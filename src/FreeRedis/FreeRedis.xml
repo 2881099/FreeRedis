@@ -3023,7 +3023,7 @@
             <param name="delay">延迟执行时间</param>
             <returns></returns>
         </member>
-        <member name="M:FreeRedis.DelayQueue.Dequeue(System.Action{System.String},System.Int32)">
+        <member name="M:FreeRedis.DelayQueue.Dequeue(System.Action{System.String},System.Int32,System.Nullable{System.Threading.CancellationToken})">
             <summary>
             消费延时队列，多个消费端不会重复
             </summary>
