@@ -135,18 +135,15 @@ namespace FreeRedis
 
             //lua脚本保持原子性
             var script = @"
-                         local zrange = redis.call('zrangebyscore',KEYS[1],0,ARGV[1],'LIMIT',0,1)
-                         if next(zrange) ~= nil and #zrange > 0
-                         then
-                         	local rmnum = redis.call('zrem',KEYS[1],unpack(zrange))
-                         	if(rmnum > 0)
-                         	then
-                         		return zrange
-                         	end
-                         else
-                         	return {}
-                         end
-                         ";
+local zrange = redis.call('zrangebyscore',KEYS[1],0,ARGV[1],'LIMIT',0,1)
+if next(zrange) ~= nil and #zrange > 0 then
+    local rmnum = redis.call('zrem',KEYS[1],unpack(zrange))
+    if(rmnum > 0) then
+        return zrange
+    end
+else
+    return {}
+end";
 
             if (_redisClient.Eval(script, new[] { _queueKey }, timestamp) is object[] eval && eval.Any())
             {
