@@ -153,7 +153,7 @@ namespace FreeRedis
                     var arr = new object[len];
                     for (var a = 0; a < len; a++)
                         arr[a] = ReadObject(encoding).Value;
-                    if (len == 1 && arr[0] == null) return new object[0];
+                    //if (len == 1 && arr[0] == null) return new object[0];
                     return arr;
                 }
                 if (lenstr == "?")
