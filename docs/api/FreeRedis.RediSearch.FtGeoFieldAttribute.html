@@ -5,10 +5,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Class FtFieldAttribute
+    <title>Class FtGeoFieldAttribute
    </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Class FtFieldAttribute
+    <meta name="title" content="Class FtGeoFieldAttribute
    ">
     <meta name="generator" content="docfx 2.59.4.0">
     
@@ -68,10 +68,10 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="FreeRedis.RediSearch.FtFieldAttribute">
+            <article class="content wrap" id="_content" data-uid="FreeRedis.RediSearch.FtGeoFieldAttribute">
   
   
-  <h1 id="FreeRedis_RediSearch_FtFieldAttribute" data-uid="FreeRedis.RediSearch.FtFieldAttribute" class="text-break">Class FtFieldAttribute
+  <h1 id="FreeRedis_RediSearch_FtGeoFieldAttribute" data-uid="FreeRedis.RediSearch.FtGeoFieldAttribute" class="text-break">Class FtGeoFieldAttribute
   </h1>
   <div class="markdown level0 summary"></div>
   <div class="markdown level0 conceptual"></div>
@@ -79,12 +79,8 @@
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><span class="xref">System.Attribute</span></div>
-    <div class="level2"><span class="xref">FtFieldAttribute</span></div>
-      <div class="level3"><a class="xref" href="FreeRedis.RediSearch.FtGeoFieldAttribute.html">FtGeoFieldAttribute</a></div>
-      <div class="level3"><a class="xref" href="FreeRedis.RediSearch.FtGeoShapeFieldAttribute.html">FtGeoShapeFieldAttribute</a></div>
-      <div class="level3"><a class="xref" href="FreeRedis.RediSearch.FtNumericFieldAttribute.html">FtNumericFieldAttribute</a></div>
-      <div class="level3"><a class="xref" href="FreeRedis.RediSearch.FtTagFieldAttribute.html">FtTagFieldAttribute</a></div>
-      <div class="level3"><a class="xref" href="FreeRedis.RediSearch.FtTextFieldAttribute.html">FtTextFieldAttribute</a></div>
+    <div class="level2"><a class="xref" href="FreeRedis.RediSearch.FtFieldAttribute.html">FtFieldAttribute</a></div>
+    <div class="level3"><span class="xref">FtGeoFieldAttribute</span></div>
   </div>
   <div class="implements">
     <h5>Implements</h5>
@@ -92,6 +88,15 @@
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="FreeRedis.RediSearch.FtFieldAttribute.html#FreeRedis_RediSearch_FtFieldAttribute_Name">FtFieldAttribute.Name</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.RediSearch.FtFieldAttribute.html#FreeRedis_RediSearch_FtFieldAttribute_Alias">FtFieldAttribute.Alias</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.RediSearch.FtFieldAttribute.html#FreeRedis_RediSearch_FtFieldAttribute_FieldName">FtFieldAttribute.FieldName</a>
+    </div>
     <div>
       <span class="xref">System.Attribute.GetCustomAttributes(System.Reflection.MemberInfo, System.Type)</span>
     </div>
@@ -233,21 +238,61 @@
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="FreeRedis.RediSearch.html">FreeRedis.RediSearch</a></h6>
   <h6><strong>Assembly</strong>: cs.temp.dll.dll</h6>
-  <h5 id="FreeRedis_RediSearch_FtFieldAttribute_syntax">Syntax</h5>
+  <h5 id="FreeRedis_RediSearch_FtGeoFieldAttribute_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public abstract class FtFieldAttribute : Attribute, _Attribute</code></pre>
+    <pre><code class="lang-csharp hljs">[AttributeUsage(AttributeTargets.Property)]
+public class FtGeoFieldAttribute : FtFieldAttribute, _Attribute</code></pre>
   </div>
+  <h3 id="constructors">Constructors
+  </h3>
+  
+  
+  <a id="FreeRedis_RediSearch_FtGeoFieldAttribute__ctor_" data-uid="FreeRedis.RediSearch.FtGeoFieldAttribute.#ctor*"></a>
+  <h4 id="FreeRedis_RediSearch_FtGeoFieldAttribute__ctor" data-uid="FreeRedis.RediSearch.FtGeoFieldAttribute.#ctor">FtGeoFieldAttribute()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public FtGeoFieldAttribute()</code></pre>
+  </div>
+  
+  
+  <a id="FreeRedis_RediSearch_FtGeoFieldAttribute__ctor_" data-uid="FreeRedis.RediSearch.FtGeoFieldAttribute.#ctor*"></a>
+  <h4 id="FreeRedis_RediSearch_FtGeoFieldAttribute__ctor_System_String_" data-uid="FreeRedis.RediSearch.FtGeoFieldAttribute.#ctor(System.String)">FtGeoFieldAttribute(String)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public FtGeoFieldAttribute(string name)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">name</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <h3 id="properties">Properties
   </h3>
   
   
-  <a id="FreeRedis_RediSearch_FtFieldAttribute_Alias_" data-uid="FreeRedis.RediSearch.FtFieldAttribute.Alias*"></a>
-  <h4 id="FreeRedis_RediSearch_FtFieldAttribute_Alias" data-uid="FreeRedis.RediSearch.FtFieldAttribute.Alias">Alias</h4>
+  <a id="FreeRedis_RediSearch_FtGeoFieldAttribute_MissingIndex_" data-uid="FreeRedis.RediSearch.FtGeoFieldAttribute.MissingIndex*"></a>
+  <h4 id="FreeRedis_RediSearch_FtGeoFieldAttribute_MissingIndex" data-uid="FreeRedis.RediSearch.FtGeoFieldAttribute.MissingIndex">MissingIndex</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string Alias { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public bool MissingIndex { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -259,20 +304,20 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.String</span></td>
+        <td><span class="xref">System.Boolean</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   
   
-  <a id="FreeRedis_RediSearch_FtFieldAttribute_FieldName_" data-uid="FreeRedis.RediSearch.FtFieldAttribute.FieldName*"></a>
-  <h4 id="FreeRedis_RediSearch_FtFieldAttribute_FieldName" data-uid="FreeRedis.RediSearch.FtFieldAttribute.FieldName">FieldName</h4>
+  <a id="FreeRedis_RediSearch_FtGeoFieldAttribute_NoIndex_" data-uid="FreeRedis.RediSearch.FtGeoFieldAttribute.NoIndex*"></a>
+  <h4 id="FreeRedis_RediSearch_FtGeoFieldAttribute_NoIndex" data-uid="FreeRedis.RediSearch.FtGeoFieldAttribute.NoIndex">NoIndex</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string FieldName { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public bool NoIndex { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -284,20 +329,20 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.String</span></td>
+        <td><span class="xref">System.Boolean</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   
   
-  <a id="FreeRedis_RediSearch_FtFieldAttribute_Name_" data-uid="FreeRedis.RediSearch.FtFieldAttribute.Name*"></a>
-  <h4 id="FreeRedis_RediSearch_FtFieldAttribute_Name" data-uid="FreeRedis.RediSearch.FtFieldAttribute.Name">Name</h4>
+  <a id="FreeRedis_RediSearch_FtGeoFieldAttribute_Sortable_" data-uid="FreeRedis.RediSearch.FtGeoFieldAttribute.Sortable*"></a>
+  <h4 id="FreeRedis_RediSearch_FtGeoFieldAttribute_Sortable" data-uid="FreeRedis.RediSearch.FtGeoFieldAttribute.Sortable">Sortable</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string Name { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public bool Sortable { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -309,7 +354,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.String</span></td>
+        <td><span class="xref">System.Boolean</span></td>
         <td></td>
       </tr>
     </tbody>

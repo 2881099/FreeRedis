@@ -1047,7 +1047,31 @@
       "output": {
         ".html": {
           "relative_path": "docs/api/FreeRedis.RediSearch.FtFieldAttribute.html",
-          "hash": "Z/nfPShL7CeJ9C1sKuKYlcvS447bBhJ8jGfqut9VPC4="
+          "hash": "5Lw2bemgQNHM0wdfD1InHM4bTWqtKOllKC2ewa7bz2U="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "docs/api/FreeRedis.RediSearch.FtGeoFieldAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "docs/api/FreeRedis.RediSearch.FtGeoFieldAttribute.html",
+          "hash": "cD8WUwIGz9LZy6vXjiaoH+ncozxSNketJ9ZF4JfekN8="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "docs/api/FreeRedis.RediSearch.FtGeoShapeFieldAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "docs/api/FreeRedis.RediSearch.FtGeoShapeFieldAttribute.html",
+          "hash": "4O/WkQzrgTT0FYX3NQ3nAJGRlw0Tht5SQ9QvdAuEZA4="
         }
       },
       "is_incremental": false,
@@ -1239,7 +1263,7 @@
       "output": {
         ".html": {
           "relative_path": "docs/api/FreeRedis.RediSearch.html",
-          "hash": "23MLQ5cFoxLBS4sm2Agx6CH93D+TA4qUQ0QY2PFMlaY="
+          "hash": "Et5OwNex7y6rPdBy1v4G6fG7hb76id24cWPLOLor6mA="
         }
       },
       "is_incremental": false,
@@ -1791,7 +1815,7 @@
       "output": {
         ".html": {
           "relative_path": "docs/api/toc.html",
-          "hash": "u+4iOIQeTs6X5yVUfimcnAn+HWDTdmvKY9NMGoZ2UDk="
+          "hash": "Zx7QaAIAoCUrjBbGDDqQlo0dkQe/mCtCnadhug9eUt4="
         }
       },
       "is_incremental": false,
@@ -1830,7 +1854,7 @@
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 146,
+          "total_file_count": 148,
           "skipped_file_count": 0
         },
         "TocDocumentProcessor": {
