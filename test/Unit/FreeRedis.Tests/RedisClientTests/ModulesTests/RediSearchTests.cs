@@ -10,8 +10,8 @@ namespace FreeRedis.Tests.RedisClientTests.Other
 {
     public class RediSearchTests : TestBase
     {
-		
-		protected static ConnectionStringBuilder Connection = new ConnectionStringBuilder()
+
+        protected static ConnectionStringBuilder Connection = new ConnectionStringBuilder()
         {
             Host = "8.154.26.119:63791",
             MaxPoolSize = 10,
@@ -50,6 +50,12 @@ namespace FreeRedis.Tests.RedisClientTests.Other
 
             [FtNumericField("views")]
             public int Views { get; set; }
+
+            [FtGeoField("location")]
+            public string Location { get; set; }
+
+            [FtGeoShapeField("shape", System = CoordinateSystem.FLAT)]
+            public string Shape { get; set; }
         }
 
         [FtDocument("index_post100", Prefix = "blog:post:")]
@@ -85,9 +91,9 @@ namespace FreeRedis.Tests.RedisClientTests.Other
             catch { }
             repo.CreateIndex();
 
-            repo.Save(new TagMapArrayIndex { Id = 1, Title = "测试标题1 word", Category = "一级分类", Content = "测试内容1suffix", Tags = ["作者1","作者2"], Views = 101 });
-            repo.Save(new TagMapArrayIndex { Id = 2, Title = "prefix测试标题2", Category = "二级分类", Content = "测试infix内容2", Tags = ["作者2","作者3"], Views = 201 });
-            repo.Save(new TagMapArrayIndex { Id = 3, Title = "测试标题3 word", Category = "一级分类", Content = "测试word内容3", Tags = ["作者2","作者5"], Views = 301 });
+            repo.Save(new TagMapArrayIndex { Id = 1, Title = "测试标题1 word", Category = "一级分类", Content = "测试内容1suffix", Tags = ["作者1", "作者2"], Views = 101 });
+            repo.Save(new TagMapArrayIndex { Id = 2, Title = "prefix测试标题2", Category = "二级分类", Content = "测试infix内容2", Tags = ["作者2", "作者3"], Views = 201 });
+            repo.Save(new TagMapArrayIndex { Id = 3, Title = "测试标题3 word", Category = "一级分类", Content = "测试word内容3", Tags = ["作者2", "作者5"], Views = 301 });
 
             repo.Delete(1, 2, 3);
 
@@ -179,9 +185,9 @@ namespace FreeRedis.Tests.RedisClientTests.Other
             repo.Delete(1, 2, 3);
 
             repo.Save(new[]{
-                new TestDoc { Id = 1, Title = "测试标题1 word", Category = "一级分类", Content = "测试内容1suffix", Tags = "作者1,作者2", Views = 101 },
-                new TestDoc { Id = 2, Title = "prefix测试标题2", Category = "二级分类", Content = "测试infix内容2", Tags = "作者2,作者3", Views = 201 },
-                new TestDoc { Id = 3, Title = "测试标题3 word", Category = "一级分类", Content = "测试word内容3", Tags = "作者2,作者5", Views = 301 }
+                new TestDoc { Id = 1, Title = "测试标题1 word", Category = "一级分类", Content = "测试内容1suffix", Tags = "作者1,作者2", Views = 101, Location = "104.800644 38.846127", Shape = "POLYGON ((1 1, 1 3, 3 3, 3 1, 1 1))" },
+                new TestDoc { Id = 2, Title = "prefix测试标题2", Category = "二级分类", Content = "测试infix内容2", Tags = "作者2,作者3", Views = 201, Location = "-104.991531, 39.742043", Shape = "POLYGON ((2 2.5, 2 3.5, 3.5 3.5, 3.5 2.5, 2 2.5))" },
+                new TestDoc { Id = 3, Title = "测试标题3 word", Category = "一级分类", Content = "测试word内容3", Tags = "作者2,作者5", Views = 301,Location = "-105.0618814,40.5150098", Shape = "POLYGON ((3.5 1, 3.75 2, 4 1, 3.5 1))" }
             });
 
             var list = repo.Search("*").InFields(a => new { a.Title }).ToList();
@@ -235,6 +241,8 @@ namespace FreeRedis.Tests.RedisClientTests.Other
             list = repo.Search("-@views:[200 200]").ToList();
             list = repo.Search("@views==200 | @views==300").Dialect(4).ToList();
             list = repo.Search("*").Filter("views", 200, 300).Dialect(4).ToList();
+            list = repo.Search("@location:[-104.800644 38.846127 100 mi]").ToList();
+            list = repo.Search("@shape:[WITHIN $qshape]").Params("qshape", "POLYGON ((1 1, 1 3, 3 3, 3 1, 1 1))").Dialect(3).ToList();
         }
 
         [Fact]
@@ -310,8 +318,8 @@ namespace FreeRedis.Tests.RedisClientTests.Other
         }
 
         [Fact]
-		public void FtCreate()
-		{
+        public void FtCreate()
+        {
             cli.FtCreate("idx1")
                 .On(IndexDataType.Hash)
                 .Prefix("blog:post:")

@@ -72,6 +72,8 @@ namespace FreeRedis.RediSearch
             if (ftattr is FtTextFieldAttribute) return FieldType.Text;
             if (ftattr is FtTagFieldAttribute) return FieldType.Tag;
             if (ftattr is FtNumericFieldAttribute) return FieldType.Numeric;
+            if (ftattr is FtGeoFieldAttribute) return FieldType.Geo;
+            if (ftattr is FtGeoShapeFieldAttribute) return FieldType.GeoShape;
             return FieldType.Text;
         }
 
@@ -130,6 +132,30 @@ namespace FreeRedis.RediSearch
                                 MissingIndex = ftattr.MissingIndex,
                                 NoIndex = ftattr.NoIndex,
                                 Sortable = ftattr.Sortable,
+                            });
+                        }
+                        break;
+                    case FieldType.Geo:
+                        {
+                            var ftattr = field.FieldAttribute as FtGeoFieldAttribute;
+                            createBuilder.AddGeoField(ftattr.Name, new GeoFieldOptions
+                            {
+                                Alias = ftattr.Alias,
+                                MissingIndex = ftattr.MissingIndex,
+                                NoIndex = ftattr.NoIndex,
+                                Sortable = ftattr.Sortable,
+                            });
+
+                        }
+                        break;
+                    case FieldType.GeoShape:
+                        {
+                            var ftattr = field.FieldAttribute as FtGeoShapeFieldAttribute;
+                            createBuilder.AddGeoShapeField(ftattr.Name, new GeoShapeFieldOptions
+                            {
+                                Alias = ftattr.Alias,
+                                System = ftattr.System,
+                                MissingIndex = ftattr.MissingIndex
                             });
                         }
                         break;
@@ -728,6 +754,29 @@ namespace FreeRedis.RediSearch
         public bool MissingIndex { get; set; }
         public FtNumericFieldAttribute() { }
         public FtNumericFieldAttribute(string name)
+        {
+            Name = name;
+        }
+    }
+    [AttributeUsage(AttributeTargets.Property)]
+    public class FtGeoFieldAttribute : FtFieldAttribute
+    {
+        public bool Sortable { get; set; }
+        public bool NoIndex { get; set; }
+        public bool MissingIndex { get; set; }
+        public FtGeoFieldAttribute() { }
+        public FtGeoFieldAttribute(string name)
+        {
+            Name = name;
+        }
+    }
+    [AttributeUsage(AttributeTargets.Property)]
+    public class FtGeoShapeFieldAttribute : FtFieldAttribute
+    {
+        public CoordinateSystem System { get; set; }
+        public bool MissingIndex { get; set; }
+        public FtGeoShapeFieldAttribute() { }
+        public FtGeoShapeFieldAttribute(string name)
         {
             Name = name;
         }

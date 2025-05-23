@@ -8,7 +8,7 @@ namespace FreeRedis.RediSearch
     {
         public long Total { get; }
         public List<Document> Documents { get; }
-        
+
         public SearchResult(long total, List<Document> docs)
         {
             Total = total;
@@ -111,7 +111,11 @@ namespace FreeRedis.RediSearch
                 .InputIf(!string.IsNullOrWhiteSpace(_payLoad), "PAYLOAD", _payLoad)
                 .InputIf(!string.IsNullOrWhiteSpace(_sortBy), "SORTBY", _sortBy).InputIf(_sortByDesc, "DESC")
                 .InputIf(_limitOffset > 0 || _limitNum != 10, "LIMIT", _limitOffset, _limitNum);
-            if (_params.Any()) cmd.Input("PARAMS", _params.Count).Input(_params);
+            if (_params.Any())
+            {
+                cmd.Input("PARAMS", _params.Count);
+                _params.ForEach(item => cmd.Input(item));
+            }
             cmd
                .InputIf(_dialect > 0, "DIALECT", _dialect);
             return cmd;
@@ -193,7 +197,7 @@ namespace FreeRedis.RediSearch
         internal string _sortBy;
         internal bool _sortByDesc;
         internal long _limitOffset, _limitNum = 10;
-        internal List<object> _params = new List<object>();
+        internal List<string> _params = new List<string>();
         internal int _dialect;
 
         public SearchBuilder NoContent(bool value = true)

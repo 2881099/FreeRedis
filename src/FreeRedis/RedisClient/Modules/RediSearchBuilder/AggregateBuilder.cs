@@ -74,7 +74,11 @@ namespace FreeRedis.RediSearch
                 .InputIf(_limitOffset > 0 || _limitNum != 10, "LIMIT", _limitOffset, _limitNum)
                 .InputIf(!string.IsNullOrWhiteSpace(_filter), "FILTER", _filter);
             if (_withCursor) cmd.Input("WITHCURSOR").InputIf(_withCursorCount != -1, "COUNT", _withCursorCount).InputIf(_withCursorMaxIdle != -1, "MAXIDLE", _withCursorMaxIdle);
-            if (_params.Any()) cmd.Input("PARAMS", _params.Count).Input(_params);
+            if (_params.Any())
+            {
+                cmd.Input("PARAMS", _params.Count);
+                _params.ForEach(item => cmd.Input(item));
+            }
             cmd
                .InputIf(_dialect > 0, "DIALECT", _dialect);
             return cmd;
@@ -93,7 +97,7 @@ namespace FreeRedis.RediSearch
         private bool _withCursor;
         private int _withCursorCount = -1;
         private long _withCursorMaxIdle = -1;
-        private List<object> _params = new List<object>();
+        private List<string> _params = new List<string>();
         private int _dialect;
 
         public AggregateBuilder Verbatim(bool value = true)
