@@ -242,7 +242,9 @@ namespace FreeRedis.Tests.RedisClientTests.Other
             list = repo.Search("@views==200 | @views==300").Dialect(4).ToList();
             list = repo.Search("*").Filter("views", 200, 300).Dialect(4).ToList();
             list = repo.Search("@location:[-104.800644 38.846127 100 mi]").ToList();
+            list = repo.Search(a => a.Location.GeoRadius(-104.800644m, 38.846127m, 38.846127m, GeoUnit.mi)).ToList();
             list = repo.Search("@shape:[WITHIN $qshape]").Params("qshape", "POLYGON ((1 1, 1 3, 3 3, 3 1, 1 1))").Dialect(3).ToList();
+            list = repo.Search(a => a.Shape.ShapeWithin("qshape")).Params("qshape", "POLYGON ((1 1, 1 3, 3 3, 3 1, 1 1))").Dialect(3).ToList();
         }
 
         [Fact]

@@ -341,4 +341,14 @@ namespace FreeRedis.RediSearch
             return this;
         }
     }
+
+    public static class SearchBuilderStringExtensions
+    {
+        // 替换为判断field字段是否在以(lon, lat)为圆心，半径为radius的圆内更好，但是只用于Search方法的话还是不用那么复杂的实现了
+        public static bool GeoRadius(this string field, decimal lon, decimal lat, decimal radius, GeoUnit unit) => true;
+        public static bool ShapeWithin(this string field, string parameterName) => true;
+        public static bool ShapeContains(this string field, string parameterName) => true;
+        public static bool ShapeIntersects(this string field, string parameterName) => true;
+        public static bool ShapeDisjoint(this string field, string parameterName) => true;
+    }
 }
