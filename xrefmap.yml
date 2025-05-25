@@ -20145,6 +20145,77 @@ references:
   isSpec: "True"
   fullName: FreeRedis.RediSearch.SearchBuilder.WithSortKeys
   nameWithType: SearchBuilder.WithSortKeys
+- uid: FreeRedis.RediSearch.SearchBuilderStringExtensions
+  name: SearchBuilderStringExtensions
+  href: docs/api/FreeRedis.RediSearch.SearchBuilderStringExtensions.html
+  commentId: T:FreeRedis.RediSearch.SearchBuilderStringExtensions
+  fullName: FreeRedis.RediSearch.SearchBuilderStringExtensions
+  nameWithType: SearchBuilderStringExtensions
+- uid: FreeRedis.RediSearch.SearchBuilderStringExtensions.GeoRadius(System.String,System.Decimal,System.Decimal,System.Decimal,FreeRedis.GeoUnit)
+  name: GeoRadius(String, Decimal, Decimal, Decimal, GeoUnit)
+  href: docs/api/FreeRedis.RediSearch.SearchBuilderStringExtensions.html#FreeRedis_RediSearch_SearchBuilderStringExtensions_GeoRadius_System_String_System_Decimal_System_Decimal_System_Decimal_FreeRedis_GeoUnit_
+  commentId: M:FreeRedis.RediSearch.SearchBuilderStringExtensions.GeoRadius(System.String,System.Decimal,System.Decimal,System.Decimal,FreeRedis.GeoUnit)
+  fullName: FreeRedis.RediSearch.SearchBuilderStringExtensions.GeoRadius(System.String, System.Decimal, System.Decimal, System.Decimal, FreeRedis.GeoUnit)
+  nameWithType: SearchBuilderStringExtensions.GeoRadius(String, Decimal, Decimal, Decimal, GeoUnit)
+- uid: FreeRedis.RediSearch.SearchBuilderStringExtensions.GeoRadius*
+  name: GeoRadius
+  href: docs/api/FreeRedis.RediSearch.SearchBuilderStringExtensions.html#FreeRedis_RediSearch_SearchBuilderStringExtensions_GeoRadius_
+  commentId: Overload:FreeRedis.RediSearch.SearchBuilderStringExtensions.GeoRadius
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.SearchBuilderStringExtensions.GeoRadius
+  nameWithType: SearchBuilderStringExtensions.GeoRadius
+- uid: FreeRedis.RediSearch.SearchBuilderStringExtensions.ShapeContains(System.String,System.String)
+  name: ShapeContains(String, String)
+  href: docs/api/FreeRedis.RediSearch.SearchBuilderStringExtensions.html#FreeRedis_RediSearch_SearchBuilderStringExtensions_ShapeContains_System_String_System_String_
+  commentId: M:FreeRedis.RediSearch.SearchBuilderStringExtensions.ShapeContains(System.String,System.String)
+  fullName: FreeRedis.RediSearch.SearchBuilderStringExtensions.ShapeContains(System.String, System.String)
+  nameWithType: SearchBuilderStringExtensions.ShapeContains(String, String)
+- uid: FreeRedis.RediSearch.SearchBuilderStringExtensions.ShapeContains*
+  name: ShapeContains
+  href: docs/api/FreeRedis.RediSearch.SearchBuilderStringExtensions.html#FreeRedis_RediSearch_SearchBuilderStringExtensions_ShapeContains_
+  commentId: Overload:FreeRedis.RediSearch.SearchBuilderStringExtensions.ShapeContains
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.SearchBuilderStringExtensions.ShapeContains
+  nameWithType: SearchBuilderStringExtensions.ShapeContains
+- uid: FreeRedis.RediSearch.SearchBuilderStringExtensions.ShapeDisjoint(System.String,System.String)
+  name: ShapeDisjoint(String, String)
+  href: docs/api/FreeRedis.RediSearch.SearchBuilderStringExtensions.html#FreeRedis_RediSearch_SearchBuilderStringExtensions_ShapeDisjoint_System_String_System_String_
+  commentId: M:FreeRedis.RediSearch.SearchBuilderStringExtensions.ShapeDisjoint(System.String,System.String)
+  fullName: FreeRedis.RediSearch.SearchBuilderStringExtensions.ShapeDisjoint(System.String, System.String)
+  nameWithType: SearchBuilderStringExtensions.ShapeDisjoint(String, String)
+- uid: FreeRedis.RediSearch.SearchBuilderStringExtensions.ShapeDisjoint*
+  name: ShapeDisjoint
+  href: docs/api/FreeRedis.RediSearch.SearchBuilderStringExtensions.html#FreeRedis_RediSearch_SearchBuilderStringExtensions_ShapeDisjoint_
+  commentId: Overload:FreeRedis.RediSearch.SearchBuilderStringExtensions.ShapeDisjoint
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.SearchBuilderStringExtensions.ShapeDisjoint
+  nameWithType: SearchBuilderStringExtensions.ShapeDisjoint
+- uid: FreeRedis.RediSearch.SearchBuilderStringExtensions.ShapeIntersects(System.String,System.String)
+  name: ShapeIntersects(String, String)
+  href: docs/api/FreeRedis.RediSearch.SearchBuilderStringExtensions.html#FreeRedis_RediSearch_SearchBuilderStringExtensions_ShapeIntersects_System_String_System_String_
+  commentId: M:FreeRedis.RediSearch.SearchBuilderStringExtensions.ShapeIntersects(System.String,System.String)
+  fullName: FreeRedis.RediSearch.SearchBuilderStringExtensions.ShapeIntersects(System.String, System.String)
+  nameWithType: SearchBuilderStringExtensions.ShapeIntersects(String, String)
+- uid: FreeRedis.RediSearch.SearchBuilderStringExtensions.ShapeIntersects*
+  name: ShapeIntersects
+  href: docs/api/FreeRedis.RediSearch.SearchBuilderStringExtensions.html#FreeRedis_RediSearch_SearchBuilderStringExtensions_ShapeIntersects_
+  commentId: Overload:FreeRedis.RediSearch.SearchBuilderStringExtensions.ShapeIntersects
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.SearchBuilderStringExtensions.ShapeIntersects
+  nameWithType: SearchBuilderStringExtensions.ShapeIntersects
+- uid: FreeRedis.RediSearch.SearchBuilderStringExtensions.ShapeWithin(System.String,System.String)
+  name: ShapeWithin(String, String)
+  href: docs/api/FreeRedis.RediSearch.SearchBuilderStringExtensions.html#FreeRedis_RediSearch_SearchBuilderStringExtensions_ShapeWithin_System_String_System_String_
+  commentId: M:FreeRedis.RediSearch.SearchBuilderStringExtensions.ShapeWithin(System.String,System.String)
+  fullName: FreeRedis.RediSearch.SearchBuilderStringExtensions.ShapeWithin(System.String, System.String)
+  nameWithType: SearchBuilderStringExtensions.ShapeWithin(String, String)
+- uid: FreeRedis.RediSearch.SearchBuilderStringExtensions.ShapeWithin*
+  name: ShapeWithin
+  href: docs/api/FreeRedis.RediSearch.SearchBuilderStringExtensions.html#FreeRedis_RediSearch_SearchBuilderStringExtensions_ShapeWithin_
+  commentId: Overload:FreeRedis.RediSearch.SearchBuilderStringExtensions.ShapeWithin
+  isSpec: "True"
+  fullName: FreeRedis.RediSearch.SearchBuilderStringExtensions.ShapeWithin
+  nameWithType: SearchBuilderStringExtensions.ShapeWithin
 - uid: FreeRedis.RediSearch.SearchResult
   name: SearchResult
   href: docs/api/FreeRedis.RediSearch.SearchResult.html
