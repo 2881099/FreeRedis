@@ -27,38 +27,38 @@ namespace FreeRedis
             }
         }
 
+        internal class PipelineCommand
+        {
+            public CommandPacket Command { get; set; }
+            public Func<RedisResult, object> Parse { get; set; }
+            public bool IsBytes { get; set; }
+            public RedisResult RedisResult { get; set; }
+            public object Result { get; set; }
+#if isasync
+            public TaskCompletionSource<object> TaskCompletionSource { get; set; }
+            bool TaskCompletionSourceIsTrySeted { get; set; }
+            public void TrySetResult(object result, Exception exception)
+            {
+                if (TaskCompletionSource == null) return;
+                if (TaskCompletionSourceIsTrySeted) return;
+                TaskCompletionSourceIsTrySeted = true;
+                if (exception != null) TaskCompletionSource.TrySetException(exception);
+                else TaskCompletionSource.TrySetResult(result);
+            }
+            public void TrySetCanceled()
+            {
+                if (TaskCompletionSource == null) return;
+                if (TaskCompletionSourceIsTrySeted) return;
+                TaskCompletionSourceIsTrySeted = true;
+                TaskCompletionSource.TrySetCanceled();
+            }
+#endif
+        }
+
         class PipelineAdapter : BaseAdapter
         {
             readonly List<PipelineCommand> _commands;
             readonly BaseAdapter _baseAdapter;
-
-            internal class PipelineCommand
-            {
-                public CommandPacket Command { get; set; }
-                public Func<RedisResult, object> Parse { get; set; }
-                public bool IsBytes { get; set; }
-                public RedisResult RedisResult { get; set; }
-                public object Result { get; set; }
-#if isasync
-                public TaskCompletionSource<object> TaskCompletionSource { get; set; }
-                bool TaskCompletionSourceIsTrySeted { get; set; }
-                public void TrySetResult(object result, Exception exception)
-                {
-                    if (TaskCompletionSource == null) return;
-                    if (TaskCompletionSourceIsTrySeted) return;
-                    TaskCompletionSourceIsTrySeted = true;
-                    if (exception != null) TaskCompletionSource.TrySetException(exception);
-                    else TaskCompletionSource.TrySetResult(result);
-                }
-                public void TrySetCanceled()
-                {
-                    if (TaskCompletionSource == null) return;
-                    if (TaskCompletionSourceIsTrySeted) return;
-                    TaskCompletionSourceIsTrySeted = true;
-                    TaskCompletionSource.TrySetCanceled();
-                }
-#endif
-            }
 
             public PipelineAdapter(BaseAdapter baseAdapter)
             {
@@ -151,7 +151,7 @@ namespace FreeRedis
                 }
             }
 
-            static void EndPipe(IRedisSocket rds, IEnumerable<PipelineCommand> cmds)
+            internal static void EndPipe(IRedisSocket rds, IEnumerable<PipelineCommand> cmds)
             {
                 var err = new List<PipelineCommand>();
                 var ms = new MemoryStream();
