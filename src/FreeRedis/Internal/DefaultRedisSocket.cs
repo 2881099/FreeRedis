@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -298,7 +299,8 @@ namespace FreeRedis.Internal
 
                 EndPoint endpoint = IPAddress.TryParse(_ip, out var tryip) ?
                     (EndPoint)new IPEndPoint(tryip, _port) :
-                    new DnsEndPoint(_ip, _port);
+                    (EndPoint)new IPEndPoint(DnsResolver.Instance.Resolve(_ip)[0], _port);
+                    //new DnsEndPoint(_ip, _port);
 
                 var localSocket = endpoint.AddressFamily == AddressFamily.InterNetworkV6 ?
                     new Socket(AddressFamily.InterNetworkV6, SocketType.Stream, ProtocolType.Tcp) :
@@ -422,6 +424,82 @@ namespace FreeRedis.Internal
             }
 
             return new KeyValuePair<string, int>(host, 6379);
+        }
+
+        class DnsResolver
+        {
+            public static DnsResolver Instance { get; set; } = new DnsResolver();
+
+            public TimeSpan Expire { set; get; } = TimeSpan.FromMinutes(5);
+            private readonly ConcurrentDictionary<string, DnsItem> _cache = new ConcurrentDictionary<string, DnsItem>();
+
+            public IPAddress[] Resolve(string host)
+            {
+                if (_cache.TryGetValue(host, out var item))
+                {
+                    if (item.UpdateTime.Add(Expire) <= DateTime.Now)
+#if isasync
+                        Task.Run(() => ResolveCore(host, item, false));
+#else
+                        ResolveCore(host, item, false);
+#endif
+                }
+                else
+                    item = ResolveCore(host, item, true);
+
+                return item?.Addresses;
+            }
+
+            DnsItem ResolveCore(string host, DnsItem item, Boolean throwError)
+            {
+                try
+                {
+#if isasync
+                    var task = Dns.GetHostAddressesAsync(host);
+                    if (!task.Wait(5000))
+                    {
+                        if (throwError) throw new TaskCanceledException();
+                        return null;
+                    }
+                    var addrs = task.ConfigureAwait(false).GetAwaiter().GetResult();
+#else
+                    var addrs = Dns.GetHostAddresses(host);
+#endif
+                    if (addrs != null && addrs.Length > 0)
+                    {
+                        if (item == null)
+                        {
+                            _cache[host] = item = new DnsItem
+                            {
+                                Host = host,
+                                Addresses = addrs,
+                                CreateTime = DateTime.Now,
+                                UpdateTime = DateTime.Now
+                            };
+                        }
+                        else
+                        {
+                            item.Addresses = addrs;
+                            item.UpdateTime = DateTime.Now;
+                        }
+                    }
+                }
+                catch
+                {
+                    if (item != null) return item;
+                    if (throwError) throw;
+                }
+
+                return item;
+            }
+
+            class DnsItem
+            {
+                public string Host { get; set; }
+                public IPAddress[] Addresses { get; set; }
+                public DateTime CreateTime { get; set; }
+                public DateTime UpdateTime { get; set; }
+            }
         }
     }
 }
