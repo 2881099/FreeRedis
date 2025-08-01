@@ -81,7 +81,10 @@ namespace FreeRedis.RediSearch
         {
             var attr = _schema.DocumentAttribute;
             var createBuilder = _client.FtCreate(attr.Name);
-            if (!string.IsNullOrWhiteSpace(attr.Prefix)) createBuilder.Prefix(attr.Prefix);
+            // 组合全局前缀和文档前缀  
+            var finalPrefix = _client.ConnectionString.Prefix + attr.Prefix;
+            if (!string.IsNullOrWhiteSpace(finalPrefix))
+                createBuilder.Prefix(finalPrefix);
             if (!string.IsNullOrWhiteSpace(attr.Filter)) createBuilder.Prefix(attr.Filter);
             if (!string.IsNullOrWhiteSpace(attr.Language)) createBuilder.Language(attr.Language);
             foreach (var field in _schema.Fields)
