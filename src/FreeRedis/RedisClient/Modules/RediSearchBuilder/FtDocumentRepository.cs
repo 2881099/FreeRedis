@@ -333,65 +333,49 @@ namespace FreeRedis.RediSearch
         /// <param name="id">文档ID</param>
         /// <param name="fieldValues">字段值字典</param>
         /// <returns>反序列化后的文档对象</returns>
-        internal T DeserializeDocumentCore(string id, Dictionary<string, object> fieldValues)
+        internal T DeserializeDocumentCore(string id, Dictionary<string, object> fieldValues, bool isFromReturnClause = false)
         {
             var ttype = typeof(T);
             var prefix = _schema.DocumentAttribute.Prefix;
             var keyProperty = _schema.KeyProperty;
-            
+
             var item = (T)ttype.CreateInstanceGetDefaultValue();
-            
+
             foreach (var kv in fieldValues)
             {
                 var name = kv.Key.Replace("-", "_");
                 DocumentSchemaFieldInfo field = null;
-                
-                // 尝试通过字段名映射查找对应的字段信息
-                if (!_schema.FieldsMapRead.TryGetValue(name, out field))
+
+                if (isFromReturnClause)
                 {
-                    // 如果没有找到，尝试通过属性名查找
-                    if (_schema.FieldsMap.ContainsKey(name))
+                    var prop = ttype.GetPropertyOrFieldIgnoreCase(name);
+                    if (prop == null || !_schema.FieldsMap.TryGetValue(prop.Name, out field))
                     {
-                        field = _schema.FieldsMap[name];
-                    }
-                    else
-                    {
-                        // 对于没有 FtFieldAttribute 的字段，直接通过属性名设置
-                        var member = ttype.GetPropertyOrFieldIgnoreCase(name);
-                        if (member != null && kv.Value != null)
-                        {
-                            // 检查是否为可写的属性或字段
-                            bool canWrite = false;
-                            Type memberType = null;
-                            
-                            if (member is PropertyInfo propInfo)
-                            {
-                                canWrite = propInfo.CanWrite;
-                                memberType = propInfo.PropertyType;
-                            }
-                            else if (member is FieldInfo fieldInfo)
-                            {
-                                canWrite = !fieldInfo.IsInitOnly && !fieldInfo.IsLiteral;
-                                memberType = fieldInfo.FieldType;
-                            }
-                            
-                            if (canWrite && memberType != null)
-                            {
-                                var convertedValue = ConvertValue(kv.Value.ToString(), memberType);
-                                ttype.SetPropertyOrFieldValue(item, member.Name, convertedValue);
-                            }
-                        }
+                        // 如果没从FieldsMap中找到，但是找到了prop，也尝试赋值，可能是Redis中Index与字段的FtFieldAttribute不一致
+                        if (prop != null && kv.Value != null)
+                            SetPropertyOrFieldValue(item, prop, kv.Value);
                         continue;
                     }
                 }
-                
+                else
+                {
+                    if (!_schema.FieldsMapRead.TryGetValue(name, out field))
+                    {
+                        // 对于没有 FtFieldAttribute 的字段，直接通过属性名设置
+                        var prop = ttype.GetPropertyOrFieldIgnoreCase(name);
+                        if (prop != null && kv.Value != null) 
+                            SetPropertyOrFieldValue(item, prop, kv.Value);
+                        continue;
+                    }
+                }
+
                 if (field == null || kv.Value == null) continue;
-                
+
                 // 处理 Tag 类型的特殊逻辑
                 if (kv.Value is string valstr && field.FieldType == FieldType.Tag)
                 {
                     var convertedValue = field.Property.PropertyType.IsArrayOrList() ?
-                        field.Property.PropertyType.FromObject(valstr.Split(new[] { (field.FieldAttribute as FtTagFieldAttribute).Separator ?? "," }, StringSplitOptions.None)) : 
+                        field.Property.PropertyType.FromObject(valstr.Split(new[] { (field.FieldAttribute as FtTagFieldAttribute).Separator ?? "," }, StringSplitOptions.None)) :
                         valstr;
                     ttype.SetPropertyOrFieldValue(item, field.Property.Name, convertedValue);
                 }
@@ -400,8 +384,8 @@ namespace FreeRedis.RediSearch
                     ttype.SetPropertyOrFieldValue(item, field.Property.Name, field.Property.PropertyType.FromObject(kv.Value));
                 }
             }
-            
-            // 设置键属性
+
+            // 设置key属性
             if (keyProperty != null)
             {
                 var itemId = id;
@@ -409,8 +393,31 @@ namespace FreeRedis.RediSearch
                     itemId = itemId.Substring(prefix.Length);
                 ttype.SetPropertyOrFieldValue(item, keyProperty.Name, keyProperty.PropertyType.FromObject(itemId));
             }
-            
+
             return item;
+
+            void SetPropertyOrFieldValue(object target, MemberInfo member, object value)
+            {
+                bool canWrite = false;
+                Type memberType = null;
+
+                if (member is PropertyInfo propInfo)
+                {
+                    canWrite = propInfo.CanWrite;
+                    memberType = propInfo.PropertyType;
+                }
+                else if (member is FieldInfo fieldInfo)
+                {
+                    canWrite = !fieldInfo.IsInitOnly && !fieldInfo.IsLiteral;
+                    memberType = fieldInfo.FieldType;
+                }
+
+                if (canWrite && memberType != null)
+                {
+                    var convertedValue = ConvertValue(value.ToString(), memberType);
+                    ttype.SetPropertyOrFieldValue(target, member.Name, convertedValue);
+                }
+            }
         }
 
         private object ConvertValue(string stringValue, Type targetType)
@@ -1179,7 +1186,7 @@ namespace FreeRedis.RediSearch
         /// 默认值为 1.0，范围通常为 0.1 到 10.0。
         /// </summary>
         public double Weight { get; set; }
-
+        
         /// <summary>
         /// 获取或设置是否禁用词干提取。如果设置为 true，将不会对该字段进行词干提取处理。
         /// 词干提取可以匹配单词的不同形式（如 "running" 和 "run"）。
@@ -1444,10 +1451,11 @@ namespace FreeRedis.RediSearch
 
         List<T> FetchResult(SearchResult result)
         {
+            var isFromReturnClause = _searchBuilder._return.Any();
             return result.Documents.Select(doc =>
             {
-                // 使用统一的反序列化核心方法
-                return _repository.DeserializeDocumentCore(doc.Id, doc.Body);
+                // 使用统一的反序列化核心方法，并传递上下文
+                return _repository.DeserializeDocumentCore(doc.Id, doc.Body, isFromReturnClause);
             }).ToList();
         }
         public long Total { get; private set; }
