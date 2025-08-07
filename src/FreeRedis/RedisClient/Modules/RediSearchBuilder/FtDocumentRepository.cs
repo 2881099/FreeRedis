@@ -893,41 +893,40 @@ namespace FreeRedis.RediSearch
                             }
                         }
                         return null;
-
-                        string ParseCallStringExtension()
+                    }
+                    string ParseCallStringExtension()
+                    {
+                        var left = parseExp(callExp.Arguments[0]);
+                        switch (callExp.Method.Name)
                         {
-                            var left = parseExp(callExp.Arguments[0]);
-                            switch (callExp.Method.Name)
-                            {
-                                case "GeoRadius":
+                            case "GeoRadius":
                                 var lon = parseExp(callExp.Arguments[1]);
                                 var lat = parseExp(callExp.Arguments[2]);
                                 var radius = parseExp(callExp.Arguments[3]);
                                 var unit = parseExp(callExp.Arguments[4]);
                                 return $"{left}:[{lon} {lat} {radius} {unit.Replace("'", "")}]";
-                                case "ShapeWithin":
+                            case "ShapeWithin":
                                 {
                                     var parameterName = parseExp(callExp.Arguments[1]);
                                     return $"{left}:[WITHIN ${parameterName.Replace("'", "")}]";
                                 }
-                                case "ShapeContains":
+                            case "ShapeContains":
                                 {
                                     var parameterName = parseExp(callExp.Arguments[1]);
                                     return $"{left}:[CONTAINS ${parameterName.Replace("'", "")}]";
                                 }
-                                case "ShapeIntersects":
+                            case "ShapeIntersects":
                                 {
                                     var parameterName = parseExp(callExp.Arguments[1]);
                                     return $"{left}:[INTERSECTS ${parameterName.Replace("'", "")}]";
                                 }
-                                case "ShapeDisjoint":
+                            case "ShapeDisjoint":
                                 {
                                     var parameterName = parseExp(callExp.Arguments[1]);
                                     return $"{left}:[DISJOINT ${parameterName.Replace("'", "")}]";
                                 }
-                            }
-                            return null;
                         }
+                        return null;
                     }
                     string ParseCallMath()
                     {
