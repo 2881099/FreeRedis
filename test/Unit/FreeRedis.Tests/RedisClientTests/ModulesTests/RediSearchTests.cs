@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace FreeRedis.Tests.RedisClientTests.Other
@@ -56,6 +57,8 @@ namespace FreeRedis.Tests.RedisClientTests.Other
 
             [FtGeoShapeField("shape", System = CoordinateSystem.FLAT)]
             public string Shape { get; set; }
+
+            public string TextWithoutAttr { get; set; }
         }
 
         [FtDocument("index_post100", Prefix = "blog:post:")]
@@ -165,7 +168,7 @@ namespace FreeRedis.Tests.RedisClientTests.Other
         }
 
         [Fact]
-        public void FtDocumentRepository()
+        public async Task FtDocumentRepository()
         {
             var connStr = Connection.ToString();
 
@@ -185,14 +188,17 @@ namespace FreeRedis.Tests.RedisClientTests.Other
             repo.Delete(1, 2, 3);
 
             repo.Save(new[]{
-                new TestDoc { Id = 1, Title = "测试标题1 word", Category = "一级分类", Content = "测试内容1suffix", Tags = "作者1,作者2", Views = 101, Location = "104.800644 38.846127", Shape = "POLYGON ((1 1, 1 3, 3 3, 3 1, 1 1))" },
+                new TestDoc { Id = 1, Title = "测试标题1 word", Category = "一级分类", Content = "测试内容1suffix", Tags = "作者1,作者2", Views = 101, Location = "104.800644 38.846127", Shape = "POLYGON ((1 1, 1 3, 3 3, 3 1, 1 1))", TextWithoutAttr = "testtt" },
                 new TestDoc { Id = 2, Title = "prefix测试标题2", Category = "二级分类", Content = "测试infix内容2", Tags = "作者2,作者3", Views = 201, Location = "-104.991531, 39.742043", Shape = "POLYGON ((2 2.5, 2 3.5, 3.5 3.5, 3.5 2.5, 2 2.5))" },
-                new TestDoc { Id = 3, Title = "测试标题3 word", Category = "一级分类", Content = "测试word内容3", Tags = "作者2,作者5", Views = 301,Location = "-105.0618814,40.5150098", Shape = "POLYGON ((3.5 1, 3.75 2, 4 1, 3.5 1))" }
             });
+            repo.SaveAll(new TestDoc { Id = 3, Title = "测试标题3 word", Category = "一级分类", Content = "测试word内容3", Tags = "作者2,作者5", Views = 301, Location = "-105.0618814,40.5150098", Shape = "POLYGON ((3.5 1, 3.75 2, 4 1, 3.5 1))", TextWithoutAttr = "Test" });
+
 
             var list = repo.Search("*").InFields(a => new { a.Title }).ToList();
             list = repo.Search("*").Return(a => new { a.Title, a.Tags }).ToList();
             list = repo.Search("*").Return(a => new { tit1 = a.Title, tgs1 = a.Tags, a.Title, a.Tags }).ToList();
+
+            list = [repo.Get(1), await repo.GetAsync(3)];
 
             list = repo.Search(a => a.Title == "word" || a.Views > 100).Filter(a => a.Views, 1, 1000).ToList();
             list = repo.Search(a => a.Title.Contains("word") || a.Views > 100).Filter(a => a.Views, 1, 1000).ToList();
