@@ -206,6 +206,255 @@ namespace FreeRedis.RediSearch
             }
         }
 
+        void SaveAll(T doc, RedisClient.PipelineHook pipe)
+        {
+            var key = $"{_schema.DocumentAttribute.Prefix}{_schema.KeyProperty.GetValue(doc, null)}";
+
+            // 获取所有可读写的属性（排除 Key 属性和索引器属性）
+            var allProperties = typeof(T).GetProperties().Where(p =>
+                p != _schema.KeyProperty &&
+                p.CanRead && p.CanWrite &&
+                !p.GetIndexParameters().Any()).ToList();
+
+            if (allProperties.Count == 0) return;
+
+            // 构建字段列表
+            var fieldValues = new List<object>();
+
+            foreach (var prop in allProperties)
+            {
+                var fieldName = GetFieldName(prop);
+                var fieldValue = GetFieldValue(prop, doc);
+                fieldValues.Add(fieldName);
+                fieldValues.Add(fieldValue);
+            }
+
+            if (fieldValues.Count >= 2)
+            {
+                var firstFieldName = (string)fieldValues[0];
+                var firstFieldValue = fieldValues[1];
+                var opts = fieldValues.Skip(2).ToArray();
+
+                if (pipe != null) pipe.HMSet(key, firstFieldName, firstFieldValue, opts);
+                else _client.HMSet(key, firstFieldName, firstFieldValue, opts);
+            }
+
+            string GetFieldName(PropertyInfo prop)
+            {
+                // 如果有 FtFieldAttribute，使用其定义的字段名，否则使用属性名
+                if (_schema.FieldsMap.ContainsKey(prop.Name))
+                {
+                    return _schema.FieldsMap[prop.Name].FieldAttribute.FieldName;
+                }
+                return prop.Name;
+            }
+
+            object GetFieldValue(PropertyInfo prop, T document)
+            {
+                var val = prop.GetValue(document, null);
+
+                // 如果有对应的 FtFieldAttribute，按其规则处理
+                if (_schema.FieldsMap.ContainsKey(prop.Name))
+                {
+                    var fieldInfo = _schema.FieldsMap[prop.Name];
+                    if (fieldInfo.FieldType == FieldType.Tag)
+                    {
+                        if (prop.PropertyType.IsArrayOrList())
+                            val = string.Join((fieldInfo.FieldAttribute as FtTagFieldAttribute).Separator ?? ",", typeof(string[]).FromObject(val) as string[]);
+                    }
+                }
+
+                return val;
+            }
+        }
+
+        /// <summary>
+        /// 保存文档的所有字段，包括没有标记 FtFieldAttribute 的字段。
+        /// 没有 FtFieldAttribute 的字段将直接使用属性名称作为 Redis 字段名称。
+        /// </summary>
+        /// <param name="doc">要保存的文档</param>
+        public void SaveAll(T doc) => SaveAll(doc, null);
+
+        /// <summary>
+        /// 保存多个文档的所有字段，包括没有标记 FtFieldAttribute 的字段。
+        /// </summary>
+        /// <param name="docs">要保存的文档数组</param>
+        public void SaveAll(T[] docs) => SaveAll(docs as IEnumerable<T>);
+
+        /// <summary>
+        /// 保存多个文档的所有字段，包括没有标记 FtFieldAttribute 的字段。
+        /// </summary>
+        /// <param name="docs">要保存的文档集合</param>
+        public void SaveAll(IEnumerable<T> docs)
+        {
+            if (docs == null) return;
+            using (var pipe = _client.StartPipe())
+            {
+                foreach (var doc in docs)
+                    SaveAll(doc, pipe);
+                pipe.EndPipe();
+            }
+        }
+
+        /// <summary>
+        /// 获取文档的所有字段，包括没有标记 FtFieldAttribute 的字段。
+        /// 使用与 Search 方法相同的反序列化逻辑。
+        /// </summary>
+        /// <param name="id">文档ID</param>
+        /// <returns>文档对象，如果不存在则返回 null</returns>
+        public T Get(object id)
+        {
+            if (id == null) return default(T);
+
+            var key = $"{_schema.DocumentAttribute.Prefix}{id}";
+            var fieldValues = _client.HGetAll(key);
+
+            if (fieldValues == null || fieldValues.Count == 0) return default(T);
+
+            // 转换为与 Search 方法兼容的格式
+            var convertedValues = fieldValues.ToDictionary(kv => kv.Key, kv => (object)kv.Value);
+            return DeserializeDocumentCore(id.ToString(), convertedValues);
+        }
+
+        /// <summary>
+        /// 批量获取文档的所有字段，包括没有标记 FtFieldAttribute 的字段。
+        /// </summary>
+        /// <param name="ids">文档ID数组</param>
+        /// <returns>文档对象数组</returns>
+        public T[] Get(params object[] ids)
+        {
+            if (ids == null || ids.Length == 0) return new T[0];
+            return ids.Select(id => Get(id)).Where(doc => doc != null).ToArray();
+        }
+
+        /// <summary>
+        /// 统一的文档反序列化核心方法，与 Search 方法使用相同的逻辑
+        /// </summary>
+        /// <param name="id">文档ID</param>
+        /// <param name="fieldValues">字段值字典</param>
+        /// <returns>反序列化后的文档对象</returns>
+        internal T DeserializeDocumentCore(string id, Dictionary<string, object> fieldValues, bool isFromReturnClause = false)
+        {
+            var ttype = typeof(T);
+            var prefix = _schema.DocumentAttribute.Prefix;
+            var keyProperty = _schema.KeyProperty;
+
+            var item = (T)ttype.CreateInstanceGetDefaultValue();
+
+            foreach (var kv in fieldValues)
+            {
+                var name = kv.Key.Replace("-", "_");
+                DocumentSchemaFieldInfo field = null;
+
+                if (isFromReturnClause)
+                {
+                    var prop = ttype.GetPropertyOrFieldIgnoreCase(name);
+                    if (prop == null || !_schema.FieldsMap.TryGetValue(prop.Name, out field))
+                    {
+                        // 如果没从FieldsMap中找到，但是找到了prop，也尝试赋值，可能是Redis中Index与字段的FtFieldAttribute不一致
+                        if (prop != null && kv.Value != null)
+                            SetPropertyOrFieldValue(item, prop, kv.Value);
+                        continue;
+                    }
+                }
+                else
+                {
+                    if (!_schema.FieldsMapRead.TryGetValue(name, out field))
+                    {
+                        // 对于没有 FtFieldAttribute 的字段，直接通过属性名设置
+                        var prop = ttype.GetPropertyOrFieldIgnoreCase(name);
+                        if (prop != null && kv.Value != null) 
+                            SetPropertyOrFieldValue(item, prop, kv.Value);
+                        continue;
+                    }
+                }
+
+                if (field == null || kv.Value == null) continue;
+
+                // 处理 Tag 类型的特殊逻辑
+                if (kv.Value is string valstr && field.FieldType == FieldType.Tag)
+                {
+                    var convertedValue = field.Property.PropertyType.IsArrayOrList() ?
+                        field.Property.PropertyType.FromObject(valstr.Split(new[] { (field.FieldAttribute as FtTagFieldAttribute).Separator ?? "," }, StringSplitOptions.None)) :
+                        valstr;
+                    ttype.SetPropertyOrFieldValue(item, field.Property.Name, convertedValue);
+                }
+                else
+                {
+                    ttype.SetPropertyOrFieldValue(item, field.Property.Name, field.Property.PropertyType.FromObject(kv.Value));
+                }
+            }
+
+            // 设置key属性
+            if (keyProperty != null)
+            {
+                var itemId = id;
+                if (!string.IsNullOrEmpty(prefix) && itemId.StartsWith(prefix))
+                    itemId = itemId.Substring(prefix.Length);
+                ttype.SetPropertyOrFieldValue(item, keyProperty.Name, keyProperty.PropertyType.FromObject(itemId));
+            }
+
+            return item;
+
+            void SetPropertyOrFieldValue(object target, MemberInfo member, object value)
+            {
+                bool canWrite = false;
+                Type memberType = null;
+
+                if (member is PropertyInfo propInfo)
+                {
+                    canWrite = propInfo.CanWrite;
+                    memberType = propInfo.PropertyType;
+                }
+                else if (member is FieldInfo fieldInfo)
+                {
+                    canWrite = !fieldInfo.IsInitOnly && !fieldInfo.IsLiteral;
+                    memberType = fieldInfo.FieldType;
+                }
+
+                if (canWrite && memberType != null)
+                {
+                    var convertedValue = ConvertValue(value.ToString(), memberType);
+                    ttype.SetPropertyOrFieldValue(target, member.Name, convertedValue);
+                }
+            }
+        }
+
+        private object ConvertValue(string stringValue, Type targetType)
+        {
+            if (string.IsNullOrEmpty(stringValue)) return null;
+
+            // 处理可空类型
+            var underlyingType = Nullable.GetUnderlyingType(targetType);
+            if (underlyingType != null)
+            {
+                targetType = underlyingType;
+            }
+
+            // 基本类型转换
+            if (targetType == typeof(string)) return stringValue;
+            if (targetType == typeof(int)) return int.Parse(stringValue);
+            if (targetType == typeof(long)) return long.Parse(stringValue);
+            if (targetType == typeof(decimal)) return decimal.Parse(stringValue);
+            if (targetType == typeof(double)) return double.Parse(stringValue);
+            if (targetType == typeof(float)) return float.Parse(stringValue);
+            if (targetType == typeof(bool)) return bool.Parse(stringValue);
+            if (targetType == typeof(DateTime)) return DateTime.Parse(stringValue);
+            if (targetType.IsEnum) return Enum.Parse(targetType, stringValue);
+
+            // 尝试使用 Convert.ChangeType
+            try
+            {
+                return Convert.ChangeType(stringValue, targetType);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+
+
         public long Delete(params long[] id)
         {
             if (id == null || id.Length == 0) return 0;
@@ -257,6 +506,132 @@ namespace FreeRedis.RediSearch
                 pipe.EndPipe();
             }
         }
+
+        async Task SaveAllAsync(T doc, RedisClient.PipelineHook pipe)
+        {
+            var key = $"{_schema.DocumentAttribute.Prefix}{_schema.KeyProperty.GetValue(doc, null)}";
+
+            // 获取所有可读写的属性（排除 Key 属性和索引器属性）
+            var allProperties = typeof(T).GetProperties().Where(p =>
+                p != _schema.KeyProperty &&
+                p.CanRead && p.CanWrite &&
+                !p.GetIndexParameters().Any()).ToList();
+
+            if (allProperties.Count == 0) return;
+
+            // 构建字段列表
+            var fieldValues = new List<object>();
+
+            foreach (var prop in allProperties)
+            {
+                var fieldName = GetFieldName(prop);
+                var fieldValue = GetFieldValue(prop, doc);
+                fieldValues.Add(fieldName);
+                fieldValues.Add(fieldValue);
+            }
+
+            if (fieldValues.Count >= 2)
+            {
+                var firstFieldName = (string)fieldValues[0];
+                var firstFieldValue = fieldValues[1];
+                var opts = fieldValues.Skip(2).ToArray();
+
+                if (pipe != null) pipe.HMSet(key, firstFieldName, firstFieldValue, opts);
+                else await _client.HMSetAsync(key, firstFieldName, firstFieldValue, opts);
+            }
+
+            string GetFieldName(PropertyInfo prop)
+            {
+                // 如果有 FtFieldAttribute，使用其定义的字段名，否则使用属性名
+                if (_schema.FieldsMap.ContainsKey(prop.Name))
+                {
+                    return _schema.FieldsMap[prop.Name].FieldAttribute.FieldName;
+                }
+                return prop.Name;
+            }
+
+            object GetFieldValue(PropertyInfo prop, T document)
+            {
+                var val = prop.GetValue(document, null);
+
+                // 如果有对应的 FtFieldAttribute，按其规则处理
+                if (_schema.FieldsMap.ContainsKey(prop.Name))
+                {
+                    var fieldInfo = _schema.FieldsMap[prop.Name];
+                    if (fieldInfo.FieldType == FieldType.Tag)
+                    {
+                        if (prop.PropertyType.IsArrayOrList())
+                            val = string.Join((fieldInfo.FieldAttribute as FtTagFieldAttribute).Separator ?? ",", typeof(string[]).FromObject(val) as string[]);
+                    }
+                }
+
+                return val;
+            }
+        }
+
+        /// <summary>
+        /// 异步保存文档的所有字段，包括没有标记 FtFieldAttribute 的字段。
+        /// 没有 FtFieldAttribute 的字段将直接使用属性名称作为 Redis 字段名称。
+        /// </summary>
+        /// <param name="doc">要保存的文档</param>
+        public Task SaveAllAsync(T doc) => SaveAllAsync(doc, null);
+
+        /// <summary>
+        /// 异步保存多个文档的所有字段，包括没有标记 FtFieldAttribute 的字段。
+        /// </summary>
+        /// <param name="docs">要保存的文档数组</param>
+        public Task SaveAllAsync(T[] docs) => SaveAllAsync(docs as IEnumerable<T>);
+
+        /// <summary>
+        /// 异步保存多个文档的所有字段，包括没有标记 FtFieldAttribute 的字段。
+        /// </summary>
+        /// <param name="docs">要保存的文档集合</param>
+        async public Task SaveAllAsync(IEnumerable<T> docs)
+        {
+            if (docs == null) return;
+            using (var pipe = _client.StartPipe())
+            {
+                foreach (var doc in docs)
+                    await SaveAllAsync(doc, pipe);
+                pipe.EndPipe();
+            }
+        }
+
+        /// <summary>
+        /// 异步获取文档的所有字段，包括没有标记 FtFieldAttribute 的字段。
+        /// 使用与 Search 方法相同的反序列化逻辑。
+        /// </summary>
+        /// <param name="id">文档ID</param>
+        /// <returns>文档对象，如果不存在则返回 null</returns>
+        public async Task<T> GetAsync(object id)
+        {
+            if (id == null) return default(T);
+
+            var key = $"{_schema.DocumentAttribute.Prefix}{id}";
+            var fieldValues = await _client.HGetAllAsync(key);
+
+            if (fieldValues == null || fieldValues.Count == 0) return default(T);
+
+            // 转换为与 Search 方法兼容的格式
+            var convertedValues = fieldValues.ToDictionary(kv => kv.Key, kv => (object)kv.Value);
+            return DeserializeDocumentCore(id.ToString(), convertedValues);
+        }
+
+        /// <summary>
+        /// 异步批量获取文档的所有字段，包括没有标记 FtFieldAttribute 的字段。
+        /// </summary>
+        /// <param name="ids">文档ID数组</param>
+        /// <returns>文档对象数组</returns>
+        public async Task<T[]> GetAsync(params object[] ids)
+        {
+            if (ids == null || ids.Length == 0) return new T[0];
+
+            var tasks = ids.Select(id => GetAsync(id));
+            var results = await Task.WhenAll(tasks);
+            return results.Where(doc => doc != null).ToArray();
+        }
+
+
 
         async public Task<long> DeleteAsync(params long[] id)
         {
@@ -526,7 +901,6 @@ namespace FreeRedis.RediSearch
                         }
                         return null;
                     }
-
                     string ParseCallStringExtension()
                     {
                         var left = parseExp(callExp.Arguments[0]);
@@ -731,92 +1105,334 @@ namespace FreeRedis.RediSearch
         }
     }
 
+    /// <summary>
+    /// 标记类为 RediSearch 文档类型，定义索引的基本配置信息。
+    /// 每个用于 FtDocumentRepository 的实体类都必须标记此特性。
+    /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
     public class FtDocumentAttribute : Attribute
     {
+        /// <summary>
+        /// 获取或设置索引的名称。这是在 Redis 中创建的索引的唯一标识符。
+        /// 索引名称必须在 Redis 实例中唯一。
+        /// </summary>
         public string Name { get; set; }
+
+        /// <summary>
+        /// 获取或设置文档键的前缀。只有具有此前缀的 Redis 键才会被包含在索引中。
+        /// 例如，如果设置为 "user:"，则只有 "user:123"、"user:456" 等键会被索引。
+        /// 前缀有助于区分不同类型的文档和提高索引性能。
+        /// </summary>
         public string Prefix { get; set; }
+
+        /// <summary>
+        /// 获取或设置文档过滤器表达式。只有满足此过滤条件的文档才会被包含在索引中。
+        /// 过滤器使用 RediSearch 查询语法，可以基于字段值进行过滤。
+        /// 例如："@status:active" 只索引状态为 active 的文档。
+        /// </summary>
         public string Filter { get; set; }
+
+        /// <summary>
+        /// 获取或设置文档的默认语言。影响文本分析、词干提取和停用词处理。
+        /// 支持的语言包括：chinese、english、arabic、danish、dutch、finnish、french、german、hungarian、italian、norwegian、portuguese、romanian、russian、spanish、swedish、turkish。
+        /// 默认值为 "chinese"。
+        /// </summary>
         public string Language { get; set; } = "chinese";
+
+        /// <summary>
+        /// 使用指定的索引名称初始化 FtDocumentAttribute 类的新实例。
+        /// </summary>
+        /// <param name="name">索引的名称</param>
         public FtDocumentAttribute(string name)
         {
             Name = name;
         }
     }
+    /// <summary>
+    /// 标记属性作为文档的主键。每个文档类必须有且仅有一个属性标记此特性。
+    /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
     public class FtKeyAttribute : Attribute { }
 
+    /// <summary>
+    /// RediSearch 字段特性的基类，定义了所有字段类型的通用属性。
+    /// </summary>
     public abstract class FtFieldAttribute : Attribute
     {
+        /// <summary>
+        /// 获取或设置字段在 Redis 中的名称。如果未设置，将使用属性名的小写形式。
+        /// </summary>
         public string Name { get; set; }
+
+        /// <summary>
+        /// 获取或设置字段的别名。如果设置了别名，搜索时可以使用别名代替字段名。
+        /// </summary>
         public string Alias { get; set; }
+
+        /// <summary>
+        /// 获取实际使用的字段名。如果设置了别名则返回别名，否则返回字段名。
+        /// </summary>
         public string FieldName => string.IsNullOrEmpty(Alias) ? Name : Alias;
     }
+    /// <summary>
+    /// 标记属性为文本字段，支持全文搜索、词干提取、语音匹配等高级文本搜索功能。
+    /// 适用于需要进行全文搜索的字符串属性，如标题、描述、内容等。
+    /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
     public class FtTextFieldAttribute : FtFieldAttribute
     {
+        /// <summary>
+        /// 获取或设置字段在搜索中的权重。权重越高，匹配该字段的文档在搜索结果中的排名越靠前。
+        /// 默认值为 1.0，范围通常为 0.1 到 10.0。
+        /// </summary>
         public double Weight { get; set; }
+        
+        /// <summary>
+        /// 获取或设置是否禁用词干提取。如果设置为 true，将不会对该字段进行词干提取处理。
+        /// 词干提取可以匹配单词的不同形式（如 "running" 和 "run"）。
+        /// </summary>
         public bool NoStem { get; set; }
+
+        /// <summary>
+        /// 获取或设置语音匹配算法。支持 "dm:en"（英语双重音标）和 "dm:fr"（法语双重音标）等。
+        /// 语音匹配可以找到发音相似的单词。
+        /// </summary>
         public string Phonetic { get; set; }
+
+        /// <summary>
+        /// 获取或设置字段是否可排序。如果设置为 true，可以在搜索结果中按此字段排序。
+        /// 注意：可排序字段会占用额外的内存空间。
+        /// </summary>
         public bool Sortable { get; set; }
+
+        /// <summary>
+        /// 获取或设置是否使用 UNF（Unicode Normalization Form）。
+        /// 如果设置为 true，将对 Unicode 文本进行标准化处理。
+        /// </summary>
         public bool Unf { get; set; }
+
+        /// <summary>
+        /// 获取或设置是否不创建搜索索引。如果设置为 true，字段数据会被存储但不能被搜索。
+        /// 适用于需要存储但不需要搜索的字段，可以节省索引空间和提高性能。
+        /// </summary>
         public bool NoIndex { get; set; }
+
+        /// <summary>
+        /// 获取或设置是否创建后缀树索引。如果设置为 true，支持通配符搜索和前缀匹配。
+        /// 注意：后缀树会显著增加索引大小和内存使用。
+        /// </summary>
         public bool WithSuffixTrie { get; set; }
+
+        /// <summary>
+        /// 获取或设置是否索引缺失值。如果设置为 true，没有该字段的文档也会被索引。
+        /// 这允许搜索不包含特定字段的文档。
+        /// </summary>
         public bool MissingIndex { get; set; }
+
+        /// <summary>
+        /// 获取或设置是否索引空值。如果设置为 true，字段值为空字符串的文档也会被索引。
+        /// 这允许搜索包含空字段的文档。
+        /// </summary>
         public bool EmptyIndex { get; set; }
+
+        /// <summary>
+        /// 初始化 FtTextFieldAttribute 类的新实例。
+        /// </summary>
         public FtTextFieldAttribute() { }
+
+        /// <summary>
+        /// 使用指定的字段名初始化 FtTextFieldAttribute 类的新实例。
+        /// </summary>
+        /// <param name="name">字段在 Redis 中的名称</param>
         public FtTextFieldAttribute(string name)
         {
             Name = name;
         }
     }
+    /// <summary>
+    /// 标记属性为标签字段，用于精确匹配和分类搜索。
+    /// 适用于类别、标签、状态等需要精确匹配的字符串或字符串数组属性。
+    /// 标签字段不进行分词处理，支持多值（数组）存储。
+    /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
     public class FtTagFieldAttribute : FtFieldAttribute
     {
+        /// <summary>
+        /// 获取或设置字段是否可排序。如果设置为 true，可以在搜索结果中按此字段排序。
+        /// 注意：可排序字段会占用额外的内存空间。
+        /// </summary>
         public bool Sortable { get; set; }
+
+        /// <summary>
+        /// 获取或设置是否使用 UNF（Unicode Normalization Form）。
+        /// 如果设置为 true，将对 Unicode 文本进行标准化处理。
+        /// </summary>
         public bool Unf { get; set; }
+
+        /// <summary>
+        /// 获取或设置是否不创建搜索索引。如果设置为 true，字段数据会被存储但不能被搜索。
+        /// 适用于需要存储但不需要搜索的标签字段。
+        /// </summary>
         public bool NoIndex { get; set; }
+
+        /// <summary>
+        /// 获取或设置多个标签值之间的分隔符。默认为逗号（","）。
+        /// 当属性为字符串数组时，保存到 Redis 时会使用此分隔符连接，加载时会按此分隔符分割。
+        /// </summary>
         public string Separator { get; set; }
+
+        /// <summary>
+        /// 获取或设置标签匹配是否区分大小写。如果设置为 true，"Tag" 和 "tag" 将被视为不同的标签。
+        /// 默认为 false，即不区分大小写。
+        /// </summary>
         public bool CaseSensitive { get; set; }
+
+        /// <summary>
+        /// 获取或设置是否创建后缀树索引。如果设置为 true，支持标签的前缀匹配。
+        /// 注意：后缀树会显著增加索引大小和内存使用。
+        /// </summary>
         public bool WithSuffixTrie { get; set; }
+
+        /// <summary>
+        /// 获取或设置是否索引缺失值。如果设置为 true，没有该字段的文档也会被索引。
+        /// 这允许搜索不包含特定标签字段的文档。
+        /// </summary>
         public bool MissingIndex { get; set; }
+
+        /// <summary>
+        /// 获取或设置是否索引空值。如果设置为 true，字段值为空的文档也会被索引。
+        /// 这允许搜索包含空标签字段的文档。
+        /// </summary>
         public bool EmptyIndex { get; set; }
+
+        /// <summary>
+        /// 初始化 FtTagFieldAttribute 类的新实例。
+        /// </summary>
         public FtTagFieldAttribute() { }
+
+        /// <summary>
+        /// 使用指定的字段名初始化 FtTagFieldAttribute 类的新实例。
+        /// </summary>
+        /// <param name="name">字段在 Redis 中的名称</param>
         public FtTagFieldAttribute(string name)
         {
             Name = name;
         }
     }
+    /// <summary>
+    /// 标记属性为数值字段，支持范围查询、数值比较和数学运算。
+    /// 适用于整数、浮点数、decimal 等数值类型属性，如价格、年龄、分数、时间戳等。
+    /// 支持范围搜索（如 @price:[100 500]）和排序操作。
+    /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
     public class FtNumericFieldAttribute : FtFieldAttribute
     {
+        /// <summary>
+        /// 获取或设置字段是否可排序。如果设置为 true，可以在搜索结果中按此字段排序。
+        /// 数值字段通常设置为可排序，以支持按价格、时间、评分等排序。
+        /// 注意：可排序字段会占用额外的内存空间。
+        /// </summary>
         public bool Sortable { get; set; }
+
+        /// <summary>
+        /// 获取或设置是否不创建搜索索引。如果设置为 true，字段数据会被存储但不能被搜索。
+        /// 适用于需要存储但不需要搜索的数值字段，如内部计算字段、统计数据等。
+        /// 即使设置了 NoIndex，仍然可以用于排序（如果同时设置了 Sortable）。
+        /// </summary>
         public bool NoIndex { get; set; }
+
+        /// <summary>
+        /// 获取或设置是否索引缺失值。如果设置为 true，没有该字段的文档也会被索引。
+        /// 这允许搜索不包含特定数值字段的文档，或者查找字段值为 null 的文档。
+        /// </summary>
         public bool MissingIndex { get; set; }
+
+        /// <summary>
+        /// 初始化 FtNumericFieldAttribute 类的新实例。
+        /// </summary>
         public FtNumericFieldAttribute() { }
+
+        /// <summary>
+        /// 使用指定的字段名初始化 FtNumericFieldAttribute 类的新实例。
+        /// </summary>
+        /// <param name="name">字段在 Redis 中的名称</param>
         public FtNumericFieldAttribute(string name)
         {
             Name = name;
         }
     }
+    /// <summary>
+    /// 标记属性为地理位置字段，支持基于地理位置的搜索和距离计算。
+    /// 适用于存储经纬度坐标的属性，支持按距离搜索、范围查询等地理空间操作。
+    /// 字段值应为 "经度,纬度" 格式的字符串，如 "116.397128,39.916527"。
+    /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
     public class FtGeoFieldAttribute : FtFieldAttribute
     {
+        /// <summary>
+        /// 获取或设置字段是否可排序。如果设置为 true，可以在搜索结果中按此字段排序。
+        /// 对于地理位置字段，排序通常按照距离某个参考点的远近进行。
+        /// 注意：可排序字段会占用额外的内存空间。
+        /// </summary>
         public bool Sortable { get; set; }
+
+        /// <summary>
+        /// 获取或设置是否不创建搜索索引。如果设置为 true，字段数据会被存储但不能进行地理搜索。
+        /// 适用于需要存储位置信息但不需要进行地理搜索的场景。
+        /// 即使设置了 NoIndex，仍然可以用于排序（如果同时设置了 Sortable）。
+        /// </summary>
         public bool NoIndex { get; set; }
+
+        /// <summary>
+        /// 获取或设置是否索引缺失值。如果设置为 true，没有该字段的文档也会被索引。
+        /// 这允许搜索不包含地理位置信息的文档。
+        /// </summary>
         public bool MissingIndex { get; set; }
+
+        /// <summary>
+        /// 初始化 FtGeoFieldAttribute 类的新实例。
+        /// </summary>
         public FtGeoFieldAttribute() { }
+
+        /// <summary>
+        /// 使用指定的字段名初始化 FtGeoFieldAttribute 类的新实例。
+        /// </summary>
+        /// <param name="name">字段在 Redis 中的名称</param>
         public FtGeoFieldAttribute(string name)
         {
             Name = name;
         }
     }
+    /// <summary>
+    /// 标记属性为地理形状字段，支持复杂的地理形状搜索，如多边形、线段等。
+    /// 适用于存储复杂地理形状数据的属性，支持形状相交、包含等高级地理空间查询。
+    /// 字段值应为 WKT（Well-Known Text）格式的字符串，如 "POLYGON((0 0, 0 1, 1 1, 1 0, 0 0))"。
+    /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
     public class FtGeoShapeFieldAttribute : FtFieldAttribute
     {
+        /// <summary>
+        /// 获取或设置坐标系统。指定地理形状使用的坐标参考系统。
+        /// 常用值包括 SPHERICAL（球面坐标系）和 FLAT（平面坐标系）。
+        /// 默认为 SPHERICAL，适用于地球表面的地理坐标。
+        /// </summary>
         public CoordinateSystem System { get; set; }
+
+        /// <summary>
+        /// 获取或设置是否索引缺失值。如果设置为 true，没有该字段的文档也会被索引。
+        /// 这允许搜索不包含地理形状信息的文档。
+        /// </summary>
         public bool MissingIndex { get; set; }
+
+        /// <summary>
+        /// 初始化 FtGeoShapeFieldAttribute 类的新实例。
+        /// </summary>
         public FtGeoShapeFieldAttribute() { }
+
+        /// <summary>
+        /// 使用指定的字段名初始化 FtGeoShapeFieldAttribute 类的新实例。
+        /// </summary>
+        /// <param name="name">字段在 Redis 中的名称</param>
         public FtGeoShapeFieldAttribute(string name)
         {
             Name = name;
@@ -835,37 +1451,11 @@ namespace FreeRedis.RediSearch
 
         List<T> FetchResult(SearchResult result)
         {
-            var ttype = typeof(T);
-            var prefix = _repository._schema.DocumentAttribute.Prefix;
-            var keyProperty = _repository._schema.KeyProperty;
+            var isFromReturnClause = _searchBuilder._return.Any();
             return result.Documents.Select(doc =>
             {
-                var item = (T)ttype.CreateInstanceGetDefaultValue();
-                foreach (var kv in doc.Body)
-                {
-                    var name = kv.Key.Replace("-", "_");
-                    FtDocumentRepository<T>.DocumentSchemaFieldInfo field = null;
-                    if (_searchBuilder._return.Any()) //属性匹配
-                    {
-                        var prop = ttype.GetPropertyOrFieldIgnoreCase(name);
-                        if (prop == null || !_repository._schema.FieldsMap.TryGetValue(prop.Name, out field)) continue;
-                    }
-                    else if (!_repository._schema.FieldsMapRead.TryGetValue(name, out field)) continue;
-                    if (kv.Value == null) continue;
-                    if (kv.Value is string valstr && field.FieldType == FieldType.Tag)
-                        ttype.SetPropertyOrFieldValue(item, field.Property.Name,
-                            field.Property.PropertyType.IsArrayOrList() ?
-                            field.Property.PropertyType.FromObject(valstr.Split(new[] { (field.FieldAttribute as FtTagFieldAttribute).Separator ?? "," }, StringSplitOptions.None)) : valstr
-                            );
-                    else
-                        ttype.SetPropertyOrFieldValue(item, field.Property.Name, field.Property.PropertyType.FromObject(kv.Value));
-                }
-                var itemId = doc.Id;
-                if (!string.IsNullOrEmpty(prefix))
-                    if (itemId.StartsWith(prefix))
-                        itemId = itemId.Substring(prefix.Length);
-                typeof(T).SetPropertyOrFieldValue(item, keyProperty.Name, keyProperty.PropertyType.FromObject(itemId));
-                return item;
+                // 使用统一的反序列化核心方法，并传递上下文
+                return _repository.DeserializeDocumentCore(doc.Id, doc.Body, isFromReturnClause);
             }).ToList();
         }
         public long Total { get; private set; }
