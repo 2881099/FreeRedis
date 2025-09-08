@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -64,7 +62,7 @@ namespace FreeRedis
         public Task<string[][]> JsonObjKeysAsync(string key, string path = "$") => CallAsync("JSON.OBJKEYS".InputKey(key).Input(path), rt => rt.ThrowOrValue<string[][]>());
         public Task<long[]> JsonObjLenAsync(string key, string path = "$") => CallAsync("JSON.OBJLEN".InputKey(key).Input(path), rt => rt.ThrowOrValue<long[]>());
         public Task<object[][]> JsonRespAsync(string key, string path = "$") => CallAsync("JSON.RESP".InputKey(key).Input(path), rt => rt.ThrowOrValue<object[][]>());
-        public Task<long[]> JsonStrAppendAsync(string key, string value, string path = "$") => CallAsync("JSON.STRAPPEND".InputKey(key).Input(path).Input(($"\"{value}\"")), rt => rt.ThrowOrValue<long[]>());
+        public Task<long[]> JsonStrAppendAsync(string key, string value, string path = "$") => CallAsync("JSON.STRAPPEND".InputKey(key).Input(path).Input(SerializeString(value)), rt => rt.ThrowOrValue<long[]>());
         public Task<long[]> JsonStrLenAsync(string key, string path = "$") => CallAsync("JSON.STRLEN".InputKey(key).Input(path), rt => rt.ThrowOrValue<long[]>());
         public Task<bool[]> JsonToggleAsync(string key, string path = "$") => CallAsync("JSON.TOGGLE".InputKey(key).Input(path), rt => rt.ThrowOrValue<bool[]>());
         public Task<string[]> JsonTypeAsync(string key, string path = "$") => CallAsync("JSON.TYPE".InputKey(key).Input(path), rt => rt.ThrowOrValue<string[]>());
@@ -80,7 +78,7 @@ namespace FreeRedis
 
         public string[] JsonMGet(string[] keys, string path = "$") => Call("JSON.MGET".InputKey(keys).Input(path), rt => rt.ThrowOrValue<string[]>());
 
-        public void JsonSet(string key, string value, string path = "$", bool nx = false, bool xx = false) 
+        public void JsonSet(string key, string value, string path = "$", bool nx = false, bool xx = false)
             => Call("JSON.SET".InputKey(key).Input(path)
                 .InputRaw(value)
                 .InputIf(nx, "NX")
@@ -122,10 +120,68 @@ namespace FreeRedis
         public string[][] JsonObjKeys(string key, string path = "$") => Call("JSON.OBJKEYS".InputKey(key).Input(path), rt => rt.ThrowOrValue<string[][]>());
         public long[] JsonObjLen(string key, string path = "$") => Call("JSON.OBJLEN".InputKey(key).Input(path), rt => rt.ThrowOrValue<long[]>());
         public object[][] JsonResp(string key, string path = "$") => Call("JSON.RESP".InputKey(key).Input(path), rt => rt.ThrowOrValue<object[][]>());
-        public long[] JsonStrAppend(string key, string value, string path = "$") => Call("JSON.STRAPPEND".InputKey(key).Input(path).Input($"\"{value}\""), rt => rt.ThrowOrValue<long[]>());
+        public long[] JsonStrAppend(string key, string value, string path = "$") => Call("JSON.STRAPPEND".InputKey(key).Input(path).Input(SerializeString(value)), rt => rt.ThrowOrValue<long[]>());
         public long[] JsonStrLen(string key, string path = "$") => Call("JSON.STRLEN".InputKey(key).Input(path), rt => rt.ThrowOrValue<long[]>());
         public bool[] JsonToggle(string key, string path = "$") => Call("JSON.TOGGLE".InputKey(key).Input(path), rt => rt.ThrowOrValue<bool[]>());
         public string[] JsonType(string key, string path = "$") => Call("JSON.TYPE".InputKey(key).Input(path), rt => rt.ThrowOrValue<string[]>());
+        private static string SerializeString(string input)
+        {
+            if (input == null)
+                return "null";
 
+            var sb = new StringBuilder();
+            sb.Append('"');
+
+            foreach (char c in input)
+            {
+                switch (c)
+                {
+                    case '"':
+                        sb.Append("\\\"");
+                        break;
+                    case '\\':
+                        sb.Append("\\\\");
+                        break;
+                    case '/':
+                        // 正斜杠可以选择性转义，这里为了安全起见进行转义
+                        sb.Append("\\/");
+                        break;
+                    case '\b':
+                        sb.Append("\\b");
+                        break;
+                    case '\f':
+                        sb.Append("\\f");
+                        break;
+                    case '\n':
+                        sb.Append("\\n");
+                        break;
+                    case '\r':
+                        sb.Append("\\r");
+                        break;
+                    case '\t':
+                        sb.Append("\\t");
+                        break;
+                    default:
+                        // 根据JSON标准，控制字符(0x00-0x1F)必须转义
+                        if (c < 32)
+                        {
+                            sb.Append("\\u").Append(((int)c).ToString("X4"));
+                        }
+                        // 对于高位Unicode字符，也进行转义以确保兼容性
+                        else if (c > 127)
+                        {
+                            sb.Append("\\u").Append(((int)c).ToString("X4"));
+                        }
+                        else
+                        {
+                            sb.Append(c);
+                        }
+                        break;
+                }
+            }
+            
+            sb.Append('"');
+            return sb.ToString();
+        }
     }
 }
