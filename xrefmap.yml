@@ -13146,6 +13146,34 @@ references:
   isSpec: "True"
   fullName: FreeRedis.RedisClient.GetDatabase
   nameWithType: RedisClient.GetDatabase
+- uid: FreeRedis.RedisClient.GetDel(System.String)
+  name: GetDel(String)
+  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_GetDel_System_String_
+  commentId: M:FreeRedis.RedisClient.GetDel(System.String)
+  fullName: FreeRedis.RedisClient.GetDel(System.String)
+  nameWithType: RedisClient.GetDel(String)
+- uid: FreeRedis.RedisClient.GetDel(System.String,Stream,System.Int32)
+  name: GetDel(String, Stream, Int32)
+  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_GetDel_System_String_Stream_System_Int32_
+  commentId: M:FreeRedis.RedisClient.GetDel(System.String,Stream,System.Int32)
+  fullName: FreeRedis.RedisClient.GetDel(System.String, Stream, System.Int32)
+  nameWithType: RedisClient.GetDel(String, Stream, Int32)
+- uid: FreeRedis.RedisClient.GetDel*
+  name: GetDel
+  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_GetDel_
+  commentId: Overload:FreeRedis.RedisClient.GetDel
+  isSpec: "True"
+  fullName: FreeRedis.RedisClient.GetDel
+  nameWithType: RedisClient.GetDel
+- uid: FreeRedis.RedisClient.GetDel``1(System.String)
+  name: GetDel<T>(String)
+  href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_GetDel__1_System_String_
+  commentId: M:FreeRedis.RedisClient.GetDel``1(System.String)
+  name.vb: GetDel(Of T)(String)
+  fullName: FreeRedis.RedisClient.GetDel<T>(System.String)
+  fullName.vb: FreeRedis.RedisClient.GetDel(Of T)(System.String)
+  nameWithType: RedisClient.GetDel<T>(String)
+  nameWithType.vb: RedisClient.GetDel(Of T)(String)
 - uid: FreeRedis.RedisClient.GetRange(System.String,System.Int64,System.Int64)
   name: GetRange(String, Int64, Int64)
   href: docs/api/FreeRedis.RedisClient.html#FreeRedis_RedisClient_GetRange_System_String_System_Int64_System_Int64_
