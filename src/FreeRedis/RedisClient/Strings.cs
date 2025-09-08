@@ -137,6 +137,7 @@ namespace FreeRedis
         /// <param name="key">Key</param>
         /// <returns>The value of key, or nil when key does not exist.</returns>
         public Task<string> GetAsync(string key) => CallAsync("GET".InputKey(key), rt => rt.ThrowOrValue<string>());
+        public Task<string> GetDelAsync(string key) => CallAsync("GETDEL".InputKey(key), rt => rt.ThrowOrValue<string>());
 
         /// <summary>
         /// GET command (An Asynchronous Version) <br /><br />
@@ -152,6 +153,7 @@ namespace FreeRedis
         /// <typeparam name="T"></typeparam>
         /// <returns>The value of key, or nil when key does not exist.</returns>
         public Task<T> GetAsync<T>(string key) => CallAsync("GET".InputKey(key).FlagReadbytes(true), rt => rt.ThrowOrValue(a => DeserializeRedisValue<T>(a.ConvertTo<byte[]>(), rt.Encoding)));
+        public Task<T> GetDelAsync<T>(string key) => CallAsync("GETDEL".InputKey(key).FlagReadbytes(true), rt => rt.ThrowOrValue(a => DeserializeRedisValue<T>(a.ConvertTo<byte[]>(), rt.Encoding)));
 
         /// <summary>
         /// GET command (A Synchronized Version) <br /><br />
@@ -166,9 +168,13 @@ namespace FreeRedis
         /// <param name="key">Key</param>
         /// <param name="destination">Destination stream</param>
         /// <param name="bufferSize">Size</param>
-        async public Task GetAsync(string key, Stream destination, int bufferSize = 1024)
+        public Task GetAsync(string key, Stream destination, int bufferSize = 1024) => 
+            GetStreamInternalAsync("GET", key, destination, bufferSize);
+        public Task GetDelAsync(string key, Stream destination, int bufferSize = 1024) =>
+            GetStreamInternalAsync("GETDEL", key, destination, bufferSize);
+        async public Task GetStreamInternalAsync(string command, string key, Stream destination, int bufferSize)
         {
-            var cmd = "GET".InputKey(key);
+            var cmd = command.InputKey(key);
             await Adapter.TopOwner.LogCallAsync(cmd, async () =>
             {
                 using (var rds = Adapter.GetRedisSocket(cmd))
@@ -862,6 +868,7 @@ namespace FreeRedis
         /// <param name="key">Key</param>
         /// <returns>The value of key, or nil when key does not exist.</returns>
         public string Get(string key) => Call("GET".InputKey(key), rt => rt.ThrowOrValue<string>());
+        public string GetDel(string key) => Call("GETDEL".InputKey(key), rt => rt.ThrowOrValue<string>());
 
         /// <summary>
         /// GET command (A Synchronized Version) <br /><br />
@@ -877,6 +884,7 @@ namespace FreeRedis
         /// <typeparam name="T"></typeparam>
         /// <returns>The value of key, or nil when key does not exist.</returns>
         public T Get<T>(string key) => Call("GET".InputKey(key).FlagReadbytes(true), rt => rt.ThrowOrValue(a => DeserializeRedisValue<T>(a.ConvertTo<byte[]>(), rt.Encoding)));
+        public T GetDel<T>(string key) => Call("GETDEL".InputKey(key).FlagReadbytes(true), rt => rt.ThrowOrValue(a => DeserializeRedisValue<T>(a.ConvertTo<byte[]>(), rt.Encoding)));
 
         /// <summary>
         /// GET command (A Synchronized Version) <br /><br />
@@ -891,9 +899,11 @@ namespace FreeRedis
         /// <param name="key">Key</param>
         /// <param name="destination">Destination stream</param>
         /// <param name="bufferSize">Size</param>
-        public void Get(string key, Stream destination, int bufferSize = 1024)
+        public void Get(string key, Stream destination, int bufferSize = 1024) => GetStreamInternal("GET", key, destination, bufferSize);
+        public void GetDel(string key, Stream destination, int bufferSize = 1024) => GetStreamInternal("GETDEL", key, destination, bufferSize);
+        void GetStreamInternal(string command, string key, Stream destination, int bufferSize)
         {
-            var cmd = "GET".InputKey(key);
+            var cmd = command.InputKey(key);
             Adapter.TopOwner.LogCall(cmd, () =>
             {
                 using (var rds = Adapter.GetRedisSocket(cmd))
