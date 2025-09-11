@@ -42,9 +42,21 @@ namespace FreeRedis.Internal.ObjectPool
         bool IsAutoDisposeWithSystem { get; set; }
 
         /// <summary>
-        /// 后台定时检查可用性间隔秒数
+        /// 后台定时检查可用性间隔
         /// </summary>
-        int CheckAvailableInterval { get; set; }
+        TimeSpan AvailableCheckInterval { get; set; }
+
+        /// <summary>
+        /// 故障切换的容忍窗口期。
+        /// 当设置为大于 TimeSpan.Zero 的值时，首次失败会进入观察期，而不是立即熔断。
+        /// 在观察期内持续失败，才会最终熔断。设置为 Zero 表示关闭此功能。
+        /// </summary>
+        TimeSpan ToleranceWindow { get; set; }
+
+        /// <summary>
+        /// 在容忍窗口期（观察期）内，进行健康检查的间隔。
+        /// </summary>
+        TimeSpan ToleranceCheckInterval { get; set; }
 
         /// <summary>
         /// 对象池的对象被创建时

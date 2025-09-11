@@ -153,7 +153,9 @@ namespace FreeRedis.Internal
         public int AsyncGetCapacity { get; set; } = 100000;
         public bool IsThrowGetTimeoutException { get; set; } = true;
         public bool IsAutoDisposeWithSystem { get => _connectionStringBuilder.ExitAutoDisposePool; set => _connectionStringBuilder.ExitAutoDisposePool = value; }
-        public int CheckAvailableInterval { get; set; } = 5;
+        public TimeSpan AvailableCheckInterval { get; set; } = TimeSpan.FromSeconds(3);
+        public TimeSpan ToleranceWindow { get; set; } = TimeSpan.FromSeconds(5);
+        public TimeSpan ToleranceCheckInterval { get; set; } = TimeSpan.FromSeconds(1);
 
         public bool OnCheckAvailable(Object<RedisClient> obj)
         {

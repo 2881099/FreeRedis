@@ -350,9 +350,21 @@
             监听 AppDomain.CurrentDomain.ProcessExit/Console.CancelKeyPress 事件自动释放
             </summary>
         </member>
-        <member name="P:FreeRedis.Internal.ObjectPool.IPolicy`1.CheckAvailableInterval">
+        <member name="P:FreeRedis.Internal.ObjectPool.IPolicy`1.AvailableCheckInterval">
             <summary>
-            后台定时检查可用性间隔秒数
+            后台定时检查可用性间隔
+            </summary>
+        </member>
+        <member name="P:FreeRedis.Internal.ObjectPool.IPolicy`1.ToleranceWindow">
+            <summary>
+            故障切换的容忍窗口期。
+            当设置为大于 TimeSpan.Zero 的值时，首次失败会进入观察期，而不是立即熔断。
+            在观察期内持续失败，才会最终熔断。设置为 Zero 表示关闭此功能。
+            </summary>
+        </member>
+        <member name="P:FreeRedis.Internal.ObjectPool.IPolicy`1.ToleranceCheckInterval">
+            <summary>
+            在容忍窗口期（观察期）内，进行健康检查的间隔。
             </summary>
         </member>
         <member name="M:FreeRedis.Internal.ObjectPool.IPolicy`1.OnCreate">
@@ -461,11 +473,38 @@
             </summary>
             <typeparam name="T">对象类型</typeparam>
         </member>
-        <member name="M:FreeRedis.Internal.ObjectPool.ObjectPool`1.CheckAvailable(System.Int32)">
+        <member name="M:FreeRedis.Internal.ObjectPool.ObjectPool`1.SetUnavailable(System.Exception,System.DateTime)">
             <summary>
-            后台定时检查可用性
+            报告一次失败。这是新的故障处理入口。
+            它会根据策略决定是进入“观察期”还是直接“熔断”。
             </summary>
-            <param name="interval"></param>
+        </member>
+        <member name="M:FreeRedis.Internal.ObjectPool.ObjectPool`1.UnifiedCheckerLoop">
+            <summary>
+            一个统一的、能处理两种状态（Observing 和 Unavailable）的检查循环。
+            这个线程一旦启动，就会一直运行，直到状态恢复为 Healthy 或池被 Dispose。
+            </summary>
+        </member>
+        <member name="M:FreeRedis.Internal.ObjectPool.ObjectPool`1.TransitionToUnavailable(System.Exception,System.DateTime,System.Boolean)">
+            <summary>
+            将连接池状态切换为“不可用”
+            </summary>
+        </member>
+        <member name="M:FreeRedis.Internal.ObjectPool.ObjectPool`1.CheckUntilAvailable(System.TimeSpan)">
+            <summary>
+            后台定时检查可用性（原 CheckAvailable 方法）
+            </summary>
+        </member>
+        <member name="M:FreeRedis.Internal.ObjectPool.ObjectPool`1.TryHealthCheck">
+            <summary>
+            尝试进行一次健康检查的通用逻辑
+            </summary>
+            <returns>检查是否成功</returns>
+        </member>
+        <member name="M:FreeRedis.Internal.ObjectPool.ObjectPool`1.RestoreToAvailable">
+            <summary>
+            将连接池恢复到可用状态
+            </summary>
         </member>
         <member name="M:FreeRedis.Internal.ObjectPool.ObjectPool`1.#ctor(System.Int32,System.Func{`0},System.Action{FreeRedis.Internal.ObjectPool.Object{`0}})">
             <summary>
@@ -485,7 +524,6 @@
             <summary>
             获取可用资源，或创建资源
             </summary>
-            <returns></returns>
         </member>
         <member name="F:FreeRedis.RedisMessageType.BlobString">
             <summary>

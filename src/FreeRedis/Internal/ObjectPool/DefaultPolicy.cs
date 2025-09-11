@@ -14,7 +14,9 @@ namespace FreeRedis.Internal.ObjectPool
         public int AsyncGetCapacity { get; set; } = 10000;
         public bool IsThrowGetTimeoutException { get; set; } = true;
         public bool IsAutoDisposeWithSystem { get; set; } = true;
-        public int CheckAvailableInterval { get; set; } = 3;
+        public TimeSpan AvailableCheckInterval { get; set; } = TimeSpan.FromSeconds(3);
+        public TimeSpan ToleranceWindow { get; set; } = TimeSpan.FromSeconds(5);
+        public TimeSpan ToleranceCheckInterval { get; set; } = TimeSpan.FromSeconds(1);
 
         public Func<T> CreateObject;
         public Action<Object<T>> OnGetObject;

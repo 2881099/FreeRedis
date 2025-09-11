@@ -54,6 +54,8 @@ namespace FreeRedis.Internal.ObjectPool
     /// <typeparam name="T">对象类型</typeparam>
     public partial class ObjectPool<T> : IObjectPool<T>
     {
+        private enum State { Healthy, Observing, Unavailable }
+
         public IPolicy<T> Policy { get; protected set; }
 
         private object _allObjectsLock = new object();
@@ -64,107 +66,254 @@ namespace FreeRedis.Internal.ObjectPool
         private ConcurrentQueue<TaskCompletionSource<Object<T>>> _getAsyncQueue = new ConcurrentQueue<TaskCompletionSource<Object<T>>>();
         private ConcurrentQueue<bool> _getQueue = new ConcurrentQueue<bool>();
 
+        private volatile State _currentState = State.Healthy;
+        private Exception _firstFailureException;
+        private readonly object _stateTransitionLock = new object();
+        private bool _running = true;
+        private bool _isCheckerRunning = false;
+
         public bool IsAvailable => this.UnavailableException == null;
         public Exception UnavailableException { get; private set; }
         public DateTime? UnavailableTime { get; private set; }
         public DateTime? AvailableTime { get; private set; }
-        private object UnavailableLock = new object();
-        private bool running = true;
 
+        /// <summary>
+        /// 报告一次失败。这是新的故障处理入口。
+        /// 它会根据策略决定是进入“观察期”还是直接“熔断”。
+        /// </summary>
         public bool SetUnavailable(Exception exception, DateTime lastGetTime)
         {
-            bool isseted = false;
-            if (exception != null && UnavailableException == null)
+            // 如果策略未开启容忍窗口，则使用旧的直接熔断逻辑
+            if (Policy.ToleranceWindow <= TimeSpan.Zero)
             {
-                lock (UnavailableLock)
+                lock (_stateTransitionLock)
                 {
-                    if (UnavailableException == null)
-                    {
-                        if (lastGetTime < AvailableTime) return false; //已经恢复
-                        UnavailableException = exception;
-                        UnavailableTime = DateTime.Now;
-                        AvailableTime = null;
-                        isseted = true;
-                    }
+                    _isCheckerRunning = false;
+                    return TransitionToUnavailable(exception, lastGetTime, true);
                 }
             }
 
-            if (isseted)
+            // --- 使用容忍窗口的逻辑 ---
+            lock (_stateTransitionLock)
             {
-                Policy.OnUnavailable();
-                CheckAvailable(Policy.CheckAvailableInterval);
-            }
+                // 如果当前不处于健康状态，则什么都不做。
+                // 这意味着恢复检查器已经在工作了。
+                if (_currentState != State.Healthy)
+                {
+                    return false;
+                }
 
-            return isseted;
+                // 状态从“健康”切换到“观察中”
+                _currentState = State.Observing;
+                _firstFailureException = exception;
+
+                TestTrace.WriteLine($"【{Policy.Name}】服务不稳定: {exception.Message}。进入为期 {Policy.ToleranceWindow.TotalSeconds} 秒的观察期。", ConsoleColor.DarkYellow);
+
+                if (!_isCheckerRunning)
+                {
+                    _isCheckerRunning = true;
+                    // 在后台启动高频的恢复检查
+                    new Thread(UnifiedCheckerLoop) { IsBackground = true }.Start();
+                }
+
+                return true; // 状态发生变化
+            }
         }
 
         /// <summary>
-        /// 后台定时检查可用性
+        /// 一个统一的、能处理两种状态（Observing 和 Unavailable）的检查循环。
+        /// 这个线程一旦启动，就会一直运行，直到状态恢复为 Healthy 或池被 Dispose。
         /// </summary>
-        /// <param name="interval"></param>
-        private void CheckAvailable(int interval)
+        private void UnifiedCheckerLoop()
         {
-            new Thread(() =>
+            try
             {
-                if (UnavailableException != null)
-                    TestTrace.WriteLine($"【{Policy.Name}】Next recovery time：{DateTime.Now.AddSeconds(interval)}", ConsoleColor.DarkYellow);
-
-                while (UnavailableException != null)
+                // === 阶段一：观察期的高频检查 ===
+                if (_currentState == State.Observing)
                 {
-                    if (running == false) return;
-                    Thread.CurrentThread.Join(TimeSpan.FromSeconds(interval));
-                    if (running == false) return;
+                    TestTrace.WriteLine($"【{Policy.Name}】观察期检查器已启动。", ConsoleColor.DarkGray);
+                    var observationEndTime = DateTime.Now.Add(Policy.ToleranceWindow);
 
-                    try
+                    while (DateTime.Now < observationEndTime)
                     {
-                        var conn = GetFree(false);
-                        if (conn == null) throw new Exception($"【{Policy.Name}】Failed to get resource {this.Statistics}");
+                        if (_running == false || _currentState != State.Observing) return;
 
-                        try
+                        if (TryHealthCheck())
                         {
-                            try
-                            {
-                                Policy.OnCheckAvailable(conn);
-                                break;
-                            }
-                            catch
-                            {
-                                conn.ResetValue();
-                            }
-                            if (Policy.OnCheckAvailable(conn) == false) throw new Exception($"【{Policy.Name}】An exception needs to be thrown");
-                            break;
+                            TestTrace.WriteLine($"【{Policy.Name}】在观察期内检测到服务恢复。", ConsoleColor.DarkGreen);
+                            RestoreToAvailable();
+                            return; // 成功，退出线程
                         }
-                        finally
-                        {
-                            Return(conn);
-                        }
+
+                        Thread.Sleep(Policy.ToleranceCheckInterval);
                     }
-                    catch (Exception ex)
+
+                    // 观察期结束仍未恢复，转换到熔断状态
+                    lock (_stateTransitionLock)
                     {
-                        TestTrace.WriteLine($"【{Policy.Name}】Next recovery time: {DateTime.Now.AddSeconds(interval)} ({ex.Message})", ConsoleColor.DarkYellow);
+                        if (_currentState == State.Observing)
+                        {
+                            TestTrace.WriteLine($"【{Policy.Name}】观察期结束，服务未恢复。正式熔断。", ConsoleColor.Red);
+                            // 注意：这里不再启动新线程，而是让当前线程继续工作
+                            TransitionToUnavailable(_firstFailureException, DateTime.Now, false);
+                        }
                     }
                 }
 
-                RestoreToAvailable();
+                // === 阶段二：熔断后的低频检查 ===
+                if (_currentState == State.Unavailable)
+                {
+                    TestTrace.WriteLine($"【{Policy.Name}】低频恢复检查器已接管。", ConsoleColor.DarkGray);
+                    while (_currentState == State.Unavailable)
+                    {
+                        if (_running == false) return;
 
-            }).Start();
+                        // 使用低频间隔
+                        Thread.Sleep(Policy.AvailableCheckInterval);
+
+                        if (_running == false) return;
+                        if (_currentState != State.Unavailable) return; // 可能在休眠期间状态已改变
+
+                        if (TryHealthCheck())
+                        {
+                            RestoreToAvailable();
+                            return; // 成功，退出线程
+                        }
+                        else
+                        {
+                            TestTrace.WriteLine($"【{Policy.Name}】恢复检查失败。下一次检查在: {DateTime.Now.Add(Policy.AvailableCheckInterval)}", ConsoleColor.DarkYellow);
+                        }
+                    }
+                }
+            }
+            finally
+            {
+                // --- 线程结束时，重置标志 ---
+                // 无论线程是正常退出（恢复成功）还是异常退出，
+                // 都必须确保重置标志，以便下次可以启动新的检查器。
+                lock (_stateTransitionLock)
+                {
+                    _isCheckerRunning = false;
+                }
+                TestTrace.WriteLine($"【{Policy.Name}】检查器线程已停止。", ConsoleColor.DarkGray);
+            }
         }
 
+        /// <summary>
+        /// 将连接池状态切换为“不可用”
+        /// </summary>
+        private bool TransitionToUnavailable(Exception exception, DateTime lastGetTime, bool isAvailableCheck)
+        {
+            if (_currentState == State.Unavailable) return false;
+            if (AvailableTime != null && lastGetTime < AvailableTime) return false;
+
+            UnavailableException = exception;
+            UnavailableTime = DateTime.Now;
+            AvailableTime = null;
+            _currentState = State.Unavailable;
+
+            Policy.OnUnavailable();
+            if (isAvailableCheck)
+            {
+                if (!_isCheckerRunning)
+                {
+                    _isCheckerRunning = true;
+                    CheckUntilAvailable(Policy.AvailableCheckInterval); // 启动“低频”的后台恢复检查
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// 后台定时检查可用性（原 CheckAvailable 方法）
+        /// </summary>
+        private void CheckUntilAvailable(TimeSpan interval)
+        {
+            new Thread(() =>
+            {
+                if (_currentState == State.Unavailable)
+                    TestTrace.WriteLine($"【{Policy.Name}】服务已熔断。下一次恢复检查在: {DateTime.Now.Add(interval)}", ConsoleColor.DarkYellow);
+
+                while (_currentState == State.Unavailable)
+                {
+                    if (_running == false) return;
+                    Thread.Sleep(interval);
+                    if (_running == false) return;
+
+                    if (TryHealthCheck())
+                    {
+                        RestoreToAvailable();
+                        break; // 恢复成功，退出循环
+                    }
+                    else
+                    {
+                        TestTrace.WriteLine($"【{Policy.Name}】恢复检查失败。下一次检查在: {DateTime.Now.Add(interval)}", ConsoleColor.DarkYellow);
+                    }
+                }
+            })
+            { IsBackground = true }.Start();
+        }
+
+        /// <summary>
+        /// 尝试进行一次健康检查的通用逻辑
+        /// </summary>
+        /// <returns>检查是否成功</returns>
+        private bool TryHealthCheck()
+        {
+            Object<T> conn = null;
+            try
+            {
+                conn = GetFree(false); // false 表示不检查池状态，强行获取一个对象
+                if (conn == null) throw new Exception($"【{Policy.Name}】无法为健康检查获取资源 {this.Statistics}");
+
+                try
+                {
+                    if (Policy.OnCheckAvailable(conn)) return true;
+                    // 如果 OnCheckAvailable 返回 false，我们认为检查失败
+                    throw new Exception($"【{Policy.Name}】OnCheckAvailable 返回 false。");
+                }
+                catch
+                {
+                    // 如果检查失败，尝试重置对象，为下一次检查做准备
+                    conn.ResetValue();
+                    // 再次检查
+                    return Policy.OnCheckAvailable(conn);
+                }
+            }
+            catch
+            {
+                // 任何异常都表示检查失败
+                return false;
+            }
+            finally
+            {
+                if (conn != null)
+                {
+                    Return(conn);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 将连接池恢复到可用状态
+        /// </summary>
         private void RestoreToAvailable()
         {
-
             bool isRestored = false;
-            if (UnavailableException != null)
+            if (_currentState != State.Healthy)
             {
-                lock (UnavailableLock)
+                lock (_stateTransitionLock)
                 {
-                    if (UnavailableException != null)
+                    if (_currentState != State.Healthy)
                     {
                         lock (_allObjectsLock)
                             _allObjects.ForEach(a => a.LastGetTime = a.LastReturnTime = new DateTime(2000, 1, 1));
+
                         UnavailableException = null;
                         UnavailableTime = null;
+                        _firstFailureException = null; // 清理首次失败的异常
                         AvailableTime = DateTime.Now;
+                        _currentState = State.Healthy; // 状态恢复为健康
                         isRestored = true;
                     }
                 }
@@ -173,7 +322,7 @@ namespace FreeRedis.Internal.ObjectPool
             if (isRestored)
             {
                 Policy.OnAvailable();
-                TestTrace.WriteLine($"【{Policy.Name}】Recovered", ConsoleColor.DarkGreen);
+                TestTrace.WriteLine($"【{Policy.Name}】服务已恢复可用。", ConsoleColor.DarkGreen);
             }
         }
 
@@ -202,21 +351,21 @@ namespace FreeRedis.Internal.ObjectPool
             return true;
         }
 
-        public string Statistics => $"Pool: {_freeObjects.Count}/{_allObjects.Count}, Get wait: {_getSyncQueue.Count}, GetAsync wait: {_getAsyncQueue.Count}";
+        public string Statistics => $"Pool: {_freeObjects.Count}/{_allObjects.Count}, Get wait: {_getSyncQueue.Count}, GetAsync wait: {_getAsyncQueue.Count}, State: {_currentState}";
         public string StatisticsFullily
         {
             get
             {
                 var sb = new StringBuilder();
-
                 sb.AppendLine(Statistics);
+                if (_currentState == State.Observing) sb.AppendLine($"Observing since: {_firstFailureException?.Message}");
+                if (_currentState == State.Unavailable) sb.AppendLine($"Unavailable since: {UnavailableException?.Message}");
                 sb.AppendLine("");
 
                 foreach (var obj in _allObjects)
                 {
-                    sb.AppendLine($"{obj.Value}, Times: {obj.GetTimes}, ThreadId(R/G): {obj.LastReturnThreadId}/{obj.LastGetThreadId}, Time(R/G): {obj.LastReturnTime.ToString("yyyy-MM-dd HH:mm:ss:ms")}/{obj.LastGetTime.ToString("yyyy-MM-dd HH:mm:ss:ms")}, ");
+                    sb.AppendLine($"{obj.Value}, Times: {obj.GetTimes}, ThreadId(R/G): {obj.LastReturnThreadId}/{obj.LastGetThreadId}, Time(R/G): {obj.LastReturnTime:yyyy-MM-dd HH:mm:ss:ms}/{obj.LastGetTime:yyyy-MM-dd HH:mm:ss:ms}, ");
                 }
-
                 return sb.ToString();
             }
         }
@@ -241,7 +390,7 @@ namespace FreeRedis.Internal.ObjectPool
             AppDomain.CurrentDomain.ProcessExit += (s1, e1) =>
             {
                 if (Policy.IsAutoDisposeWithSystem)
-                    running = false;
+                    _running = false;
             };
             try
             {
@@ -249,7 +398,7 @@ namespace FreeRedis.Internal.ObjectPool
                 {
                     if (e1.Cancel) return;
                     if (Policy.IsAutoDisposeWithSystem)
-                        running = false;
+                        _running = false;
                 };
             }
             catch { }
@@ -257,7 +406,7 @@ namespace FreeRedis.Internal.ObjectPool
 
         public void AutoFree()
         {
-            if (running == false) return;
+            if (_running == false) return;
             if (UnavailableException != null) return;
 
             var list = new List<Object<T>>();
@@ -281,15 +430,20 @@ namespace FreeRedis.Internal.ObjectPool
         /// <summary>
         /// 获取可用资源，或创建资源
         /// </summary>
-        /// <returns></returns>
         private Object<T> GetFree(bool checkAvailable)
         {
-
-            if (running == false)
+            if (_running == false)
                 throw new ObjectDisposedException($"【{Policy.Name}】The ObjectPool has been disposed, see: https://github.com/dotnetcore/FreeSql/discussions/1079");
 
-            if (checkAvailable && UnavailableException != null)
-                throw new Exception($"【{Policy.Name}】Status unavailable, waiting for recovery. {UnavailableException?.Message}", UnavailableException);
+            if (checkAvailable)
+            {
+                var currentState = _currentState;
+                if (currentState == State.Unavailable)
+                    throw new Exception($"【{Policy.Name}】服务已熔断，正在等待恢复。错误: {UnavailableException?.Message}", UnavailableException);
+
+                //if (currentState == State.Observing)
+                //    throw new Exception($"【{Policy.Name}】服务不稳定，正在检查恢复。原始错误: {_firstFailureException?.Message}", _firstFailureException);
+            }
 
             if ((_freeObjects.TryPop(out var obj) == false || obj == null) && _allObjects.Count < Policy.PoolSize)
             {
@@ -428,7 +582,7 @@ namespace FreeRedis.Internal.ObjectPool
             if (obj == null) return;
             if (obj._isReturned) return;
 
-            if (running == false)
+            if (_running == false)
             {
                 Policy.OnDestroy(obj.Value);
                 try { (obj.Value as IDisposable)?.Dispose(); } catch { }
@@ -527,7 +681,7 @@ namespace FreeRedis.Internal.ObjectPool
 
         public void Dispose()
         {
-            running = false;
+            _running = false;
 
             while (_freeObjects.TryPop(out var fo)) ;
             while (_getSyncQueue.TryDequeue(out var sync))
