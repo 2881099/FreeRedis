@@ -4,7 +4,7 @@
 		<AssemblyName>FreeRedis.DistributedCache</AssemblyName>
 		<PackageId>FreeRedis.DistributedCache</PackageId>
 		<RootNamespace>FreeRedis.DistributedCache</RootNamespace>
-		<Version>1.4.1</Version>
+		<Version>1.4.2</Version>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<PackageProjectUrl>https://github.com/2881099/FreeRedis</PackageProjectUrl>
 		<Description>分布式缓存 FreeRedis 实现 Microsoft.Extensions.Caching</Description>
