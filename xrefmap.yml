@@ -3967,23 +3967,23 @@ references:
   fullName.vb: FreeRedis.Internal.ObjectPool.DefaultPolicy(Of T).AsyncGetCapacity
   nameWithType: DefaultPolicy<T>.AsyncGetCapacity
   nameWithType.vb: DefaultPolicy(Of T).AsyncGetCapacity
-- uid: FreeRedis.Internal.ObjectPool.DefaultPolicy`1.CheckAvailableInterval
-  name: CheckAvailableInterval
-  href: docs/api/FreeRedis.Internal.ObjectPool.DefaultPolicy-1.html#FreeRedis_Internal_ObjectPool_DefaultPolicy_1_CheckAvailableInterval
-  commentId: P:FreeRedis.Internal.ObjectPool.DefaultPolicy`1.CheckAvailableInterval
-  fullName: FreeRedis.Internal.ObjectPool.DefaultPolicy<T>.CheckAvailableInterval
-  fullName.vb: FreeRedis.Internal.ObjectPool.DefaultPolicy(Of T).CheckAvailableInterval
-  nameWithType: DefaultPolicy<T>.CheckAvailableInterval
-  nameWithType.vb: DefaultPolicy(Of T).CheckAvailableInterval
-- uid: FreeRedis.Internal.ObjectPool.DefaultPolicy`1.CheckAvailableInterval*
-  name: CheckAvailableInterval
-  href: docs/api/FreeRedis.Internal.ObjectPool.DefaultPolicy-1.html#FreeRedis_Internal_ObjectPool_DefaultPolicy_1_CheckAvailableInterval_
-  commentId: Overload:FreeRedis.Internal.ObjectPool.DefaultPolicy`1.CheckAvailableInterval
+- uid: FreeRedis.Internal.ObjectPool.DefaultPolicy`1.AvailableCheckInterval
+  name: AvailableCheckInterval
+  href: docs/api/FreeRedis.Internal.ObjectPool.DefaultPolicy-1.html#FreeRedis_Internal_ObjectPool_DefaultPolicy_1_AvailableCheckInterval
+  commentId: P:FreeRedis.Internal.ObjectPool.DefaultPolicy`1.AvailableCheckInterval
+  fullName: FreeRedis.Internal.ObjectPool.DefaultPolicy<T>.AvailableCheckInterval
+  fullName.vb: FreeRedis.Internal.ObjectPool.DefaultPolicy(Of T).AvailableCheckInterval
+  nameWithType: DefaultPolicy<T>.AvailableCheckInterval
+  nameWithType.vb: DefaultPolicy(Of T).AvailableCheckInterval
+- uid: FreeRedis.Internal.ObjectPool.DefaultPolicy`1.AvailableCheckInterval*
+  name: AvailableCheckInterval
+  href: docs/api/FreeRedis.Internal.ObjectPool.DefaultPolicy-1.html#FreeRedis_Internal_ObjectPool_DefaultPolicy_1_AvailableCheckInterval_
+  commentId: Overload:FreeRedis.Internal.ObjectPool.DefaultPolicy`1.AvailableCheckInterval
   isSpec: "True"
-  fullName: FreeRedis.Internal.ObjectPool.DefaultPolicy<T>.CheckAvailableInterval
-  fullName.vb: FreeRedis.Internal.ObjectPool.DefaultPolicy(Of T).CheckAvailableInterval
-  nameWithType: DefaultPolicy<T>.CheckAvailableInterval
-  nameWithType.vb: DefaultPolicy(Of T).CheckAvailableInterval
+  fullName: FreeRedis.Internal.ObjectPool.DefaultPolicy<T>.AvailableCheckInterval
+  fullName.vb: FreeRedis.Internal.ObjectPool.DefaultPolicy(Of T).AvailableCheckInterval
+  nameWithType: DefaultPolicy<T>.AvailableCheckInterval
+  nameWithType.vb: DefaultPolicy(Of T).AvailableCheckInterval
 - uid: FreeRedis.Internal.ObjectPool.DefaultPolicy`1.CreateObject
   name: CreateObject
   href: docs/api/FreeRedis.Internal.ObjectPool.DefaultPolicy-1.html#FreeRedis_Internal_ObjectPool_DefaultPolicy_1_CreateObject
@@ -4259,6 +4259,40 @@ references:
   fullName.vb: FreeRedis.Internal.ObjectPool.DefaultPolicy(Of T).SyncGetTimeout
   nameWithType: DefaultPolicy<T>.SyncGetTimeout
   nameWithType.vb: DefaultPolicy(Of T).SyncGetTimeout
+- uid: FreeRedis.Internal.ObjectPool.DefaultPolicy`1.ToleranceCheckInterval
+  name: ToleranceCheckInterval
+  href: docs/api/FreeRedis.Internal.ObjectPool.DefaultPolicy-1.html#FreeRedis_Internal_ObjectPool_DefaultPolicy_1_ToleranceCheckInterval
+  commentId: P:FreeRedis.Internal.ObjectPool.DefaultPolicy`1.ToleranceCheckInterval
+  fullName: FreeRedis.Internal.ObjectPool.DefaultPolicy<T>.ToleranceCheckInterval
+  fullName.vb: FreeRedis.Internal.ObjectPool.DefaultPolicy(Of T).ToleranceCheckInterval
+  nameWithType: DefaultPolicy<T>.ToleranceCheckInterval
+  nameWithType.vb: DefaultPolicy(Of T).ToleranceCheckInterval
+- uid: FreeRedis.Internal.ObjectPool.DefaultPolicy`1.ToleranceCheckInterval*
+  name: ToleranceCheckInterval
+  href: docs/api/FreeRedis.Internal.ObjectPool.DefaultPolicy-1.html#FreeRedis_Internal_ObjectPool_DefaultPolicy_1_ToleranceCheckInterval_
+  commentId: Overload:FreeRedis.Internal.ObjectPool.DefaultPolicy`1.ToleranceCheckInterval
+  isSpec: "True"
+  fullName: FreeRedis.Internal.ObjectPool.DefaultPolicy<T>.ToleranceCheckInterval
+  fullName.vb: FreeRedis.Internal.ObjectPool.DefaultPolicy(Of T).ToleranceCheckInterval
+  nameWithType: DefaultPolicy<T>.ToleranceCheckInterval
+  nameWithType.vb: DefaultPolicy(Of T).ToleranceCheckInterval
+- uid: FreeRedis.Internal.ObjectPool.DefaultPolicy`1.ToleranceWindow
+  name: ToleranceWindow
+  href: docs/api/FreeRedis.Internal.ObjectPool.DefaultPolicy-1.html#FreeRedis_Internal_ObjectPool_DefaultPolicy_1_ToleranceWindow
+  commentId: P:FreeRedis.Internal.ObjectPool.DefaultPolicy`1.ToleranceWindow
+  fullName: FreeRedis.Internal.ObjectPool.DefaultPolicy<T>.ToleranceWindow
+  fullName.vb: FreeRedis.Internal.ObjectPool.DefaultPolicy(Of T).ToleranceWindow
+  nameWithType: DefaultPolicy<T>.ToleranceWindow
+  nameWithType.vb: DefaultPolicy(Of T).ToleranceWindow
+- uid: FreeRedis.Internal.ObjectPool.DefaultPolicy`1.ToleranceWindow*
+  name: ToleranceWindow
+  href: docs/api/FreeRedis.Internal.ObjectPool.DefaultPolicy-1.html#FreeRedis_Internal_ObjectPool_DefaultPolicy_1_ToleranceWindow_
+  commentId: Overload:FreeRedis.Internal.ObjectPool.DefaultPolicy`1.ToleranceWindow
+  isSpec: "True"
+  fullName: FreeRedis.Internal.ObjectPool.DefaultPolicy<T>.ToleranceWindow
+  fullName.vb: FreeRedis.Internal.ObjectPool.DefaultPolicy(Of T).ToleranceWindow
+  nameWithType: DefaultPolicy<T>.ToleranceWindow
+  nameWithType.vb: DefaultPolicy(Of T).ToleranceWindow
 - uid: FreeRedis.Internal.ObjectPool.IObjectPool`1
   name: IObjectPool<T>
   href: docs/api/FreeRedis.Internal.ObjectPool.IObjectPool-1.html
@@ -4466,23 +4500,23 @@ references:
   fullName.vb: FreeRedis.Internal.ObjectPool.IPolicy(Of T).AsyncGetCapacity
   nameWithType: IPolicy<T>.AsyncGetCapacity
   nameWithType.vb: IPolicy(Of T).AsyncGetCapacity
-- uid: FreeRedis.Internal.ObjectPool.IPolicy`1.CheckAvailableInterval
-  name: CheckAvailableInterval
-  href: docs/api/FreeRedis.Internal.ObjectPool.IPolicy-1.html#FreeRedis_Internal_ObjectPool_IPolicy_1_CheckAvailableInterval
-  commentId: P:FreeRedis.Internal.ObjectPool.IPolicy`1.CheckAvailableInterval
-  fullName: FreeRedis.Internal.ObjectPool.IPolicy<T>.CheckAvailableInterval
-  fullName.vb: FreeRedis.Internal.ObjectPool.IPolicy(Of T).CheckAvailableInterval
-  nameWithType: IPolicy<T>.CheckAvailableInterval
-  nameWithType.vb: IPolicy(Of T).CheckAvailableInterval
-- uid: FreeRedis.Internal.ObjectPool.IPolicy`1.CheckAvailableInterval*
-  name: CheckAvailableInterval
-  href: docs/api/FreeRedis.Internal.ObjectPool.IPolicy-1.html#FreeRedis_Internal_ObjectPool_IPolicy_1_CheckAvailableInterval_
-  commentId: Overload:FreeRedis.Internal.ObjectPool.IPolicy`1.CheckAvailableInterval
+- uid: FreeRedis.Internal.ObjectPool.IPolicy`1.AvailableCheckInterval
+  name: AvailableCheckInterval
+  href: docs/api/FreeRedis.Internal.ObjectPool.IPolicy-1.html#FreeRedis_Internal_ObjectPool_IPolicy_1_AvailableCheckInterval
+  commentId: P:FreeRedis.Internal.ObjectPool.IPolicy`1.AvailableCheckInterval
+  fullName: FreeRedis.Internal.ObjectPool.IPolicy<T>.AvailableCheckInterval
+  fullName.vb: FreeRedis.Internal.ObjectPool.IPolicy(Of T).AvailableCheckInterval
+  nameWithType: IPolicy<T>.AvailableCheckInterval
+  nameWithType.vb: IPolicy(Of T).AvailableCheckInterval
+- uid: FreeRedis.Internal.ObjectPool.IPolicy`1.AvailableCheckInterval*
+  name: AvailableCheckInterval
+  href: docs/api/FreeRedis.Internal.ObjectPool.IPolicy-1.html#FreeRedis_Internal_ObjectPool_IPolicy_1_AvailableCheckInterval_
+  commentId: Overload:FreeRedis.Internal.ObjectPool.IPolicy`1.AvailableCheckInterval
   isSpec: "True"
-  fullName: FreeRedis.Internal.ObjectPool.IPolicy<T>.CheckAvailableInterval
-  fullName.vb: FreeRedis.Internal.ObjectPool.IPolicy(Of T).CheckAvailableInterval
-  nameWithType: IPolicy<T>.CheckAvailableInterval
-  nameWithType.vb: IPolicy(Of T).CheckAvailableInterval
+  fullName: FreeRedis.Internal.ObjectPool.IPolicy<T>.AvailableCheckInterval
+  fullName.vb: FreeRedis.Internal.ObjectPool.IPolicy(Of T).AvailableCheckInterval
+  nameWithType: IPolicy<T>.AvailableCheckInterval
+  nameWithType.vb: IPolicy(Of T).AvailableCheckInterval
 - uid: FreeRedis.Internal.ObjectPool.IPolicy`1.IdleTimeout
   name: IdleTimeout
   href: docs/api/FreeRedis.Internal.ObjectPool.IPolicy-1.html#FreeRedis_Internal_ObjectPool_IPolicy_1_IdleTimeout
@@ -4742,6 +4776,40 @@ references:
   fullName.vb: FreeRedis.Internal.ObjectPool.IPolicy(Of T).SyncGetTimeout
   nameWithType: IPolicy<T>.SyncGetTimeout
   nameWithType.vb: IPolicy(Of T).SyncGetTimeout
+- uid: FreeRedis.Internal.ObjectPool.IPolicy`1.ToleranceCheckInterval
+  name: ToleranceCheckInterval
+  href: docs/api/FreeRedis.Internal.ObjectPool.IPolicy-1.html#FreeRedis_Internal_ObjectPool_IPolicy_1_ToleranceCheckInterval
+  commentId: P:FreeRedis.Internal.ObjectPool.IPolicy`1.ToleranceCheckInterval
+  fullName: FreeRedis.Internal.ObjectPool.IPolicy<T>.ToleranceCheckInterval
+  fullName.vb: FreeRedis.Internal.ObjectPool.IPolicy(Of T).ToleranceCheckInterval
+  nameWithType: IPolicy<T>.ToleranceCheckInterval
+  nameWithType.vb: IPolicy(Of T).ToleranceCheckInterval
+- uid: FreeRedis.Internal.ObjectPool.IPolicy`1.ToleranceCheckInterval*
+  name: ToleranceCheckInterval
+  href: docs/api/FreeRedis.Internal.ObjectPool.IPolicy-1.html#FreeRedis_Internal_ObjectPool_IPolicy_1_ToleranceCheckInterval_
+  commentId: Overload:FreeRedis.Internal.ObjectPool.IPolicy`1.ToleranceCheckInterval
+  isSpec: "True"
+  fullName: FreeRedis.Internal.ObjectPool.IPolicy<T>.ToleranceCheckInterval
+  fullName.vb: FreeRedis.Internal.ObjectPool.IPolicy(Of T).ToleranceCheckInterval
+  nameWithType: IPolicy<T>.ToleranceCheckInterval
+  nameWithType.vb: IPolicy(Of T).ToleranceCheckInterval
+- uid: FreeRedis.Internal.ObjectPool.IPolicy`1.ToleranceWindow
+  name: ToleranceWindow
+  href: docs/api/FreeRedis.Internal.ObjectPool.IPolicy-1.html#FreeRedis_Internal_ObjectPool_IPolicy_1_ToleranceWindow
+  commentId: P:FreeRedis.Internal.ObjectPool.IPolicy`1.ToleranceWindow
+  fullName: FreeRedis.Internal.ObjectPool.IPolicy<T>.ToleranceWindow
+  fullName.vb: FreeRedis.Internal.ObjectPool.IPolicy(Of T).ToleranceWindow
+  nameWithType: IPolicy<T>.ToleranceWindow
+  nameWithType.vb: IPolicy(Of T).ToleranceWindow
+- uid: FreeRedis.Internal.ObjectPool.IPolicy`1.ToleranceWindow*
+  name: ToleranceWindow
+  href: docs/api/FreeRedis.Internal.ObjectPool.IPolicy-1.html#FreeRedis_Internal_ObjectPool_IPolicy_1_ToleranceWindow_
+  commentId: Overload:FreeRedis.Internal.ObjectPool.IPolicy`1.ToleranceWindow
+  isSpec: "True"
+  fullName: FreeRedis.Internal.ObjectPool.IPolicy<T>.ToleranceWindow
+  fullName.vb: FreeRedis.Internal.ObjectPool.IPolicy(Of T).ToleranceWindow
+  nameWithType: IPolicy<T>.ToleranceWindow
+  nameWithType.vb: IPolicy(Of T).ToleranceWindow
 - uid: FreeRedis.Internal.ObjectPool.Object`1
   name: Object<T>
   href: docs/api/FreeRedis.Internal.ObjectPool.Object-1.html
@@ -5330,19 +5398,19 @@ references:
   isSpec: "True"
   fullName: FreeRedis.Internal.RedisClientPoolPolicy.AsyncGetCapacity
   nameWithType: RedisClientPoolPolicy.AsyncGetCapacity
-- uid: FreeRedis.Internal.RedisClientPoolPolicy.CheckAvailableInterval
-  name: CheckAvailableInterval
-  href: docs/api/FreeRedis.Internal.RedisClientPoolPolicy.html#FreeRedis_Internal_RedisClientPoolPolicy_CheckAvailableInterval
-  commentId: P:FreeRedis.Internal.RedisClientPoolPolicy.CheckAvailableInterval
-  fullName: FreeRedis.Internal.RedisClientPoolPolicy.CheckAvailableInterval
-  nameWithType: RedisClientPoolPolicy.CheckAvailableInterval
-- uid: FreeRedis.Internal.RedisClientPoolPolicy.CheckAvailableInterval*
-  name: CheckAvailableInterval
-  href: docs/api/FreeRedis.Internal.RedisClientPoolPolicy.html#FreeRedis_Internal_RedisClientPoolPolicy_CheckAvailableInterval_
-  commentId: Overload:FreeRedis.Internal.RedisClientPoolPolicy.CheckAvailableInterval
+- uid: FreeRedis.Internal.RedisClientPoolPolicy.AvailableCheckInterval
+  name: AvailableCheckInterval
+  href: docs/api/FreeRedis.Internal.RedisClientPoolPolicy.html#FreeRedis_Internal_RedisClientPoolPolicy_AvailableCheckInterval
+  commentId: P:FreeRedis.Internal.RedisClientPoolPolicy.AvailableCheckInterval
+  fullName: FreeRedis.Internal.RedisClientPoolPolicy.AvailableCheckInterval
+  nameWithType: RedisClientPoolPolicy.AvailableCheckInterval
+- uid: FreeRedis.Internal.RedisClientPoolPolicy.AvailableCheckInterval*
+  name: AvailableCheckInterval
+  href: docs/api/FreeRedis.Internal.RedisClientPoolPolicy.html#FreeRedis_Internal_RedisClientPoolPolicy_AvailableCheckInterval_
+  commentId: Overload:FreeRedis.Internal.RedisClientPoolPolicy.AvailableCheckInterval
   isSpec: "True"
-  fullName: FreeRedis.Internal.RedisClientPoolPolicy.CheckAvailableInterval
-  nameWithType: RedisClientPoolPolicy.CheckAvailableInterval
+  fullName: FreeRedis.Internal.RedisClientPoolPolicy.AvailableCheckInterval
+  nameWithType: RedisClientPoolPolicy.AvailableCheckInterval
 - uid: FreeRedis.Internal.RedisClientPoolPolicy.Connected
   name: Connected
   href: docs/api/FreeRedis.Internal.RedisClientPoolPolicy.html#FreeRedis_Internal_RedisClientPoolPolicy_Connected
@@ -5572,6 +5640,32 @@ references:
   isSpec: "True"
   fullName: FreeRedis.Internal.RedisClientPoolPolicy.SyncGetTimeout
   nameWithType: RedisClientPoolPolicy.SyncGetTimeout
+- uid: FreeRedis.Internal.RedisClientPoolPolicy.ToleranceCheckInterval
+  name: ToleranceCheckInterval
+  href: docs/api/FreeRedis.Internal.RedisClientPoolPolicy.html#FreeRedis_Internal_RedisClientPoolPolicy_ToleranceCheckInterval
+  commentId: P:FreeRedis.Internal.RedisClientPoolPolicy.ToleranceCheckInterval
+  fullName: FreeRedis.Internal.RedisClientPoolPolicy.ToleranceCheckInterval
+  nameWithType: RedisClientPoolPolicy.ToleranceCheckInterval
+- uid: FreeRedis.Internal.RedisClientPoolPolicy.ToleranceCheckInterval*
+  name: ToleranceCheckInterval
+  href: docs/api/FreeRedis.Internal.RedisClientPoolPolicy.html#FreeRedis_Internal_RedisClientPoolPolicy_ToleranceCheckInterval_
+  commentId: Overload:FreeRedis.Internal.RedisClientPoolPolicy.ToleranceCheckInterval
+  isSpec: "True"
+  fullName: FreeRedis.Internal.RedisClientPoolPolicy.ToleranceCheckInterval
+  nameWithType: RedisClientPoolPolicy.ToleranceCheckInterval
+- uid: FreeRedis.Internal.RedisClientPoolPolicy.ToleranceWindow
+  name: ToleranceWindow
+  href: docs/api/FreeRedis.Internal.RedisClientPoolPolicy.html#FreeRedis_Internal_RedisClientPoolPolicy_ToleranceWindow
+  commentId: P:FreeRedis.Internal.RedisClientPoolPolicy.ToleranceWindow
+  fullName: FreeRedis.Internal.RedisClientPoolPolicy.ToleranceWindow
+  nameWithType: RedisClientPoolPolicy.ToleranceWindow
+- uid: FreeRedis.Internal.RedisClientPoolPolicy.ToleranceWindow*
+  name: ToleranceWindow
+  href: docs/api/FreeRedis.Internal.RedisClientPoolPolicy.html#FreeRedis_Internal_RedisClientPoolPolicy_ToleranceWindow_
+  commentId: Overload:FreeRedis.Internal.RedisClientPoolPolicy.ToleranceWindow
+  isSpec: "True"
+  fullName: FreeRedis.Internal.RedisClientPoolPolicy.ToleranceWindow
+  nameWithType: RedisClientPoolPolicy.ToleranceWindow
 - uid: FreeRedis.Internal.SubscribeListBroadcastObject
   name: SubscribeListBroadcastObject
   href: docs/api/FreeRedis.Internal.SubscribeListBroadcastObject.html

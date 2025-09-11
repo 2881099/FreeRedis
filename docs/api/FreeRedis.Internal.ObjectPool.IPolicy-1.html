@@ -126,14 +126,14 @@
   </table>
   
   
-  <a id="FreeRedis_Internal_ObjectPool_IPolicy_1_CheckAvailableInterval_" data-uid="FreeRedis.Internal.ObjectPool.IPolicy`1.CheckAvailableInterval*"></a>
-  <h4 id="FreeRedis_Internal_ObjectPool_IPolicy_1_CheckAvailableInterval" data-uid="FreeRedis.Internal.ObjectPool.IPolicy`1.CheckAvailableInterval">CheckAvailableInterval</h4>
-  <div class="markdown level1 summary"><p>后台定时检查可用性间隔秒数</p>
+  <a id="FreeRedis_Internal_ObjectPool_IPolicy_1_AvailableCheckInterval_" data-uid="FreeRedis.Internal.ObjectPool.IPolicy`1.AvailableCheckInterval*"></a>
+  <h4 id="FreeRedis_Internal_ObjectPool_IPolicy_1_AvailableCheckInterval" data-uid="FreeRedis.Internal.ObjectPool.IPolicy`1.AvailableCheckInterval">AvailableCheckInterval</h4>
+  <div class="markdown level1 summary"><p>后台定时检查可用性间隔</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">int CheckAvailableInterval { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">TimeSpan AvailableCheckInterval { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -145,7 +145,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Int32</span></td>
+        <td><span class="xref">System.TimeSpan</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -290,6 +290,60 @@
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">TimeSpan SyncGetTimeout { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.TimeSpan</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="FreeRedis_Internal_ObjectPool_IPolicy_1_ToleranceCheckInterval_" data-uid="FreeRedis.Internal.ObjectPool.IPolicy`1.ToleranceCheckInterval*"></a>
+  <h4 id="FreeRedis_Internal_ObjectPool_IPolicy_1_ToleranceCheckInterval" data-uid="FreeRedis.Internal.ObjectPool.IPolicy`1.ToleranceCheckInterval">ToleranceCheckInterval</h4>
+  <div class="markdown level1 summary"><p>在容忍窗口期（观察期）内，进行健康检查的间隔。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">TimeSpan ToleranceCheckInterval { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.TimeSpan</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="FreeRedis_Internal_ObjectPool_IPolicy_1_ToleranceWindow_" data-uid="FreeRedis.Internal.ObjectPool.IPolicy`1.ToleranceWindow*"></a>
+  <h4 id="FreeRedis_Internal_ObjectPool_IPolicy_1_ToleranceWindow" data-uid="FreeRedis.Internal.ObjectPool.IPolicy`1.ToleranceWindow">ToleranceWindow</h4>
+  <div class="markdown level1 summary"><p>故障切换的容忍窗口期。
+当设置为大于 TimeSpan.Zero 的值时，首次失败会进入观察期，而不是立即熔断。
+在观察期内持续失败，才会最终熔断。设置为 Zero 表示关闭此功能。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">TimeSpan ToleranceWindow { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
