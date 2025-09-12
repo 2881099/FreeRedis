@@ -129,13 +129,16 @@ namespace FreeRedis
                                 if (cmd.IsReadOnlyCommand() == false || cmd._protocolErrorTryCount > 1) throw;
                                 protocolRetry = true;
                             }
+
+                            //不重试的情况下，进行哨兵恢复
+                            RecoverySentinel(false);
                         }
                         catch (Exception ex)
                         {
-                            var pool = (rds as DefaultRedisSocket.TempProxyRedisSocket)._pool;
+                            var pool = (rds as DefaultRedisSocket.TempProxyRedisSocket)?._pool;
                             if (cmd.IsBlockingCommand() == false && pool?.SetUnavailable(ex, getTime) == true)
                             {
-                                RecoverySentinel();
+                                RecoverySentinel(true);
                             }
                             throw;
                         }
@@ -170,13 +173,16 @@ namespace FreeRedis
                                 if (cmd.IsReadOnlyCommand() == false || cmd._protocolErrorTryCount > 1) throw;
                                 protocolRetry = true;
                             }
+
+                            //不重试的情况下，进行哨兵恢复
+                            RecoverySentinel(false);
                         }
                         catch (Exception ex)
                         {
-                            var pool = (rds as DefaultRedisSocket.TempProxyRedisSocket)._pool;
+                            var pool = (rds as DefaultRedisSocket.TempProxyRedisSocket)?._pool;
                             if (cmd.IsBlockingCommand() == false && pool?.SetUnavailable(ex, getTime) == true)
                             {
-                                RecoverySentinel();
+                                RecoverySentinel(true);
                             }
                             throw;
                         }
@@ -305,7 +311,7 @@ namespace FreeRedis
 
             bool RecoverySentineling = false;
             object RecoverySentinelingLock = new object();
-            bool RecoverySentinel()
+            bool RecoverySentinel(bool isSleep)
             {
                 var ing = false;
                 if (RecoverySentineling == false)
@@ -321,7 +327,9 @@ namespace FreeRedis
                     {
                         while (true)
                         {
-                            Thread.CurrentThread.Join(1000);
+                            if(isSleep)
+                                Thread.CurrentThread.Join(1000);
+
                             try
                             {
                                 var oldMasterHost = _masterHost;
@@ -334,12 +342,21 @@ namespace FreeRedis
 
                                     RecoverySentineling = false;
                                     return;
+                                } 
+                                else if (oldMasterHost == _masterHost && _ib.Get(_masterHost).CheckAvailable()) 
+                                {
+                                    RecoverySentineling = false;
+                                    return;
                                 }
                             }
                             catch (Exception ex21)
                             {
                                 if (!TopOwner.OnNotice(null, new NoticeEventArgs(NoticeType.Info, null, $"{_connectionString.Host.PadRight(21)} > Redis Sentinel switch to {_masterHost}", null)))
                                     TestTrace.WriteLine($"【{_connectionString.Host}】Redis Sentinel: {ex21.Message}", ConsoleColor.DarkYellow);
+                            }
+                            finally {
+                                if (!isSleep)
+                                    Thread.CurrentThread.Join(1000);
                             }
                         }
                     }).Start();
