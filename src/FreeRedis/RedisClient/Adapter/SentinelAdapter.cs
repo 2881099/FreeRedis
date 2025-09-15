@@ -25,7 +25,7 @@ namespace FreeRedis
             string _masterHost;
             readonly bool _rw_splitting;
             readonly bool _is_single;
-            Exception? _switchingException;
+            Exception _switchingException;
 
             public SentinelAdapter(RedisClient topOwner, ConnectionStringBuilder sentinelConnectionString, string[] sentinels, bool rw_splitting)
             {
@@ -58,12 +58,12 @@ namespace FreeRedis
                     {
                         if (chan == "+switch-master" && msg != null)
                         {
-                            var args = msg?.ToString()!.Split(' '); //mymaster 127.0.0.1 6381 127.0.0.1 6379
+                            var args = msg?.ToString().Split(' '); //mymaster 127.0.0.1 6381 127.0.0.1 6379
                             if (args == null || args.Length < 5) return;
                             if (_connectionString.Host != args[0]) return;
 
                             var masterhostEnd = $"{args[3]}:{args[4]}";
-                            _ib.TryRemove(_masterHost!);
+                            _ib.TryRemove(_masterHost);
 
                             ConnectionStringBuilder connectionString = _connectionString.ToString();
                             connectionString.Host = masterhostEnd;
@@ -115,7 +115,7 @@ namespace FreeRedis
                 var tmprds = redisSocket as DefaultRedisSocket.TempProxyRedisSocket;
                 if (tmprds != null) _ib.Get(tmprds._poolkey);
             }
-            public override IRedisSocket GetRedisSocket(CommandPacket? cmd)
+            public override IRedisSocket GetRedisSocket(CommandPacket cmd)
             {
                 var poolkey = GetIdleBusKey(cmd);
                 if (string.IsNullOrWhiteSpace(poolkey)) throw new RedisClientException($"【{_connectionString.Host}】Redis Sentinel is switching{(_switchingException == null ? "" : $", {_switchingException.Message}")}");
@@ -131,7 +131,7 @@ namespace FreeRedis
             {
                 return TopOwner.LogCall(cmd, () =>
                 {
-                    RedisResult? rt = null;
+                    RedisResult rt = null;
                     var protocolRetry = false;
                     using (var rds = GetRedisSocket(cmd))
                     {
@@ -175,7 +175,7 @@ namespace FreeRedis
             {
                 return TopOwner.LogCallAsync(cmd, async () =>
                 {
-                    RedisResult? rt = null;
+                    RedisResult rt = null;
                     var protocolRetry = false;
                     using (var rds = GetRedisSocket(cmd))
                     {
@@ -216,7 +216,7 @@ namespace FreeRedis
             }
 #endif
 
-            internal string GetIdleBusKey(CommandPacket? cmd)
+            internal string GetIdleBusKey(CommandPacket cmd)
             {
                 if (cmd != null && (_rw_splitting || !_is_single))
                 {
@@ -259,14 +259,14 @@ namespace FreeRedis
                 {
                     if (i > 0)
                     {
-                        var first = _sentinels.First!;
+                        var first = _sentinels.First;
                         _sentinels.RemoveFirst();
                         _sentinels.AddLast(first.Value);
                     }
 
                     try
                     {
-                        using (var sentinelcli = new RedisSentinelClient(_sentinels.First!.Value))
+                        using (var sentinelcli = new RedisSentinelClient(_sentinels.First.Value))
                         {
                             var masterhost = sentinelcli.GetMasterAddrByName(_connectionString.Host);
                             var masterConnectionString = localTestHost(masterhost, RoleType.Master);
@@ -277,7 +277,7 @@ namespace FreeRedis
                             {
                                 foreach (var slave in sentinelcli.Salves(_connectionString.Host))
                                 {
-                                    ConnectionStringBuilder? slaveConnectionString = localTestHost($"{slave.ip}:{slave.port}", RoleType.Slave);
+                                    ConnectionStringBuilder slaveConnectionString = localTestHost($"{slave.ip}:{slave.port}", RoleType.Slave);
                                     if (slaveConnectionString == null) continue;
                                 }
                             }
@@ -304,7 +304,7 @@ namespace FreeRedis
                 Interlocked.Exchange(ref _masterHost, masterhostEnd);
                 Interlocked.Decrement(ref ResetSentinelFlag);
 
-                ConnectionStringBuilder? localTestHost(string host, RoleType role)
+                ConnectionStringBuilder localTestHost(string host, RoleType role)
                 {
                     ConnectionStringBuilder connectionString = _connectionString.ToString();
                     connectionString.Host = host;
