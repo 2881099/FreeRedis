@@ -5,6 +5,7 @@ using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace FreeRedis.Internal
 {
@@ -225,7 +226,14 @@ namespace FreeRedis
                         _redisSocket.ReceiveTimeout = TimeSpan.Zero;
                         var timer = new Timer(state =>
                         {
-                            _topOwner.Adapter.Refersh(_redisSocket); //防止 IdleBus 超时回收
+                            try
+                            {
+                                _topOwner.Adapter.Refersh(_redisSocket); //防止 IdleBus 超时回收
+                            }
+                            catch (Exception ex)
+                            {
+                                Trace.WriteLine($"防止 IdleBus 超时回收异常: {ex.Message}");
+                            }
                             try { _redisSocket.Write("PING"); } catch { }
                         }, null, 10000, 10000);
                         var readCmd = "PubSubRead".SubCommand(null).FlagReadbytes(_topOwner.ConnectionString.SubscribeReadbytes);
