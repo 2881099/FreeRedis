@@ -166,7 +166,7 @@ namespace FreeRedis
                 Refresh(key, absExpr, sldExpr);
             }
 
-            return results.Length >= 3 ? results[3] : null;
+            return results.Length >= 3 ? results[2] : null;
         }
 
         private async Task<byte[]> GetAndRefreshAsync(string key, bool getData, CancellationToken token = default(CancellationToken))
@@ -189,7 +189,7 @@ namespace FreeRedis
                 await RefreshAsync(key, absExpr, sldExpr, token);
             }
 
-            return results.Length >= 3 ? results[3] : null;
+            return results.Length >= 3 ? results[2] : null;
         }
 
         public void Remove(string key)
