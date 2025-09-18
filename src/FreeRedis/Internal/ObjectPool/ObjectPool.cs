@@ -107,7 +107,7 @@ namespace FreeRedis.Internal.ObjectPool
                 _currentState = State.Observing;
                 _firstFailureException = exception;
 
-                TestTrace.WriteLine($"【{Policy.Name}】服务不稳定: {exception.Message}。进入为期 {Policy.ToleranceWindow.TotalSeconds} 秒的观察期。", ConsoleColor.DarkYellow);
+                TestTrace.WriteLine($"[{Policy.Name}] Service unstable: {exception.Message}. Entering a {Policy.ToleranceWindow.TotalSeconds} second observation period.", ConsoleColor.DarkYellow);
 
                 if (!_isCheckerRunning)
                 {
@@ -131,7 +131,7 @@ namespace FreeRedis.Internal.ObjectPool
                 // === 阶段一：观察期的高频检查 ===
                 if (_currentState == State.Observing)
                 {
-                    TestTrace.WriteLine($"【{Policy.Name}】观察期检查器已启动。", ConsoleColor.DarkGray);
+                    TestTrace.WriteLine($"[{Policy.Name}] Observation period checker started.", ConsoleColor.DarkGray);
                     var observationEndTime = DateTime.Now.Add(Policy.ToleranceWindow);
 
                     while (DateTime.Now < observationEndTime)
@@ -140,7 +140,7 @@ namespace FreeRedis.Internal.ObjectPool
 
                         if (TryHealthCheck())
                         {
-                            TestTrace.WriteLine($"【{Policy.Name}】在观察期内检测到服务恢复。", ConsoleColor.DarkGreen);
+                            TestTrace.WriteLine($"[{Policy.Name}] Service recovery detected during the observation period.", ConsoleColor.DarkGreen);
                             RestoreToAvailable();
                             return; // 成功，退出线程
                         }
@@ -153,7 +153,7 @@ namespace FreeRedis.Internal.ObjectPool
                     {
                         if (_currentState == State.Observing)
                         {
-                            TestTrace.WriteLine($"【{Policy.Name}】观察期结束，服务未恢复。正式熔断。", ConsoleColor.Red);
+                            TestTrace.WriteLine($"[{Policy.Name}] Observation period ended, service not recovered. Now breaking the circuit.", ConsoleColor.Red);
                             // 注意：这里不再启动新线程，而是让当前线程继续工作
                             TransitionToUnavailable(_firstFailureException, DateTime.Now, false);
                         }
@@ -163,7 +163,7 @@ namespace FreeRedis.Internal.ObjectPool
                 // === 阶段二：熔断后的低频检查 ===
                 if (_currentState == State.Unavailable)
                 {
-                    TestTrace.WriteLine($"【{Policy.Name}】低频恢复检查器已接管。", ConsoleColor.DarkGray);
+                    TestTrace.WriteLine($"[{Policy.Name}] Low-frequency recovery checker has taken over.", ConsoleColor.DarkGray);
                     while (_currentState == State.Unavailable)
                     {
                         if (_running == false) return;
@@ -181,7 +181,7 @@ namespace FreeRedis.Internal.ObjectPool
                         }
                         else
                         {
-                            TestTrace.WriteLine($"【{Policy.Name}】恢复检查失败。下一次检查在: {DateTime.Now.Add(Policy.AvailableCheckInterval)}", ConsoleColor.DarkYellow);
+                            TestTrace.WriteLine($"[{Policy.Name}] Recovery check failed. Next check at: {DateTime.Now.Add(Policy.AvailableCheckInterval)}", ConsoleColor.DarkYellow);
                         }
                     }
                 }
@@ -195,7 +195,7 @@ namespace FreeRedis.Internal.ObjectPool
                 {
                     _isCheckerRunning = false;
                 }
-                TestTrace.WriteLine($"【{Policy.Name}】检查器线程已停止。", ConsoleColor.DarkGray);
+                TestTrace.WriteLine($"[{Policy.Name}] Checker thread stopped.", ConsoleColor.DarkGray);
             }
         }
 
@@ -232,7 +232,7 @@ namespace FreeRedis.Internal.ObjectPool
             new Thread(() =>
             {
                 if (_currentState == State.Unavailable)
-                    TestTrace.WriteLine($"【{Policy.Name}】服务已熔断。下一次恢复检查在: {DateTime.Now.Add(interval)}", ConsoleColor.DarkYellow);
+                    TestTrace.WriteLine($"[{Policy.Name}] Service is circuit-broken. Next recovery check at: {DateTime.Now.Add(interval)}", ConsoleColor.DarkYellow);
 
                 while (_currentState == State.Unavailable)
                 {
@@ -247,7 +247,7 @@ namespace FreeRedis.Internal.ObjectPool
                     }
                     else
                     {
-                        TestTrace.WriteLine($"【{Policy.Name}】恢复检查失败。下一次检查在: {DateTime.Now.Add(interval)}", ConsoleColor.DarkYellow);
+                        TestTrace.WriteLine($"[{Policy.Name}] Recovery check failed. Next check at: {DateTime.Now.Add(interval)}", ConsoleColor.DarkYellow);
                     }
                 }
             })
@@ -264,13 +264,13 @@ namespace FreeRedis.Internal.ObjectPool
             try
             {
                 conn = GetFree(false); // false 表示不检查池状态，强行获取一个对象
-                if (conn == null) throw new Exception($"【{Policy.Name}】无法为健康检查获取资源 {this.Statistics}");
+                if (conn == null) throw new Exception($"[{Policy.Name}] Unable to get a resource for health check {this.Statistics}");
 
                 try
                 {
                     if (Policy.OnCheckAvailable(conn)) return true;
                     // 如果 OnCheckAvailable 返回 false，我们认为检查失败
-                    throw new Exception($"【{Policy.Name}】OnCheckAvailable 返回 false。");
+                    throw new Exception($"[{Policy.Name}] OnCheckAvailable returned false.");
                 }
                 catch
                 {
@@ -322,7 +322,7 @@ namespace FreeRedis.Internal.ObjectPool
             if (isRestored)
             {
                 Policy.OnAvailable();
-                TestTrace.WriteLine($"【{Policy.Name}】服务已恢复可用。", ConsoleColor.DarkGreen);
+                TestTrace.WriteLine($"[{Policy.Name}] Service is now available.", ConsoleColor.DarkGreen);
             }
         }
 
@@ -331,11 +331,11 @@ namespace FreeRedis.Internal.ObjectPool
             try
             {
                 var conn = GetFree(false);
-                if (conn == null) throw new Exception($"【{Policy.Name}】Failed to get resource {this.Statistics}");
+                if (conn == null) throw new Exception($"[{Policy.Name}] Failed to get resource {this.Statistics}");
 
                 try
                 {
-                    if (Policy.OnCheckAvailable(conn) == false) throw new Exception("【{Policy.Name}】An exception needs to be thrown");
+                    if (Policy.OnCheckAvailable(conn) == false) throw new Exception($"[{Policy.Name}] An exception needs to be thrown");
                 }
                 finally
                 {
@@ -433,16 +433,16 @@ namespace FreeRedis.Internal.ObjectPool
         private Object<T> GetFree(bool checkAvailable)
         {
             if (_running == false)
-                throw new ObjectDisposedException($"【{Policy.Name}】The ObjectPool has been disposed, see: https://github.com/dotnetcore/FreeSql/discussions/1079");
+                throw new ObjectDisposedException($"[{Policy.Name}] The ObjectPool has been disposed, see: https://github.com/dotnetcore/FreeSql/discussions/1079");
 
             if (checkAvailable)
             {
                 var currentState = _currentState;
                 if (currentState == State.Unavailable)
-                    throw new Exception($"【{Policy.Name}】服务已熔断，正在等待恢复。错误: {UnavailableException?.Message}", UnavailableException);
+                    throw new Exception($"[{Policy.Name}] The service is circuit-broken, waiting for recovery. Error: {UnavailableException?.Message}", UnavailableException);
 
                 //if (currentState == State.Observing)
-                //    throw new Exception($"【{Policy.Name}】服务不稳定，正在检查恢复。原始错误: {_firstFailureException?.Message}", _firstFailureException);
+                //    throw new Exception($"[{Policy.Name}] The service is unstable, checking for recovery. Original error: {_firstFailureException?.Message}", _firstFailureException);
             }
 
             if ((_freeObjects.TryPop(out var obj) == false || obj == null) && _allObjects.Count < Policy.PoolSize)
@@ -500,7 +500,7 @@ namespace FreeRedis.Internal.ObjectPool
                 {
                     Policy.OnGetTimeout();
                     if (Policy.IsThrowGetTimeoutException)
-                        throw new TimeoutException($"【{Policy.Name}】ObjectPool.Get() timeout {timeout.Value.TotalSeconds} seconds, see: https://github.com/dotnetcore/FreeSql/discussions/1081");
+                        throw new TimeoutException($"[{Policy.Name}] ObjectPool.Get() timeout {timeout.Value.TotalSeconds} seconds, see: https://github.com/dotnetcore/FreeSql/discussions/1081");
 
                     return null;
                 }
@@ -532,7 +532,7 @@ namespace FreeRedis.Internal.ObjectPool
             if (obj == null)
             {
                 if (Policy.AsyncGetCapacity > 0 && _getAsyncQueue.Count >= Policy.AsyncGetCapacity - 1)
-                    throw new OutOfMemoryException($"【{Policy.Name}】ObjectPool.GetAsync() The queue is too long. Policy.AsyncGetCapacity = {Policy.AsyncGetCapacity}");
+                    throw new OutOfMemoryException($"[{Policy.Name}] ObjectPool.GetAsync() The queue is too long. Policy.AsyncGetCapacity = {Policy.AsyncGetCapacity}");
 
                 var tcs = new TaskCompletionSource<Object<T>>();
 
@@ -552,7 +552,7 @@ namespace FreeRedis.Internal.ObjectPool
                 //	Policy.GetTimeout();
 
                 //	if (Policy.IsThrowGetTimeoutException)
-                //		throw new TimeoutException($"【{Policy.Name}】ObjectPool.GetAsync() timeout {timeout.Value.TotalSeconds} seconds, see: https://github.com/dotnetcore/FreeSql/discussions/1081");
+                //		throw new TimeoutException($"[{Policy.Name}] ObjectPool.GetAsync() timeout {timeout.Value.TotalSeconds} seconds, see: https://github.com/dotnetcore/FreeSql/discussions/1081");
 
                 //	return null;
                 //}
@@ -577,7 +577,7 @@ namespace FreeRedis.Internal.ObjectPool
         }
 #endif
 
-		public void Return(Object<T> obj, bool isReset = false)
+        public void Return(Object<T> obj, bool isReset = false)
         {
             if (obj == null) return;
             if (obj._isReturned) return;
@@ -606,7 +606,7 @@ namespace FreeRedis.Internal.ObjectPool
                         {
                             if (UnavailableException != null)
                             {
-                                queueItem.Exception = new Exception($"【{Policy.Name}】Status unavailable, waiting for recovery. {UnavailableException?.Message}", UnavailableException);
+                                queueItem.Exception = new Exception($"[{Policy.Name}] Status unavailable, waiting for recovery. {UnavailableException?.Message}", UnavailableException);
                                 try
                                 {
                                     queueItem.Wait.Set();
@@ -638,7 +638,7 @@ namespace FreeRedis.Internal.ObjectPool
                         {
                             try
                             {
-                                tcs.TrySetException(new Exception($"【{Policy.Name}】Status unavailable, waiting for recovery. {UnavailableException?.Message}", UnavailableException));
+                                tcs.TrySetException(new Exception($"[{Policy.Name}] Status unavailable, waiting for recovery. {UnavailableException?.Message}", UnavailableException));
                             }
                             catch { }
                         }
