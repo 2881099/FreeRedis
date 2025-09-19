@@ -152,17 +152,13 @@ namespace FreeRedis
                                 if (cmd.IsReadOnlyCommand() == false || cmd._protocolErrorTryCount > 1) throw;
                                 protocolRetry = true;
                             }
-
-                            //不重试的情况下，进行哨兵恢复
-                            RecoverySentinel(false);
+                            if (!protocolRetry) RecoverySentinel(false);
                         }
                         catch (Exception ex)
                         {
                             var pool = (rds as DefaultRedisSocket.TempProxyRedisSocket)?._pool;
                             if (cmd.IsBlockingCommand() == false && pool?.SetUnavailable(ex, getTime) == true)
-                            {
                                 RecoverySentinel(true);
-                            }
                             throw;
                         }
                     }
@@ -196,17 +192,13 @@ namespace FreeRedis
                                 if (cmd.IsReadOnlyCommand() == false || cmd._protocolErrorTryCount > 1) throw;
                                 protocolRetry = true;
                             }
-
-                            //不重试的情况下，进行哨兵恢复
-                            RecoverySentinel(false);
+                            if (!protocolRetry) RecoverySentinel(false);
                         }
                         catch (Exception ex)
                         {
                             var pool = (rds as DefaultRedisSocket.TempProxyRedisSocket)?._pool;
                             if (cmd.IsBlockingCommand() == false && pool?.SetUnavailable(ex, getTime) == true)
-                            {
                                 RecoverySentinel(true);
-                            }
                             throw;
                         }
                     }
