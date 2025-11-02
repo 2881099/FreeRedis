@@ -129,7 +129,6 @@ namespace FreeRedis
             .ThrowOrValue((a, _) => a == null || a.Length == 0 ? new ZMember[0] : a.MapToHash<decimal>(rt.Encoding).Select(b => new ZMember(b.Key, b.Value)).ToArray()));
         public Task<long> ZRevRankAsync(string key, string member) => CallAsync("ZREVRANK".InputKey(key, member), rt => rt.ThrowOrValue<long>());
 
-        //ZSCAN key cursor [MATCH pattern] [COUNT count]
         public Task<decimal?> ZScoreAsync(string key, string member) => CallAsync("ZSCORE".InputKey(key, member), rt => rt.ThrowOrValue<decimal?>());
         public Task<long> ZUnionStoreAsync(string destination, string[] keys, int[] weights = null, ZAggregate? aggregate = null) => ZStoreAsync(false, destination, keys, weights, aggregate);
         Task<long> ZStoreAsync(bool inter, string destination, string[] keys, int[] weights, ZAggregate? aggregate) => CallAsync((inter ? "ZINTERSTORE" : "ZUNIONSTORE")
@@ -138,6 +137,13 @@ namespace FreeRedis
             .InputIf(weights?.Any() == true, weights)
             .InputIf(aggregate != null, "AGGREGATE", aggregate ?? ZAggregate.max), rt => rt
             .ThrowOrValue<long>());
+        
+        public Task<ScanResult<ZMember>> ZScanAsync(string key, long cursor, string pattern, long count = 0) => CallAsync("ZSCAN"
+            .InputKey(key, cursor)
+            .InputIf(!string.IsNullOrWhiteSpace(pattern), "MATCH", pattern)
+            .InputIf(count != 0, "COUNT", count), rt => rt.ThrowOrValue((a, _) => new ScanResult<ZMember>(a[0].ConvertTo<long>(),
+                a[1] == null ? new ZMember[0] :
+                ((object[])a[1]).MapToList((k, v) => new ZMember(k.ConvertTo<string>(), v.ConvertTo<decimal>())).ToArray())));
         #endregion
 #endif
 
@@ -259,7 +265,6 @@ namespace FreeRedis
             .ThrowOrValue((a, _) => a == null || a.Length == 0 ? new ZMember[0] : a.MapToHash<decimal>(rt.Encoding).Select(b => new ZMember(b.Key, b.Value)).ToArray()));
         public long ZRevRank(string key, string member) => Call("ZREVRANK".InputKey(key, member), rt => rt.ThrowOrValue<long>());
 
-        //ZSCAN key cursor [MATCH pattern] [COUNT count]
         public decimal? ZScore(string key, string member) => Call("ZSCORE".InputKey(key, member), rt => rt.ThrowOrValue<decimal?>());
         public long ZUnionStore(string destination, string[] keys, int[] weights = null, ZAggregate? aggregate = null) => ZStore(false, destination, keys, weights, aggregate);
         long ZStore(bool inter, string destination, string[] keys, int[] weights, ZAggregate? aggregate) => Call((inter ? "ZINTERSTORE" : "ZUNIONSTORE")
