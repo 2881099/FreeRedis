@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net80</TargetFrameworks>
+		<TargetFrameworks>net10.0;net8.0</TargetFrameworks>
 		<AssemblyName>FreeRedis.OpenTelemetry</AssemblyName>
 		<PackageId>FreeRedis.OpenTelemetry</PackageId>
 		<RootNamespace>FreeRedis.OpenTelemetry</RootNamespace>
-		<Version>1.5.1</Version>
+		<Version>1.5.2</Version>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<PackageProjectUrl>https://github.com/2881099/FreeRedis</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/2881099/FreeRedis</RepositoryUrl>
