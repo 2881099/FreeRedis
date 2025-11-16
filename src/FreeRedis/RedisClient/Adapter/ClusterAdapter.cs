@@ -33,10 +33,9 @@ namespace FreeRedis
                     foreach (var kv in hostMappings)
                         _hostMappings.Add(kv.Key, kv.Value);
                 }
-                _hostMappings = hostMappings;
                 _baseEncoding = _clusterConnectionStrings.FirstOrDefault()?.Encoding;
                 _ib = new IdleBus<RedisClientPool>(TimeSpan.FromMinutes(10));
-                RefershClusterNodes();
+                RefreshClusterNodes();
             }
 
             bool isdisposed = false;
@@ -281,7 +280,7 @@ namespace FreeRedis
             }
 #endif
 
-            void RefershClusterNodes()
+            void RefreshClusterNodes()
             {
                 Exception clusterException = null;
                 foreach (var testConnection in _clusterConnectionStrings)
