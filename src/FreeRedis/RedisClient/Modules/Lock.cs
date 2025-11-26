@@ -145,7 +145,7 @@ return 0", new[] { _name }, _value, milliseconds)?.ToString() == "1";
                 }
                 catch
                 {
-                    _handleLostTokenSource?.Cancel();
+                    try { _handleLostTokenSource?.Cancel(); } catch { }
                     _autoDelayTimer?.Dispose(); //未知情况，关闭定时器
                     return false;//这里必须要吞掉异常，否则会导致整个程序崩溃，因为Timer的异常没有地方去处理
                 }
