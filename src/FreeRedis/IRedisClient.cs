@@ -1,4 +1,5 @@
 ﻿using FreeRedis.Internal;
+using FreeRedis.RediSearch;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -363,8 +364,8 @@ namespace FreeRedis
 		long XTrim(string key, long count);
 		long Append<T>(string key, T value);
 		long BitCount(string key, long start, long end);
-        long[] BitField(string key, params BitFieldAction[] actions);
-        long BitOp(BitOpOperation operation, string destkey, params string[] keys);
+		long[] BitField(string key, params BitFieldAction[] actions);
+		long BitOp(BitOpOperation operation, string destkey, params string[] keys);
 		long BitPos(string key, bool bit, long? start = null, long? end = null);
 		long Decr(string key);
 		long DecrBy(string key, long decrement);
@@ -403,6 +404,34 @@ namespace FreeRedis
 		long SetRange<T>(string key, long offset, T value);
 		long StrLen(string key);
 		object Call(CommandPacket cmd);
+
+		// RediSearch methods
+		FtDocumentRepository<T> FtDocumentRepository<T>();
+		string[] Ft_List();
+		AggregateBuilder FtAggregate(string index, string query);
+		void FtAliasAdd(string alias, string index);
+		void FtAliasDel(string alias);
+		void FtAliasUpdate(string alias, string index);
+		AlterBuilder FtAlter(string index);
+		Dictionary<string, object> FtConfigGet(string option, string value);
+		void FtConfigSet(string option, string value);
+		CreateBuilder FtCreate(string index);
+		void FtCursorDel(string index, long cursor_id);
+		AggregationResult FtCursorRead(string index, long cursorId, int count = 0);
+		long FtDictAdd(string dict, params string[] terms);
+		long FtDictDel(string dict, params string[] terms);
+		string[] FtDictDump(string dict);
+		void FtDropIndex(string index, bool dd = false);
+		string FtExplain(string index, string query, string dialect = null);
+		SearchBuilder FtSearch(string index, string query);
+		Dictionary<string, Dictionary<string, double>> FtSpellCheck(string index, string query, int distance = 1, int? dialect = null);
+		Dictionary<string, string[]> FtSynDump(string index);
+		void FtSynUpdate(string index, string synonymGroupId, bool skipInitialScan, params string[] terms);
+		long FtSugAdd(string key, string str, double score, bool incr = false, string payload = null);
+		void FtSugDel(string key, string str);
+		string[] FtSugGet(string key, string prefix, bool fuzzy = false, bool withScores = false, bool withPayloads = false, int? max = null);
+		void FtSugLen(string key);
+		string[] FtTagVals(string index, string fieldName);
 
 #if isasync
 		Task<object> CallAsync(CommandPacket cmd);
@@ -688,7 +717,7 @@ namespace FreeRedis
 		Task<long> AppendAsync<T>(string key, T value);
 		Task<long> BitCountAsync(string key, long start, long end);
 		Task<long[]> BitFieldAsync(string key, params BitFieldAction[] actions);
-        Task<long> BitOpAsync(BitOpOperation operation, string destkey, params string[] keys);
+		Task<long> BitOpAsync(BitOpOperation operation, string destkey, params string[] keys);
 		Task<long> BitPosAsync(string key, bool bit, long? start = null, long? end = null);
 		Task<long> DecrAsync(string key);
 		Task<long> DecrByAsync(string key, long decrement);
@@ -726,6 +755,29 @@ namespace FreeRedis
 		Task<bool> SetNxAsync<T>(string key, T value);
 		Task<long> SetRangeAsync<T>(string key, long offset, T value);
 		Task<long> StrLenAsync(string key);
+
+		// RediSearch async methods
+		Task<string[]> Ft_ListAsync();
+		Task FtAliasAddAsync(string alias, string index);
+		Task FtAliasDelAsync(string alias);
+		Task FtAliasUpdateAsync(string alias, string index);
+		Task<Dictionary<string, object>> FtConfigGetAsync(string option, string value);
+		Task FtConfigSetAsync(string option, string value);
+		Task FtCursorDelAsync(string index, long cursor_id);
+		Task<AggregationResult> FtCursorReadAsync(string index, long cursorId, int count = 0);
+		Task<long> FtDictAddAsync(string dict, params string[] terms);
+		Task<long> FtDictDelAsync(string dict, params string[] terms);
+		Task<string[]> FtDictDumpAsync(string dict);
+		Task FtDropIndexAsync(string index, bool dd = false);
+		Task<string> FtExplainAsync(string index, string query, string dialect = null);
+		Task<Dictionary<string, Dictionary<string, double>>> FtSpellCheckAsync(string index, string query, int distance = 1, int? dialect = null);
+		Task<Dictionary<string, string[]>> FtSynDumpAsync(string index);
+		Task FtSynUpdateAsync(string index, string synonymGroupId, bool skipInitialScan, params string[] terms);
+		Task<long> FtSugAddAsync(string key, string str, double score, bool incr = false, string payload = null);
+		Task FtSugDelAsync(string key, string str);
+		Task<string[]> FtSugGetAsync(string key, string prefix, bool fuzzy = false, bool withScores = false, bool withPayloads = false, int? max = null);
+		Task FtSugLenAsync(string key);
+		Task<string[]> FtTagValsAsync(string index, string fieldName);
 #endif
 	}
 }
