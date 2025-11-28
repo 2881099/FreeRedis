@@ -755,7 +755,7 @@ namespace FreeRedis.RediSearch
     [AttributeUsage(AttributeTargets.Property)]
     public class FtTextFieldAttribute : FtFieldAttribute
     {
-        public double Weight { get; set; }
+        public double Weight { get; set; } = 1.0;
         public bool NoStem { get; set; }
         public string Phonetic { get; set; }
         public bool Sortable { get; set; }

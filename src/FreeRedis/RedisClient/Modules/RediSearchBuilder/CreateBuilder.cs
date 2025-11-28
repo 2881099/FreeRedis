@@ -203,7 +203,8 @@ namespace FreeRedis.RediSearch
                     _schemaArgs.Add("PHONETIC");
                     _schemaArgs.Add(options.Phonetic);
                 }
-                if (options.Weight != 1.0)
+                // 只有在非NoIndex字段时才设置权重
+                if (!options.NoIndex && options.Weight != 1.0)
                 {
                     _schemaArgs.Add("WEIGHT");
                     _schemaArgs.Add(options.Weight);
