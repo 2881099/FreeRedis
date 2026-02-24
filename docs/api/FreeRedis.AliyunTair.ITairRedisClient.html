@@ -1,0 +1,2617 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Interface ITairRedisClient
+   </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Interface ITairRedisClient
+   ">
+    <meta name="generator" content="docfx 2.59.4.0">
+    
+    <link rel="shortcut icon" href="../../favicon.ico">
+    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../styles/docfx.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <meta property="docfx:navrel" content="">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../../index.html">
+                <img id="logo" class="svg" src="../../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="FreeRedis.AliyunTair.ITairRedisClient">
+  
+  
+  <h1 id="FreeRedis_AliyunTair_ITairRedisClient" data-uid="FreeRedis.AliyunTair.ITairRedisClient" class="text-break">Interface ITairRedisClient
+  </h1>
+  <div class="markdown level0 summary"><p>扩展阿里云Tair Redis 数据类型接口</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_Interceptors">IRedisClient.Interceptors</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_Connected">IRedisClient.Connected</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_Notice">IRedisClient.Notice</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_Unavailable">IRedisClient.Unavailable</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_StartPipe">IRedisClient.StartPipe()</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_GetDatabase_System_Nullable_System_Int32__">IRedisClient.GetDatabase(Nullable&lt;Int32&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_Multi">IRedisClient.Multi()</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_Auth_System_String_">IRedisClient.Auth(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_Auth_System_String_System_String_">IRedisClient.Auth(String, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ClientCaching_FreeRedis_Confirm_">IRedisClient.ClientCaching(Confirm)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ClientGetName">IRedisClient.ClientGetName()</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ClientGetRedir">IRedisClient.ClientGetRedir()</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ClientId">IRedisClient.ClientId()</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ClientKill_System_String_">IRedisClient.ClientKill(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ClientKill_System_String_System_Nullable_System_Int64__System_Nullable_FreeRedis_ClientType__System_String_System_String_System_Nullable_FreeRedis_Confirm__">IRedisClient.ClientKill(String, Nullable&lt;Int64&gt;, Nullable&lt;ClientType&gt;, String, String, Nullable&lt;Confirm&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ClientList_System_Nullable_FreeRedis_ClientType__">IRedisClient.ClientList(Nullable&lt;ClientType&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ClientPause_System_Int64_">IRedisClient.ClientPause(Int64)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ClientReply_FreeRedis_ClientReplyType_">IRedisClient.ClientReply(ClientReplyType)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ClientSetName_System_String_">IRedisClient.ClientSetName(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ClientTracking_System_Boolean_System_Nullable_System_Int64__System_String___System_Boolean_System_Boolean_System_Boolean_System_Boolean_">IRedisClient.ClientTracking(Boolean, Nullable&lt;Int64&gt;, String[], Boolean, Boolean, Boolean, Boolean)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ClientUnBlock_System_Int64_System_Nullable_FreeRedis_ClientUnBlockType__">IRedisClient.ClientUnBlock(Int64, Nullable&lt;ClientUnBlockType&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_Echo_System_String_">IRedisClient.Echo(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_Hello_System_String_System_String_System_String_System_String_">IRedisClient.Hello(String, String, String, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_Ping_System_String_">IRedisClient.Ping(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_Quit">IRedisClient.Quit()</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_Select_System_Int32_">IRedisClient.Select(Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_GeoAdd_System_String_FreeRedis_GeoMember___">IRedisClient.GeoAdd(String, GeoMember[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_GeoDist_System_String_System_String_System_String_FreeRedis_GeoUnit_">IRedisClient.GeoDist(String, String, String, GeoUnit)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_GeoHash_System_String_System_String_">IRedisClient.GeoHash(String, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_GeoHash_System_String_System_String___">IRedisClient.GeoHash(String, String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_GeoPos_System_String_System_String_">IRedisClient.GeoPos(String, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_GeoPos_System_String_System_String___">IRedisClient.GeoPos(String, String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_GeoRadius_System_String_System_Decimal_System_Decimal_System_Decimal_FreeRedis_GeoUnit_System_Boolean_System_Boolean_System_Boolean_System_Nullable_System_Int64__System_Nullable_FreeRedis_Collation__">IRedisClient.GeoRadius(String, Decimal, Decimal, Decimal, GeoUnit, Boolean, Boolean, Boolean, Nullable&lt;Int64&gt;, Nullable&lt;Collation&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_GeoRadiusStore_System_String_System_Decimal_System_Decimal_System_Decimal_FreeRedis_GeoUnit_System_Nullable_System_Int64__System_Nullable_FreeRedis_Collation__System_String_System_String_">IRedisClient.GeoRadiusStore(String, Decimal, Decimal, Decimal, GeoUnit, Nullable&lt;Int64&gt;, Nullable&lt;Collation&gt;, String, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_GeoRadiusByMember_System_String_System_String_System_Decimal_FreeRedis_GeoUnit_System_Boolean_System_Boolean_System_Boolean_System_Nullable_System_Int64__System_Nullable_FreeRedis_Collation__">IRedisClient.GeoRadiusByMember(String, String, Decimal, GeoUnit, Boolean, Boolean, Boolean, Nullable&lt;Int64&gt;, Nullable&lt;Collation&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_GeoRadiusByMemberStore_System_String_System_String_System_Decimal_FreeRedis_GeoUnit_System_Nullable_System_Int64__System_Nullable_FreeRedis_Collation__System_String_System_String_">IRedisClient.GeoRadiusByMemberStore(String, String, Decimal, GeoUnit, Nullable&lt;Int64&gt;, Nullable&lt;Collation&gt;, String, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_HDel_System_String_System_String___">IRedisClient.HDel(String, String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_HExists_System_String_System_String_">IRedisClient.HExists(String, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_HGet_System_String_System_String_">IRedisClient.HGet(String, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_HGet__1_System_String_System_String_">IRedisClient.HGet&lt;T&gt;(String, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_HGetAll_System_String_">IRedisClient.HGetAll(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_HGetAll__1_System_String_">IRedisClient.HGetAll&lt;T&gt;(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_HIncrBy_System_String_System_String_System_Int64_">IRedisClient.HIncrBy(String, String, Int64)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_HIncrByFloat_System_String_System_String_System_Decimal_">IRedisClient.HIncrByFloat(String, String, Decimal)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_HKeys_System_String_">IRedisClient.HKeys(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_HLen_System_String_">IRedisClient.HLen(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_HMGet_System_String_System_String___">IRedisClient.HMGet(String, String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_HMGet__1_System_String_System_String___">IRedisClient.HMGet&lt;T&gt;(String, String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_HMSet__1_System_String_System_String___0_System_Object___">IRedisClient.HMSet&lt;T&gt;(String, String, T, Object[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_HMSet__1_System_String_System_Collections_Generic_Dictionary_System_String___0__">IRedisClient.HMSet&lt;T&gt;(String, Dictionary&lt;String, T&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_HScan_System_String_System_Int64_System_String_System_Int64_">IRedisClient.HScan(String, Int64, String, Int64)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_HScan__1_System_String_System_Int64_System_String_System_Int64_">IRedisClient.HScan&lt;T&gt;(String, Int64, String, Int64)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_HScan_System_String_System_String_System_Int64_">IRedisClient.HScan(String, String, Int64)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_HScan__1_System_String_System_String_System_Int64_">IRedisClient.HScan&lt;T&gt;(String, String, Int64)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_HSet__1_System_String_System_String___0_System_Object___">IRedisClient.HSet&lt;T&gt;(String, String, T, Object[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_HSet__1_System_String_System_Collections_Generic_Dictionary_System_String___0__">IRedisClient.HSet&lt;T&gt;(String, Dictionary&lt;String, T&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_HSetNx__1_System_String_System_String___0_">IRedisClient.HSetNx&lt;T&gt;(String, String, T)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_HStrLen_System_String_System_String_">IRedisClient.HStrLen(String, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_HVals_System_String_">IRedisClient.HVals(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_HVals__1_System_String_">IRedisClient.HVals&lt;T&gt;(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_PfAdd_System_String_System_Object___">IRedisClient.PfAdd(String, Object[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_PfCount_System_String___">IRedisClient.PfCount(String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_PfMerge_System_String_System_String___">IRedisClient.PfMerge(String, String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_Del_System_String___">IRedisClient.Del(String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_Dump_System_String_">IRedisClient.Dump(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_Exists_System_String_">IRedisClient.Exists(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_Exists_System_String___">IRedisClient.Exists(String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_Expire_System_String_System_Int32_">IRedisClient.Expire(String, Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_Expire_System_String_System_TimeSpan_">IRedisClient.Expire(String, TimeSpan)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ExpireAt_System_String_System_DateTime_">IRedisClient.ExpireAt(String, DateTime)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_Keys_System_String_">IRedisClient.Keys(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_Migrate_System_String_System_Int32_System_String_System_Int32_System_Int64_System_Boolean_System_Boolean_System_String_System_String_System_String_System_String___">IRedisClient.Migrate(String, Int32, String, Int32, Int64, Boolean, Boolean, String, String, String, String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_Move_System_String_System_Int32_">IRedisClient.Move(String, Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ObjectRefCount_System_String_">IRedisClient.ObjectRefCount(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ObjectIdleTime_System_String_">IRedisClient.ObjectIdleTime(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ObjectEncoding_System_String_">IRedisClient.ObjectEncoding(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ObjectFreq_System_String_">IRedisClient.ObjectFreq(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_Persist_System_String_">IRedisClient.Persist(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_PExpire_System_String_System_Int32_">IRedisClient.PExpire(String, Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_PExpireAt_System_String_System_DateTime_">IRedisClient.PExpireAt(String, DateTime)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_PTtl_System_String_">IRedisClient.PTtl(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_RandomKey">IRedisClient.RandomKey()</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_Rename_System_String_System_String_">IRedisClient.Rename(String, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_RenameNx_System_String_System_String_">IRedisClient.RenameNx(String, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_Restore_System_String_System_Byte___">IRedisClient.Restore(String, Byte[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_Restore_System_String_System_Int32_System_Byte___System_Boolean_System_Boolean_System_Nullable_System_Int32__System_Nullable_System_Decimal__">IRedisClient.Restore(String, Int32, Byte[], Boolean, Boolean, Nullable&lt;Int32&gt;, Nullable&lt;Decimal&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_Scan_System_Int64_System_String_System_Int64_System_String_">IRedisClient.Scan(Int64, String, Int64, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_Scan_System_String_System_Int64_System_String_">IRedisClient.Scan(String, Int64, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_Sort_System_String_System_String_System_Int64_System_Int64_System_String___System_Nullable_FreeRedis_Collation__System_Boolean_">IRedisClient.Sort(String, String, Int64, Int64, String[], Nullable&lt;Collation&gt;, Boolean)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_SortStore_System_String_System_String_System_String_System_Int64_System_Int64_System_String___System_Nullable_FreeRedis_Collation__System_Boolean_">IRedisClient.SortStore(String, String, String, Int64, Int64, String[], Nullable&lt;Collation&gt;, Boolean)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_Touch_System_String___">IRedisClient.Touch(String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_Ttl_System_String_">IRedisClient.Ttl(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_Type_System_String_">IRedisClient.Type(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_UnLink_System_String___">IRedisClient.UnLink(String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_Wait_System_Int64_System_Int64_">IRedisClient.Wait(Int64, Int64)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_BLPop_System_String_System_Int32_">IRedisClient.BLPop(String, Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_BLPop__1_System_String_System_Int32_">IRedisClient.BLPop&lt;T&gt;(String, Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_BLPop_System_String___System_Int32_">IRedisClient.BLPop(String[], Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_BLPop__1_System_String___System_Int32_">IRedisClient.BLPop&lt;T&gt;(String[], Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_BRPop_System_String_System_Int32_">IRedisClient.BRPop(String, Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_BRPop__1_System_String_System_Int32_">IRedisClient.BRPop&lt;T&gt;(String, Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_BRPop_System_String___System_Int32_">IRedisClient.BRPop(String[], Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_BRPop__1_System_String___System_Int32_">IRedisClient.BRPop&lt;T&gt;(String[], Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_BRPopLPush_System_String_System_String_System_Int32_">IRedisClient.BRPopLPush(String, String, Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_BRPopLPush__1_System_String_System_String_System_Int32_">IRedisClient.BRPopLPush&lt;T&gt;(String, String, Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_LIndex_System_String_System_Int64_">IRedisClient.LIndex(String, Int64)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_LIndex__1_System_String_System_Int64_">IRedisClient.LIndex&lt;T&gt;(String, Int64)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_LInsert_System_String_FreeRedis_InsertDirection_System_Object_System_Object_">IRedisClient.LInsert(String, InsertDirection, Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_LLen_System_String_">IRedisClient.LLen(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_LPop_System_String_">IRedisClient.LPop(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_LPop__1_System_String_">IRedisClient.LPop&lt;T&gt;(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_LPos__1_System_String___0_System_Int32_">IRedisClient.LPos&lt;T&gt;(String, T, Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_LPos__1_System_String___0_System_Int32_System_Int32_System_Int32_">IRedisClient.LPos&lt;T&gt;(String, T, Int32, Int32, Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_LPush_System_String_System_Object___">IRedisClient.LPush(String, Object[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_LPushX_System_String_System_Object___">IRedisClient.LPushX(String, Object[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_LRange_System_String_System_Int64_System_Int64_">IRedisClient.LRange(String, Int64, Int64)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_LRange__1_System_String_System_Int64_System_Int64_">IRedisClient.LRange&lt;T&gt;(String, Int64, Int64)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_LRem__1_System_String_System_Int64___0_">IRedisClient.LRem&lt;T&gt;(String, Int64, T)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_LSet__1_System_String_System_Int64___0_">IRedisClient.LSet&lt;T&gt;(String, Int64, T)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_LTrim_System_String_System_Int64_System_Int64_">IRedisClient.LTrim(String, Int64, Int64)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_RPop_System_String_">IRedisClient.RPop(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_RPop__1_System_String_">IRedisClient.RPop&lt;T&gt;(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_RPopLPush_System_String_System_String_">IRedisClient.RPopLPush(String, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_RPopLPush__1_System_String_System_String_">IRedisClient.RPopLPush&lt;T&gt;(String, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_RPush_System_String_System_Object___">IRedisClient.RPush(String, Object[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_RPushX_System_String_System_Object___">IRedisClient.RPushX(String, Object[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_BfReserve_System_String_System_Decimal_System_Int64_System_Int32_System_Boolean_">IRedisClient.BfReserve(String, Decimal, Int64, Int32, Boolean)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_BfAdd_System_String_System_String_">IRedisClient.BfAdd(String, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_BfMAdd_System_String_System_String___">IRedisClient.BfMAdd(String, String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_BfInsert_System_String_System_String___System_Nullable_System_Int64__System_String_System_Int32_System_Boolean_System_Boolean_">IRedisClient.BfInsert(String, String[], Nullable&lt;Int64&gt;, String, Int32, Boolean, Boolean)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_BfExists_System_String_System_String_">IRedisClient.BfExists(String, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_BfMExists_System_String_System_String___">IRedisClient.BfMExists(String, String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_BfScanDump_System_String_System_Int64_">IRedisClient.BfScanDump(String, Int64)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_BfLoadChunk_System_String_System_Int64_System_Byte___">IRedisClient.BfLoadChunk(String, Int64, Byte[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_BfInfo_System_String_">IRedisClient.BfInfo(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_Lock_System_String_System_Int32_System_Boolean_">IRedisClient.Lock(String, Int32, Boolean)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_CmsInitByDim_System_String_System_Int64_System_Int64_">IRedisClient.CmsInitByDim(String, Int64, Int64)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_CmsInitByProb_System_String_System_Decimal_System_Decimal_">IRedisClient.CmsInitByProb(String, Decimal, Decimal)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_CmsIncrBy_System_String_System_String_System_Int64_">IRedisClient.CmsIncrBy(String, String, Int64)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_CmsIncrBy_System_String_System_Collections_Generic_Dictionary_System_String_System_Int64__">IRedisClient.CmsIncrBy(String, Dictionary&lt;String, Int64&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_CmsQuery_System_String_System_String___">IRedisClient.CmsQuery(String, String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_CmsMerge_System_String_System_Int64_System_String___System_Int64___">IRedisClient.CmsMerge(String, Int64, String[], Int64[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_CmsInfo_System_String_">IRedisClient.CmsInfo(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_CfReserve_System_String_System_Int64_System_Nullable_System_Int64__System_Nullable_System_Int64__System_Nullable_System_Int32__">IRedisClient.CfReserve(String, Int64, Nullable&lt;Int64&gt;, Nullable&lt;Int64&gt;, Nullable&lt;Int32&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_CfAdd_System_String_System_String_">IRedisClient.CfAdd(String, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_CfAddNx_System_String_System_String_">IRedisClient.CfAddNx(String, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_CfInsert_System_String_System_String___System_Nullable_System_Int64__System_Boolean_">IRedisClient.CfInsert(String, String[], Nullable&lt;Int64&gt;, Boolean)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_CfInsertNx_System_String_System_String___System_Nullable_System_Int64__System_Boolean_">IRedisClient.CfInsertNx(String, String[], Nullable&lt;Int64&gt;, Boolean)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_CfExists_System_String_System_String_">IRedisClient.CfExists(String, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_CfDel_System_String_System_String_">IRedisClient.CfDel(String, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_CfCount_System_String_System_String_">IRedisClient.CfCount(String, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_CfScanDump_System_String_System_Int64_">IRedisClient.CfScanDump(String, Int64)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_CfLoadChunk_System_String_System_Int64_System_Byte___">IRedisClient.CfLoadChunk(String, Int64, Byte[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_CfInfo_System_String_">IRedisClient.CfInfo(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_TopkReserve_System_String_System_Int64_System_Int64_System_Int64_System_Decimal_">IRedisClient.TopkReserve(String, Int64, Int64, Int64, Decimal)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_TopkAdd_System_String_System_String___">IRedisClient.TopkAdd(String, String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_TopkIncrBy_System_String_System_String_System_Int64_">IRedisClient.TopkIncrBy(String, String, Int64)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_TopkIncrBy_System_String_System_Collections_Generic_Dictionary_System_String_System_Int64__">IRedisClient.TopkIncrBy(String, Dictionary&lt;String, Int64&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_TopkQuery_System_String_System_String___">IRedisClient.TopkQuery(String, String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_TopkCount_System_String_System_String___">IRedisClient.TopkCount(String, String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_TopkList_System_String_">IRedisClient.TopkList(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_TopkInfo_System_String_">IRedisClient.TopkInfo(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_JsonGet_System_String_System_String_System_String_System_String_System_String___">IRedisClient.JsonGet(String, String, String, String, String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_JsonMGet_System_String___System_String_">IRedisClient.JsonMGet(String[], String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_JsonSet_System_String_System_String_System_String_System_Boolean_System_Boolean_">IRedisClient.JsonSet(String, String, String, Boolean, Boolean)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_JsonMSet_System_String___System_String___System_String___">IRedisClient.JsonMSet(String[], String[], String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_JsonMerge_System_String_System_String_System_String_">IRedisClient.JsonMerge(String, String, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_JsonDel_System_String_System_String_">IRedisClient.JsonDel(String, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_JsonArrInsert_System_String_System_String_System_Int64_System_Object___">IRedisClient.JsonArrInsert(String, String, Int64, Object[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_JsonArrAppend_System_String_System_String_System_Object___">IRedisClient.JsonArrAppend(String, String, Object[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_JsonArrIndex__1_System_String_System_String___0_">IRedisClient.JsonArrIndex&lt;T&gt;(String, String, T)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_JsonArrLen_System_String_System_String_">IRedisClient.JsonArrLen(String, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_JsonArrPop_System_String_System_String_System_Int32_">IRedisClient.JsonArrPop(String, String, Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_JsonArrTrim_System_String_System_String_System_Int32_System_Int32_">IRedisClient.JsonArrTrim(String, String, Int32, Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_JsonClear_System_String_System_String_">IRedisClient.JsonClear(String, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_JsonDebugMemory_System_String_System_String_">IRedisClient.JsonDebugMemory(String, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_JsonForget_System_String_System_String_">IRedisClient.JsonForget(String, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_JsonNumIncrBy_System_String_System_String_System_Double_">IRedisClient.JsonNumIncrBy(String, String, Double)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_JsonNumMultBy_System_String_System_String_System_Double_">IRedisClient.JsonNumMultBy(String, String, Double)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_JsonObjKeys_System_String_System_String_">IRedisClient.JsonObjKeys(String, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_JsonObjLen_System_String_System_String_">IRedisClient.JsonObjLen(String, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_JsonResp_System_String_System_String_">IRedisClient.JsonResp(String, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_JsonStrAppend_System_String_System_String_System_String_">IRedisClient.JsonStrAppend(String, String, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_JsonStrLen_System_String_System_String_">IRedisClient.JsonStrLen(String, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_JsonToggle_System_String_System_String_">IRedisClient.JsonToggle(String, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_JsonType_System_String_System_String_">IRedisClient.JsonType(String, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_SubscribeList_System_String_System_Action_System_String__">IRedisClient.SubscribeList(String, Action&lt;String&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_SubscribeList_System_String___System_Action_System_String_System_String__">IRedisClient.SubscribeList(String[], Action&lt;String, String&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_SubscribeListBroadcast_System_String_System_String_System_Action_System_String__">IRedisClient.SubscribeListBroadcast(String, String, Action&lt;String&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_SubscribeStream_System_String_System_Action_System_Collections_Generic_Dictionary_System_String_System_String___">IRedisClient.SubscribeStream(String, Action&lt;Dictionary&lt;String, String&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_Publish_System_String_System_String_">IRedisClient.Publish(String, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_Publish_System_String_System_Byte___">IRedisClient.Publish(String, Byte[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_PubSubChannels_System_String_">IRedisClient.PubSubChannels(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_PubSubNumSub_System_String_">IRedisClient.PubSubNumSub(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_PubSubNumSub_System_String___">IRedisClient.PubSubNumSub(String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_PubSubNumPat">IRedisClient.PubSubNumPat()</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_PUnSubscribe_System_String___">IRedisClient.PUnSubscribe(String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_UnSubscribe_System_String___">IRedisClient.UnSubscribe(String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ScriptExists_System_String_">IRedisClient.ScriptExists(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ScriptExists_System_String___">IRedisClient.ScriptExists(String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ScriptFlush">IRedisClient.ScriptFlush()</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ScriptKill">IRedisClient.ScriptKill()</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ScriptLoad_System_String_">IRedisClient.ScriptLoad(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_AclCat_System_String_">IRedisClient.AclCat(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_AclDelUser_System_String___">IRedisClient.AclDelUser(String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_AclGenPass_System_Int32_">IRedisClient.AclGenPass(Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_AclGetUser_System_String_">IRedisClient.AclGetUser(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_AclList">IRedisClient.AclList()</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_AclLoad">IRedisClient.AclLoad()</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_AclLog_System_Int64_">IRedisClient.AclLog(Int64)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_AclSave">IRedisClient.AclSave()</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_AclSetUser_System_String_System_String___">IRedisClient.AclSetUser(String, String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_AclUsers">IRedisClient.AclUsers()</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_AclWhoami">IRedisClient.AclWhoami()</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_BgRewriteAof">IRedisClient.BgRewriteAof()</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_BgSave_System_String_">IRedisClient.BgSave(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_Command">IRedisClient.Command()</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_CommandCount">IRedisClient.CommandCount()</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_CommandGetKeys_System_String___">IRedisClient.CommandGetKeys(String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_CommandInfo_System_String___">IRedisClient.CommandInfo(String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ConfigGet_System_String_">IRedisClient.ConfigGet(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ConfigResetStat">IRedisClient.ConfigResetStat()</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ConfigRewrite">IRedisClient.ConfigRewrite()</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ConfigSet__1_System_String___0_">IRedisClient.ConfigSet&lt;T&gt;(String, T)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_DbSize">IRedisClient.DbSize()</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_DebugObject_System_String_">IRedisClient.DebugObject(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_FlushAll_System_Boolean_">IRedisClient.FlushAll(Boolean)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_FlushDb_System_Boolean_">IRedisClient.FlushDb(Boolean)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_Info_System_String_">IRedisClient.Info(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_LastSave">IRedisClient.LastSave()</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_LatencyDoctor">IRedisClient.LatencyDoctor()</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_MemoryDoctor">IRedisClient.MemoryDoctor()</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_MemoryMallocStats">IRedisClient.MemoryMallocStats()</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_MemoryPurge">IRedisClient.MemoryPurge()</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_MemoryStats">IRedisClient.MemoryStats()</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_MemoryUsage_System_String_System_Int64_">IRedisClient.MemoryUsage(String, Int64)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ReplicaOf_System_String_System_Int32_">IRedisClient.ReplicaOf(String, Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_Role">IRedisClient.Role()</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_Save">IRedisClient.Save()</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_SlaveOf_System_String_System_Int32_">IRedisClient.SlaveOf(String, Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_SwapDb_System_Int32_System_Int32_">IRedisClient.SwapDb(Int32, Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_Time">IRedisClient.Time()</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_SAdd_System_String_System_Object___">IRedisClient.SAdd(String, Object[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_SCard_System_String_">IRedisClient.SCard(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_SDiff_System_String___">IRedisClient.SDiff(String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_SDiff__1_System_String___">IRedisClient.SDiff&lt;T&gt;(String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_SDiffStore_System_String_System_String___">IRedisClient.SDiffStore(String, String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_SInter_System_String___">IRedisClient.SInter(String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_SInter__1_System_String___">IRedisClient.SInter&lt;T&gt;(String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_SInterStore_System_String_System_String___">IRedisClient.SInterStore(String, String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_SIsMember__1_System_String___0_">IRedisClient.SIsMember&lt;T&gt;(String, T)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_SMembers_System_String_">IRedisClient.SMembers(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_SMembers__1_System_String_">IRedisClient.SMembers&lt;T&gt;(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_SMIsMember_System_String_System_Object___">IRedisClient.SMIsMember(String, Object[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_SMove__1_System_String_System_String___0_">IRedisClient.SMove&lt;T&gt;(String, String, T)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_SPop_System_String_">IRedisClient.SPop(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_SPop__1_System_String_">IRedisClient.SPop&lt;T&gt;(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_SPop_System_String_System_Int32_">IRedisClient.SPop(String, Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_SPop__1_System_String_System_Int32_">IRedisClient.SPop&lt;T&gt;(String, Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_SRandMember_System_String_">IRedisClient.SRandMember(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_SRandMember__1_System_String_">IRedisClient.SRandMember&lt;T&gt;(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_SRandMember_System_String_System_Int32_">IRedisClient.SRandMember(String, Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_SRandMember__1_System_String_System_Int32_">IRedisClient.SRandMember&lt;T&gt;(String, Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_SRem_System_String_System_Object___">IRedisClient.SRem(String, Object[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_SScan_System_String_System_Int64_System_String_System_Int64_">IRedisClient.SScan(String, Int64, String, Int64)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_SScan__1_System_String_System_Int64_System_String_System_Int64_">IRedisClient.SScan&lt;T&gt;(String, Int64, String, Int64)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_SScan_System_String_System_String_System_Int64_">IRedisClient.SScan(String, String, Int64)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_SScan__1_System_String_System_String_System_Int64_">IRedisClient.SScan&lt;T&gt;(String, String, Int64)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_SUnion_System_String___">IRedisClient.SUnion(String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_SUnion__1_System_String___">IRedisClient.SUnion&lt;T&gt;(String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_SUnionStore_System_String_System_String___">IRedisClient.SUnionStore(String, String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_BZPopMin_System_String_System_Int32_">IRedisClient.BZPopMin(String, Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_BZPopMin_System_String___System_Int32_">IRedisClient.BZPopMin(String[], Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_BZPopMax_System_String_System_Int32_">IRedisClient.BZPopMax(String, Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_BZPopMax_System_String___System_Int32_">IRedisClient.BZPopMax(String[], Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ZAdd_System_String_System_Decimal_System_String_System_Object___">IRedisClient.ZAdd(String, Decimal, String, Object[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ZAdd_System_String_FreeRedis_ZMember___System_Nullable_FreeRedis_ZAddThan__System_Boolean_">IRedisClient.ZAdd(String, ZMember[], Nullable&lt;ZAddThan&gt;, Boolean)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ZAddNx_System_String_System_Decimal_System_String_System_Object___">IRedisClient.ZAddNx(String, Decimal, String, Object[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ZAddNx_System_String_FreeRedis_ZMember___System_Nullable_FreeRedis_ZAddThan__System_Boolean_">IRedisClient.ZAddNx(String, ZMember[], Nullable&lt;ZAddThan&gt;, Boolean)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ZAddXx_System_String_System_Decimal_System_String_System_Object___">IRedisClient.ZAddXx(String, Decimal, String, Object[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ZAddXx_System_String_FreeRedis_ZMember___System_Nullable_FreeRedis_ZAddThan__System_Boolean_">IRedisClient.ZAddXx(String, ZMember[], Nullable&lt;ZAddThan&gt;, Boolean)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ZCard_System_String_">IRedisClient.ZCard(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ZCount_System_String_System_Decimal_System_Decimal_">IRedisClient.ZCount(String, Decimal, Decimal)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ZCount_System_String_System_String_System_String_">IRedisClient.ZCount(String, String, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ZIncrBy_System_String_System_Decimal_System_String_">IRedisClient.ZIncrBy(String, Decimal, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ZInterStore_System_String_System_String___System_Int32___System_Nullable_FreeRedis_ZAggregate__">IRedisClient.ZInterStore(String, String[], Int32[], Nullable&lt;ZAggregate&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ZLexCount_System_String_System_String_System_String_">IRedisClient.ZLexCount(String, String, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ZPopMin_System_String_">IRedisClient.ZPopMin(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ZPopMin_System_String_System_Int32_">IRedisClient.ZPopMin(String, Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ZPopMax_System_String_">IRedisClient.ZPopMax(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ZPopMax_System_String_System_Int32_">IRedisClient.ZPopMax(String, Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ZRange_System_String_System_Decimal_System_Decimal_">IRedisClient.ZRange(String, Decimal, Decimal)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ZRangeWithScores_System_String_System_Decimal_System_Decimal_">IRedisClient.ZRangeWithScores(String, Decimal, Decimal)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ZRangeByLex_System_String_System_String_System_String_System_Int32_System_Int32_">IRedisClient.ZRangeByLex(String, String, String, Int32, Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ZRangeByScore_System_String_System_Decimal_System_Decimal_System_Int32_System_Int32_">IRedisClient.ZRangeByScore(String, Decimal, Decimal, Int32, Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ZRangeByScore_System_String_System_String_System_String_System_Int32_System_Int32_">IRedisClient.ZRangeByScore(String, String, String, Int32, Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ZRangeByScoreWithScores_System_String_System_Decimal_System_Decimal_System_Int32_System_Int32_">IRedisClient.ZRangeByScoreWithScores(String, Decimal, Decimal, Int32, Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ZRangeByScoreWithScores_System_String_System_String_System_String_System_Int32_System_Int32_">IRedisClient.ZRangeByScoreWithScores(String, String, String, Int32, Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ZRank_System_String_System_String_">IRedisClient.ZRank(String, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ZRem_System_String_System_String___">IRedisClient.ZRem(String, String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ZRemRangeByLex_System_String_System_String_System_String_">IRedisClient.ZRemRangeByLex(String, String, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ZRemRangeByRank_System_String_System_Int64_System_Int64_">IRedisClient.ZRemRangeByRank(String, Int64, Int64)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ZRemRangeByScore_System_String_System_Decimal_System_Decimal_">IRedisClient.ZRemRangeByScore(String, Decimal, Decimal)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ZRemRangeByScore_System_String_System_String_System_String_">IRedisClient.ZRemRangeByScore(String, String, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ZRevRange_System_String_System_Decimal_System_Decimal_">IRedisClient.ZRevRange(String, Decimal, Decimal)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ZRevRangeWithScores_System_String_System_Decimal_System_Decimal_">IRedisClient.ZRevRangeWithScores(String, Decimal, Decimal)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ZRevRangeByLex_System_String_System_Decimal_System_Decimal_System_Int32_System_Int32_">IRedisClient.ZRevRangeByLex(String, Decimal, Decimal, Int32, Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ZRevRangeByLex_System_String_System_String_System_String_System_Int32_System_Int32_">IRedisClient.ZRevRangeByLex(String, String, String, Int32, Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ZRevRangeByScore_System_String_System_Decimal_System_Decimal_System_Int32_System_Int32_">IRedisClient.ZRevRangeByScore(String, Decimal, Decimal, Int32, Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ZRevRangeByScore_System_String_System_String_System_String_System_Int32_System_Int32_">IRedisClient.ZRevRangeByScore(String, String, String, Int32, Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ZRevRangeByScoreWithScores_System_String_System_Decimal_System_Decimal_System_Int32_System_Int32_">IRedisClient.ZRevRangeByScoreWithScores(String, Decimal, Decimal, Int32, Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ZRevRangeByScoreWithScores_System_String_System_String_System_String_System_Int32_System_Int32_">IRedisClient.ZRevRangeByScoreWithScores(String, String, String, Int32, Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ZRevRank_System_String_System_String_">IRedisClient.ZRevRank(String, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ZScore_System_String_System_String_">IRedisClient.ZScore(String, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ZUnionStore_System_String_System_String___System_Int32___System_Nullable_FreeRedis_ZAggregate__">IRedisClient.ZUnionStore(String, String[], Int32[], Nullable&lt;ZAggregate&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ZRandMember_System_String_System_Int32_System_Boolean_">IRedisClient.ZRandMember(String, Int32, Boolean)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ZRandMemberWithScores_System_String_System_Int32_System_Boolean_">IRedisClient.ZRandMemberWithScores(String, Int32, Boolean)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ZScan_System_String_System_Int64_System_String_System_Int64_">IRedisClient.ZScan(String, Int64, String, Int64)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_ZScan_System_String_System_String_System_Int64_">IRedisClient.ZScan(String, String, Int64)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_XAck_System_String_System_String_System_String___">IRedisClient.XAck(String, String, String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_XAdd__1_System_String_System_String___0_System_Object___">IRedisClient.XAdd&lt;T&gt;(String, String, T, Object[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_XAdd__1_System_String_System_Int64_System_String_System_String___0_System_Object___">IRedisClient.XAdd&lt;T&gt;(String, Int64, String, String, T, Object[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_XAdd__1_System_String_System_Collections_Generic_Dictionary_System_String___0__">IRedisClient.XAdd&lt;T&gt;(String, Dictionary&lt;String, T&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_XAdd__1_System_String_System_Int64_System_String_System_Collections_Generic_Dictionary_System_String___0__">IRedisClient.XAdd&lt;T&gt;(String, Int64, String, Dictionary&lt;String, T&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_XAutoClaim_System_String_System_String_System_String_System_Int64_System_String_System_Int64_">IRedisClient.XAutoClaim(String, String, String, Int64, String, Int64)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_XClaim_System_String_System_String_System_String_System_Int64_System_String___">IRedisClient.XClaim(String, String, String, Int64, String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_XClaim_System_String_System_String_System_String_System_Int64_System_String___System_Int64_System_Int64_System_Boolean_">IRedisClient.XClaim(String, String, String, Int64, String[], Int64, Int64, Boolean)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_XClaimJustId_System_String_System_String_System_String_System_Int64_System_String___">IRedisClient.XClaimJustId(String, String, String, Int64, String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_XClaimJustId_System_String_System_String_System_String_System_Int64_System_String___System_Int64_System_Int64_System_Boolean_">IRedisClient.XClaimJustId(String, String, String, Int64, String[], Int64, Int64, Boolean)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_XDel_System_String_System_String___">IRedisClient.XDel(String, String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_XGroupCreate_System_String_System_String_System_String_System_Boolean_">IRedisClient.XGroupCreate(String, String, String, Boolean)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_XGroupSetId_System_String_System_String_System_String_">IRedisClient.XGroupSetId(String, String, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_XGroupDestroy_System_String_System_String_">IRedisClient.XGroupDestroy(String, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_XGroupCreateConsumer_System_String_System_String_System_String_">IRedisClient.XGroupCreateConsumer(String, String, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_XGroupDelConsumer_System_String_System_String_System_String_">IRedisClient.XGroupDelConsumer(String, String, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_XInfoStream_System_String_">IRedisClient.XInfoStream(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_XInfoStreamFull_System_String_System_Int64_">IRedisClient.XInfoStreamFull(String, Int64)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_XInfoGroups_System_String_">IRedisClient.XInfoGroups(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_XInfoConsumers_System_String_System_String_">IRedisClient.XInfoConsumers(String, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_XLen_System_String_">IRedisClient.XLen(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_XPending_System_String_System_String_">IRedisClient.XPending(String, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_XPending_System_String_System_String_System_String_System_String_System_Int64_System_String_">IRedisClient.XPending(String, String, String, String, Int64, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_XRange_System_String_System_String_System_String_System_Int64_">IRedisClient.XRange(String, String, String, Int64)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_XRevRange_System_String_System_String_System_String_System_Int64_">IRedisClient.XRevRange(String, String, String, Int64)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_XRead_System_Int64_System_String_System_String_">IRedisClient.XRead(Int64, String, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_XRead_System_Int64_System_Int64_System_String_System_String_System_String___">IRedisClient.XRead(Int64, Int64, String, String, String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_XRead_System_Int64_System_Int64_System_Collections_Generic_Dictionary_System_String_System_String__">IRedisClient.XRead(Int64, Int64, Dictionary&lt;String, String&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_XReadGroup_System_String_System_String_System_Int64_System_String_System_String_">IRedisClient.XReadGroup(String, String, Int64, String, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_XReadGroup_System_String_System_String_System_Int64_System_Int64_System_Boolean_System_String_System_String_System_String___">IRedisClient.XReadGroup(String, String, Int64, Int64, Boolean, String, String, String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_XReadGroup_System_String_System_String_System_Int64_System_Int64_System_Boolean_System_Collections_Generic_Dictionary_System_String_System_String__">IRedisClient.XReadGroup(String, String, Int64, Int64, Boolean, Dictionary&lt;String, String&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_XTrim_System_String_System_Int64_">IRedisClient.XTrim(String, Int64)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_Append__1_System_String___0_">IRedisClient.Append&lt;T&gt;(String, T)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_BitCount_System_String_System_Int64_System_Int64_">IRedisClient.BitCount(String, Int64, Int64)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_BitField_System_String_FreeRedis_BitFieldAction___">IRedisClient.BitField(String, BitFieldAction[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_BitOp_FreeRedis_BitOpOperation_System_String_System_String___">IRedisClient.BitOp(BitOpOperation, String, String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_BitPos_System_String_System_Boolean_System_Nullable_System_Int64__System_Nullable_System_Int64__">IRedisClient.BitPos(String, Boolean, Nullable&lt;Int64&gt;, Nullable&lt;Int64&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_Decr_System_String_">IRedisClient.Decr(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_DecrBy_System_String_System_Int64_">IRedisClient.DecrBy(String, Int64)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_Get_System_String_">IRedisClient.Get(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_GetDel_System_String_">IRedisClient.GetDel(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_Get__1_System_String_">IRedisClient.Get&lt;T&gt;(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_GetDel__1_System_String_">IRedisClient.GetDel&lt;T&gt;(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_Get_System_String_Stream_System_Int32_">IRedisClient.Get(String, Stream, Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_GetDel_System_String_Stream_System_Int32_">IRedisClient.GetDel(String, Stream, Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_GetBit_System_String_System_Int64_">IRedisClient.GetBit(String, Int64)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_GetRange_System_String_System_Int64_System_Int64_">IRedisClient.GetRange(String, Int64, Int64)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_GetRange__1_System_String_System_Int64_System_Int64_">IRedisClient.GetRange&lt;T&gt;(String, Int64, Int64)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_GetSet__1_System_String___0_">IRedisClient.GetSet&lt;T&gt;(String, T)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_Incr_System_String_">IRedisClient.Incr(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_IncrBy_System_String_System_Int64_">IRedisClient.IncrBy(String, Int64)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_IncrByFloat_System_String_System_Decimal_">IRedisClient.IncrByFloat(String, Decimal)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_MGet_System_String___">IRedisClient.MGet(String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_MGet__1_System_String___">IRedisClient.MGet&lt;T&gt;(String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_MSet_System_String_System_Object_System_Object___">IRedisClient.MSet(String, Object, Object[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_MSet__1_System_Collections_Generic_Dictionary_System_String___0__">IRedisClient.MSet&lt;T&gt;(Dictionary&lt;String, T&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_MSetNx_System_String_System_Object_System_Object___">IRedisClient.MSetNx(String, Object, Object[])</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_MSetNx__1_System_Collections_Generic_Dictionary_System_String___0__">IRedisClient.MSetNx&lt;T&gt;(Dictionary&lt;String, T&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_PSetEx__1_System_String_System_Int64___0_">IRedisClient.PSetEx&lt;T&gt;(String, Int64, T)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_Set__1_System_String___0_System_Int32_">IRedisClient.Set&lt;T&gt;(String, T, Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_Set__1_System_String___0_System_TimeSpan_">IRedisClient.Set&lt;T&gt;(String, T, TimeSpan)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_Set__1_System_String___0_System_Boolean_">IRedisClient.Set&lt;T&gt;(String, T, Boolean)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_SetNx__1_System_String___0_System_Int32_">IRedisClient.SetNx&lt;T&gt;(String, T, Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_SetNx__1_System_String___0_System_TimeSpan_">IRedisClient.SetNx&lt;T&gt;(String, T, TimeSpan)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_SetXx__1_System_String___0_System_Int32_">IRedisClient.SetXx&lt;T&gt;(String, T, Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_SetXx__1_System_String___0_System_TimeSpan_">IRedisClient.SetXx&lt;T&gt;(String, T, TimeSpan)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_SetXx__1_System_String___0_System_Boolean_">IRedisClient.SetXx&lt;T&gt;(String, T, Boolean)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_Set__1_System_String___0_System_TimeSpan_System_Boolean_System_Boolean_System_Boolean_System_Boolean_">IRedisClient.Set&lt;T&gt;(String, T, TimeSpan, Boolean, Boolean, Boolean, Boolean)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_SetBit_System_String_System_Int64_System_Boolean_">IRedisClient.SetBit(String, Int64, Boolean)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_SetEx__1_System_String_System_Int32___0_">IRedisClient.SetEx&lt;T&gt;(String, Int32, T)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_SetNx__1_System_String___0_">IRedisClient.SetNx&lt;T&gt;(String, T)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_SetRange__1_System_String_System_Int64___0_">IRedisClient.SetRange&lt;T&gt;(String, Int64, T)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_StrLen_System_String_">IRedisClient.StrLen(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="FreeRedis.IRedisClient.html#FreeRedis_IRedisClient_Call_FreeRedis_CommandPacket_">IRedisClient.Call(CommandPacket)</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="FreeRedis.AliyunTair.html">FreeRedis.AliyunTair</a></h6>
+  <h6><strong>Assembly</strong>: cs.temp.dll.dll</h6>
+  <h5 id="FreeRedis_AliyunTair_ITairRedisClient_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public interface ITairRedisClient : IRedisClient</code></pre>
+  </div>
+  <h3 id="methods">Methods
+  </h3>
+  
+  
+  <a id="FreeRedis_AliyunTair_ITairRedisClient_ExHDel_" data-uid="FreeRedis.AliyunTair.ITairRedisClient.ExHDel*"></a>
+  <h4 id="FreeRedis_AliyunTair_ITairRedisClient_ExHDel_System_String_System_String___" data-uid="FreeRedis.AliyunTair.ITairRedisClient.ExHDel(System.String,System.String[])">ExHDel(String, String[])</h4>
+  <div class="markdown level1 summary"><p>删除key指定的TairHash中的一个field，如果TairHash不存在或者field不存在则返回0 ，成功删除返回1。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">long ExHDel(string key, params string[] fields)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td><p>TairHash的key，用于指定作为命令调用对象的TairHash。</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span>[]</td>
+        <td><span class="parametername">fields</span></td>
+        <td><p>需要删除的field数组</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int64</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="FreeRedis_AliyunTair_ITairRedisClient_ExHExists_" data-uid="FreeRedis.AliyunTair.ITairRedisClient.ExHExists*"></a>
+  <h4 id="FreeRedis_AliyunTair_ITairRedisClient_ExHExists_System_String_System_String_" data-uid="FreeRedis.AliyunTair.ITairRedisClient.ExHExists(System.String,System.String)">ExHExists(String, String)</h4>
+  <div class="markdown level1 summary"><p>查询key指定的TairHash中是否存在对应的field</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">bool ExHExists(string key, string field)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td><p>TairHash的key，用于指定作为命令调用对象的TairHash</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">field</span></td>
+        <td><p>TairHash中的一个元素，一个TairHash key可以有多个field</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="FreeRedis_AliyunTair_ITairRedisClient_ExHExpireTime_" data-uid="FreeRedis.AliyunTair.ITairRedisClient.ExHExpireTime*"></a>
+  <h4 id="FreeRedis_AliyunTair_ITairRedisClient_ExHExpireTime_System_String_System_String_System_DateTime_System_Boolean_" data-uid="FreeRedis.AliyunTair.ITairRedisClient.ExHExpireTime(System.String,System.String,System.DateTime,System.Boolean)">ExHExpireTime(String, String, DateTime, Boolean)</h4>
+  <div class="markdown level1 summary"><p>在指定的key的TairHash中为一个field设置绝对时间</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">bool ExHExpireTime(string key, string field, DateTime expireTime, bool isMillisecond = false)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td><p>TairHash的key，用于指定作为命令调用对象的TairHash</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">field</span></td>
+        <td><p>TairHash中的一个元素，一个TairHash key可以有多个field</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.DateTime</span></td>
+        <td><span class="parametername">expireTime</span></td>
+        <td><p>绝对时间</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">isMillisecond</span></td>
+        <td><p>是否精确到毫秒  默认为false:精确到秒  true：精确到毫秒</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="FreeRedis_AliyunTair_ITairRedisClient_ExHExpireTime_" data-uid="FreeRedis.AliyunTair.ITairRedisClient.ExHExpireTime*"></a>
+  <h4 id="FreeRedis_AliyunTair_ITairRedisClient_ExHExpireTime_System_String_System_String_System_TimeSpan_System_Boolean_" data-uid="FreeRedis.AliyunTair.ITairRedisClient.ExHExpireTime(System.String,System.String,System.TimeSpan,System.Boolean)">ExHExpireTime(String, String, TimeSpan, Boolean)</h4>
+  <div class="markdown level1 summary"><p>在指定的key的TairHash中为一个field设置相对过期时间</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">bool ExHExpireTime(string key, string field, TimeSpan expireTimeSpan, bool isMillisecond = false)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td><p>TairHash的key，用于指定作为命令调用对象的TairHash</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">field</span></td>
+        <td><p>TairHash中的一个元素，一个TairHash key可以有多个field</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.TimeSpan</span></td>
+        <td><span class="parametername">expireTimeSpan</span></td>
+        <td><p>过期时间</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">isMillisecond</span></td>
+        <td><p>是否精确到毫秒  默认为false:精确到秒  true：精确到毫秒</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="FreeRedis_AliyunTair_ITairRedisClient_ExHGet_" data-uid="FreeRedis.AliyunTair.ITairRedisClient.ExHGet*"></a>
+  <h4 id="FreeRedis_AliyunTair_ITairRedisClient_ExHGet_System_String_System_String_" data-uid="FreeRedis.AliyunTair.ITairRedisClient.ExHGet(System.String,System.String)">ExHGet(String, String)</h4>
+  <div class="markdown level1 summary"><p>获取key指定的TairHash中一个field的值，如果TairHash不存在或者field不存在，则返回nil</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">string ExHGet(string key, string field)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td><p>TairHash的key，用于指定作为命令调用对象的TairHash。</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">field</span></td>
+        <td><p>TairHash中的一个元素，一个TairHash key可以有多个field。</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="FreeRedis_AliyunTair_ITairRedisClient_ExHGet_" data-uid="FreeRedis.AliyunTair.ITairRedisClient.ExHGet*"></a>
+  <h4 id="FreeRedis_AliyunTair_ITairRedisClient_ExHGet__1_System_String_System_String_" data-uid="FreeRedis.AliyunTair.ITairRedisClient.ExHGet``1(System.String,System.String)">ExHGet&lt;T&gt;(String, String)</h4>
+  <div class="markdown level1 summary"><p>获取key指定的TairHash中一个field的值，如果TairHash不存在或者field不存在，则返回nil。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">T ExHGet&lt;T&gt;(string key, string field)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">field</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">T</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="FreeRedis_AliyunTair_ITairRedisClient_ExHGetAll_" data-uid="FreeRedis.AliyunTair.ITairRedisClient.ExHGetAll*"></a>
+  <h4 id="FreeRedis_AliyunTair_ITairRedisClient_ExHGetAll_System_String_" data-uid="FreeRedis.AliyunTair.ITairRedisClient.ExHGetAll(System.String)">ExHGetAll(String)</h4>
+  <div class="markdown level1 summary"><p>获取key指定的TairHash中所有field及其value。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Dictionary&lt;string, string&gt; ExHGetAll(string key)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td><p>TairHash的key，用于指定作为命令调用对象的TairHash。</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.Dictionary</span>&lt;<span class="xref">System.String</span>, <span class="xref">System.String</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="FreeRedis_AliyunTair_ITairRedisClient_ExHGetAll_" data-uid="FreeRedis.AliyunTair.ITairRedisClient.ExHGetAll*"></a>
+  <h4 id="FreeRedis_AliyunTair_ITairRedisClient_ExHGetAll__1_System_String_" data-uid="FreeRedis.AliyunTair.ITairRedisClient.ExHGetAll``1(System.String)">ExHGetAll&lt;T&gt;(String)</h4>
+  <div class="markdown level1 summary"><p>获取key指定的TairHash中所有field及其value。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Dictionary&lt;string, T&gt; ExHGetAll&lt;T&gt;(string key)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td><p>TairHash的key，用于指定作为命令调用对象的TairHash。</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.Dictionary</span>&lt;<span class="xref">System.String</span>, T&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="FreeRedis_AliyunTair_ITairRedisClient_ExHIncrBy_" data-uid="FreeRedis.AliyunTair.ITairRedisClient.ExHIncrBy*"></a>
+  <h4 id="FreeRedis_AliyunTair_ITairRedisClient_ExHIncrBy_System_String_System_String_System_Int64_System_Nullable_System_TimeSpan__" data-uid="FreeRedis.AliyunTair.ITairRedisClient.ExHIncrBy(System.String,System.String,System.Int64,System.Nullable{System.TimeSpan})">ExHIncrBy(String, String, Int64, Nullable&lt;TimeSpan&gt;)</h4>
+  <div class="markdown level1 summary"><p>将key指定的TairHash中一个field的value增加num，num为一个整数。如果TairHash不存在则自动新创建一个，如果指定的field不存在，则在加之前插入该field并将其值设置为0</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">long ExHIncrBy(string key, string field, long num, TimeSpan? timeout = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td><p>TairHash的key，用于指定作为命令调用对象的TairHash</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">field</span></td>
+        <td><p>TairHash中的一个元素，一个TairHash key可以有多个field</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Int64</span></td>
+        <td><span class="parametername">num</span></td>
+        <td><p>需要为field的value增加的整数值</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.TimeSpan</span>&gt;</td>
+        <td><span class="parametername">timeout</span></td>
+        <td><p>相对过期过期时间,单位为秒,不传此参数表示不过期</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int64</span></td>
+        <td><p>成功会返回：与num相加后value的值</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="FreeRedis_AliyunTair_ITairRedisClient_ExHIncrByFloat_" data-uid="FreeRedis.AliyunTair.ITairRedisClient.ExHIncrByFloat*"></a>
+  <h4 id="FreeRedis_AliyunTair_ITairRedisClient_ExHIncrByFloat_System_String_System_String_System_Decimal_System_Nullable_System_TimeSpan__" data-uid="FreeRedis.AliyunTair.ITairRedisClient.ExHIncrByFloat(System.String,System.String,System.Decimal,System.Nullable{System.TimeSpan})">ExHIncrByFloat(String, String, Decimal, Nullable&lt;TimeSpan&gt;)</h4>
+  <div class="markdown level1 summary"><p>将key指定的TairHash中一个field的value增加num，num为一个浮点数。如果TairHash不存在则自动新创建一个，如果指定的field不存在，则在加之前插入该field并将其值设置为0。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">decimal ExHIncrByFloat(string key, string field, decimal num, TimeSpan? timeout = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td><p>TairHash的key，用于指定作为命令调用对象的TairHash</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">field</span></td>
+        <td><p>TairHash中的一个元素，一个TairHash key可以有多个field</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Decimal</span></td>
+        <td><span class="parametername">num</span></td>
+        <td><p>需要为field的value增加的整数值</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.TimeSpan</span>&gt;</td>
+        <td><span class="parametername">timeout</span></td>
+        <td><p>相对过期过期时间,单位为秒,不传此参数表示不过期</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Decimal</span></td>
+        <td><p>成功会返回：与num相加后value的值</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="FreeRedis_AliyunTair_ITairRedisClient_ExHKeys_" data-uid="FreeRedis.AliyunTair.ITairRedisClient.ExHKeys*"></a>
+  <h4 id="FreeRedis_AliyunTair_ITairRedisClient_ExHKeys_System_String_" data-uid="FreeRedis.AliyunTair.ITairRedisClient.ExHKeys(System.String)">ExHKeys(String)</h4>
+  <div class="markdown level1 summary"><p>获取key指定的TairHash中所有的field。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">string[] ExHKeys(string key)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td><p>TairHash的key，用于指定作为命令调用对象的TairHash。</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span>[]</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="FreeRedis_AliyunTair_ITairRedisClient_ExHLen_" data-uid="FreeRedis.AliyunTair.ITairRedisClient.ExHLen*"></a>
+  <h4 id="FreeRedis_AliyunTair_ITairRedisClient_ExHLen_System_String_System_Boolean_" data-uid="FreeRedis.AliyunTair.ITairRedisClient.ExHLen(System.String,System.Boolean)">ExHLen(String, Boolean)</h4>
+  <div class="markdown level1 summary"><p>获取key指定的TairHash中field个数，该命令不会触发对过期field的被动淘汰，也不会将其过滤掉，所以结果中可能包含已经过期但还未被删除的field。如果只想返回当前没有过期的field个数，可以在命令中设置NOEXP选项。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">long ExHLen(string key, bool noExpire = false)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">noExpire</span></td>
+        <td><p>只返回当前未过期的field的个数</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int64</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="FreeRedis_AliyunTair_ITairRedisClient_ExHMGet_" data-uid="FreeRedis.AliyunTair.ITairRedisClient.ExHMGet*"></a>
+  <h4 id="FreeRedis_AliyunTair_ITairRedisClient_ExHMGet_System_String_System_String___" data-uid="FreeRedis.AliyunTair.ITairRedisClient.ExHMGet(System.String,System.String[])">ExHMGet(String, String[])</h4>
+  <div class="markdown level1 summary"><p>同时获取key指定的TairHash多个field的值，如果TairHash不存在或者field不存在，则返回nil。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">string[] ExHMGet(string key, params string[] fields)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td><p>TairHash的key，用于指定作为命令调用对象的TairHash。</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span>[]</td>
+        <td><span class="parametername">fields</span></td>
+        <td><p>多个field数组</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span>[]</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="FreeRedis_AliyunTair_ITairRedisClient_ExHMGet_" data-uid="FreeRedis.AliyunTair.ITairRedisClient.ExHMGet*"></a>
+  <h4 id="FreeRedis_AliyunTair_ITairRedisClient_ExHMGet__1_System_String_System_String___" data-uid="FreeRedis.AliyunTair.ITairRedisClient.ExHMGet``1(System.String,System.String[])">ExHMGet&lt;T&gt;(String, String[])</h4>
+  <div class="markdown level1 summary"><p>同时获取key指定的TairHash多个field的值，如果TairHash不存在或者field不存在，则返回nil。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">T[] ExHMGet&lt;T&gt;(string key, params string[] fields)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td><p>TairHash的key，用于指定作为命令调用对象的TairHash。</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span>[]</td>
+        <td><span class="parametername">fields</span></td>
+        <td><p>多个field数组</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>T[]</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="FreeRedis_AliyunTair_ITairRedisClient_ExHMSet_" data-uid="FreeRedis.AliyunTair.ITairRedisClient.ExHMSet*"></a>
+  <h4 id="FreeRedis_AliyunTair_ITairRedisClient_ExHMSet__1_System_String_System_Collections_Generic_Dictionary_System_String___0__" data-uid="FreeRedis.AliyunTair.ITairRedisClient.ExHMSet``1(System.String,System.Collections.Generic.Dictionary{System.String,``0})">ExHMSet&lt;T&gt;(String, Dictionary&lt;String, T&gt;)</h4>
+  <div class="markdown level1 summary"><p>同时向key指定的TairHash中插入多个field，如果TairHash不存在则自动创建一个，如果field已经存在则覆盖其值。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">bool ExHMSet&lt;T&gt;(string key, Dictionary&lt;string, T&gt; keyValues)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td><p>TairHash的key，用于指定作为命令调用对象的TairHash。</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.Dictionary</span>&lt;<span class="xref">System.String</span>, T&gt;</td>
+        <td><span class="parametername">keyValues</span></td>
+        <td><p>field,valude字典</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="FreeRedis_AliyunTair_ITairRedisClient_ExHMSet_" data-uid="FreeRedis.AliyunTair.ITairRedisClient.ExHMSet*"></a>
+  <h4 id="FreeRedis_AliyunTair_ITairRedisClient_ExHMSet__1_System_String_System_String___0_System_Object___" data-uid="FreeRedis.AliyunTair.ITairRedisClient.ExHMSet``1(System.String,System.String,``0,System.Object[])">ExHMSet&lt;T&gt;(String, String, T, Object[])</h4>
+  <div class="markdown level1 summary"><p>同时向key指定的TairHash中插入多个field，如果TairHash不存在则自动创建一个，如果field已经存在则覆盖其值。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">bool ExHMSet&lt;T&gt;(string key, string field, T value, params object[] fieldValues)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td><p>TairHash的key，用于指定作为命令调用对象的TairHash。</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">field</span></td>
+        <td><p>TairHash中的一个元素，一个TairHash key可以有多个field。</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">T</span></td>
+        <td><span class="parametername">value</span></td>
+        <td><p>field对应的值，一个field只能有一个value。</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Object</span>[]</td>
+        <td><span class="parametername">fieldValues</span></td>
+        <td><p>field,valude数组 例如： field1,value1,field2,value2......</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="FreeRedis_AliyunTair_ITairRedisClient_ExHPTtl_" data-uid="FreeRedis.AliyunTair.ITairRedisClient.ExHPTtl*"></a>
+  <h4 id="FreeRedis_AliyunTair_ITairRedisClient_ExHPTtl_System_String_System_String_" data-uid="FreeRedis.AliyunTair.ITairRedisClient.ExHPTtl(System.String,System.String)">ExHPTtl(String, String)</h4>
+  <div class="markdown level1 summary"><p>查看key指定的TairHash中一个field的剩余过期时间，结果精确到毫秒。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">long ExHPTtl(string key, string field)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">field</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int64</span></td>
+        <td><p>field存在但是没有设置过期时间：-1。</p>
+<p>key不存在：-2。</p>
+<p>field不存在：-3。</p> 
+<p>field存在且设置了过期时间：过期时间，单位为秒。</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="FreeRedis_AliyunTair_ITairRedisClient_ExHScan_" data-uid="FreeRedis.AliyunTair.ITairRedisClient.ExHScan*"></a>
+  <h4 id="FreeRedis_AliyunTair_ITairRedisClient_ExHScan_System_String_System_Int64_System_String_System_Int64_" data-uid="FreeRedis.AliyunTair.ITairRedisClient.ExHScan(System.String,System.Int64,System.String,System.Int64)">ExHScan(String, Int64, String, Int64)</h4>
+  <div class="markdown level1 summary"><p>扫描Key指定的TairHash</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">ScanResult&lt;KeyValuePair&lt;string, string&gt;&gt; ExHScan(string key, long cursor, string pattern, long count)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td><p>TairHash的Key，用于指定作为命令调用对象的TairHash。</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Int64</span></td>
+        <td><span class="parametername">cursor</span></td>
+        <td><p>指定本次扫描的游标</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">pattern</span></td>
+        <td><p>用于过滤扫描结果，根据MATCH指定的pattern对待扫描的Key进行正则过滤</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Int64</span></td>
+        <td><span class="parametername">count</span></td>
+        <td><p>用于规定单次扫描field的个数（默认为10）。</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="FreeRedis.ScanResult-1.html">ScanResult</a>&lt;<span class="xref">System.Collections.Generic.KeyValuePair</span>&lt;<span class="xref">System.String</span>, <span class="xref">System.String</span>&gt;&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="FreeRedis_AliyunTair_ITairRedisClient_ExHSet_" data-uid="FreeRedis.AliyunTair.ITairRedisClient.ExHSet*"></a>
+  <h4 id="FreeRedis_AliyunTair_ITairRedisClient_ExHSet__1_System_String_System_String___0_System_Nullable_System_TimeSpan__" data-uid="FreeRedis.AliyunTair.ITairRedisClient.ExHSet``1(System.String,System.String,``0,System.Nullable{System.TimeSpan})">ExHSet&lt;T&gt;(String, String, T, Nullable&lt;TimeSpan&gt;)</h4>
+  <div class="markdown level1 summary"><p>向Key指定的TairHash中插入一个field。如果TairHash不存在则自动创建一个，如果field已经存在则覆盖其值。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">long ExHSet&lt;T&gt;(string key, string field, T value, TimeSpan? timeout = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td><p>TairHash的key，用于指定作为命令调用对象的TairHash。</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">field</span></td>
+        <td><p>TairHash中的一个元素，一个TairHash key可以有多个field。</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">T</span></td>
+        <td><span class="parametername">value</span></td>
+        <td><p>field对应的值，一个field只能有一个value。</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.TimeSpan</span>&gt;</td>
+        <td><span class="parametername">timeout</span></td>
+        <td><p>相对过期过期时间,单位为秒,不传此参数表示不过期</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int64</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="FreeRedis_AliyunTair_ITairRedisClient_ExHStrLen_" data-uid="FreeRedis.AliyunTair.ITairRedisClient.ExHStrLen*"></a>
+  <h4 id="FreeRedis_AliyunTair_ITairRedisClient_ExHStrLen_System_String_System_String_" data-uid="FreeRedis.AliyunTair.ITairRedisClient.ExHStrLen(System.String,System.String)">ExHStrLen(String, String)</h4>
+  <div class="markdown level1 summary"><p>获取key指定的TairHash中一个field对应的value的长度。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">long ExHStrLen(string key, string field)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td><p>TairHash的key，用于指定作为命令调用对象的TairHash</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">field</span></td>
+        <td><p>TairHash中的一个元素，一个TairHash key可以有多个field</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int64</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="FreeRedis_AliyunTair_ITairRedisClient_ExHTtl_" data-uid="FreeRedis.AliyunTair.ITairRedisClient.ExHTtl*"></a>
+  <h4 id="FreeRedis_AliyunTair_ITairRedisClient_ExHTtl_System_String_System_String_" data-uid="FreeRedis.AliyunTair.ITairRedisClient.ExHTtl(System.String,System.String)">ExHTtl(String, String)</h4>
+  <div class="markdown level1 summary"><p>查看key指定的TairHash中一个field的过期时间，结果精确到秒。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">long ExHTtl(string key, string field)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">field</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int64</span></td>
+        <td><p>field存在但是没有设置过期时间：-1。</p>
+<p>key不存在：-2。</p>
+<p>field不存在：-3。</p>
+<p>field存在且设置了过期时间：过期时间，单位为秒。</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="FreeRedis_AliyunTair_ITairRedisClient_ExHVals_" data-uid="FreeRedis.AliyunTair.ITairRedisClient.ExHVals*"></a>
+  <h4 id="FreeRedis_AliyunTair_ITairRedisClient_ExHVals_System_String_" data-uid="FreeRedis.AliyunTair.ITairRedisClient.ExHVals(System.String)">ExHVals(String)</h4>
+  <div class="markdown level1 summary"><p>获取key指定的TairHash中所有field的值。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">string[] ExHVals(string key)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td><p>TairHash的key，用于指定作为命令调用对象的TairHash。</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span>[]</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="FreeRedis_AliyunTair_ITairRedisClient_ExHVals_" data-uid="FreeRedis.AliyunTair.ITairRedisClient.ExHVals*"></a>
+  <h4 id="FreeRedis_AliyunTair_ITairRedisClient_ExHVals__1_System_String_" data-uid="FreeRedis.AliyunTair.ITairRedisClient.ExHVals``1(System.String)">ExHVals&lt;T&gt;(String)</h4>
+  <div class="markdown level1 summary"><p>获取key指定的TairHash中所有field的值。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">T[] ExHVals&lt;T&gt;(string key)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td><p>TairHash的key，用于指定作为命令调用对象的TairHash。</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>T[]</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In This Article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../styles/main.js"></script>
+  </body>
+</html>

@@ -73,6 +73,662 @@ references:
   commentId: F:FreeRedis.AclGetUserResult.selectors
   fullName: FreeRedis.AclGetUserResult.selectors
   nameWithType: AclGetUserResult.selectors
+- uid: FreeRedis.AliyunTair
+  name: FreeRedis.AliyunTair
+  href: docs/api/FreeRedis.AliyunTair.html
+  commentId: N:FreeRedis.AliyunTair
+  fullName: FreeRedis.AliyunTair
+  nameWithType: FreeRedis.AliyunTair
+- uid: FreeRedis.AliyunTair.ITairRedisClient
+  name: ITairRedisClient
+  href: docs/api/FreeRedis.AliyunTair.ITairRedisClient.html
+  commentId: T:FreeRedis.AliyunTair.ITairRedisClient
+  fullName: FreeRedis.AliyunTair.ITairRedisClient
+  nameWithType: ITairRedisClient
+- uid: FreeRedis.AliyunTair.ITairRedisClient.ExHDel(System.String,System.String[])
+  name: ExHDel(String, String[])
+  href: docs/api/FreeRedis.AliyunTair.ITairRedisClient.html#FreeRedis_AliyunTair_ITairRedisClient_ExHDel_System_String_System_String___
+  commentId: M:FreeRedis.AliyunTair.ITairRedisClient.ExHDel(System.String,System.String[])
+  name.vb: ExHDel(String, String())
+  fullName: FreeRedis.AliyunTair.ITairRedisClient.ExHDel(System.String, System.String[])
+  fullName.vb: FreeRedis.AliyunTair.ITairRedisClient.ExHDel(System.String, System.String())
+  nameWithType: ITairRedisClient.ExHDel(String, String[])
+  nameWithType.vb: ITairRedisClient.ExHDel(String, String())
+- uid: FreeRedis.AliyunTair.ITairRedisClient.ExHDel*
+  name: ExHDel
+  href: docs/api/FreeRedis.AliyunTair.ITairRedisClient.html#FreeRedis_AliyunTair_ITairRedisClient_ExHDel_
+  commentId: Overload:FreeRedis.AliyunTair.ITairRedisClient.ExHDel
+  isSpec: "True"
+  fullName: FreeRedis.AliyunTair.ITairRedisClient.ExHDel
+  nameWithType: ITairRedisClient.ExHDel
+- uid: FreeRedis.AliyunTair.ITairRedisClient.ExHExists(System.String,System.String)
+  name: ExHExists(String, String)
+  href: docs/api/FreeRedis.AliyunTair.ITairRedisClient.html#FreeRedis_AliyunTair_ITairRedisClient_ExHExists_System_String_System_String_
+  commentId: M:FreeRedis.AliyunTair.ITairRedisClient.ExHExists(System.String,System.String)
+  fullName: FreeRedis.AliyunTair.ITairRedisClient.ExHExists(System.String, System.String)
+  nameWithType: ITairRedisClient.ExHExists(String, String)
+- uid: FreeRedis.AliyunTair.ITairRedisClient.ExHExists*
+  name: ExHExists
+  href: docs/api/FreeRedis.AliyunTair.ITairRedisClient.html#FreeRedis_AliyunTair_ITairRedisClient_ExHExists_
+  commentId: Overload:FreeRedis.AliyunTair.ITairRedisClient.ExHExists
+  isSpec: "True"
+  fullName: FreeRedis.AliyunTair.ITairRedisClient.ExHExists
+  nameWithType: ITairRedisClient.ExHExists
+- uid: FreeRedis.AliyunTair.ITairRedisClient.ExHExpireTime(System.String,System.String,System.DateTime,System.Boolean)
+  name: ExHExpireTime(String, String, DateTime, Boolean)
+  href: docs/api/FreeRedis.AliyunTair.ITairRedisClient.html#FreeRedis_AliyunTair_ITairRedisClient_ExHExpireTime_System_String_System_String_System_DateTime_System_Boolean_
+  commentId: M:FreeRedis.AliyunTair.ITairRedisClient.ExHExpireTime(System.String,System.String,System.DateTime,System.Boolean)
+  fullName: FreeRedis.AliyunTair.ITairRedisClient.ExHExpireTime(System.String, System.String, System.DateTime, System.Boolean)
+  nameWithType: ITairRedisClient.ExHExpireTime(String, String, DateTime, Boolean)
+- uid: FreeRedis.AliyunTair.ITairRedisClient.ExHExpireTime(System.String,System.String,System.TimeSpan,System.Boolean)
+  name: ExHExpireTime(String, String, TimeSpan, Boolean)
+  href: docs/api/FreeRedis.AliyunTair.ITairRedisClient.html#FreeRedis_AliyunTair_ITairRedisClient_ExHExpireTime_System_String_System_String_System_TimeSpan_System_Boolean_
+  commentId: M:FreeRedis.AliyunTair.ITairRedisClient.ExHExpireTime(System.String,System.String,System.TimeSpan,System.Boolean)
+  fullName: FreeRedis.AliyunTair.ITairRedisClient.ExHExpireTime(System.String, System.String, System.TimeSpan, System.Boolean)
+  nameWithType: ITairRedisClient.ExHExpireTime(String, String, TimeSpan, Boolean)
+- uid: FreeRedis.AliyunTair.ITairRedisClient.ExHExpireTime*
+  name: ExHExpireTime
+  href: docs/api/FreeRedis.AliyunTair.ITairRedisClient.html#FreeRedis_AliyunTair_ITairRedisClient_ExHExpireTime_
+  commentId: Overload:FreeRedis.AliyunTair.ITairRedisClient.ExHExpireTime
+  isSpec: "True"
+  fullName: FreeRedis.AliyunTair.ITairRedisClient.ExHExpireTime
+  nameWithType: ITairRedisClient.ExHExpireTime
+- uid: FreeRedis.AliyunTair.ITairRedisClient.ExHGet(System.String,System.String)
+  name: ExHGet(String, String)
+  href: docs/api/FreeRedis.AliyunTair.ITairRedisClient.html#FreeRedis_AliyunTair_ITairRedisClient_ExHGet_System_String_System_String_
+  commentId: M:FreeRedis.AliyunTair.ITairRedisClient.ExHGet(System.String,System.String)
+  fullName: FreeRedis.AliyunTair.ITairRedisClient.ExHGet(System.String, System.String)
+  nameWithType: ITairRedisClient.ExHGet(String, String)
+- uid: FreeRedis.AliyunTair.ITairRedisClient.ExHGet*
+  name: ExHGet
+  href: docs/api/FreeRedis.AliyunTair.ITairRedisClient.html#FreeRedis_AliyunTair_ITairRedisClient_ExHGet_
+  commentId: Overload:FreeRedis.AliyunTair.ITairRedisClient.ExHGet
+  isSpec: "True"
+  fullName: FreeRedis.AliyunTair.ITairRedisClient.ExHGet
+  nameWithType: ITairRedisClient.ExHGet
+- uid: FreeRedis.AliyunTair.ITairRedisClient.ExHGet``1(System.String,System.String)
+  name: ExHGet<T>(String, String)
+  href: docs/api/FreeRedis.AliyunTair.ITairRedisClient.html#FreeRedis_AliyunTair_ITairRedisClient_ExHGet__1_System_String_System_String_
+  commentId: M:FreeRedis.AliyunTair.ITairRedisClient.ExHGet``1(System.String,System.String)
+  name.vb: ExHGet(Of T)(String, String)
+  fullName: FreeRedis.AliyunTair.ITairRedisClient.ExHGet<T>(System.String, System.String)
+  fullName.vb: FreeRedis.AliyunTair.ITairRedisClient.ExHGet(Of T)(System.String, System.String)
+  nameWithType: ITairRedisClient.ExHGet<T>(String, String)
+  nameWithType.vb: ITairRedisClient.ExHGet(Of T)(String, String)
+- uid: FreeRedis.AliyunTair.ITairRedisClient.ExHGetAll(System.String)
+  name: ExHGetAll(String)
+  href: docs/api/FreeRedis.AliyunTair.ITairRedisClient.html#FreeRedis_AliyunTair_ITairRedisClient_ExHGetAll_System_String_
+  commentId: M:FreeRedis.AliyunTair.ITairRedisClient.ExHGetAll(System.String)
+  fullName: FreeRedis.AliyunTair.ITairRedisClient.ExHGetAll(System.String)
+  nameWithType: ITairRedisClient.ExHGetAll(String)
+- uid: FreeRedis.AliyunTair.ITairRedisClient.ExHGetAll*
+  name: ExHGetAll
+  href: docs/api/FreeRedis.AliyunTair.ITairRedisClient.html#FreeRedis_AliyunTair_ITairRedisClient_ExHGetAll_
+  commentId: Overload:FreeRedis.AliyunTair.ITairRedisClient.ExHGetAll
+  isSpec: "True"
+  fullName: FreeRedis.AliyunTair.ITairRedisClient.ExHGetAll
+  nameWithType: ITairRedisClient.ExHGetAll
+- uid: FreeRedis.AliyunTair.ITairRedisClient.ExHGetAll``1(System.String)
+  name: ExHGetAll<T>(String)
+  href: docs/api/FreeRedis.AliyunTair.ITairRedisClient.html#FreeRedis_AliyunTair_ITairRedisClient_ExHGetAll__1_System_String_
+  commentId: M:FreeRedis.AliyunTair.ITairRedisClient.ExHGetAll``1(System.String)
+  name.vb: ExHGetAll(Of T)(String)
+  fullName: FreeRedis.AliyunTair.ITairRedisClient.ExHGetAll<T>(System.String)
+  fullName.vb: FreeRedis.AliyunTair.ITairRedisClient.ExHGetAll(Of T)(System.String)
+  nameWithType: ITairRedisClient.ExHGetAll<T>(String)
+  nameWithType.vb: ITairRedisClient.ExHGetAll(Of T)(String)
+- uid: FreeRedis.AliyunTair.ITairRedisClient.ExHIncrBy(System.String,System.String,System.Int64,System.Nullable{System.TimeSpan})
+  name: ExHIncrBy(String, String, Int64, Nullable<TimeSpan>)
+  href: docs/api/FreeRedis.AliyunTair.ITairRedisClient.html#FreeRedis_AliyunTair_ITairRedisClient_ExHIncrBy_System_String_System_String_System_Int64_System_Nullable_System_TimeSpan__
+  commentId: M:FreeRedis.AliyunTair.ITairRedisClient.ExHIncrBy(System.String,System.String,System.Int64,System.Nullable{System.TimeSpan})
+  name.vb: ExHIncrBy(String, String, Int64, Nullable(Of TimeSpan))
+  fullName: FreeRedis.AliyunTair.ITairRedisClient.ExHIncrBy(System.String, System.String, System.Int64, System.Nullable<System.TimeSpan>)
+  fullName.vb: FreeRedis.AliyunTair.ITairRedisClient.ExHIncrBy(System.String, System.String, System.Int64, System.Nullable(Of System.TimeSpan))
+  nameWithType: ITairRedisClient.ExHIncrBy(String, String, Int64, Nullable<TimeSpan>)
+  nameWithType.vb: ITairRedisClient.ExHIncrBy(String, String, Int64, Nullable(Of TimeSpan))
+- uid: FreeRedis.AliyunTair.ITairRedisClient.ExHIncrBy*
+  name: ExHIncrBy
+  href: docs/api/FreeRedis.AliyunTair.ITairRedisClient.html#FreeRedis_AliyunTair_ITairRedisClient_ExHIncrBy_
+  commentId: Overload:FreeRedis.AliyunTair.ITairRedisClient.ExHIncrBy
+  isSpec: "True"
+  fullName: FreeRedis.AliyunTair.ITairRedisClient.ExHIncrBy
+  nameWithType: ITairRedisClient.ExHIncrBy
+- uid: FreeRedis.AliyunTair.ITairRedisClient.ExHIncrByFloat(System.String,System.String,System.Decimal,System.Nullable{System.TimeSpan})
+  name: ExHIncrByFloat(String, String, Decimal, Nullable<TimeSpan>)
+  href: docs/api/FreeRedis.AliyunTair.ITairRedisClient.html#FreeRedis_AliyunTair_ITairRedisClient_ExHIncrByFloat_System_String_System_String_System_Decimal_System_Nullable_System_TimeSpan__
+  commentId: M:FreeRedis.AliyunTair.ITairRedisClient.ExHIncrByFloat(System.String,System.String,System.Decimal,System.Nullable{System.TimeSpan})
+  name.vb: ExHIncrByFloat(String, String, Decimal, Nullable(Of TimeSpan))
+  fullName: FreeRedis.AliyunTair.ITairRedisClient.ExHIncrByFloat(System.String, System.String, System.Decimal, System.Nullable<System.TimeSpan>)
+  fullName.vb: FreeRedis.AliyunTair.ITairRedisClient.ExHIncrByFloat(System.String, System.String, System.Decimal, System.Nullable(Of System.TimeSpan))
+  nameWithType: ITairRedisClient.ExHIncrByFloat(String, String, Decimal, Nullable<TimeSpan>)
+  nameWithType.vb: ITairRedisClient.ExHIncrByFloat(String, String, Decimal, Nullable(Of TimeSpan))
+- uid: FreeRedis.AliyunTair.ITairRedisClient.ExHIncrByFloat*
+  name: ExHIncrByFloat
+  href: docs/api/FreeRedis.AliyunTair.ITairRedisClient.html#FreeRedis_AliyunTair_ITairRedisClient_ExHIncrByFloat_
+  commentId: Overload:FreeRedis.AliyunTair.ITairRedisClient.ExHIncrByFloat
+  isSpec: "True"
+  fullName: FreeRedis.AliyunTair.ITairRedisClient.ExHIncrByFloat
+  nameWithType: ITairRedisClient.ExHIncrByFloat
+- uid: FreeRedis.AliyunTair.ITairRedisClient.ExHKeys(System.String)
+  name: ExHKeys(String)
+  href: docs/api/FreeRedis.AliyunTair.ITairRedisClient.html#FreeRedis_AliyunTair_ITairRedisClient_ExHKeys_System_String_
+  commentId: M:FreeRedis.AliyunTair.ITairRedisClient.ExHKeys(System.String)
+  fullName: FreeRedis.AliyunTair.ITairRedisClient.ExHKeys(System.String)
+  nameWithType: ITairRedisClient.ExHKeys(String)
+- uid: FreeRedis.AliyunTair.ITairRedisClient.ExHKeys*
+  name: ExHKeys
+  href: docs/api/FreeRedis.AliyunTair.ITairRedisClient.html#FreeRedis_AliyunTair_ITairRedisClient_ExHKeys_
+  commentId: Overload:FreeRedis.AliyunTair.ITairRedisClient.ExHKeys
+  isSpec: "True"
+  fullName: FreeRedis.AliyunTair.ITairRedisClient.ExHKeys
+  nameWithType: ITairRedisClient.ExHKeys
+- uid: FreeRedis.AliyunTair.ITairRedisClient.ExHLen(System.String,System.Boolean)
+  name: ExHLen(String, Boolean)
+  href: docs/api/FreeRedis.AliyunTair.ITairRedisClient.html#FreeRedis_AliyunTair_ITairRedisClient_ExHLen_System_String_System_Boolean_
+  commentId: M:FreeRedis.AliyunTair.ITairRedisClient.ExHLen(System.String,System.Boolean)
+  fullName: FreeRedis.AliyunTair.ITairRedisClient.ExHLen(System.String, System.Boolean)
+  nameWithType: ITairRedisClient.ExHLen(String, Boolean)
+- uid: FreeRedis.AliyunTair.ITairRedisClient.ExHLen*
+  name: ExHLen
+  href: docs/api/FreeRedis.AliyunTair.ITairRedisClient.html#FreeRedis_AliyunTair_ITairRedisClient_ExHLen_
+  commentId: Overload:FreeRedis.AliyunTair.ITairRedisClient.ExHLen
+  isSpec: "True"
+  fullName: FreeRedis.AliyunTair.ITairRedisClient.ExHLen
+  nameWithType: ITairRedisClient.ExHLen
+- uid: FreeRedis.AliyunTair.ITairRedisClient.ExHMGet(System.String,System.String[])
+  name: ExHMGet(String, String[])
+  href: docs/api/FreeRedis.AliyunTair.ITairRedisClient.html#FreeRedis_AliyunTair_ITairRedisClient_ExHMGet_System_String_System_String___
+  commentId: M:FreeRedis.AliyunTair.ITairRedisClient.ExHMGet(System.String,System.String[])
+  name.vb: ExHMGet(String, String())
+  fullName: FreeRedis.AliyunTair.ITairRedisClient.ExHMGet(System.String, System.String[])
+  fullName.vb: FreeRedis.AliyunTair.ITairRedisClient.ExHMGet(System.String, System.String())
+  nameWithType: ITairRedisClient.ExHMGet(String, String[])
+  nameWithType.vb: ITairRedisClient.ExHMGet(String, String())
+- uid: FreeRedis.AliyunTair.ITairRedisClient.ExHMGet*
+  name: ExHMGet
+  href: docs/api/FreeRedis.AliyunTair.ITairRedisClient.html#FreeRedis_AliyunTair_ITairRedisClient_ExHMGet_
+  commentId: Overload:FreeRedis.AliyunTair.ITairRedisClient.ExHMGet
+  isSpec: "True"
+  fullName: FreeRedis.AliyunTair.ITairRedisClient.ExHMGet
+  nameWithType: ITairRedisClient.ExHMGet
+- uid: FreeRedis.AliyunTair.ITairRedisClient.ExHMGet``1(System.String,System.String[])
+  name: ExHMGet<T>(String, String[])
+  href: docs/api/FreeRedis.AliyunTair.ITairRedisClient.html#FreeRedis_AliyunTair_ITairRedisClient_ExHMGet__1_System_String_System_String___
+  commentId: M:FreeRedis.AliyunTair.ITairRedisClient.ExHMGet``1(System.String,System.String[])
+  name.vb: ExHMGet(Of T)(String, String())
+  fullName: FreeRedis.AliyunTair.ITairRedisClient.ExHMGet<T>(System.String, System.String[])
+  fullName.vb: FreeRedis.AliyunTair.ITairRedisClient.ExHMGet(Of T)(System.String, System.String())
+  nameWithType: ITairRedisClient.ExHMGet<T>(String, String[])
+  nameWithType.vb: ITairRedisClient.ExHMGet(Of T)(String, String())
+- uid: FreeRedis.AliyunTair.ITairRedisClient.ExHMSet*
+  name: ExHMSet
+  href: docs/api/FreeRedis.AliyunTair.ITairRedisClient.html#FreeRedis_AliyunTair_ITairRedisClient_ExHMSet_
+  commentId: Overload:FreeRedis.AliyunTair.ITairRedisClient.ExHMSet
+  isSpec: "True"
+  fullName: FreeRedis.AliyunTair.ITairRedisClient.ExHMSet
+  nameWithType: ITairRedisClient.ExHMSet
+- uid: FreeRedis.AliyunTair.ITairRedisClient.ExHMSet``1(System.String,System.Collections.Generic.Dictionary{System.String,``0})
+  name: ExHMSet<T>(String, Dictionary<String, T>)
+  href: docs/api/FreeRedis.AliyunTair.ITairRedisClient.html#FreeRedis_AliyunTair_ITairRedisClient_ExHMSet__1_System_String_System_Collections_Generic_Dictionary_System_String___0__
+  commentId: M:FreeRedis.AliyunTair.ITairRedisClient.ExHMSet``1(System.String,System.Collections.Generic.Dictionary{System.String,``0})
+  name.vb: ExHMSet(Of T)(String, Dictionary(Of String, T))
+  fullName: FreeRedis.AliyunTair.ITairRedisClient.ExHMSet<T>(System.String, System.Collections.Generic.Dictionary<System.String, T>)
+  fullName.vb: FreeRedis.AliyunTair.ITairRedisClient.ExHMSet(Of T)(System.String, System.Collections.Generic.Dictionary(Of System.String, T))
+  nameWithType: ITairRedisClient.ExHMSet<T>(String, Dictionary<String, T>)
+  nameWithType.vb: ITairRedisClient.ExHMSet(Of T)(String, Dictionary(Of String, T))
+- uid: FreeRedis.AliyunTair.ITairRedisClient.ExHMSet``1(System.String,System.String,``0,System.Object[])
+  name: ExHMSet<T>(String, String, T, Object[])
+  href: docs/api/FreeRedis.AliyunTair.ITairRedisClient.html#FreeRedis_AliyunTair_ITairRedisClient_ExHMSet__1_System_String_System_String___0_System_Object___
+  commentId: M:FreeRedis.AliyunTair.ITairRedisClient.ExHMSet``1(System.String,System.String,``0,System.Object[])
+  name.vb: ExHMSet(Of T)(String, String, T, Object())
+  fullName: FreeRedis.AliyunTair.ITairRedisClient.ExHMSet<T>(System.String, System.String, T, System.Object[])
+  fullName.vb: FreeRedis.AliyunTair.ITairRedisClient.ExHMSet(Of T)(System.String, System.String, T, System.Object())
+  nameWithType: ITairRedisClient.ExHMSet<T>(String, String, T, Object[])
+  nameWithType.vb: ITairRedisClient.ExHMSet(Of T)(String, String, T, Object())
+- uid: FreeRedis.AliyunTair.ITairRedisClient.ExHPTtl(System.String,System.String)
+  name: ExHPTtl(String, String)
+  href: docs/api/FreeRedis.AliyunTair.ITairRedisClient.html#FreeRedis_AliyunTair_ITairRedisClient_ExHPTtl_System_String_System_String_
+  commentId: M:FreeRedis.AliyunTair.ITairRedisClient.ExHPTtl(System.String,System.String)
+  fullName: FreeRedis.AliyunTair.ITairRedisClient.ExHPTtl(System.String, System.String)
+  nameWithType: ITairRedisClient.ExHPTtl(String, String)
+- uid: FreeRedis.AliyunTair.ITairRedisClient.ExHPTtl*
+  name: ExHPTtl
+  href: docs/api/FreeRedis.AliyunTair.ITairRedisClient.html#FreeRedis_AliyunTair_ITairRedisClient_ExHPTtl_
+  commentId: Overload:FreeRedis.AliyunTair.ITairRedisClient.ExHPTtl
+  isSpec: "True"
+  fullName: FreeRedis.AliyunTair.ITairRedisClient.ExHPTtl
+  nameWithType: ITairRedisClient.ExHPTtl
+- uid: FreeRedis.AliyunTair.ITairRedisClient.ExHScan(System.String,System.Int64,System.String,System.Int64)
+  name: ExHScan(String, Int64, String, Int64)
+  href: docs/api/FreeRedis.AliyunTair.ITairRedisClient.html#FreeRedis_AliyunTair_ITairRedisClient_ExHScan_System_String_System_Int64_System_String_System_Int64_
+  commentId: M:FreeRedis.AliyunTair.ITairRedisClient.ExHScan(System.String,System.Int64,System.String,System.Int64)
+  fullName: FreeRedis.AliyunTair.ITairRedisClient.ExHScan(System.String, System.Int64, System.String, System.Int64)
+  nameWithType: ITairRedisClient.ExHScan(String, Int64, String, Int64)
+- uid: FreeRedis.AliyunTair.ITairRedisClient.ExHScan*
+  name: ExHScan
+  href: docs/api/FreeRedis.AliyunTair.ITairRedisClient.html#FreeRedis_AliyunTair_ITairRedisClient_ExHScan_
+  commentId: Overload:FreeRedis.AliyunTair.ITairRedisClient.ExHScan
+  isSpec: "True"
+  fullName: FreeRedis.AliyunTair.ITairRedisClient.ExHScan
+  nameWithType: ITairRedisClient.ExHScan
+- uid: FreeRedis.AliyunTair.ITairRedisClient.ExHSet*
+  name: ExHSet
+  href: docs/api/FreeRedis.AliyunTair.ITairRedisClient.html#FreeRedis_AliyunTair_ITairRedisClient_ExHSet_
+  commentId: Overload:FreeRedis.AliyunTair.ITairRedisClient.ExHSet
+  isSpec: "True"
+  fullName: FreeRedis.AliyunTair.ITairRedisClient.ExHSet
+  nameWithType: ITairRedisClient.ExHSet
+- uid: FreeRedis.AliyunTair.ITairRedisClient.ExHSet``1(System.String,System.String,``0,System.Nullable{System.TimeSpan})
+  name: ExHSet<T>(String, String, T, Nullable<TimeSpan>)
+  href: docs/api/FreeRedis.AliyunTair.ITairRedisClient.html#FreeRedis_AliyunTair_ITairRedisClient_ExHSet__1_System_String_System_String___0_System_Nullable_System_TimeSpan__
+  commentId: M:FreeRedis.AliyunTair.ITairRedisClient.ExHSet``1(System.String,System.String,``0,System.Nullable{System.TimeSpan})
+  name.vb: ExHSet(Of T)(String, String, T, Nullable(Of TimeSpan))
+  fullName: FreeRedis.AliyunTair.ITairRedisClient.ExHSet<T>(System.String, System.String, T, System.Nullable<System.TimeSpan>)
+  fullName.vb: FreeRedis.AliyunTair.ITairRedisClient.ExHSet(Of T)(System.String, System.String, T, System.Nullable(Of System.TimeSpan))
+  nameWithType: ITairRedisClient.ExHSet<T>(String, String, T, Nullable<TimeSpan>)
+  nameWithType.vb: ITairRedisClient.ExHSet(Of T)(String, String, T, Nullable(Of TimeSpan))
+- uid: FreeRedis.AliyunTair.ITairRedisClient.ExHStrLen(System.String,System.String)
+  name: ExHStrLen(String, String)
+  href: docs/api/FreeRedis.AliyunTair.ITairRedisClient.html#FreeRedis_AliyunTair_ITairRedisClient_ExHStrLen_System_String_System_String_
+  commentId: M:FreeRedis.AliyunTair.ITairRedisClient.ExHStrLen(System.String,System.String)
+  fullName: FreeRedis.AliyunTair.ITairRedisClient.ExHStrLen(System.String, System.String)
+  nameWithType: ITairRedisClient.ExHStrLen(String, String)
+- uid: FreeRedis.AliyunTair.ITairRedisClient.ExHStrLen*
+  name: ExHStrLen
+  href: docs/api/FreeRedis.AliyunTair.ITairRedisClient.html#FreeRedis_AliyunTair_ITairRedisClient_ExHStrLen_
+  commentId: Overload:FreeRedis.AliyunTair.ITairRedisClient.ExHStrLen
+  isSpec: "True"
+  fullName: FreeRedis.AliyunTair.ITairRedisClient.ExHStrLen
+  nameWithType: ITairRedisClient.ExHStrLen
+- uid: FreeRedis.AliyunTair.ITairRedisClient.ExHTtl(System.String,System.String)
+  name: ExHTtl(String, String)
+  href: docs/api/FreeRedis.AliyunTair.ITairRedisClient.html#FreeRedis_AliyunTair_ITairRedisClient_ExHTtl_System_String_System_String_
+  commentId: M:FreeRedis.AliyunTair.ITairRedisClient.ExHTtl(System.String,System.String)
+  fullName: FreeRedis.AliyunTair.ITairRedisClient.ExHTtl(System.String, System.String)
+  nameWithType: ITairRedisClient.ExHTtl(String, String)
+- uid: FreeRedis.AliyunTair.ITairRedisClient.ExHTtl*
+  name: ExHTtl
+  href: docs/api/FreeRedis.AliyunTair.ITairRedisClient.html#FreeRedis_AliyunTair_ITairRedisClient_ExHTtl_
+  commentId: Overload:FreeRedis.AliyunTair.ITairRedisClient.ExHTtl
+  isSpec: "True"
+  fullName: FreeRedis.AliyunTair.ITairRedisClient.ExHTtl
+  nameWithType: ITairRedisClient.ExHTtl
+- uid: FreeRedis.AliyunTair.ITairRedisClient.ExHVals(System.String)
+  name: ExHVals(String)
+  href: docs/api/FreeRedis.AliyunTair.ITairRedisClient.html#FreeRedis_AliyunTair_ITairRedisClient_ExHVals_System_String_
+  commentId: M:FreeRedis.AliyunTair.ITairRedisClient.ExHVals(System.String)
+  fullName: FreeRedis.AliyunTair.ITairRedisClient.ExHVals(System.String)
+  nameWithType: ITairRedisClient.ExHVals(String)
+- uid: FreeRedis.AliyunTair.ITairRedisClient.ExHVals*
+  name: ExHVals
+  href: docs/api/FreeRedis.AliyunTair.ITairRedisClient.html#FreeRedis_AliyunTair_ITairRedisClient_ExHVals_
+  commentId: Overload:FreeRedis.AliyunTair.ITairRedisClient.ExHVals
+  isSpec: "True"
+  fullName: FreeRedis.AliyunTair.ITairRedisClient.ExHVals
+  nameWithType: ITairRedisClient.ExHVals
+- uid: FreeRedis.AliyunTair.ITairRedisClient.ExHVals``1(System.String)
+  name: ExHVals<T>(String)
+  href: docs/api/FreeRedis.AliyunTair.ITairRedisClient.html#FreeRedis_AliyunTair_ITairRedisClient_ExHVals__1_System_String_
+  commentId: M:FreeRedis.AliyunTair.ITairRedisClient.ExHVals``1(System.String)
+  name.vb: ExHVals(Of T)(String)
+  fullName: FreeRedis.AliyunTair.ITairRedisClient.ExHVals<T>(System.String)
+  fullName.vb: FreeRedis.AliyunTair.ITairRedisClient.ExHVals(Of T)(System.String)
+  nameWithType: ITairRedisClient.ExHVals<T>(String)
+  nameWithType.vb: ITairRedisClient.ExHVals(Of T)(String)
+- uid: FreeRedis.AliyunTair.TairRedisClient
+  name: TairRedisClient
+  href: docs/api/FreeRedis.AliyunTair.TairRedisClient.html
+  commentId: T:FreeRedis.AliyunTair.TairRedisClient
+  fullName: FreeRedis.AliyunTair.TairRedisClient
+  nameWithType: TairRedisClient
+- uid: FreeRedis.AliyunTair.TairRedisClient.#ctor(FreeRedis.ConnectionStringBuilder,FreeRedis.ConnectionStringBuilder[])
+  name: TairRedisClient(ConnectionStringBuilder, ConnectionStringBuilder[])
+  href: docs/api/FreeRedis.AliyunTair.TairRedisClient.html#FreeRedis_AliyunTair_TairRedisClient__ctor_FreeRedis_ConnectionStringBuilder_FreeRedis_ConnectionStringBuilder___
+  commentId: M:FreeRedis.AliyunTair.TairRedisClient.#ctor(FreeRedis.ConnectionStringBuilder,FreeRedis.ConnectionStringBuilder[])
+  name.vb: TairRedisClient(ConnectionStringBuilder, ConnectionStringBuilder())
+  fullName: FreeRedis.AliyunTair.TairRedisClient.TairRedisClient(FreeRedis.ConnectionStringBuilder, FreeRedis.ConnectionStringBuilder[])
+  fullName.vb: FreeRedis.AliyunTair.TairRedisClient.TairRedisClient(FreeRedis.ConnectionStringBuilder, FreeRedis.ConnectionStringBuilder())
+  nameWithType: TairRedisClient.TairRedisClient(ConnectionStringBuilder, ConnectionStringBuilder[])
+  nameWithType.vb: TairRedisClient.TairRedisClient(ConnectionStringBuilder, ConnectionStringBuilder())
+- uid: FreeRedis.AliyunTair.TairRedisClient.#ctor(FreeRedis.ConnectionStringBuilder,System.String[],System.Boolean)
+  name: TairRedisClient(ConnectionStringBuilder, String[], Boolean)
+  href: docs/api/FreeRedis.AliyunTair.TairRedisClient.html#FreeRedis_AliyunTair_TairRedisClient__ctor_FreeRedis_ConnectionStringBuilder_System_String___System_Boolean_
+  commentId: M:FreeRedis.AliyunTair.TairRedisClient.#ctor(FreeRedis.ConnectionStringBuilder,System.String[],System.Boolean)
+  name.vb: TairRedisClient(ConnectionStringBuilder, String(), Boolean)
+  fullName: FreeRedis.AliyunTair.TairRedisClient.TairRedisClient(FreeRedis.ConnectionStringBuilder, System.String[], System.Boolean)
+  fullName.vb: FreeRedis.AliyunTair.TairRedisClient.TairRedisClient(FreeRedis.ConnectionStringBuilder, System.String(), System.Boolean)
+  nameWithType: TairRedisClient.TairRedisClient(ConnectionStringBuilder, String[], Boolean)
+  nameWithType.vb: TairRedisClient.TairRedisClient(ConnectionStringBuilder, String(), Boolean)
+- uid: FreeRedis.AliyunTair.TairRedisClient.#ctor(FreeRedis.ConnectionStringBuilder[],System.Collections.Generic.Dictionary{System.String,System.String})
+  name: TairRedisClient(ConnectionStringBuilder[], Dictionary<String, String>)
+  href: docs/api/FreeRedis.AliyunTair.TairRedisClient.html#FreeRedis_AliyunTair_TairRedisClient__ctor_FreeRedis_ConnectionStringBuilder___System_Collections_Generic_Dictionary_System_String_System_String__
+  commentId: M:FreeRedis.AliyunTair.TairRedisClient.#ctor(FreeRedis.ConnectionStringBuilder[],System.Collections.Generic.Dictionary{System.String,System.String})
+  name.vb: TairRedisClient(ConnectionStringBuilder(), Dictionary(Of String, String))
+  fullName: FreeRedis.AliyunTair.TairRedisClient.TairRedisClient(FreeRedis.ConnectionStringBuilder[], System.Collections.Generic.Dictionary<System.String, System.String>)
+  fullName.vb: FreeRedis.AliyunTair.TairRedisClient.TairRedisClient(FreeRedis.ConnectionStringBuilder(), System.Collections.Generic.Dictionary(Of System.String, System.String))
+  nameWithType: TairRedisClient.TairRedisClient(ConnectionStringBuilder[], Dictionary<String, String>)
+  nameWithType.vb: TairRedisClient.TairRedisClient(ConnectionStringBuilder(), Dictionary(Of String, String))
+- uid: FreeRedis.AliyunTair.TairRedisClient.#ctor(FreeRedis.ConnectionStringBuilder[],System.Func{System.String,System.String})
+  name: TairRedisClient(ConnectionStringBuilder[], Func<String, String>)
+  href: docs/api/FreeRedis.AliyunTair.TairRedisClient.html#FreeRedis_AliyunTair_TairRedisClient__ctor_FreeRedis_ConnectionStringBuilder___System_Func_System_String_System_String__
+  commentId: M:FreeRedis.AliyunTair.TairRedisClient.#ctor(FreeRedis.ConnectionStringBuilder[],System.Func{System.String,System.String})
+  name.vb: TairRedisClient(ConnectionStringBuilder(), Func(Of String, String))
+  fullName: FreeRedis.AliyunTair.TairRedisClient.TairRedisClient(FreeRedis.ConnectionStringBuilder[], System.Func<System.String, System.String>)
+  fullName.vb: FreeRedis.AliyunTair.TairRedisClient.TairRedisClient(FreeRedis.ConnectionStringBuilder(), System.Func(Of System.String, System.String))
+  nameWithType: TairRedisClient.TairRedisClient(ConnectionStringBuilder[], Func<String, String>)
+  nameWithType.vb: TairRedisClient.TairRedisClient(ConnectionStringBuilder(), Func(Of String, String))
+- uid: FreeRedis.AliyunTair.TairRedisClient.#ctor(FreeRedis.RedisClient,System.String,System.Boolean,RemoteCertificateValidationCallback,LocalCertificateSelectionCallback,System.TimeSpan,System.TimeSpan,System.TimeSpan,System.Action{FreeRedis.RedisClient},System.Action{FreeRedis.RedisClient})
+  name: TairRedisClient(RedisClient, String, Boolean, RemoteCertificateValidationCallback, LocalCertificateSelectionCallback, TimeSpan, TimeSpan, TimeSpan, Action<RedisClient>, Action<RedisClient>)
+  href: docs/api/FreeRedis.AliyunTair.TairRedisClient.html#FreeRedis_AliyunTair_TairRedisClient__ctor_FreeRedis_RedisClient_System_String_System_Boolean_RemoteCertificateValidationCallback_LocalCertificateSelectionCallback_System_TimeSpan_System_TimeSpan_System_TimeSpan_System_Action_FreeRedis_RedisClient__System_Action_FreeRedis_RedisClient__
+  commentId: M:FreeRedis.AliyunTair.TairRedisClient.#ctor(FreeRedis.RedisClient,System.String,System.Boolean,RemoteCertificateValidationCallback,LocalCertificateSelectionCallback,System.TimeSpan,System.TimeSpan,System.TimeSpan,System.Action{FreeRedis.RedisClient},System.Action{FreeRedis.RedisClient})
+  name.vb: TairRedisClient(RedisClient, String, Boolean, RemoteCertificateValidationCallback, LocalCertificateSelectionCallback, TimeSpan, TimeSpan, TimeSpan, Action(Of RedisClient), Action(Of RedisClient))
+  fullName: FreeRedis.AliyunTair.TairRedisClient.TairRedisClient(FreeRedis.RedisClient, System.String, System.Boolean, RemoteCertificateValidationCallback, LocalCertificateSelectionCallback, System.TimeSpan, System.TimeSpan, System.TimeSpan, System.Action<FreeRedis.RedisClient>, System.Action<FreeRedis.RedisClient>)
+  fullName.vb: FreeRedis.AliyunTair.TairRedisClient.TairRedisClient(FreeRedis.RedisClient, System.String, System.Boolean, RemoteCertificateValidationCallback, LocalCertificateSelectionCallback, System.TimeSpan, System.TimeSpan, System.TimeSpan, System.Action(Of FreeRedis.RedisClient), System.Action(Of FreeRedis.RedisClient))
+  nameWithType: TairRedisClient.TairRedisClient(RedisClient, String, Boolean, RemoteCertificateValidationCallback, LocalCertificateSelectionCallback, TimeSpan, TimeSpan, TimeSpan, Action<RedisClient>, Action<RedisClient>)
+  nameWithType.vb: TairRedisClient.TairRedisClient(RedisClient, String, Boolean, RemoteCertificateValidationCallback, LocalCertificateSelectionCallback, TimeSpan, TimeSpan, TimeSpan, Action(Of RedisClient), Action(Of RedisClient))
+- uid: FreeRedis.AliyunTair.TairRedisClient.#ctor(FreeRedis.RedisClient.BaseAdapter)
+  name: TairRedisClient(RedisClient.BaseAdapter)
+  href: docs/api/FreeRedis.AliyunTair.TairRedisClient.html#FreeRedis_AliyunTair_TairRedisClient__ctor_FreeRedis_RedisClient_BaseAdapter_
+  commentId: M:FreeRedis.AliyunTair.TairRedisClient.#ctor(FreeRedis.RedisClient.BaseAdapter)
+  fullName: FreeRedis.AliyunTair.TairRedisClient.TairRedisClient(FreeRedis.RedisClient.BaseAdapter)
+  nameWithType: TairRedisClient.TairRedisClient(RedisClient.BaseAdapter)
+- uid: FreeRedis.AliyunTair.TairRedisClient.#ctor*
+  name: TairRedisClient
+  href: docs/api/FreeRedis.AliyunTair.TairRedisClient.html#FreeRedis_AliyunTair_TairRedisClient__ctor_
+  commentId: Overload:FreeRedis.AliyunTair.TairRedisClient.#ctor
+  isSpec: "True"
+  fullName: FreeRedis.AliyunTair.TairRedisClient.TairRedisClient
+  nameWithType: TairRedisClient.TairRedisClient
+- uid: FreeRedis.AliyunTair.TairRedisClient.ExHDel(System.String,System.String[])
+  name: ExHDel(String, String[])
+  href: docs/api/FreeRedis.AliyunTair.TairRedisClient.html#FreeRedis_AliyunTair_TairRedisClient_ExHDel_System_String_System_String___
+  commentId: M:FreeRedis.AliyunTair.TairRedisClient.ExHDel(System.String,System.String[])
+  name.vb: ExHDel(String, String())
+  fullName: FreeRedis.AliyunTair.TairRedisClient.ExHDel(System.String, System.String[])
+  fullName.vb: FreeRedis.AliyunTair.TairRedisClient.ExHDel(System.String, System.String())
+  nameWithType: TairRedisClient.ExHDel(String, String[])
+  nameWithType.vb: TairRedisClient.ExHDel(String, String())
+- uid: FreeRedis.AliyunTair.TairRedisClient.ExHDel*
+  name: ExHDel
+  href: docs/api/FreeRedis.AliyunTair.TairRedisClient.html#FreeRedis_AliyunTair_TairRedisClient_ExHDel_
+  commentId: Overload:FreeRedis.AliyunTair.TairRedisClient.ExHDel
+  isSpec: "True"
+  fullName: FreeRedis.AliyunTair.TairRedisClient.ExHDel
+  nameWithType: TairRedisClient.ExHDel
+- uid: FreeRedis.AliyunTair.TairRedisClient.ExHExists(System.String,System.String)
+  name: ExHExists(String, String)
+  href: docs/api/FreeRedis.AliyunTair.TairRedisClient.html#FreeRedis_AliyunTair_TairRedisClient_ExHExists_System_String_System_String_
+  commentId: M:FreeRedis.AliyunTair.TairRedisClient.ExHExists(System.String,System.String)
+  fullName: FreeRedis.AliyunTair.TairRedisClient.ExHExists(System.String, System.String)
+  nameWithType: TairRedisClient.ExHExists(String, String)
+- uid: FreeRedis.AliyunTair.TairRedisClient.ExHExists*
+  name: ExHExists
+  href: docs/api/FreeRedis.AliyunTair.TairRedisClient.html#FreeRedis_AliyunTair_TairRedisClient_ExHExists_
+  commentId: Overload:FreeRedis.AliyunTair.TairRedisClient.ExHExists
+  isSpec: "True"
+  fullName: FreeRedis.AliyunTair.TairRedisClient.ExHExists
+  nameWithType: TairRedisClient.ExHExists
+- uid: FreeRedis.AliyunTair.TairRedisClient.ExHExpireTime(System.String,System.String,System.DateTime,System.Boolean)
+  name: ExHExpireTime(String, String, DateTime, Boolean)
+  href: docs/api/FreeRedis.AliyunTair.TairRedisClient.html#FreeRedis_AliyunTair_TairRedisClient_ExHExpireTime_System_String_System_String_System_DateTime_System_Boolean_
+  commentId: M:FreeRedis.AliyunTair.TairRedisClient.ExHExpireTime(System.String,System.String,System.DateTime,System.Boolean)
+  fullName: FreeRedis.AliyunTair.TairRedisClient.ExHExpireTime(System.String, System.String, System.DateTime, System.Boolean)
+  nameWithType: TairRedisClient.ExHExpireTime(String, String, DateTime, Boolean)
+- uid: FreeRedis.AliyunTair.TairRedisClient.ExHExpireTime(System.String,System.String,System.TimeSpan,System.Boolean)
+  name: ExHExpireTime(String, String, TimeSpan, Boolean)
+  href: docs/api/FreeRedis.AliyunTair.TairRedisClient.html#FreeRedis_AliyunTair_TairRedisClient_ExHExpireTime_System_String_System_String_System_TimeSpan_System_Boolean_
+  commentId: M:FreeRedis.AliyunTair.TairRedisClient.ExHExpireTime(System.String,System.String,System.TimeSpan,System.Boolean)
+  fullName: FreeRedis.AliyunTair.TairRedisClient.ExHExpireTime(System.String, System.String, System.TimeSpan, System.Boolean)
+  nameWithType: TairRedisClient.ExHExpireTime(String, String, TimeSpan, Boolean)
+- uid: FreeRedis.AliyunTair.TairRedisClient.ExHExpireTime*
+  name: ExHExpireTime
+  href: docs/api/FreeRedis.AliyunTair.TairRedisClient.html#FreeRedis_AliyunTair_TairRedisClient_ExHExpireTime_
+  commentId: Overload:FreeRedis.AliyunTair.TairRedisClient.ExHExpireTime
+  isSpec: "True"
+  fullName: FreeRedis.AliyunTair.TairRedisClient.ExHExpireTime
+  nameWithType: TairRedisClient.ExHExpireTime
+- uid: FreeRedis.AliyunTair.TairRedisClient.ExHGet(System.String,System.String)
+  name: ExHGet(String, String)
+  href: docs/api/FreeRedis.AliyunTair.TairRedisClient.html#FreeRedis_AliyunTair_TairRedisClient_ExHGet_System_String_System_String_
+  commentId: M:FreeRedis.AliyunTair.TairRedisClient.ExHGet(System.String,System.String)
+  fullName: FreeRedis.AliyunTair.TairRedisClient.ExHGet(System.String, System.String)
+  nameWithType: TairRedisClient.ExHGet(String, String)
+- uid: FreeRedis.AliyunTair.TairRedisClient.ExHGet*
+  name: ExHGet
+  href: docs/api/FreeRedis.AliyunTair.TairRedisClient.html#FreeRedis_AliyunTair_TairRedisClient_ExHGet_
+  commentId: Overload:FreeRedis.AliyunTair.TairRedisClient.ExHGet
+  isSpec: "True"
+  fullName: FreeRedis.AliyunTair.TairRedisClient.ExHGet
+  nameWithType: TairRedisClient.ExHGet
+- uid: FreeRedis.AliyunTair.TairRedisClient.ExHGet``1(System.String,System.String)
+  name: ExHGet<T>(String, String)
+  href: docs/api/FreeRedis.AliyunTair.TairRedisClient.html#FreeRedis_AliyunTair_TairRedisClient_ExHGet__1_System_String_System_String_
+  commentId: M:FreeRedis.AliyunTair.TairRedisClient.ExHGet``1(System.String,System.String)
+  name.vb: ExHGet(Of T)(String, String)
+  fullName: FreeRedis.AliyunTair.TairRedisClient.ExHGet<T>(System.String, System.String)
+  fullName.vb: FreeRedis.AliyunTair.TairRedisClient.ExHGet(Of T)(System.String, System.String)
+  nameWithType: TairRedisClient.ExHGet<T>(String, String)
+  nameWithType.vb: TairRedisClient.ExHGet(Of T)(String, String)
+- uid: FreeRedis.AliyunTair.TairRedisClient.ExHGetAll(System.String)
+  name: ExHGetAll(String)
+  href: docs/api/FreeRedis.AliyunTair.TairRedisClient.html#FreeRedis_AliyunTair_TairRedisClient_ExHGetAll_System_String_
+  commentId: M:FreeRedis.AliyunTair.TairRedisClient.ExHGetAll(System.String)
+  fullName: FreeRedis.AliyunTair.TairRedisClient.ExHGetAll(System.String)
+  nameWithType: TairRedisClient.ExHGetAll(String)
+- uid: FreeRedis.AliyunTair.TairRedisClient.ExHGetAll*
+  name: ExHGetAll
+  href: docs/api/FreeRedis.AliyunTair.TairRedisClient.html#FreeRedis_AliyunTair_TairRedisClient_ExHGetAll_
+  commentId: Overload:FreeRedis.AliyunTair.TairRedisClient.ExHGetAll
+  isSpec: "True"
+  fullName: FreeRedis.AliyunTair.TairRedisClient.ExHGetAll
+  nameWithType: TairRedisClient.ExHGetAll
+- uid: FreeRedis.AliyunTair.TairRedisClient.ExHGetAll``1(System.String)
+  name: ExHGetAll<T>(String)
+  href: docs/api/FreeRedis.AliyunTair.TairRedisClient.html#FreeRedis_AliyunTair_TairRedisClient_ExHGetAll__1_System_String_
+  commentId: M:FreeRedis.AliyunTair.TairRedisClient.ExHGetAll``1(System.String)
+  name.vb: ExHGetAll(Of T)(String)
+  fullName: FreeRedis.AliyunTair.TairRedisClient.ExHGetAll<T>(System.String)
+  fullName.vb: FreeRedis.AliyunTair.TairRedisClient.ExHGetAll(Of T)(System.String)
+  nameWithType: TairRedisClient.ExHGetAll<T>(String)
+  nameWithType.vb: TairRedisClient.ExHGetAll(Of T)(String)
+- uid: FreeRedis.AliyunTair.TairRedisClient.ExHIncrBy(System.String,System.String,System.Int64,System.Nullable{System.TimeSpan})
+  name: ExHIncrBy(String, String, Int64, Nullable<TimeSpan>)
+  href: docs/api/FreeRedis.AliyunTair.TairRedisClient.html#FreeRedis_AliyunTair_TairRedisClient_ExHIncrBy_System_String_System_String_System_Int64_System_Nullable_System_TimeSpan__
+  commentId: M:FreeRedis.AliyunTair.TairRedisClient.ExHIncrBy(System.String,System.String,System.Int64,System.Nullable{System.TimeSpan})
+  name.vb: ExHIncrBy(String, String, Int64, Nullable(Of TimeSpan))
+  fullName: FreeRedis.AliyunTair.TairRedisClient.ExHIncrBy(System.String, System.String, System.Int64, System.Nullable<System.TimeSpan>)
+  fullName.vb: FreeRedis.AliyunTair.TairRedisClient.ExHIncrBy(System.String, System.String, System.Int64, System.Nullable(Of System.TimeSpan))
+  nameWithType: TairRedisClient.ExHIncrBy(String, String, Int64, Nullable<TimeSpan>)
+  nameWithType.vb: TairRedisClient.ExHIncrBy(String, String, Int64, Nullable(Of TimeSpan))
+- uid: FreeRedis.AliyunTair.TairRedisClient.ExHIncrBy*
+  name: ExHIncrBy
+  href: docs/api/FreeRedis.AliyunTair.TairRedisClient.html#FreeRedis_AliyunTair_TairRedisClient_ExHIncrBy_
+  commentId: Overload:FreeRedis.AliyunTair.TairRedisClient.ExHIncrBy
+  isSpec: "True"
+  fullName: FreeRedis.AliyunTair.TairRedisClient.ExHIncrBy
+  nameWithType: TairRedisClient.ExHIncrBy
+- uid: FreeRedis.AliyunTair.TairRedisClient.ExHIncrByFloat(System.String,System.String,System.Decimal,System.Nullable{System.TimeSpan})
+  name: ExHIncrByFloat(String, String, Decimal, Nullable<TimeSpan>)
+  href: docs/api/FreeRedis.AliyunTair.TairRedisClient.html#FreeRedis_AliyunTair_TairRedisClient_ExHIncrByFloat_System_String_System_String_System_Decimal_System_Nullable_System_TimeSpan__
+  commentId: M:FreeRedis.AliyunTair.TairRedisClient.ExHIncrByFloat(System.String,System.String,System.Decimal,System.Nullable{System.TimeSpan})
+  name.vb: ExHIncrByFloat(String, String, Decimal, Nullable(Of TimeSpan))
+  fullName: FreeRedis.AliyunTair.TairRedisClient.ExHIncrByFloat(System.String, System.String, System.Decimal, System.Nullable<System.TimeSpan>)
+  fullName.vb: FreeRedis.AliyunTair.TairRedisClient.ExHIncrByFloat(System.String, System.String, System.Decimal, System.Nullable(Of System.TimeSpan))
+  nameWithType: TairRedisClient.ExHIncrByFloat(String, String, Decimal, Nullable<TimeSpan>)
+  nameWithType.vb: TairRedisClient.ExHIncrByFloat(String, String, Decimal, Nullable(Of TimeSpan))
+- uid: FreeRedis.AliyunTair.TairRedisClient.ExHIncrByFloat*
+  name: ExHIncrByFloat
+  href: docs/api/FreeRedis.AliyunTair.TairRedisClient.html#FreeRedis_AliyunTair_TairRedisClient_ExHIncrByFloat_
+  commentId: Overload:FreeRedis.AliyunTair.TairRedisClient.ExHIncrByFloat
+  isSpec: "True"
+  fullName: FreeRedis.AliyunTair.TairRedisClient.ExHIncrByFloat
+  nameWithType: TairRedisClient.ExHIncrByFloat
+- uid: FreeRedis.AliyunTair.TairRedisClient.ExHKeys(System.String)
+  name: ExHKeys(String)
+  href: docs/api/FreeRedis.AliyunTair.TairRedisClient.html#FreeRedis_AliyunTair_TairRedisClient_ExHKeys_System_String_
+  commentId: M:FreeRedis.AliyunTair.TairRedisClient.ExHKeys(System.String)
+  fullName: FreeRedis.AliyunTair.TairRedisClient.ExHKeys(System.String)
+  nameWithType: TairRedisClient.ExHKeys(String)
+- uid: FreeRedis.AliyunTair.TairRedisClient.ExHKeys*
+  name: ExHKeys
+  href: docs/api/FreeRedis.AliyunTair.TairRedisClient.html#FreeRedis_AliyunTair_TairRedisClient_ExHKeys_
+  commentId: Overload:FreeRedis.AliyunTair.TairRedisClient.ExHKeys
+  isSpec: "True"
+  fullName: FreeRedis.AliyunTair.TairRedisClient.ExHKeys
+  nameWithType: TairRedisClient.ExHKeys
+- uid: FreeRedis.AliyunTair.TairRedisClient.ExHLen(System.String,System.Boolean)
+  name: ExHLen(String, Boolean)
+  href: docs/api/FreeRedis.AliyunTair.TairRedisClient.html#FreeRedis_AliyunTair_TairRedisClient_ExHLen_System_String_System_Boolean_
+  commentId: M:FreeRedis.AliyunTair.TairRedisClient.ExHLen(System.String,System.Boolean)
+  fullName: FreeRedis.AliyunTair.TairRedisClient.ExHLen(System.String, System.Boolean)
+  nameWithType: TairRedisClient.ExHLen(String, Boolean)
+- uid: FreeRedis.AliyunTair.TairRedisClient.ExHLen*
+  name: ExHLen
+  href: docs/api/FreeRedis.AliyunTair.TairRedisClient.html#FreeRedis_AliyunTair_TairRedisClient_ExHLen_
+  commentId: Overload:FreeRedis.AliyunTair.TairRedisClient.ExHLen
+  isSpec: "True"
+  fullName: FreeRedis.AliyunTair.TairRedisClient.ExHLen
+  nameWithType: TairRedisClient.ExHLen
+- uid: FreeRedis.AliyunTair.TairRedisClient.ExHMGet(System.String,System.String[])
+  name: ExHMGet(String, String[])
+  href: docs/api/FreeRedis.AliyunTair.TairRedisClient.html#FreeRedis_AliyunTair_TairRedisClient_ExHMGet_System_String_System_String___
+  commentId: M:FreeRedis.AliyunTair.TairRedisClient.ExHMGet(System.String,System.String[])
+  name.vb: ExHMGet(String, String())
+  fullName: FreeRedis.AliyunTair.TairRedisClient.ExHMGet(System.String, System.String[])
+  fullName.vb: FreeRedis.AliyunTair.TairRedisClient.ExHMGet(System.String, System.String())
+  nameWithType: TairRedisClient.ExHMGet(String, String[])
+  nameWithType.vb: TairRedisClient.ExHMGet(String, String())
+- uid: FreeRedis.AliyunTair.TairRedisClient.ExHMGet*
+  name: ExHMGet
+  href: docs/api/FreeRedis.AliyunTair.TairRedisClient.html#FreeRedis_AliyunTair_TairRedisClient_ExHMGet_
+  commentId: Overload:FreeRedis.AliyunTair.TairRedisClient.ExHMGet
+  isSpec: "True"
+  fullName: FreeRedis.AliyunTair.TairRedisClient.ExHMGet
+  nameWithType: TairRedisClient.ExHMGet
+- uid: FreeRedis.AliyunTair.TairRedisClient.ExHMGet``1(System.String,System.String[])
+  name: ExHMGet<T>(String, String[])
+  href: docs/api/FreeRedis.AliyunTair.TairRedisClient.html#FreeRedis_AliyunTair_TairRedisClient_ExHMGet__1_System_String_System_String___
+  commentId: M:FreeRedis.AliyunTair.TairRedisClient.ExHMGet``1(System.String,System.String[])
+  name.vb: ExHMGet(Of T)(String, String())
+  fullName: FreeRedis.AliyunTair.TairRedisClient.ExHMGet<T>(System.String, System.String[])
+  fullName.vb: FreeRedis.AliyunTair.TairRedisClient.ExHMGet(Of T)(System.String, System.String())
+  nameWithType: TairRedisClient.ExHMGet<T>(String, String[])
+  nameWithType.vb: TairRedisClient.ExHMGet(Of T)(String, String())
+- uid: FreeRedis.AliyunTair.TairRedisClient.ExHMSet*
+  name: ExHMSet
+  href: docs/api/FreeRedis.AliyunTair.TairRedisClient.html#FreeRedis_AliyunTair_TairRedisClient_ExHMSet_
+  commentId: Overload:FreeRedis.AliyunTair.TairRedisClient.ExHMSet
+  isSpec: "True"
+  fullName: FreeRedis.AliyunTair.TairRedisClient.ExHMSet
+  nameWithType: TairRedisClient.ExHMSet
+- uid: FreeRedis.AliyunTair.TairRedisClient.ExHMSet``1(System.String,System.Collections.Generic.Dictionary{System.String,``0})
+  name: ExHMSet<T>(String, Dictionary<String, T>)
+  href: docs/api/FreeRedis.AliyunTair.TairRedisClient.html#FreeRedis_AliyunTair_TairRedisClient_ExHMSet__1_System_String_System_Collections_Generic_Dictionary_System_String___0__
+  commentId: M:FreeRedis.AliyunTair.TairRedisClient.ExHMSet``1(System.String,System.Collections.Generic.Dictionary{System.String,``0})
+  name.vb: ExHMSet(Of T)(String, Dictionary(Of String, T))
+  fullName: FreeRedis.AliyunTair.TairRedisClient.ExHMSet<T>(System.String, System.Collections.Generic.Dictionary<System.String, T>)
+  fullName.vb: FreeRedis.AliyunTair.TairRedisClient.ExHMSet(Of T)(System.String, System.Collections.Generic.Dictionary(Of System.String, T))
+  nameWithType: TairRedisClient.ExHMSet<T>(String, Dictionary<String, T>)
+  nameWithType.vb: TairRedisClient.ExHMSet(Of T)(String, Dictionary(Of String, T))
+- uid: FreeRedis.AliyunTair.TairRedisClient.ExHMSet``1(System.String,System.String,``0,System.Object[])
+  name: ExHMSet<T>(String, String, T, Object[])
+  href: docs/api/FreeRedis.AliyunTair.TairRedisClient.html#FreeRedis_AliyunTair_TairRedisClient_ExHMSet__1_System_String_System_String___0_System_Object___
+  commentId: M:FreeRedis.AliyunTair.TairRedisClient.ExHMSet``1(System.String,System.String,``0,System.Object[])
+  name.vb: ExHMSet(Of T)(String, String, T, Object())
+  fullName: FreeRedis.AliyunTair.TairRedisClient.ExHMSet<T>(System.String, System.String, T, System.Object[])
+  fullName.vb: FreeRedis.AliyunTair.TairRedisClient.ExHMSet(Of T)(System.String, System.String, T, System.Object())
+  nameWithType: TairRedisClient.ExHMSet<T>(String, String, T, Object[])
+  nameWithType.vb: TairRedisClient.ExHMSet(Of T)(String, String, T, Object())
+- uid: FreeRedis.AliyunTair.TairRedisClient.ExHPTtl(System.String,System.String)
+  name: ExHPTtl(String, String)
+  href: docs/api/FreeRedis.AliyunTair.TairRedisClient.html#FreeRedis_AliyunTair_TairRedisClient_ExHPTtl_System_String_System_String_
+  commentId: M:FreeRedis.AliyunTair.TairRedisClient.ExHPTtl(System.String,System.String)
+  fullName: FreeRedis.AliyunTair.TairRedisClient.ExHPTtl(System.String, System.String)
+  nameWithType: TairRedisClient.ExHPTtl(String, String)
+- uid: FreeRedis.AliyunTair.TairRedisClient.ExHPTtl*
+  name: ExHPTtl
+  href: docs/api/FreeRedis.AliyunTair.TairRedisClient.html#FreeRedis_AliyunTair_TairRedisClient_ExHPTtl_
+  commentId: Overload:FreeRedis.AliyunTair.TairRedisClient.ExHPTtl
+  isSpec: "True"
+  fullName: FreeRedis.AliyunTair.TairRedisClient.ExHPTtl
+  nameWithType: TairRedisClient.ExHPTtl
+- uid: FreeRedis.AliyunTair.TairRedisClient.ExHScan(System.String,System.Int64,System.String,System.Int64)
+  name: ExHScan(String, Int64, String, Int64)
+  href: docs/api/FreeRedis.AliyunTair.TairRedisClient.html#FreeRedis_AliyunTair_TairRedisClient_ExHScan_System_String_System_Int64_System_String_System_Int64_
+  commentId: M:FreeRedis.AliyunTair.TairRedisClient.ExHScan(System.String,System.Int64,System.String,System.Int64)
+  fullName: FreeRedis.AliyunTair.TairRedisClient.ExHScan(System.String, System.Int64, System.String, System.Int64)
+  nameWithType: TairRedisClient.ExHScan(String, Int64, String, Int64)
+- uid: FreeRedis.AliyunTair.TairRedisClient.ExHScan*
+  name: ExHScan
+  href: docs/api/FreeRedis.AliyunTair.TairRedisClient.html#FreeRedis_AliyunTair_TairRedisClient_ExHScan_
+  commentId: Overload:FreeRedis.AliyunTair.TairRedisClient.ExHScan
+  isSpec: "True"
+  fullName: FreeRedis.AliyunTair.TairRedisClient.ExHScan
+  nameWithType: TairRedisClient.ExHScan
+- uid: FreeRedis.AliyunTair.TairRedisClient.ExHSet*
+  name: ExHSet
+  href: docs/api/FreeRedis.AliyunTair.TairRedisClient.html#FreeRedis_AliyunTair_TairRedisClient_ExHSet_
+  commentId: Overload:FreeRedis.AliyunTair.TairRedisClient.ExHSet
+  isSpec: "True"
+  fullName: FreeRedis.AliyunTair.TairRedisClient.ExHSet
+  nameWithType: TairRedisClient.ExHSet
+- uid: FreeRedis.AliyunTair.TairRedisClient.ExHSet``1(System.String,System.String,``0,System.Nullable{System.TimeSpan})
+  name: ExHSet<T>(String, String, T, Nullable<TimeSpan>)
+  href: docs/api/FreeRedis.AliyunTair.TairRedisClient.html#FreeRedis_AliyunTair_TairRedisClient_ExHSet__1_System_String_System_String___0_System_Nullable_System_TimeSpan__
+  commentId: M:FreeRedis.AliyunTair.TairRedisClient.ExHSet``1(System.String,System.String,``0,System.Nullable{System.TimeSpan})
+  name.vb: ExHSet(Of T)(String, String, T, Nullable(Of TimeSpan))
+  fullName: FreeRedis.AliyunTair.TairRedisClient.ExHSet<T>(System.String, System.String, T, System.Nullable<System.TimeSpan>)
+  fullName.vb: FreeRedis.AliyunTair.TairRedisClient.ExHSet(Of T)(System.String, System.String, T, System.Nullable(Of System.TimeSpan))
+  nameWithType: TairRedisClient.ExHSet<T>(String, String, T, Nullable<TimeSpan>)
+  nameWithType.vb: TairRedisClient.ExHSet(Of T)(String, String, T, Nullable(Of TimeSpan))
+- uid: FreeRedis.AliyunTair.TairRedisClient.ExHStrLen(System.String,System.String)
+  name: ExHStrLen(String, String)
+  href: docs/api/FreeRedis.AliyunTair.TairRedisClient.html#FreeRedis_AliyunTair_TairRedisClient_ExHStrLen_System_String_System_String_
+  commentId: M:FreeRedis.AliyunTair.TairRedisClient.ExHStrLen(System.String,System.String)
+  fullName: FreeRedis.AliyunTair.TairRedisClient.ExHStrLen(System.String, System.String)
+  nameWithType: TairRedisClient.ExHStrLen(String, String)
+- uid: FreeRedis.AliyunTair.TairRedisClient.ExHStrLen*
+  name: ExHStrLen
+  href: docs/api/FreeRedis.AliyunTair.TairRedisClient.html#FreeRedis_AliyunTair_TairRedisClient_ExHStrLen_
+  commentId: Overload:FreeRedis.AliyunTair.TairRedisClient.ExHStrLen
+  isSpec: "True"
+  fullName: FreeRedis.AliyunTair.TairRedisClient.ExHStrLen
+  nameWithType: TairRedisClient.ExHStrLen
+- uid: FreeRedis.AliyunTair.TairRedisClient.ExHTtl(System.String,System.String)
+  name: ExHTtl(String, String)
+  href: docs/api/FreeRedis.AliyunTair.TairRedisClient.html#FreeRedis_AliyunTair_TairRedisClient_ExHTtl_System_String_System_String_
+  commentId: M:FreeRedis.AliyunTair.TairRedisClient.ExHTtl(System.String,System.String)
+  fullName: FreeRedis.AliyunTair.TairRedisClient.ExHTtl(System.String, System.String)
+  nameWithType: TairRedisClient.ExHTtl(String, String)
+- uid: FreeRedis.AliyunTair.TairRedisClient.ExHTtl*
+  name: ExHTtl
+  href: docs/api/FreeRedis.AliyunTair.TairRedisClient.html#FreeRedis_AliyunTair_TairRedisClient_ExHTtl_
+  commentId: Overload:FreeRedis.AliyunTair.TairRedisClient.ExHTtl
+  isSpec: "True"
+  fullName: FreeRedis.AliyunTair.TairRedisClient.ExHTtl
+  nameWithType: TairRedisClient.ExHTtl
+- uid: FreeRedis.AliyunTair.TairRedisClient.ExHVals(System.String)
+  name: ExHVals(String)
+  href: docs/api/FreeRedis.AliyunTair.TairRedisClient.html#FreeRedis_AliyunTair_TairRedisClient_ExHVals_System_String_
+  commentId: M:FreeRedis.AliyunTair.TairRedisClient.ExHVals(System.String)
+  fullName: FreeRedis.AliyunTair.TairRedisClient.ExHVals(System.String)
+  nameWithType: TairRedisClient.ExHVals(String)
+- uid: FreeRedis.AliyunTair.TairRedisClient.ExHVals*
+  name: ExHVals
+  href: docs/api/FreeRedis.AliyunTair.TairRedisClient.html#FreeRedis_AliyunTair_TairRedisClient_ExHVals_
+  commentId: Overload:FreeRedis.AliyunTair.TairRedisClient.ExHVals
+  isSpec: "True"
+  fullName: FreeRedis.AliyunTair.TairRedisClient.ExHVals
+  nameWithType: TairRedisClient.ExHVals
+- uid: FreeRedis.AliyunTair.TairRedisClient.ExHVals``1(System.String)
+  name: ExHVals<T>(String)
+  href: docs/api/FreeRedis.AliyunTair.TairRedisClient.html#FreeRedis_AliyunTair_TairRedisClient_ExHVals__1_System_String_
+  commentId: M:FreeRedis.AliyunTair.TairRedisClient.ExHVals``1(System.String)
+  name.vb: ExHVals(Of T)(String)
+  fullName: FreeRedis.AliyunTair.TairRedisClient.ExHVals<T>(System.String)
+  fullName.vb: FreeRedis.AliyunTair.TairRedisClient.ExHVals(Of T)(System.String)
+  nameWithType: TairRedisClient.ExHVals<T>(String)
+  nameWithType.vb: TairRedisClient.ExHVals(Of T)(String)
 - uid: FreeRedis.BitFieldAction
   name: BitFieldAction
   href: docs/api/FreeRedis.BitFieldAction.html

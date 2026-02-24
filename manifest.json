@@ -59,6 +59,42 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "docs/api/FreeRedis.AliyunTair.ITairRedisClient.yml",
+      "output": {
+        ".html": {
+          "relative_path": "docs/api/FreeRedis.AliyunTair.ITairRedisClient.html",
+          "hash": "2I2e+jyDnjfqkfzHBQtjitPoWtwICA7bOTL01bK1Fks="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "docs/api/FreeRedis.AliyunTair.TairRedisClient.yml",
+      "output": {
+        ".html": {
+          "relative_path": "docs/api/FreeRedis.AliyunTair.TairRedisClient.html",
+          "hash": "phjXgkuTbTYeQPkndT0FIWBxUopSXQjvojh2av3LPKo="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "docs/api/FreeRedis.AliyunTair.yml",
+      "output": {
+        ".html": {
+          "relative_path": "docs/api/FreeRedis.AliyunTair.html",
+          "hash": "LV4av87p6/exGNYPqYrY+QYcBGb2K2+wsEejGZ8ILZU="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "docs/api/FreeRedis.BitFieldAction.yml",
       "output": {
         ".html": {
@@ -1359,7 +1395,7 @@
       "output": {
         ".html": {
           "relative_path": "docs/api/FreeRedis.RedisClient.html",
-          "hash": "VZf31zqJd/V1U6hUq7z7p1E9WXJjRcfs1jLJYoG7omk="
+          "hash": "LZ4n8AClIADeUnzrgp7X9pnJoBgH7p/3vlaXeTo19Ds="
         }
       },
       "is_incremental": false,
@@ -1827,7 +1863,7 @@
       "output": {
         ".html": {
           "relative_path": "docs/api/toc.html",
-          "hash": "sEto3r/zrJ4cogxiIQJyFKtE1sVKBT6BjoyPkHxpUtk="
+          "hash": "6DQyFXnQcCz4huv3iMInI4KNtwy35WHxLsH9tZPNEmo="
         }
       },
       "is_incremental": false,
@@ -1866,7 +1902,7 @@
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 149,
+          "total_file_count": 152,
           "skipped_file_count": 0
         },
         "TocDocumentProcessor": {
