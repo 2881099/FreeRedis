@@ -548,6 +548,11 @@
             空闲时间，获取时若超出，则重新创建
             </summary>
         </member>
+        <member name="P:FreeRedis.Internal.ObjectPool.IPolicy`1.IdleCheckTimeout">
+            <summary>
+            空闲保活检查时间，超过该时间会触发一次保活动作
+            </summary>
+        </member>
         <member name="P:FreeRedis.Internal.ObjectPool.IPolicy`1.AsyncGetCapacity">
             <summary>
             异步获取排队队列大小，小于等于0不生效
@@ -622,6 +627,12 @@
             <param name="obj">资源对象</param>
             <returns></returns>
         </member>
+        <member name="M:FreeRedis.Internal.ObjectPool.IPolicy`1.OnIdleCheck(FreeRedis.Internal.ObjectPool.Object{`0})">
+            <summary>
+            空闲保活动作
+            </summary>
+            <param name="obj">资源对象</param>
+        </member>
         <member name="M:FreeRedis.Internal.ObjectPool.IPolicy`1.OnAvailable">
             <summary>
             事件：可用时触发
@@ -660,6 +671,11 @@
             最后归还时的时间
             </summary>
         </member>
+        <member name="P:FreeRedis.Internal.ObjectPool.Object`1.LastKeepAliveTime">
+            <summary>
+            最后一次空闲保活时间
+            </summary>
+        </member>
         <member name="P:FreeRedis.Internal.ObjectPool.Object`1.CreateTime">
             <summary>
             创建时间
@@ -673,6 +689,11 @@
         <member name="P:FreeRedis.Internal.ObjectPool.Object`1.LastReturnThreadId">
             <summary>
             最后归还时的线程id
+            </summary>
+        </member>
+        <member name="M:FreeRedis.Internal.ObjectPool.Object`1.ReleaseValue">
+            <summary>
+            释放 Value 值
             </summary>
         </member>
         <member name="M:FreeRedis.Internal.ObjectPool.Object`1.ResetValue">

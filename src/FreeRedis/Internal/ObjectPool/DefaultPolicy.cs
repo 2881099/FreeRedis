@@ -11,6 +11,7 @@ namespace FreeRedis.Internal.ObjectPool
         public int PoolSize { get; set; } = 1000;
         public TimeSpan SyncGetTimeout { get; set; } = TimeSpan.FromSeconds(10);
         public TimeSpan IdleTimeout { get; set; } = TimeSpan.FromSeconds(50);
+        public TimeSpan IdleCheckTimeout { get; set; } = TimeSpan.Zero;
         public int AsyncGetCapacity { get; set; } = 10000;
         public bool IsThrowGetTimeoutException { get; set; } = true;
         public bool IsAutoDisposeWithSystem { get; set; } = true;
@@ -57,6 +58,10 @@ namespace FreeRedis.Internal.ObjectPool
         public bool OnCheckAvailable(Object<T> obj)
         {
             return true;
+        }
+
+        public void OnIdleCheck(Object<T> obj)
+        {
         }
 
         public void OnAvailable()

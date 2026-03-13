@@ -63,6 +63,7 @@ namespace FreeRedis
                 var rdsproxy = DefaultRedisSocket.CreateTempProxy(rds, () => pool.Return(cli));
                 rdsproxy._poolkey = poolkey;
                 rdsproxy._pool = pool;
+                rdsproxy._poolObjectId = cli.Id;
                 return rdsproxy;
             }
             public override TValue AdapterCall<TValue>(CommandPacket cmd, Func<RedisResult, TValue> parse)
@@ -93,8 +94,9 @@ namespace FreeRedis
                         }
                         catch (Exception ex)
                         {
-                            var pool = (rds as DefaultRedisSocket.TempProxyRedisSocket)._pool;
-                            if (cmd.IsBlockingCommand() == false && pool?.SetUnavailable(ex, getTime) == true)
+                            var proxy = rds as DefaultRedisSocket.TempProxyRedisSocket;
+                            var pool = proxy._pool;
+                            if (cmd.IsBlockingCommand() == false && pool?.TrySetUnavailable(ex, getTime, proxy._poolObjectId) == true)
                             {
                             }
                             throw;
@@ -133,8 +135,9 @@ namespace FreeRedis
                         }
                         catch (Exception ex)
                         {
-                            var pool = (rds as DefaultRedisSocket.TempProxyRedisSocket)._pool;
-                            if (cmd.IsBlockingCommand() == false && pool?.SetUnavailable(ex, getTime) == true)
+                            var proxy = rds as DefaultRedisSocket.TempProxyRedisSocket;
+                            var pool = proxy._pool;
+                            if (cmd.IsBlockingCommand() == false && pool?.TrySetUnavailable(ex, getTime, proxy._poolObjectId) == true)
                             {
                             }
                             throw;

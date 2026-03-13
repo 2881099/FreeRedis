@@ -71,6 +71,8 @@ namespace FreeRedis.Internal.ObjectPool
         private readonly object _stateTransitionLock = new object();
         private bool _running = true;
         private bool _isCheckerRunning = false;
+        private readonly object _idleWatcherLock = new object();
+        private bool _isIdleWatcherRunning = false;
 
         public bool IsAvailable => this.UnavailableException == null;
         public Exception UnavailableException { get; private set; }
@@ -404,26 +406,160 @@ namespace FreeRedis.Internal.ObjectPool
             catch { }
         }
 
+        private void EnsureIdleWatcher()
+        {
+            if (_running == false) return;
+            if (Policy.IdleTimeout <= TimeSpan.Zero && Policy.IdleCheckTimeout <= TimeSpan.Zero) return;
+
+            lock (_idleWatcherLock)
+            {
+                if (_isIdleWatcherRunning) return;
+                _isIdleWatcherRunning = true;
+            }
+
+            new Thread(IdleWatcherLoop)
+            {
+                IsBackground = true,
+                Name = $"ObjectPoolIdleWatcher<{typeof(T).Name}>"
+            }.Start();
+        }
+
+        private void IdleWatcherLoop()
+        {
+            var idleLoops = 0;
+            try
+            {
+                while (_running)
+                {
+                    try
+                    {
+                        Thread.Sleep(GetIdleWatcherInterval());
+                        if (_running == false) return;
+
+                        AutoFree();
+
+                        if (_freeObjects.IsEmpty)
+                        {
+                            idleLoops++;
+                            if (idleLoops >= 10) return;
+                            continue;
+                        }
+
+                        idleLoops = 0;
+                    }
+                    catch (Exception ex)
+                    {
+                        idleLoops = 0;
+                        TestTrace.WriteLine($"[{Policy.Name}] Idle watcher error: {ex.Message}", ConsoleColor.DarkYellow);
+                    }
+                }
+            }
+            finally
+            {
+                lock (_idleWatcherLock)
+                    _isIdleWatcherRunning = false;
+
+                if (_running && _freeObjects.IsEmpty == false && (Policy.IdleTimeout > TimeSpan.Zero || Policy.IdleCheckTimeout > TimeSpan.Zero))
+                    EnsureIdleWatcher();
+            }
+        }
+
+        private TimeSpan GetIdleWatcherInterval()
+        {
+            var baseTimeout = TimeSpan.Zero;
+            if (Policy.IdleCheckTimeout > TimeSpan.Zero)
+                baseTimeout = Policy.IdleCheckTimeout;
+            if (Policy.IdleTimeout > TimeSpan.Zero && (baseTimeout <= TimeSpan.Zero || Policy.IdleTimeout < baseTimeout))
+                baseTimeout = Policy.IdleTimeout;
+
+            var interval = TimeSpan.FromSeconds(1);
+            if (baseTimeout > TimeSpan.FromSeconds(2))
+                interval = TimeSpan.FromMilliseconds(baseTimeout.TotalMilliseconds / 2d);
+            if (interval > TimeSpan.FromSeconds(15))
+                interval = TimeSpan.FromSeconds(15);
+            return interval;
+        }
+
+        private int GetIdleWatcherBatchSize()
+        {
+            var freeCount = _freeObjects.Count;
+            if (freeCount <= 0) return 0;
+            if (freeCount <= 8) return freeCount;
+            if (freeCount <= 64) return 8;
+            if (freeCount <= 256) return 16;
+            return 32;
+        }
+
+        private void RequeueFreeObject(Object<T> obj)
+        {
+            if (obj == null) return;
+            var root = obj.RootObject;
+            root.MarkFree();
+            _freeObjects.Push(root);
+        }
+
+        private void ProcessIdleObject(Object<T> obj, DateTime now)
+        {
+            if (obj == null) return;
+
+            if (obj.Value == null)
+                return;
+
+            if (Policy.IdleTimeout > TimeSpan.Zero && now.Subtract(obj.LastReturnTime) > Policy.IdleTimeout)
+            {
+                obj.ReleaseValue();
+                return;
+            }
+
+            if (Policy.IdleCheckTimeout <= TimeSpan.Zero)
+                return;
+
+            var lastCheckTime = obj.LastKeepAliveTime;
+            if (lastCheckTime < obj.LastReturnTime)
+                lastCheckTime = obj.LastReturnTime;
+            if (now.Subtract(lastCheckTime) <= Policy.IdleCheckTimeout)
+                return;
+
+            try
+            {
+                Policy.OnIdleCheck(obj);
+                obj.LastKeepAliveTime = now;
+            }
+            catch (Exception ex)
+            {
+                TestTrace.WriteLine($"[{Policy.Name}] Idle check error: {ex.Message}", ConsoleColor.DarkYellow);
+                obj.ReleaseValue();
+            }
+        }
+
         public void AutoFree()
         {
             if (_running == false) return;
             if (UnavailableException != null) return;
 
-            var list = new List<Object<T>>();
-            while (_freeObjects.TryPop(out var obj))
-                list.Add(obj);
-            foreach (var obj in list)
+            var batchSize = GetIdleWatcherBatchSize();
+            if (batchSize <= 0) return;
+
+            var pendingCount = _freeObjects.Count;
+            while (pendingCount > 0)
             {
-                if (obj != null && obj.Value == null ||
-                    obj != null && Policy.IdleTimeout > TimeSpan.Zero && DateTime.Now.Subtract(obj.LastReturnTime) > Policy.IdleTimeout)
+                var currentBatchSize = Math.Min(batchSize, pendingCount);
+                var list = new List<Object<T>>(currentBatchSize);
+                for (var index = 0; index < currentBatchSize && _freeObjects.TryPop(out var obj); index++)
                 {
-                    if (obj.Value != null)
-                    {
-                        Return(obj, true);
+                    if (obj != null && obj.TryReserveFree() == false)
                         continue;
-                    }
+                    list.Add(obj);
                 }
-                Return(obj);
+                if (list.Count <= 0) break;
+
+                pendingCount -= list.Count;
+                var now = DateTime.Now;
+                for (var index = 0; index < list.Count; index++)
+                    ProcessIdleObject(list[index], now);
+
+                for (var index = list.Count - 1; index >= 0; index--)
+                    RequeueFreeObject(list[index]);
             }
         }
 
@@ -445,15 +581,26 @@ namespace FreeRedis.Internal.ObjectPool
                 //    throw new Exception($"[{Policy.Name}] The service is unstable, checking for recovery. Original error: {_firstFailureException?.Message}", _firstFailureException);
             }
 
-            if ((_freeObjects.TryPop(out var obj) == false || obj == null) && _allObjects.Count < Policy.PoolSize)
+            var fromFreeStack = _freeObjects.TryPop(out var obj) && obj != null;
+
+            if (fromFreeStack == false && _allObjects.Count < Policy.PoolSize)
             {
                 lock (_allObjectsLock)
                     if (_allObjects.Count < Policy.PoolSize)
                         _allObjects.Add(obj = new Object<T> { Pool = this, Id = _allObjects.Count + 1 });
             }
 
+            while (fromFreeStack && obj != null && obj.TryReserveFree() == false)
+            {
+                if (_freeObjects.TryPop(out obj) == false || obj == null)
+                {
+                    obj = null;
+                    fromFreeStack = false;
+                }
+            }
+
             if (obj != null)
-                obj._isReturned = false;
+                obj = obj.ActivateLease();
 
             if (obj != null && obj.Value == null ||
                 obj != null && Policy.IdleTimeout > TimeSpan.Zero && DateTime.Now.Subtract(obj.LastReturnTime) > Policy.IdleTimeout)
@@ -580,16 +727,25 @@ namespace FreeRedis.Internal.ObjectPool
         public void Return(Object<T> obj, bool isReset = false)
         {
             if (obj == null) return;
-            if (obj._isReturned) return;
+            if (obj.TryBeginReturn() == false) return;
 
             if (_running == false)
             {
+                obj.MarkLeased();
                 Policy.OnDestroy(obj.Value);
                 try { (obj.Value as IDisposable)?.Dispose(); } catch { }
                 return;
             }
 
-            if (isReset) obj.ResetValue();
+            try
+            {
+                if (isReset) obj.ResetValue();
+            }
+            catch
+            {
+                obj.MarkLeased();
+                throw;
+            }
             bool isReturn = false;
 
             while (isReturn == false && _getQueue.TryDequeue(out var isAsync))
@@ -598,9 +754,10 @@ namespace FreeRedis.Internal.ObjectPool
                 {
                     if (_getSyncQueue.TryDequeue(out var queueItem) && queueItem != null)
                     {
+                        var handoffLease = default(Object<T>);
                         lock (queueItem.Lock)
-                            if (queueItem.IsTimeout == false)
-                                queueItem.ReturnValue = obj;
+                            if (queueItem.IsTimeout == false && UnavailableException == null)
+                                handoffLease = queueItem.ReturnValue = obj.ActivateLease();
 
                         if (queueItem.ReturnValue != null)
                         {
@@ -623,7 +780,10 @@ namespace FreeRedis.Internal.ObjectPool
                                     queueItem.Wait.Set();
                                     isReturn = true;
                                 }
-                                catch { }
+                                catch
+                                {
+                                    if (handoffLease != null) obj.MarkFree();
+                                }
                             }
                         }
 
@@ -646,10 +806,12 @@ namespace FreeRedis.Internal.ObjectPool
                         {
                             obj.LastReturnThreadId = Thread.CurrentThread.ManagedThreadId;
                             obj.LastReturnTime = DateTime.Now;
+                            var handoffLease = obj.ActivateLease();
 
                             try
                             {
-                                isReturn = tcs.TrySetResult(obj);
+                                isReturn = tcs.TrySetResult(handoffLease);
+                                if (isReturn == false) obj.MarkFree();
                             }
                             catch { }
                         }
@@ -672,9 +834,11 @@ namespace FreeRedis.Internal.ObjectPool
                 {
                     obj.LastReturnThreadId = Thread.CurrentThread.ManagedThreadId;
                     obj.LastReturnTime = DateTime.Now;
-                    obj._isReturned = true;
+                    obj.LastKeepAliveTime = obj.LastReturnTime;
+                    obj.MarkFree();
 
-                    _freeObjects.Push(obj);
+                    _freeObjects.Push(obj.RootObject);
+                    EnsureIdleWatcher();
                 }
             }
         }

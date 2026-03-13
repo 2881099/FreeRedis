@@ -27,6 +27,11 @@ namespace FreeRedis.Internal.ObjectPool
         TimeSpan IdleTimeout { get; set; }
 
         /// <summary>
+        /// 空闲保活检查时间，超过该时间会触发一次保活动作
+        /// </summary>
+        TimeSpan IdleCheckTimeout { get; set; }
+
+        /// <summary>
         /// 异步获取排队队列大小，小于等于0不生效
         /// </summary>
         int AsyncGetCapacity { get; set; }
@@ -101,6 +106,12 @@ namespace FreeRedis.Internal.ObjectPool
         /// <param name="obj">资源对象</param>
         /// <returns></returns>
         bool OnCheckAvailable(Object<T> obj);
+
+        /// <summary>
+        /// 空闲保活动作
+        /// </summary>
+        /// <param name="obj">资源对象</param>
+        void OnIdleCheck(Object<T> obj);
 
         /// <summary>
         /// 事件：可用时触发

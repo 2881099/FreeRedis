@@ -3,12 +3,18 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
+using System.Net.Sockets;
 using System.Threading.Tasks;
 
 namespace FreeRedis.Internal
 {
     public class RedisClientPool : ObjectPool<RedisClient>, IDisposable
     {
+        readonly object _unavailableLock = new object();
+        DateTime _lastUnavailableCandidateTime = DateTime.MinValue;
+        int _unavailableCandidateCount;
+        readonly HashSet<int> _unavailableCandidateObjectIds = new HashSet<int>();
+
         public RedisClientPool(ConnectionStringBuilder connectionString, RedisClient topOwner) : base(null)
         {
             _policy = new RedisClientPoolPolicy
@@ -133,6 +139,53 @@ namespace FreeRedis.Internal
 
         internal bool CheckAvailable() => base.LiveCheckAvailable();
 
+        internal bool TrySetUnavailable(Exception exception, DateTime lastGetTime, int poolObjectId = 0)
+        {
+            if (_policy.IsUnavailableCandidate(exception) == false)
+                return false;
+
+            lock (_unavailableLock)
+            {
+                var now = DateTime.Now;
+                if (now.Subtract(_lastUnavailableCandidateTime) > _policy.GetUnavailableCandidateWindow())
+                {
+                    _unavailableCandidateCount = 0;
+                    _unavailableCandidateObjectIds.Clear();
+                }
+
+                _lastUnavailableCandidateTime = now;
+                if (poolObjectId > 0)
+                {
+                    if (_unavailableCandidateObjectIds.Add(poolObjectId) == false)
+                        return false;
+
+                    _unavailableCandidateCount = _unavailableCandidateObjectIds.Count;
+                }
+                else
+                {
+                    _unavailableCandidateCount++;
+                }
+
+                if (_unavailableCandidateCount < 2)
+                    return false;
+
+                _unavailableCandidateCount = 0;
+                _unavailableCandidateObjectIds.Clear();
+            }
+
+            return SetUnavailable(exception, lastGetTime);
+        }
+
+        internal void ResetUnavailableCandidates()
+        {
+            lock (_unavailableLock)
+            {
+                _lastUnavailableCandidateTime = DateTime.MinValue;
+                _unavailableCandidateCount = 0;
+                _unavailableCandidateObjectIds.Clear();
+            }
+        }
+
         internal RedisClientPoolPolicy _policy;
         public string Key => _policy.Key;
         public string Prefix => _policy._connectionStringBuilder.Prefix;
@@ -149,6 +202,7 @@ namespace FreeRedis.Internal
         public string Name { get => Key; set => throw new NotSupportedException(); }
         public int PoolSize { get => _connectionStringBuilder.MaxPoolSize; set => _connectionStringBuilder.MaxPoolSize = value; }
         public TimeSpan IdleTimeout { get => _connectionStringBuilder.IdleTimeout; set => _connectionStringBuilder.IdleTimeout = value; }
+        public TimeSpan IdleCheckTimeout { get => _connectionStringBuilder.IdleCheckTimeout; set => _connectionStringBuilder.IdleCheckTimeout = value; }
         public TimeSpan SyncGetTimeout { get; set; } = TimeSpan.FromSeconds(10);
         public int AsyncGetCapacity { get; set; } = 100000;
         public bool IsThrowGetTimeoutException { get; set; } = true;
@@ -193,7 +247,11 @@ namespace FreeRedis.Internal
         {
             if (_pool.IsAvailable)
             {
-                if (DateTime.Now.Subtract(obj.LastReturnTime).TotalSeconds > 60 || obj.Value.Adapter.GetRedisSocket(null).IsConnected == false)
+                var lastActiveTime = obj.LastKeepAliveTime;
+                if (lastActiveTime < obj.LastReturnTime)
+                    lastActiveTime = obj.LastReturnTime;
+
+                if (DateTime.Now.Subtract(lastActiveTime) > IdleCheckTimeout || obj.Value.Adapter.GetRedisSocket(null).IsConnected == false)
                 {
                     try
                     {
@@ -213,7 +271,11 @@ namespace FreeRedis.Internal
         {
 			if (_pool.IsAvailable)
 			{
-				if (DateTime.Now.Subtract(obj.LastReturnTime).TotalSeconds > 60 || obj.Value.Adapter.GetRedisSocket(null).IsConnected == false)
+                var lastActiveTime = obj.LastKeepAliveTime;
+                if (lastActiveTime < obj.LastReturnTime)
+                    lastActiveTime = obj.LastReturnTime;
+
+                if (DateTime.Now.Subtract(lastActiveTime) > IdleCheckTimeout || obj.Value.Adapter.GetRedisSocket(null).IsConnected == false)
 				{
 					try
 					{
@@ -230,12 +292,48 @@ namespace FreeRedis.Internal
 		}
 #endif
 
+        public void OnIdleCheck(Object<RedisClient> obj)
+        {
+            if (_pool.IsAvailable == false) return;
+
+            var redisSocket = obj.Value.Adapter.GetRedisSocket(null);
+            if (redisSocket.IsConnected == false)
+            {
+                obj.ResetValue();
+                return;
+            }
+
+            CommandPacket cmd = "PING";
+            cmd.IsIgnoreAop = true;
+            obj.Value.Call(cmd);
+        }
+
         public void OnGetTimeout() { }
-        public void OnAvailable() { }
+        public void OnAvailable()
+        {
+            _pool.ResetUnavailableCandidates();
+        }
         public void OnUnavailable()
         {
             _pool.TopOwner?.OnUnavailable(_pool.TopOwner, new UnavailableEventArgs(_connectionStringBuilder.Host, _pool));
             _pool.TopOwner?.OnNotice(_pool.TopOwner, new NoticeEventArgs(NoticeType.Info, null, $"{_connectionStringBuilder.Host.PadRight(21)} > Unavailable", null));
+        }
+
+        internal TimeSpan GetUnavailableCandidateWindow()
+        {
+            if (ToleranceWindow > TimeSpan.Zero && ToleranceWindow < TimeSpan.FromSeconds(2))
+                return ToleranceWindow;
+            return TimeSpan.FromSeconds(2);
+        }
+
+        internal bool IsUnavailableCandidate(Exception exception)
+        {
+            for (var current = exception; current != null; current = current.InnerException)
+            {
+                if (current is TimeoutException || current is IOException || current is SocketException || current is ObjectDisposedException)
+                    return true;
+            }
+            return false;
         }
 
         public static void PrevReheatConnectionPool(ObjectPool<RedisClient> pool, int minPoolSize)
@@ -257,11 +355,10 @@ namespace FreeRedis.Internal
             catch (Exception ex)
             {
                 initTestOk = false; //预热一次失败，后面将不进行
-                pool.SetUnavailable(ex, DateTime.Now);
             }
             for (var a = 1; initTestOk && a < minPoolSize; a += 10)
             {
-                if (initStartTime.Subtract(DateTime.Now).TotalSeconds > 3) break; //预热耗时超过3秒，退出
+                if (DateTime.Now.Subtract(initStartTime).TotalSeconds > 3) break; //预热耗时超过3秒，退出
                 var b = Math.Min(minPoolSize - a, 10); //每10个预热
                 var initTasks = new Task[b];
                 for (var c = 0; c < b; c++)

@@ -31,6 +31,7 @@ namespace FreeRedis.Internal
         {
             public string _poolkey; //flag idlebus key
             public RedisClientPool _pool; //flag pooling
+            public int _poolObjectId; //flag pooled object identity
             public IRedisSocket _owner;
             Action _dispose;
             public TempProxyRedisSocket(IRedisSocket owner, Action dispose)
