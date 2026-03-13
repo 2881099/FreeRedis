@@ -327,7 +327,7 @@
       "output": {
         ".html": {
           "relative_path": "docs/api/FreeRedis.ConnectionStringBuilder.html",
-          "hash": "3p6LComULOLHsuggzf29vk9SHy2dO/jZ6Sa6BL9U20w="
+          "hash": "3RbZUjsdPfN/ZpjXknN5VVeuC4HENa7msPDGmhkCkgg="
         }
       },
       "is_incremental": false,
@@ -495,7 +495,7 @@
       "output": {
         ".html": {
           "relative_path": "docs/api/FreeRedis.Internal.DefaultRedisSocket.TempProxyRedisSocket.html",
-          "hash": "JcNdkbx6s6huO2wKvX7297VbwY3xVmtE5R0eky67/j4="
+          "hash": "0gxWpVV4wIzc7XbNdQLKY8LxI53fyPtce6i5r7unY4A="
         }
       },
       "is_incremental": false,
@@ -627,7 +627,7 @@
       "output": {
         ".html": {
           "relative_path": "docs/api/FreeRedis.Internal.ObjectPool.DefaultPolicy-1.html",
-          "hash": "as3b/4I6Z3hesJfTYFDnYcDN35r4lz/CQJrCLklDJaY="
+          "hash": "LDPUlhURJgRiQQLGxqWfdu9z3UvPHgme2V+1s7nN7sE="
         }
       },
       "is_incremental": false,
@@ -651,7 +651,7 @@
       "output": {
         ".html": {
           "relative_path": "docs/api/FreeRedis.Internal.ObjectPool.IPolicy-1.html",
-          "hash": "Xc/VPwn3OT5IwkXjLJ42qO2oHx6OJuSNvuygds9sn00="
+          "hash": "2c/EBx759kAb13+4LUbeiBs7DIifueTXcXwX9XoddJ0="
         }
       },
       "is_incremental": false,
@@ -663,7 +663,7 @@
       "output": {
         ".html": {
           "relative_path": "docs/api/FreeRedis.Internal.ObjectPool.Object-1.html",
-          "hash": "7+pNKhQTNTKhEZka11A/bDBNIKHK27JBuTRZvOKg8dQ="
+          "hash": "KBiQorErb3WE5a7oktBFzo6sCk3cjT8OCkRv0gl5HRs="
         }
       },
       "is_incremental": false,
@@ -711,7 +711,7 @@
       "output": {
         ".html": {
           "relative_path": "docs/api/FreeRedis.Internal.RedisClientPoolPolicy.html",
-          "hash": "sT+XiMAsYU0PTfOIZVA95/xwJefE0FC6H/q7GtMpFn8="
+          "hash": "4cMqZw6ADyxVArJnCdbTF7qah2xLldNb6dS25zQKNt4="
         }
       },
       "is_incremental": false,

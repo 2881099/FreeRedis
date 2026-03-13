@@ -1971,6 +1971,19 @@ references:
   isSpec: "True"
   fullName: FreeRedis.ConnectionStringBuilder.Host
   nameWithType: ConnectionStringBuilder.Host
+- uid: FreeRedis.ConnectionStringBuilder.IdleCheckTimeout
+  name: IdleCheckTimeout
+  href: docs/api/FreeRedis.ConnectionStringBuilder.html#FreeRedis_ConnectionStringBuilder_IdleCheckTimeout
+  commentId: P:FreeRedis.ConnectionStringBuilder.IdleCheckTimeout
+  fullName: FreeRedis.ConnectionStringBuilder.IdleCheckTimeout
+  nameWithType: ConnectionStringBuilder.IdleCheckTimeout
+- uid: FreeRedis.ConnectionStringBuilder.IdleCheckTimeout*
+  name: IdleCheckTimeout
+  href: docs/api/FreeRedis.ConnectionStringBuilder.html#FreeRedis_ConnectionStringBuilder_IdleCheckTimeout_
+  commentId: Overload:FreeRedis.ConnectionStringBuilder.IdleCheckTimeout
+  isSpec: "True"
+  fullName: FreeRedis.ConnectionStringBuilder.IdleCheckTimeout
+  nameWithType: ConnectionStringBuilder.IdleCheckTimeout
 - uid: FreeRedis.ConnectionStringBuilder.IdleTimeout
   name: IdleTimeout
   href: docs/api/FreeRedis.ConnectionStringBuilder.html#FreeRedis_ConnectionStringBuilder_IdleTimeout
@@ -3280,6 +3293,12 @@ references:
   commentId: F:FreeRedis.Internal.DefaultRedisSocket.TempProxyRedisSocket._poolkey
   fullName: FreeRedis.Internal.DefaultRedisSocket.TempProxyRedisSocket._poolkey
   nameWithType: DefaultRedisSocket.TempProxyRedisSocket._poolkey
+- uid: FreeRedis.Internal.DefaultRedisSocket.TempProxyRedisSocket._poolObjectId
+  name: _poolObjectId
+  href: docs/api/FreeRedis.Internal.DefaultRedisSocket.TempProxyRedisSocket.html#FreeRedis_Internal_DefaultRedisSocket_TempProxyRedisSocket__poolObjectId
+  commentId: F:FreeRedis.Internal.DefaultRedisSocket.TempProxyRedisSocket._poolObjectId
+  fullName: FreeRedis.Internal.DefaultRedisSocket.TempProxyRedisSocket._poolObjectId
+  nameWithType: DefaultRedisSocket.TempProxyRedisSocket._poolObjectId
 - uid: FreeRedis.Internal.DefaultRedisSocket.TempProxyRedisSocket.ClientId
   name: ClientId
   href: docs/api/FreeRedis.Internal.DefaultRedisSocket.TempProxyRedisSocket.html#FreeRedis_Internal_DefaultRedisSocket_TempProxyRedisSocket_ClientId
@@ -4648,6 +4667,23 @@ references:
   fullName.vb: FreeRedis.Internal.ObjectPool.DefaultPolicy(Of T).CreateObject
   nameWithType: DefaultPolicy<T>.CreateObject
   nameWithType.vb: DefaultPolicy(Of T).CreateObject
+- uid: FreeRedis.Internal.ObjectPool.DefaultPolicy`1.IdleCheckTimeout
+  name: IdleCheckTimeout
+  href: docs/api/FreeRedis.Internal.ObjectPool.DefaultPolicy-1.html#FreeRedis_Internal_ObjectPool_DefaultPolicy_1_IdleCheckTimeout
+  commentId: P:FreeRedis.Internal.ObjectPool.DefaultPolicy`1.IdleCheckTimeout
+  fullName: FreeRedis.Internal.ObjectPool.DefaultPolicy<T>.IdleCheckTimeout
+  fullName.vb: FreeRedis.Internal.ObjectPool.DefaultPolicy(Of T).IdleCheckTimeout
+  nameWithType: DefaultPolicy<T>.IdleCheckTimeout
+  nameWithType.vb: DefaultPolicy(Of T).IdleCheckTimeout
+- uid: FreeRedis.Internal.ObjectPool.DefaultPolicy`1.IdleCheckTimeout*
+  name: IdleCheckTimeout
+  href: docs/api/FreeRedis.Internal.ObjectPool.DefaultPolicy-1.html#FreeRedis_Internal_ObjectPool_DefaultPolicy_1_IdleCheckTimeout_
+  commentId: Overload:FreeRedis.Internal.ObjectPool.DefaultPolicy`1.IdleCheckTimeout
+  isSpec: "True"
+  fullName: FreeRedis.Internal.ObjectPool.DefaultPolicy<T>.IdleCheckTimeout
+  fullName.vb: FreeRedis.Internal.ObjectPool.DefaultPolicy(Of T).IdleCheckTimeout
+  nameWithType: DefaultPolicy<T>.IdleCheckTimeout
+  nameWithType.vb: DefaultPolicy(Of T).IdleCheckTimeout
 - uid: FreeRedis.Internal.ObjectPool.DefaultPolicy`1.IdleTimeout
   name: IdleTimeout
   href: docs/api/FreeRedis.Internal.ObjectPool.DefaultPolicy-1.html#FreeRedis_Internal_ObjectPool_DefaultPolicy_1_IdleTimeout
@@ -4846,6 +4882,24 @@ references:
   fullName.vb: FreeRedis.Internal.ObjectPool.DefaultPolicy(Of T).OnGetTimeout
   nameWithType: DefaultPolicy<T>.OnGetTimeout
   nameWithType.vb: DefaultPolicy(Of T).OnGetTimeout
+- uid: FreeRedis.Internal.ObjectPool.DefaultPolicy`1.OnIdleCheck(FreeRedis.Internal.ObjectPool.Object{`0})
+  name: OnIdleCheck(Object<T>)
+  href: docs/api/FreeRedis.Internal.ObjectPool.DefaultPolicy-1.html#FreeRedis_Internal_ObjectPool_DefaultPolicy_1_OnIdleCheck_FreeRedis_Internal_ObjectPool_Object__0__
+  commentId: M:FreeRedis.Internal.ObjectPool.DefaultPolicy`1.OnIdleCheck(FreeRedis.Internal.ObjectPool.Object{`0})
+  name.vb: OnIdleCheck(Object(Of T))
+  fullName: FreeRedis.Internal.ObjectPool.DefaultPolicy<T>.OnIdleCheck(FreeRedis.Internal.ObjectPool.Object<T>)
+  fullName.vb: FreeRedis.Internal.ObjectPool.DefaultPolicy(Of T).OnIdleCheck(FreeRedis.Internal.ObjectPool.Object(Of T))
+  nameWithType: DefaultPolicy<T>.OnIdleCheck(Object<T>)
+  nameWithType.vb: DefaultPolicy(Of T).OnIdleCheck(Object(Of T))
+- uid: FreeRedis.Internal.ObjectPool.DefaultPolicy`1.OnIdleCheck*
+  name: OnIdleCheck
+  href: docs/api/FreeRedis.Internal.ObjectPool.DefaultPolicy-1.html#FreeRedis_Internal_ObjectPool_DefaultPolicy_1_OnIdleCheck_
+  commentId: Overload:FreeRedis.Internal.ObjectPool.DefaultPolicy`1.OnIdleCheck
+  isSpec: "True"
+  fullName: FreeRedis.Internal.ObjectPool.DefaultPolicy<T>.OnIdleCheck
+  fullName.vb: FreeRedis.Internal.ObjectPool.DefaultPolicy(Of T).OnIdleCheck
+  nameWithType: DefaultPolicy<T>.OnIdleCheck
+  nameWithType.vb: DefaultPolicy(Of T).OnIdleCheck
 - uid: FreeRedis.Internal.ObjectPool.DefaultPolicy`1.OnReturn(FreeRedis.Internal.ObjectPool.Object{`0})
   name: OnReturn(Object<T>)
   href: docs/api/FreeRedis.Internal.ObjectPool.DefaultPolicy-1.html#FreeRedis_Internal_ObjectPool_DefaultPolicy_1_OnReturn_FreeRedis_Internal_ObjectPool_Object__0__
@@ -5173,6 +5227,23 @@ references:
   fullName.vb: FreeRedis.Internal.ObjectPool.IPolicy(Of T).AvailableCheckInterval
   nameWithType: IPolicy<T>.AvailableCheckInterval
   nameWithType.vb: IPolicy(Of T).AvailableCheckInterval
+- uid: FreeRedis.Internal.ObjectPool.IPolicy`1.IdleCheckTimeout
+  name: IdleCheckTimeout
+  href: docs/api/FreeRedis.Internal.ObjectPool.IPolicy-1.html#FreeRedis_Internal_ObjectPool_IPolicy_1_IdleCheckTimeout
+  commentId: P:FreeRedis.Internal.ObjectPool.IPolicy`1.IdleCheckTimeout
+  fullName: FreeRedis.Internal.ObjectPool.IPolicy<T>.IdleCheckTimeout
+  fullName.vb: FreeRedis.Internal.ObjectPool.IPolicy(Of T).IdleCheckTimeout
+  nameWithType: IPolicy<T>.IdleCheckTimeout
+  nameWithType.vb: IPolicy(Of T).IdleCheckTimeout
+- uid: FreeRedis.Internal.ObjectPool.IPolicy`1.IdleCheckTimeout*
+  name: IdleCheckTimeout
+  href: docs/api/FreeRedis.Internal.ObjectPool.IPolicy-1.html#FreeRedis_Internal_ObjectPool_IPolicy_1_IdleCheckTimeout_
+  commentId: Overload:FreeRedis.Internal.ObjectPool.IPolicy`1.IdleCheckTimeout
+  isSpec: "True"
+  fullName: FreeRedis.Internal.ObjectPool.IPolicy<T>.IdleCheckTimeout
+  fullName.vb: FreeRedis.Internal.ObjectPool.IPolicy(Of T).IdleCheckTimeout
+  nameWithType: IPolicy<T>.IdleCheckTimeout
+  nameWithType.vb: IPolicy(Of T).IdleCheckTimeout
 - uid: FreeRedis.Internal.ObjectPool.IPolicy`1.IdleTimeout
   name: IdleTimeout
   href: docs/api/FreeRedis.Internal.ObjectPool.IPolicy-1.html#FreeRedis_Internal_ObjectPool_IPolicy_1_IdleTimeout
@@ -5363,6 +5434,24 @@ references:
   fullName.vb: FreeRedis.Internal.ObjectPool.IPolicy(Of T).OnGetTimeout
   nameWithType: IPolicy<T>.OnGetTimeout
   nameWithType.vb: IPolicy(Of T).OnGetTimeout
+- uid: FreeRedis.Internal.ObjectPool.IPolicy`1.OnIdleCheck(FreeRedis.Internal.ObjectPool.Object{`0})
+  name: OnIdleCheck(Object<T>)
+  href: docs/api/FreeRedis.Internal.ObjectPool.IPolicy-1.html#FreeRedis_Internal_ObjectPool_IPolicy_1_OnIdleCheck_FreeRedis_Internal_ObjectPool_Object__0__
+  commentId: M:FreeRedis.Internal.ObjectPool.IPolicy`1.OnIdleCheck(FreeRedis.Internal.ObjectPool.Object{`0})
+  name.vb: OnIdleCheck(Object(Of T))
+  fullName: FreeRedis.Internal.ObjectPool.IPolicy<T>.OnIdleCheck(FreeRedis.Internal.ObjectPool.Object<T>)
+  fullName.vb: FreeRedis.Internal.ObjectPool.IPolicy(Of T).OnIdleCheck(FreeRedis.Internal.ObjectPool.Object(Of T))
+  nameWithType: IPolicy<T>.OnIdleCheck(Object<T>)
+  nameWithType.vb: IPolicy(Of T).OnIdleCheck(Object(Of T))
+- uid: FreeRedis.Internal.ObjectPool.IPolicy`1.OnIdleCheck*
+  name: OnIdleCheck
+  href: docs/api/FreeRedis.Internal.ObjectPool.IPolicy-1.html#FreeRedis_Internal_ObjectPool_IPolicy_1_OnIdleCheck_
+  commentId: Overload:FreeRedis.Internal.ObjectPool.IPolicy`1.OnIdleCheck
+  isSpec: "True"
+  fullName: FreeRedis.Internal.ObjectPool.IPolicy<T>.OnIdleCheck
+  fullName.vb: FreeRedis.Internal.ObjectPool.IPolicy(Of T).OnIdleCheck
+  nameWithType: IPolicy<T>.OnIdleCheck
+  nameWithType.vb: IPolicy(Of T).OnIdleCheck
 - uid: FreeRedis.Internal.ObjectPool.IPolicy`1.OnReturn(FreeRedis.Internal.ObjectPool.Object{`0})
   name: OnReturn(Object<T>)
   href: docs/api/FreeRedis.Internal.ObjectPool.IPolicy-1.html#FreeRedis_Internal_ObjectPool_IPolicy_1_OnReturn_FreeRedis_Internal_ObjectPool_Object__0__
@@ -5612,6 +5701,23 @@ references:
   fullName.vb: FreeRedis.Internal.ObjectPool.Object(Of T).LastGetTimeCopy
   nameWithType: Object<T>.LastGetTimeCopy
   nameWithType.vb: Object(Of T).LastGetTimeCopy
+- uid: FreeRedis.Internal.ObjectPool.Object`1.LastKeepAliveTime
+  name: LastKeepAliveTime
+  href: docs/api/FreeRedis.Internal.ObjectPool.Object-1.html#FreeRedis_Internal_ObjectPool_Object_1_LastKeepAliveTime
+  commentId: P:FreeRedis.Internal.ObjectPool.Object`1.LastKeepAliveTime
+  fullName: FreeRedis.Internal.ObjectPool.Object<T>.LastKeepAliveTime
+  fullName.vb: FreeRedis.Internal.ObjectPool.Object(Of T).LastKeepAliveTime
+  nameWithType: Object<T>.LastKeepAliveTime
+  nameWithType.vb: Object(Of T).LastKeepAliveTime
+- uid: FreeRedis.Internal.ObjectPool.Object`1.LastKeepAliveTime*
+  name: LastKeepAliveTime
+  href: docs/api/FreeRedis.Internal.ObjectPool.Object-1.html#FreeRedis_Internal_ObjectPool_Object_1_LastKeepAliveTime_
+  commentId: Overload:FreeRedis.Internal.ObjectPool.Object`1.LastKeepAliveTime
+  isSpec: "True"
+  fullName: FreeRedis.Internal.ObjectPool.Object<T>.LastKeepAliveTime
+  fullName.vb: FreeRedis.Internal.ObjectPool.Object(Of T).LastKeepAliveTime
+  nameWithType: Object<T>.LastKeepAliveTime
+  nameWithType.vb: Object(Of T).LastKeepAliveTime
 - uid: FreeRedis.Internal.ObjectPool.Object`1.LastReturnThreadId
   name: LastReturnThreadId
   href: docs/api/FreeRedis.Internal.ObjectPool.Object-1.html#FreeRedis_Internal_ObjectPool_Object_1_LastReturnThreadId
@@ -5663,6 +5769,23 @@ references:
   fullName.vb: FreeRedis.Internal.ObjectPool.Object(Of T).Pool
   nameWithType: Object<T>.Pool
   nameWithType.vb: Object(Of T).Pool
+- uid: FreeRedis.Internal.ObjectPool.Object`1.ReleaseValue
+  name: ReleaseValue()
+  href: docs/api/FreeRedis.Internal.ObjectPool.Object-1.html#FreeRedis_Internal_ObjectPool_Object_1_ReleaseValue
+  commentId: M:FreeRedis.Internal.ObjectPool.Object`1.ReleaseValue
+  fullName: FreeRedis.Internal.ObjectPool.Object<T>.ReleaseValue()
+  fullName.vb: FreeRedis.Internal.ObjectPool.Object(Of T).ReleaseValue()
+  nameWithType: Object<T>.ReleaseValue()
+  nameWithType.vb: Object(Of T).ReleaseValue()
+- uid: FreeRedis.Internal.ObjectPool.Object`1.ReleaseValue*
+  name: ReleaseValue
+  href: docs/api/FreeRedis.Internal.ObjectPool.Object-1.html#FreeRedis_Internal_ObjectPool_Object_1_ReleaseValue_
+  commentId: Overload:FreeRedis.Internal.ObjectPool.Object`1.ReleaseValue
+  isSpec: "True"
+  fullName: FreeRedis.Internal.ObjectPool.Object<T>.ReleaseValue
+  fullName.vb: FreeRedis.Internal.ObjectPool.Object(Of T).ReleaseValue
+  nameWithType: Object<T>.ReleaseValue
+  nameWithType.vb: Object(Of T).ReleaseValue
 - uid: FreeRedis.Internal.ObjectPool.Object`1.ResetValue
   name: ResetValue()
   href: docs/api/FreeRedis.Internal.ObjectPool.Object-1.html#FreeRedis_Internal_ObjectPool_Object_1_ResetValue
@@ -6073,6 +6196,19 @@ references:
   commentId: E:FreeRedis.Internal.RedisClientPoolPolicy.Connected
   fullName: FreeRedis.Internal.RedisClientPoolPolicy.Connected
   nameWithType: RedisClientPoolPolicy.Connected
+- uid: FreeRedis.Internal.RedisClientPoolPolicy.IdleCheckTimeout
+  name: IdleCheckTimeout
+  href: docs/api/FreeRedis.Internal.RedisClientPoolPolicy.html#FreeRedis_Internal_RedisClientPoolPolicy_IdleCheckTimeout
+  commentId: P:FreeRedis.Internal.RedisClientPoolPolicy.IdleCheckTimeout
+  fullName: FreeRedis.Internal.RedisClientPoolPolicy.IdleCheckTimeout
+  nameWithType: RedisClientPoolPolicy.IdleCheckTimeout
+- uid: FreeRedis.Internal.RedisClientPoolPolicy.IdleCheckTimeout*
+  name: IdleCheckTimeout
+  href: docs/api/FreeRedis.Internal.RedisClientPoolPolicy.html#FreeRedis_Internal_RedisClientPoolPolicy_IdleCheckTimeout_
+  commentId: Overload:FreeRedis.Internal.RedisClientPoolPolicy.IdleCheckTimeout
+  isSpec: "True"
+  fullName: FreeRedis.Internal.RedisClientPoolPolicy.IdleCheckTimeout
+  nameWithType: RedisClientPoolPolicy.IdleCheckTimeout
 - uid: FreeRedis.Internal.RedisClientPoolPolicy.IdleTimeout
   name: IdleTimeout
   href: docs/api/FreeRedis.Internal.RedisClientPoolPolicy.html#FreeRedis_Internal_RedisClientPoolPolicy_IdleTimeout
@@ -6225,6 +6361,22 @@ references:
   isSpec: "True"
   fullName: FreeRedis.Internal.RedisClientPoolPolicy.OnGetTimeout
   nameWithType: RedisClientPoolPolicy.OnGetTimeout
+- uid: FreeRedis.Internal.RedisClientPoolPolicy.OnIdleCheck(System.Object{FreeRedis.RedisClient})
+  name: OnIdleCheck(Object<RedisClient>)
+  href: docs/api/FreeRedis.Internal.RedisClientPoolPolicy.html#FreeRedis_Internal_RedisClientPoolPolicy_OnIdleCheck_System_Object_FreeRedis_RedisClient__
+  commentId: M:FreeRedis.Internal.RedisClientPoolPolicy.OnIdleCheck(System.Object{FreeRedis.RedisClient})
+  name.vb: OnIdleCheck(Object(Of RedisClient))
+  fullName: FreeRedis.Internal.RedisClientPoolPolicy.OnIdleCheck(System.Object<FreeRedis.RedisClient>)
+  fullName.vb: FreeRedis.Internal.RedisClientPoolPolicy.OnIdleCheck(System.Object(Of FreeRedis.RedisClient))
+  nameWithType: RedisClientPoolPolicy.OnIdleCheck(Object<RedisClient>)
+  nameWithType.vb: RedisClientPoolPolicy.OnIdleCheck(Object(Of RedisClient))
+- uid: FreeRedis.Internal.RedisClientPoolPolicy.OnIdleCheck*
+  name: OnIdleCheck
+  href: docs/api/FreeRedis.Internal.RedisClientPoolPolicy.html#FreeRedis_Internal_RedisClientPoolPolicy_OnIdleCheck_
+  commentId: Overload:FreeRedis.Internal.RedisClientPoolPolicy.OnIdleCheck
+  isSpec: "True"
+  fullName: FreeRedis.Internal.RedisClientPoolPolicy.OnIdleCheck
+  nameWithType: RedisClientPoolPolicy.OnIdleCheck
 - uid: FreeRedis.Internal.RedisClientPoolPolicy.OnReturn(System.Object{FreeRedis.RedisClient})
   name: OnReturn(Object<RedisClient>)
   href: docs/api/FreeRedis.Internal.RedisClientPoolPolicy.html#FreeRedis_Internal_RedisClientPoolPolicy_OnReturn_System_Object_FreeRedis_RedisClient__
