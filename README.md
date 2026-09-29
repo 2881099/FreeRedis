@@ -7,6 +7,7 @@ FreeRedis is a redis client based on .NET, supports .NET Core 2.1+, .NET Framewo
 [![nuget](https://img.shields.io/nuget/v/FreeRedis.svg?style=flat-square)](https://www.nuget.org/packages/FreeRedis) 
 [![stats](https://img.shields.io/nuget/dt/FreeRedis.svg?style=flat-square)](https://www.nuget.org/stats/packages/FreeRedis?groupby=Version) 
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://raw.githubusercontent.com/2881099/FreeRedis/master/LICENSE.txt)
+[![AtomGit](https://atomgit.com/gh_mirrors/fr/FreeRedis/star/new_badge.svg)](https://atomgit.com/gh_mirrors/fr/FreeRedis)
 
 <p>
     <span>English</span> |  
